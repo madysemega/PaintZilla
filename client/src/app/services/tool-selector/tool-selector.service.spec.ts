@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PencilService } from '@app/services/tools/pencil-service';
+import { Tool } from '@app/classes/tool';
 import { ToolSelectorService } from './tool-selector.service';
 
 describe('ToolSelectorService', () => {
@@ -16,6 +16,12 @@ describe('ToolSelectorService', () => {
 
     it("should change tool to pencil when selectTool('pencil') is called", () => {
         service.selectTool('pencil');
-        expect(service.getSelectedTool() instanceof PencilService).toBeTruthy();
+        expect(service.getSelectedTool()).toEqual(service.getRegisteredTools().get('pencil') as Tool);
+    });
+
+    it('should keep last selected tool when user tries to select a non-existent tool', () => {
+        service.selectTool('pencil');
+        service.selectTool('invalid tool');
+        expect(service.getSelectedTool()).toEqual(service.getRegisteredTools().get('pencil') as Tool);
     });
 });
