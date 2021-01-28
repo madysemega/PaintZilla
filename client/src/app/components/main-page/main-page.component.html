@@ -2,15 +2,17 @@
     <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
 
     <div id="server-message">
-        <p>Petit message du serveur : {{ message | async }}</p>
-        <button class="button" (click)="getMessagesFromServer()">Récuper un message du serveur</button>
+        <p>Petit message de l'équipe 201 de 2990 : {{ message | async }}</p>
+        <button class="button" (click)="getMessagesFromServer()">Voir le message de l'équipe</button>
         <button class="button" (click)="sendTimeToServer()">Envoyer un message au serveur</button>
     </div>
 
-    <button class="button" routerLink="/editor">Ouvir Éditeur</button>
+    <button class="button" routerLink="/editor">Créer un nouveau dessin</button>
+    <button class="button" routerLink="">Ouvrir le carrousel de dessins</button>
+    <button class="button" *ngIf="false">Continuer un dessin</button>
 
     <div class="footer-item">
-        <h4 class="team-name">Équipe Poly</h4>
-        <p>Coequipier #1, Coequipier #2, Coequipier #3, Coequipier #4, Coequipier #5, Coequipier #6</p>
+        <h4 class="team-name">Équipe 201</h4>
+        <p>Émile Dumas, Charles Fakih, Clément Gassmann-Prince, Félix Duguay, Mady Semega, Samuel Lavallée</p>
     </div>
 </div>
