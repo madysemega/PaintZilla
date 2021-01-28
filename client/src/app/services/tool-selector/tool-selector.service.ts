@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Tool } from '@app/classes/tool';
+import { EllipseService } from '@app/services/tools/ellipse-service.service';
 import { PencilService } from '@app/services/tools/pencil-service';
 
 @Injectable({
@@ -23,7 +24,8 @@ export class ToolSelectorService {
         return this.tools;
     }
 
-    constructor(pencilService: PencilService) {
+    constructor(pencilService: PencilService, ellipseService: EllipseService) {
         this.tools.set('pencil', pencilService);
+        this.tools.set('ellipse', ellipseService);
     }
 }
