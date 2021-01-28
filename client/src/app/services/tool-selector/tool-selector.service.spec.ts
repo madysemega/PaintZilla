@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { PencilService } from '../tools/pencil-service';
+import { PencilService } from '@app/services/tools/pencil-service';
 import { ToolSelectorService } from './tool-selector.service';
-
 
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
