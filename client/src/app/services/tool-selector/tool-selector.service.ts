@@ -19,6 +19,10 @@ export class ToolSelectorService {
         }
     }
 
+    getRegisteredTools(): Map<string, Tool> {
+        return this.tools;
+    }
+
     constructor(pencilService: PencilService) {
         this.tools.set('pencil', pencilService);
     }
