@@ -1,9 +1,25 @@
 import { Injectable } from '@angular/core';
+import { Tool } from '@app/classes/tool';
+import { PencilService } from '@app/services/tools/pencil-service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolSelectorService {
+    private tools: Map<string, Tool> = new Map<string, Tool>();
+    private selectedTool: Tool;
 
-  constructor() { }
+    getSelectedTool(): Tool {
+        return this.selectedTool;
+    }
+
+    selectTool(toolName: string): void {
+        if (this.tools.has(toolName)) {
+            this.selectedTool = this.tools.get(toolName) as Tool;
+        }
+    }
+
+    constructor(pencilService: PencilService) {
+        this.tools.set('pencil', pencilService);
+    }
 }
