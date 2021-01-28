@@ -4,7 +4,6 @@ import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PencilService } from '@app/services/tools/pencil-service';
 import { DrawingComponent } from './drawing.component';
 
-
 class ToolStub extends Tool {}
 
 // TODO : Déplacer dans un fichier accessible à tous
@@ -48,7 +47,7 @@ describe('DrawingComponent', () => {
     });
 
     it('should get stubTool', () => {
-        const currentTool = component['toolSelector'].getSelectedTool();
+        const currentTool = component.getCurrentTool();
         expect(currentTool).toEqual(toolStub);
     });
 

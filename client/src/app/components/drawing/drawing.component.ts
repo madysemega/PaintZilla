@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
@@ -46,6 +47,10 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseUp(event);
+    }
+
+    getCurrentTool(): Tool {
+        return this.toolSelector.getSelectedTool();
     }
 
     get width(): number {
