@@ -14,7 +14,7 @@ describe('ToolSelectorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should change tool to pencil when selectTool(\'pencil\') is called', () => {
+    it("should change tool to pencil when selectTool('pencil') is called", () => {
         service.selectTool('pencil');
         expect(service.getSelectedTool() instanceof PencilService).toBeTruthy();
     });
