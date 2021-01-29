@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Tool } from '@app/classes/tool';
+import { NamedTool } from '@app/classes/named-tool';
 import { ToolSelectorService } from './tool-selector.service';
 
 describe('ToolSelectorService', () => {
@@ -16,12 +16,22 @@ describe('ToolSelectorService', () => {
 
     it("should change tool to pencil when selectTool('pencil') is called", () => {
         service.selectTool('pencil');
-        expect(service.getSelectedTool()).toEqual(service.getRegisteredTools().get('pencil') as Tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
     });
 
     it('should keep last selected tool when user tries to select a non-existent tool', () => {
         service.selectTool('pencil');
         service.selectTool('invalid tool');
-        expect(service.getSelectedTool()).toEqual(service.getRegisteredTools().get('pencil') as Tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
+    });
+
+    it('should return the correct display name when calling getDisplayName with a valid tool name', () => {
+        const displayName = service.getDisplayName('pencil');
+        expect(displayName).toBe('Crayon');
+    });
+
+    it('should return undefined when calling getDisplayName with an invalid tool name', () => {
+        const displayName = service.getDisplayName('invalid tool');
+        expect(displayName).toBe(undefined);
     });
 });
