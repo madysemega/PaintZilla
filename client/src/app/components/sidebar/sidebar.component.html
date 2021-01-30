@@ -1,14 +1,26 @@
-<div class="container sidebar-container">
-    <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right">
-        <mat-icon>home</mat-icon>
-    </button>
+<div class="container vertical">
+    <div class="navbar-section vertical">
+        <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right">
+            <mat-icon>home</mat-icon>
+        </button>
+    </div>
+    
     <mat-divider></mat-divider>
-    <button *ngFor="let toolName of toolNames"
-            [ngClass]="{selected: selectedToolName === toolName}"
-            (click)="selectTool(toolName)"
-            mat-icon-button
-            [matTooltip]="getDisplayName(toolName)"
-            matTooltipPosition="right">
-        <mat-icon>edit</mat-icon>
-    </button>
+    
+    <div class="navbar-section vertical">
+        <button *ngFor="let toolName of toolNames"
+                [ngClass]="{selected: selectedToolName === toolName}"
+                (click)="selectTool(toolName)"
+                mat-icon-button
+                [matTooltip]="getDisplayName(toolName)"
+                matTooltipPosition="right">
+            <mat-icon [svgIcon]="getIconName(toolName)"></mat-icon>
+        </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="navbar-section vertical">
+        <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
+    </div>
 </div>
