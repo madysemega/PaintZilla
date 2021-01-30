@@ -32,6 +32,7 @@ export class EllipseService extends Tool {
             const mousePosition = this.getPositionFromMouse(event);
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
         }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
     }
 
