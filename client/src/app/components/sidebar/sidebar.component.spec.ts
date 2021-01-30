@@ -39,4 +39,16 @@ describe('SidebarComponent', () => {
         const obtainedDisplayName: string = component.getDisplayName('invalid tool');
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
+
+    it('getIconName(toolName) should return the correct icon name if given toolName is valid', () => {
+        const expectedIconName = 'pencil';
+        const obtainedIconName: string = component.getIconName('pencil');
+        expect(obtainedIconName).toBe(expectedIconName);
+    });
+
+    it("getIconName(toolName) should return 'unknown' if given toolName is invalid", () => {
+        const expectedIconName = 'unknown';
+        const obtainedIconName: string = component.getIconName('invalid tool');
+        expect(obtainedIconName).toBe(expectedIconName);
+    });
 });
