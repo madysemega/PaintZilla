@@ -5,11 +5,16 @@
     margin-right: 5px;
 }
 
-.sidebar-container {
+.vertical {
     display: flex;
     flex-direction: column;
 }
 
 .selected {
     background: rgb(223, 223, 223);
+}
+
+.navbar-section {
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
