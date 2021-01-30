@@ -10,6 +10,7 @@ export class SidebarComponent {
     selectedToolName: string = 'pencil';
 
     toolNames: string[];
+    toolIcons: Map<string, string> = new Map<string, string>();
 
     selectTool(toolName: string): void {
         this.selectedToolName = toolName;
@@ -21,7 +22,15 @@ export class SidebarComponent {
         return displayName === undefined ? '<Outil inconnu>' : displayName;
     }
 
+    getIconName(toolName: string): string {
+        const iconName: string | undefined = this.toolIcons.get(toolName);
+        return iconName === undefined ? 'unknown' : iconName;
+    }
+
     constructor(private toolSelectorService: ToolSelectorService) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
+
+        this.toolIcons.set('pencil', 'pencil');
+        this.toolIcons.set('ellipse', 'ellipse-contoured');
     }
 }
