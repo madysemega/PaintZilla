@@ -43,6 +43,7 @@ export class PencilService extends Tool {
             this.pathData.push(mousePosition);
             this.drawLine(this.drawingService.baseCtx, this.pathData);
         }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
         this.clearPath();
     }
