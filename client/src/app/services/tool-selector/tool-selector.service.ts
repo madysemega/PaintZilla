@@ -4,22 +4,38 @@ import { Tool } from '@app/classes/tool';
 import { EllipseService } from '@app/services/tools/ellipse-service.service';
 import { PencilService } from '@app/services/tools/pencil-service';
 import { RectangleService } from '@app/services/tools/rectangle.service'
+import {  BehaviorSubject } from 'rxjs'
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSelectorService {
     private tools: Map<string, NamedTool> = new Map<string, NamedTool>();
-    private selectedTool: NamedTool;
+    selectedTool : NamedTool;
+    name : BehaviorSubject<string> = new BehaviorSubject<string>("pencil"); 
 
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
     }
 
-    selectTool(toolName: string): void {
-        if (this.tools.has(toolName)) {
-            this.selectedTool = this.tools.get(toolName) as NamedTool;
+    selectTool(name: string): boolean{
+        switch (name) {
+            case "1":
+                return this.select("rectangle");
+            case "2":
+                return this.select("ellipse");
+            default:
+                return this.select(name);
         }
+    }
+
+    private select(name: string): boolean{
+        if (this.tools.has(name)) {
+            this.selectedTool = this.tools.get(name)!;
+            this.name.next(name.toString());
+            return true;
+        }
+        return false;
     }
 
     getRegisteredTools(): Map<string, NamedTool> {
@@ -34,5 +50,6 @@ export class ToolSelectorService {
         this.tools.set('pencil', { name: 'Crayon', tool: pencilService });
         this.tools.set('ellipse', { name: 'Ellipse', tool: ellipseService });
         this.tools.set('rectangle', { name: 'Rectangle', tool: rectangleService })
+        this.selectedTool = new NamedTool;
     }
 }

@@ -1,6 +1,6 @@
 import { Tool } from './tool';
 
-export type NamedTool = {
+export class NamedTool {
     name: string;
     tool: Tool;
-};
+}

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+
 
 @Component({
     selector: 'app-sidebar',
@@ -7,13 +8,11 @@ import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.s
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-    selectedToolName: string = 'pencil';
-
+    selectedToolName: string;
     toolNames: string[];
     toolIcons: Map<string, string> = new Map<string, string>();
 
     selectTool(toolName: string): void {
-        this.selectedToolName = toolName;
         this.toolSelectorService.selectTool(toolName);
     }
 
@@ -29,9 +28,12 @@ export class SidebarComponent {
 
     constructor(private toolSelectorService: ToolSelectorService) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
-
         this.toolIcons.set('pencil', 'pencil');
         this.toolIcons.set('ellipse', 'ellipse-contoured');
         this.toolIcons.set('rectangle', 'rectangle-contoured');
+    }
+
+    ngAfterContentInit(){
+        this.toolSelectorService.name.subscribe(name=> this.selectedToolName = name);
     }
 }
