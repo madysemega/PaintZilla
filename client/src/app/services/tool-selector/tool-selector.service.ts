@@ -3,6 +3,7 @@ import { NamedTool } from '@app/classes/named-tool';
 import { Tool } from '@app/classes/tool';
 import { EllipseService } from '@app/services/tools/ellipse-service.service';
 import { PencilService } from '@app/services/tools/pencil-service';
+import { RectangleService } from '@app/services/tools/rectangle.service'
 
 @Injectable({
     providedIn: 'root',
@@ -29,8 +30,9 @@ export class ToolSelectorService {
         return this.tools.get(toolName)?.name;
     }
 
-    constructor(pencilService: PencilService, ellipseService: EllipseService) {
+    constructor(pencilService: PencilService, ellipseService: EllipseService, rectangleService: RectangleService) {
         this.tools.set('pencil', { name: 'Crayon', tool: pencilService });
         this.tools.set('ellipse', { name: 'Ellipse', tool: ellipseService });
+        this.tools.set('rectangle', { name: 'Rectangle', tool: rectangleService })
     }
 }

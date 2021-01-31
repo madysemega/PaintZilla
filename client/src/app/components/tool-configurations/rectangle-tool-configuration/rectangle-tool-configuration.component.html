@@ -1,0 +1,19 @@
+<mat-button-toggle-group [value]="shapeType"
+                         (change)="onShapeTypeChange($event)"
+                         vertical="true"
+                         name="fontStyle"
+                         aria-label="Font Style">
+
+    <mat-button-toggle value="contoured" matTooltip="Contour" matTooltipPosition="right">
+        <mat-icon svgIcon="rectangle-contoured"></mat-icon>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="filled" matTooltip="Plein" matTooltipPosition="right">
+        <mat-icon svgIcon="rectangle-filled"></mat-icon>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="contoured-and-filled" matTooltip="Plein avec contour" matTooltipPosition="right">
+        <mat-icon svgIcon="rectangle-contoured-and-filled"></mat-icon>
+    </mat-button-toggle>
+
+</mat-button-toggle-group>

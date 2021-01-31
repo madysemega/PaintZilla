@@ -17,9 +17,10 @@ import { EditorComponent } from './components/editor/editor.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EllipseToolConfigurationComponent } from './components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { RectangleToolConfigurationComponent } from './components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 
 @NgModule({
-    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent, MainPageComponent, EllipseToolConfigurationComponent],
+    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent, MainPageComponent, EllipseToolConfigurationComponent, RectangleToolConfigurationComponent],
     imports: [
         BrowserModule,
         HttpClientModule,
