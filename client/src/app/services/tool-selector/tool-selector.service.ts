@@ -24,6 +24,8 @@ export class ToolSelectorService {
                 return this.select('rectangle');
             case '2':
                 return this.select('ellipse');
+            case 'c':
+                return this.select('pencil');
             default:
                 return this.select(name);
         }
@@ -50,6 +52,6 @@ export class ToolSelectorService {
         this.tools.set('pencil', { name: 'Crayon', tool: pencilService });
         this.tools.set('rectangle', { name: 'Rectangle', tool: rectangleService });
         this.tools.set('ellipse', { name: 'Ellipse', tool: ellipseService });
-        this.selectedTool = new NamedTool();
+        this.selectedTool =this.tools.get("pencil") as NamedTool;
     }
 }

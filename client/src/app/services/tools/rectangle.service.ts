@@ -3,20 +3,7 @@ import { ShapeType } from '@app/classes/shape-type';
 import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-
-export enum MouseButton {
-    Left = 0,
-    Middle = 1,
-    Right = 2,
-    Back = 3,
-    Forward = 4,
-}
-
-export enum DrawingStyle {
-    outlineOnly = 0,
-    filled = 1,
-    filledWithOutline = 2,
-}
+import { MouseButton } from './pencil-service';
 
 @Injectable({
     providedIn: 'root',
@@ -31,12 +18,18 @@ export class RectangleService extends Tool {
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
+        this.startingPos = {x: 0, y:0};
+        this.width=0;
+        this.height=0;
+        this.shiftDown = false;
+        this.lastMouseCoords = {x:0, y:0}
     }
-
+/*
     setLineWidth(width: number): void {
         this.drawingService.previewCtx.lineWidth = width;
         this.drawingService.baseCtx.lineWidth = width;
     }
+*/
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
@@ -55,14 +48,15 @@ export class RectangleService extends Tool {
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
-            this.startingPos = this.getPositionFromMouse(event);
+            this.mouseDownCoord = this.getPositionFromMouse(event);
+            this.startingPos = this.mouseDownCoord;
             this.lastMouseCoords = this.startingPos;
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        this.drawRect(this.drawingService.baseCtx);
         if (this.mouseDown) {
+            this.drawRect(this.drawingService.baseCtx);
             this.startingPos.x = 0;
             this.startingPos.y = 0;
         }

@@ -28,6 +28,8 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
+    
+
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = 'Crayon';
         const obtainedDisplayName: string = component.getDisplayName('pencil');

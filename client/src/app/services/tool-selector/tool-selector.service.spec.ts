@@ -19,6 +19,32 @@ describe('ToolSelectorService', () => {
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
     });
 
+    it("should change tool to rect when selectTool('rectangle') is called", () => {
+        service.selectTool('rectangle');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('rectangle') as NamedTool).tool);
+    });
+
+    it("should change tool to ellipse when selectTool('ellipse') is called", () => {
+        service.selectTool('ellipse');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as NamedTool).tool);
+    });
+
+    it("should change tool to pencil when selectTool('c') is called", () => {
+        service.selectTool('c');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
+    });
+
+    it("should change tool to rectangle when selectTool('1') is called", () => {
+        service.selectTool('1');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('rectangle') as NamedTool).tool);
+    });
+
+    it("should change tool to ellipse when selectTool('1') is called", () => {
+        service.selectTool('2');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as NamedTool).tool);
+    });
+
+
     it('should keep last selected tool when user tries to select a non-existent tool', () => {
         service.selectTool('pencil');
         service.selectTool('invalid tool');
