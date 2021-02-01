@@ -20,7 +20,15 @@ import { EllipseToolConfigurationComponent } from './components/tool-configurati
 import { RectangleToolConfigurationComponent } from './components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 
 @NgModule({
-    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent, MainPageComponent, EllipseToolConfigurationComponent, RectangleToolConfigurationComponent],
+    declarations: [
+        AppComponent,
+        EditorComponent,
+        SidebarComponent,
+        DrawingComponent,
+        MainPageComponent,
+        EllipseToolConfigurationComponent,
+        RectangleToolConfigurationComponent,
+    ],
     imports: [
         BrowserModule,
         HttpClientModule,

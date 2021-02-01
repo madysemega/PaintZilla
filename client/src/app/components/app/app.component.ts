@@ -24,10 +24,6 @@ export class AppComponent {
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured.svg'),
         );
         this.iconRegistryService.addSvgIcon(
-            'rectangle-contoured',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured.svg'),
-        );
-        this.iconRegistryService.addSvgIcon(
             'rectangle-filled',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-filled.svg'),
         );

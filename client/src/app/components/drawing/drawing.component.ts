@@ -33,15 +33,14 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
     }
 
-   
     @HostListener('keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void{
+    onKeyDown(event: KeyboardEvent): void {
         this.toolSelector.selectTool(event.key);
         this.toolSelector.getSelectedTool().onKeyDown(event);
     }
 
     @HostListener('keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void{
+    onKeyUp(event: KeyboardEvent): void {
         this.toolSelector.getSelectedTool().onKeyUp(event);
     }
 
