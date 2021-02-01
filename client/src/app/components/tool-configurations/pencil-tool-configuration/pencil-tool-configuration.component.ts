@@ -3,20 +3,20 @@ import { MatSliderChange } from '@angular/material/slider';
 import { PencilService } from '@app/services/tools/pencil-service';
 
 @Component({
-  selector: 'app-pencil-tool-configuration',
-  templateUrl: './pencil-tool-configuration.component.html',
-  styleUrls: ['./pencil-tool-configuration.component.scss']
+    selector: 'app-pencil-tool-configuration',
+    templateUrl: './pencil-tool-configuration.component.html',
+    styleUrls: ['./pencil-tool-configuration.component.scss'],
 })
 export class PencilToolConfigurationComponent implements OnInit {
-  lineWidth: number;
-  
-  constructor(private pencilTool: PencilService) { }
+    lineWidth: number;
 
-  ngOnInit(): void {
-    this.lineWidth = this.pencilTool.lineWidth;
-  }
+    constructor(private pencilTool: PencilService) {}
 
-  onSliderChange(event: MatSliderChange): void {
-    this.pencilTool.lineWidth = event.value as number;
-  }
+    ngOnInit(): void {
+        this.lineWidth = this.pencilTool.lineWidth;
+    }
+
+    onSliderChange(event: MatSliderChange): void {
+        this.pencilTool.lineWidth = event.value as number;
+    }
 }

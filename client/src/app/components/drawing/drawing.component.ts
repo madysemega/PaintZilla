@@ -54,14 +54,14 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
-        this.currentTool.onMouseLeave(event);
+        this.toolSelector.getSelectedTool().onMouseLeave(event);
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
-        this.currentTool.onMouseEnter(event);
+        this.toolSelector.getSelectedTool().onMouseEnter(event);
     }
-    
+
     get width(): number {
         return this.canvasSize.x;
     }

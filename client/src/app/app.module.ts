@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,9 +18,18 @@ import { EditorComponent } from './components/editor/editor.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EllipseToolConfigurationComponent } from './components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { PencilToolConfigurationComponent } from './components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 
 @NgModule({
-    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent, MainPageComponent, EllipseToolConfigurationComponent],
+    declarations: [
+        AppComponent,
+        EditorComponent,
+        SidebarComponent,
+        DrawingComponent,
+        MainPageComponent,
+        EllipseToolConfigurationComponent,
+        PencilToolConfigurationComponent,
+    ],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -33,6 +43,7 @@ import { EllipseToolConfigurationComponent } from './components/tool-configurati
         MatMenuModule,
         MatSelectModule,
         MatButtonToggleModule,
+        MatSliderModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

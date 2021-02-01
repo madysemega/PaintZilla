@@ -1,5 +1,5 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
-import { DrawingComponent } from '../drawing/drawing.component';
+import { DrawingComponent } from '@app/components/drawing/drawing.component';
 
 @Component({
     selector: 'app-editor',
@@ -9,14 +9,14 @@ import { DrawingComponent } from '../drawing/drawing.component';
 export class EditorComponent {
     @ViewChild(DrawingComponent)
     drawingComponent: DrawingComponent;
-    
+
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.drawingComponent.currentTool.onMouseDown(event);
+        this.drawingComponent.getCurrentTool().onMouseDown(event);
     }
 
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.drawingComponent.currentTool.onMouseUp(event);
+        this.drawingComponent.getCurrentTool().onMouseUp(event);
     }
 }
