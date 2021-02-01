@@ -52,11 +52,11 @@ describe('RectangleService', () => {
         } as MouseEvent;
 
         keyboardShiftEvent = {
-            key: "Shift"
+            key: 'Shift',
         } as KeyboardEvent;
 
         keyboardSpaceEvent = {
-            key: "Space"
+            key: 'Space',
         } as KeyboardEvent;
     });
 
@@ -248,6 +248,54 @@ describe('RectangleService', () => {
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
+    });
+
+    it(' after having been adjusted width should be negative if it was so before the adjustment', () => {
+        const x = 0;
+        const y = 11;
+        const startingX = 10;
+        const startingY = 10;
+        service.shiftDown = true;
+        service.startingPos.x = startingX;
+        service.startingPos.y = startingY;
+        service.adjustRectSize(x, y);
+        expect(service.width).toBeLessThan(0);
+    });
+
+    it(' after having been adjusted width should be positve if it was so before the adjustment', () => {
+        const x = 20;
+        const y = 11;
+        const startingX = 10;
+        const startingY = 10;
+        service.shiftDown = true;
+        service.startingPos.x = startingX;
+        service.startingPos.y = startingY;
+        service.adjustRectSize(x, y);
+        expect(service.width).toBeGreaterThan(0);
+    });
+
+    it(' after having been adjusted height should be negative if it was so before the adjustment', () => {
+        const x = 9;
+        const y = 4;
+        const startingX = 10;
+        const startingY = 10;
+        service.shiftDown = true;
+        service.startingPos.x = startingX;
+        service.startingPos.y = startingY;
+        service.adjustRectSize(x, y);
+        expect(service.height).toBeLessThan(0);
+    });
+
+    it(' after having been adjusted height should be positve if it was so before the adjustment', () => {
+        const x = 20;
+        const y = 50;
+        const startingX = 10;
+        const startingY = 10;
+        service.shiftDown = true;
+        service.startingPos.x = startingX;
+        service.startingPos.y = startingY;
+        service.adjustRectSize(x, y);
+        expect(service.height).toBeGreaterThan(0);
     });
 
     it(' should change the pixel of the canvas ', () => {

@@ -1,4 +1,4 @@
-import { OnInit, Component,  HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
 
 @Component({

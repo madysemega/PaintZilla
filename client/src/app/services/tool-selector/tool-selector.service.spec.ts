@@ -44,7 +44,6 @@ describe('ToolSelectorService', () => {
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as NamedTool).tool);
     });
 
-
     it('should keep last selected tool when user tries to select a non-existent tool', () => {
         service.selectTool('pencil');
         service.selectTool('invalid tool');

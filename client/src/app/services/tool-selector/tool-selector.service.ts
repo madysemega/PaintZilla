@@ -52,6 +52,6 @@ export class ToolSelectorService {
         this.tools.set('pencil', { name: 'Crayon', tool: pencilService });
         this.tools.set('rectangle', { name: 'Rectangle', tool: rectangleService });
         this.tools.set('ellipse', { name: 'Ellipse', tool: ellipseService });
-        this.selectedTool =this.tools.get("pencil") as NamedTool;
+        this.selectedTool = this.tools.get('pencil') as NamedTool;
     }
 }

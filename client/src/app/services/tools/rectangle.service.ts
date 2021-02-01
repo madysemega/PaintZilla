@@ -9,22 +9,22 @@ import { MouseButton } from './pencil-service';
     providedIn: 'root',
 })
 export class RectangleService extends Tool {
-    private startingPos: Vec2;
-    private width: number;
-    private height: number;
-    private shiftDown: boolean;
-    private lastMouseCoords: Vec2;
+    startingPos: Vec2;
+    width: number;
+    height: number;
+    shiftDown: boolean;
+    lastMouseCoords: Vec2;
     shapeType: ShapeType = ShapeType.Contoured;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.startingPos = {x: 0, y:0};
-        this.width=0;
-        this.height=0;
+        this.startingPos = { x: 0, y: 0 };
+        this.width = 0;
+        this.height = 0;
         this.shiftDown = false;
-        this.lastMouseCoords = {x:0, y:0}
+        this.lastMouseCoords = { x: 0, y: 0 };
     }
-/*
+    /*
     setLineWidth(width: number): void {
         this.drawingService.previewCtx.lineWidth = width;
         this.drawingService.baseCtx.lineWidth = width;
@@ -80,7 +80,7 @@ export class RectangleService extends Tool {
         this.drawRect(ctx);
     }
 
-    private adjustRectSize(x: number, y: number): void {
+    adjustRectSize(x: number, y: number): void {
         this.width = x - this.startingPos.x;
         this.height = y - this.startingPos.y;
         if (this.shiftDown) {
