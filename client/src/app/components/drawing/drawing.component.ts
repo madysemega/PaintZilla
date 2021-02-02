@@ -35,7 +35,8 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        this.toolSelector.selectTool(event.key);
+        const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
+        this.toolSelector.selectTool(toolName);
         this.toolSelector.getSelectedTool().onKeyDown(event);
     }
 
