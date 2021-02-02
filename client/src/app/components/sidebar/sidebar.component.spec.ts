@@ -38,13 +38,13 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    it('should set selectedToolName to new toolName when calling pressing a key corresponding to a tool', () => {
+    it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
         const toolName = 'rectangle';
-        component.onKeyDown(keyboard1Event);
+        component.onKeyUp(keyboard1Event);
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    it('should not set selectedToolName to new toolName when calling pressing a key corresponding to a tool', () => {
+    it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
         const toolName = component.selectedToolName;
         component.onKeyDown(keyboardShiftEvent);
         expect(component.selectedToolName).toEqual(toolName);
