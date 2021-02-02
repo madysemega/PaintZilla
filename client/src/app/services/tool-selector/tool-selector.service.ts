@@ -41,10 +41,6 @@ export class ToolSelectorService {
         return this.tools.get(toolName)?.icon;
     }
 
-    getKeyboardShortcut(toolName: string): string | undefined {
-        return this.tools.get(toolName)?.keyboardShortcut;
-    }
-
     fromKeyboardShortcut(key: string): string | undefined {
         for (const toolData of this.tools) {
             const toolName = toolData[0];
