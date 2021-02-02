@@ -9,19 +9,21 @@ import { ColourToolService } from '../../../services/tools/colour-tool.service';
 export class ColourSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas')
   canvas: ElementRef<HTMLCanvasElement>;
-  // private ctx: CanvasRenderingContext2D;
+  private ctx: CanvasRenderingContext2D;
+  public height: number;
+  public width: number;
   
   @Output()
   colour: EventEmitter<string> = new EventEmitter()
 
   onMouseDown(evt: MouseEvent) {
 
-    this.service.onMouseDown(evt);
+    this.service.onMouseDown(evt, this.height, this.width, this.ctx);
   }
 
   onMouseMove(evt: MouseEvent) {
     
-    this.service.onMouseMove(evt);
+    this.service.onMouseMove(evt, this.height, this.width, this.ctx);
   }
 
   @HostListener('window:mouseup', ['$event'])
@@ -35,13 +37,18 @@ export class ColourSliderComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.canvas = this.service.canvas;
-    this.service.canvas = this.canvas;
-    this.service.width = this.canvas.nativeElement.width;
-    this.service.height = this.canvas.nativeElement.height;
     
     this.service.colour = this.colour;
-    this.service.draw();
+    this.draw();
+  }
+
+  draw() {
+    if (!this.ctx) {
+      this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    }
+    this.width = this.canvas.nativeElement.width;
+    this.height = this.canvas.nativeElement.height;
+    this.service.draw(this.height, this.width, this.ctx);
   }
 
 }

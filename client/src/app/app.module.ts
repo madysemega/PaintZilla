@@ -13,7 +13,8 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
-    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent, MainPageComponent, ColourSelectorComponent, ColourSliderComponent, ColourPaletteComponent],
+    declarations: [AppComponent, EditorComponent, SidebarComponent, DrawingComponent,
+         MainPageComponent, ColourSelectorComponent, ColourSliderComponent, ColourPaletteComponent],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule],
     providers: [],
     bootstrap: [AppComponent],

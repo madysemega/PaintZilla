@@ -1,22 +1,18 @@
-import { ElementRef, EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ColourToolService {
-  private ctx: CanvasRenderingContext2D;
-  canvas: ElementRef<HTMLCanvasElement>;
+  
   public mousedown: boolean = false;
   private selectedHeight: number;
-  public width: number;
-  public height: number;
+ 
   colour: EventEmitter<string> = new EventEmitter();
-  draw() {
-    if (!this.ctx) {
-      this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-    }
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+  draw(width: number, height:number, ctx: CanvasRenderingContext2D) {
+    
+    ctx.clearRect(0, 0, width, height);
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
     gradient.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
     gradient.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
@@ -24,45 +20,45 @@ export class ColourToolService {
     gradient.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
     gradient.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
     gradient.addColorStop(1, 'rgba(255, 0, 0, 1)');
-    this.ctx.beginPath();
-    this.ctx.rect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = gradient;
-    this.ctx.fill();
-    this.ctx.closePath();
+    ctx.beginPath();
+    ctx.rect(0, 0, width, height);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.closePath();
     if (this.selectedHeight) { 
-      this.ctx.beginPath();
-      this.ctx.strokeStyle = 'white';
-      this.ctx.lineWidth = 5;
-      this.ctx.rect(0, this.selectedHeight - 5, this.width, 10);
-      this.ctx.stroke();
-      this.ctx.closePath();
+      ctx.beginPath();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 5;
+      ctx.rect(0, this.selectedHeight - 5, width, 10);
+      ctx.stroke();
+      ctx.closePath();
     }
   }
   
 
-  onMouseDown(evt: MouseEvent) {
+  onMouseDown(evt: MouseEvent, height: number, width: number, ctx: CanvasRenderingContext2D) {
 
     this.mousedown = true;
     this.selectedHeight = evt.offsetY;
-    this.draw();
-    this.emitColor(evt.offsetX, evt.offsetY);
+    this.draw(height, width, ctx);
+    this.emitColor(evt.offsetX, evt.offsetY, ctx);
   }
 
-  onMouseMove(evt: MouseEvent) {
+  onMouseMove(evt: MouseEvent, height: number, width: number, ctx: CanvasRenderingContext2D) {
     if (this.mousedown) {
       this.selectedHeight = evt.offsetY
-      this.draw()
-      this.emitColor(evt.offsetX, evt.offsetY)
+      this.draw(height, width, ctx);
+      this.emitColor(evt.offsetX, evt.offsetY, ctx)
     }
   }
 
-  emitColor(x: number, y: number) {
-    const rgbaColor = this.getColorAtPosition(x, y);
+  emitColor(x: number, y: number, ctx: CanvasRenderingContext2D) {
+    const rgbaColor = this.getColorAtPosition(x, y, ctx);
     this.colour.emit(rgbaColor)
   }
 
-  getColorAtPosition(x: number, y: number) {
-    const imageData = this.ctx.getImageData(x, y, 1, 1).data;
+  getColorAtPosition(x: number, y: number, ctx: CanvasRenderingContext2D) {
+    const imageData = ctx.getImageData(x, y, 1, 1).data;
     return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
   }
 

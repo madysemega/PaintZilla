@@ -13,6 +13,8 @@ import { PaletteToolService } from '../../../services/tools/palette-tool.service
 })
 export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges {
 
+  private ctx: CanvasRenderingContext2D;
+
   @Input()
   hue: string;
 
@@ -35,13 +37,13 @@ export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges 
 
   ngOnChanges(changes: SimpleChanges) {
 
-    if (changes['hue']) {
+    if (changes['hue'] && !changes['hue'].firstChange) {
 
-      this.service.draw();
+      this.draw();
       const pos = this.service.selectedPosition;
       if (pos) {
 
-        this.service.colour.emit(this.service.getColourAtPosition(pos.x, pos.y));
+        this.service.colour.emit(this.service.getColourAtPosition(pos.x, pos.y, this.ctx));
       }
     }
   }
@@ -54,17 +56,25 @@ export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges 
   onMouseDown(evt: MouseEvent) {
     this.service.mousedown = true
     this.service.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
-    this.service.draw()
-    this.service.colour.emit(this.service.getColourAtPosition(evt.offsetX, evt.offsetY))
+    this.draw()
+    this.service.colour.emit(this.service.getColourAtPosition(evt.offsetX, evt.offsetY, this.ctx));
   }
 
   onMouseMove(evt: MouseEvent) {
     if (this.service.mousedown) {
       this.service.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
-      this.service.draw()
-      this.service.emitColour(evt.offsetX, evt.offsetY)
+      this.draw();
+      this.service.emitColour(evt.offsetX, evt.offsetY, this.ctx);
     }
   }
 
+  draw() {
+    if (!this.ctx) {
+      this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    }
+    const width = this.canvas.nativeElement.width;
+    const height = this.canvas.nativeElement.height;
+    this.service.draw(width, height, this.ctx);
+  }
 
 }
