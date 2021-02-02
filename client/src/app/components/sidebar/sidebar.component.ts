@@ -12,8 +12,13 @@ export class SidebarComponent implements OnInit {
 
     @HostListener('keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        this.toolSelectorService.selectTool(this.toolSelectorService.fromKeyboardShortcut(event.key));
         this.toolSelectorService.getSelectedTool().onKeyDown(event);
+    }
+
+    @HostListener('keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        this.toolSelectorService.selectTool(this.toolSelectorService.fromKeyboardShortcut(event.key));
+        this.toolSelectorService.getSelectedTool().onKeyUp(event);
     }
 
     selectTool(toolName: string): void {
