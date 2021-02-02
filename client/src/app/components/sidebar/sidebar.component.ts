@@ -32,5 +32,6 @@ export class SidebarComponent {
 
         this.toolIcons.set('pencil', 'pencil');
         this.toolIcons.set('ellipse', 'ellipse-contoured');
+        this.toolIcons.set('line', 'pencil-with-line');
     }
 }
