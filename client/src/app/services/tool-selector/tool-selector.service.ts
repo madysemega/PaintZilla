@@ -46,13 +46,9 @@ export class ToolSelectorService {
             const toolName = toolData[0];
             const toolMetaInfo = toolData[1];
 
-            if (toolMetaInfo === undefined) {
-                continue;
-            } else {
-                const keyboardShortcut = toolMetaInfo.keyboardShortcut;
-                if (keyboardShortcut === key.toLowerCase()) {
-                    return toolName;
-                }
+            const keyboardShortcut = toolMetaInfo.keyboardShortcut;
+            if (keyboardShortcut === key.toLowerCase()) {
+                return toolName;
             }
         }
         return undefined;
