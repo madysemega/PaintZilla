@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NamedTool } from '@app/classes/named-tool';
+import { MetaWrappedTool } from '@app/classes/meta-wrapped-tool';
 import { Tool } from '@app/classes/tool';
 import { EllipseService } from '@app/services/tools/ellipse-service.service';
 import { PencilService } from '@app/services/tools/pencil-service';
@@ -10,37 +10,26 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root',
 })
 export class ToolSelectorService {
-    private tools: Map<string, NamedTool> = new Map<string, NamedTool>();
-    selectedTool: NamedTool;
+    private tools: Map<string, MetaWrappedTool> = new Map<string, MetaWrappedTool>();
+    selectedTool: MetaWrappedTool;
     name: BehaviorSubject<string> = new BehaviorSubject<string>('pencil');
 
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
     }
 
-    selectTool(name: string): boolean {
-        switch (name) {
-            case '1':
-                return this.select('rectangle');
-            case '2':
-                return this.select('ellipse');
-            case 'c':
-                return this.select('pencil');
-            default:
-                return this.select(name);
-        }
-    }
+    selectTool(name: string | undefined): boolean {
+        if (name === undefined) return false;
 
-    private select(name: string): boolean {
         if (this.tools.has(name)) {
-            this.selectedTool = this.tools.get(name) as NamedTool;
-            this.name.next(name.toString());
+            this.selectedTool = this.tools.get(name) as MetaWrappedTool;
+            this.name.next(name);
             return true;
         }
         return false;
     }
 
-    getRegisteredTools(): Map<string, NamedTool> {
+    getRegisteredTools(): Map<string, MetaWrappedTool> {
         return this.tools;
     }
 
@@ -48,10 +37,43 @@ export class ToolSelectorService {
         return this.tools.get(toolName)?.name;
     }
 
+    getIcon(toolName: string): string | undefined {
+        return this.tools.get(toolName)?.icon;
+    }
+
+    fromKeyboardShortcut(key: string): string | undefined {
+        for (const toolData of this.tools) {
+            const toolName = toolData[0];
+            const toolMetaInfo = toolData[1];
+
+            const keyboardShortcut = toolMetaInfo.keyboardShortcut;
+            if (keyboardShortcut === key.toLowerCase()) {
+                return toolName;
+            }
+        }
+        return undefined;
+    }
+
     constructor(pencilService: PencilService, ellipseService: EllipseService, rectangleService: RectangleService) {
-        this.tools.set('pencil', { name: 'Crayon', tool: pencilService });
-        this.tools.set('rectangle', { name: 'Rectangle', tool: rectangleService });
-        this.tools.set('ellipse', { name: 'Ellipse', tool: ellipseService });
-        this.selectedTool = this.tools.get('pencil') as NamedTool;
+        this.tools.set('pencil', {
+            name: 'Crayon',
+            icon: 'pencil',
+            keyboardShortcut: 'c',
+            tool: pencilService,
+        });
+        this.tools.set('rectangle', {
+            name: 'Rectangle',
+            icon: 'rectangle-contoured',
+            keyboardShortcut: '1',
+            tool: rectangleService,
+        });
+        this.tools.set('ellipse', {
+            name: 'Ellipse',
+            icon: 'ellipse-contoured',
+            keyboardShortcut: '2',
+            tool: ellipseService,
+        });
+
+        this.selectedTool = this.tools.get('pencil') as MetaWrappedTool;
     }
 }
