@@ -48,6 +48,16 @@ export class DrawingComponent implements AfterViewInit {
         this.toolSelector.getSelectedTool().onMouseUp(event);
     }
 
+    @HostListener('click', ['$event'])
+    onMouseClick(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseClick(event);
+    }
+
+    @HostListener('dblclick', ['$event'])
+    onMouseDoubleClick(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
+    }
+
     getCurrentTool(): Tool {
         return this.toolSelector.getSelectedTool();
     }
