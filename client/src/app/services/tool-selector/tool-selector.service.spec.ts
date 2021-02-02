@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NamedTool } from '@app/classes/named-tool';
+import { MetaWrappedTool } from '@app/classes/meta-wrapped-tool';
 import { ToolSelectorService } from './tool-selector.service';
 
 describe('ToolSelectorService', () => {
@@ -16,38 +16,41 @@ describe('ToolSelectorService', () => {
 
     it("should change tool to pencil when selectTool('pencil') is called", () => {
         service.selectTool('pencil');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as MetaWrappedTool).tool);
     });
 
     it("should change tool to rect when selectTool('rectangle') is called", () => {
         service.selectTool('rectangle');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('rectangle') as NamedTool).tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('rectangle') as MetaWrappedTool).tool);
     });
 
     it("should change tool to ellipse when selectTool('ellipse') is called", () => {
         service.selectTool('ellipse');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as NamedTool).tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as MetaWrappedTool).tool);
     });
 
-    it("should change tool to pencil when selectTool('c') is called", () => {
-        service.selectTool('c');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
+    it("fromKeyboardShortcut should map 'c' to 'pencil'", () => {
+        const expectedToolName = 'pencil';
+        const toolName = service.fromKeyboardShortcut('c');
+        expect(toolName).toBe(expectedToolName);
     });
 
-    it("should change tool to rectangle when selectTool('1') is called", () => {
-        service.selectTool('1');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('rectangle') as NamedTool).tool);
+    it("fromKeyboardShortcut should map '1' to 'rectangle'", () => {
+        const expectedToolName = 'rectangle';
+        const toolName = service.fromKeyboardShortcut('1');
+        expect(toolName).toBe(expectedToolName);
     });
 
-    it("should change tool to ellipse when selectTool('1') is called", () => {
-        service.selectTool('2');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as NamedTool).tool);
+    it("fromKeyboardShortcut should map '2' to 'ellipse'", () => {
+        const expectedToolName = 'ellipse';
+        const toolName = service.fromKeyboardShortcut('2');
+        expect(toolName).toBe(expectedToolName);
     });
 
     it('should keep last selected tool when user tries to select a non-existent tool', () => {
         service.selectTool('pencil');
         service.selectTool('invalid tool');
-        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as NamedTool).tool);
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as MetaWrappedTool).tool);
     });
 
     it('should return the correct display name when calling getDisplayName with a valid tool name', () => {
