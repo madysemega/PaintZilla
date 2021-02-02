@@ -19,5 +19,9 @@ export class AppComponent {
             'ellipse-contoured-and-filled',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/ellipse-contoured-and-filled.svg'),
         );
+        this.iconRegistryService.addSvgIcon(
+            'pencil-with-line',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/pencil-with-line.svg')
+        );
     }
 }
