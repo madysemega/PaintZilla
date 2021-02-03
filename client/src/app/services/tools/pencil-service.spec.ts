@@ -15,6 +15,7 @@ describe('PencilService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let drawSegmentsSpy: jasmine.Spy<any>;
     let drawPointSpy: jasmine.Spy<any>;
+    let createNewSegmentSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -29,6 +30,7 @@ describe('PencilService', () => {
         service = TestBed.inject(PencilService);
         drawSegmentsSpy = spyOn<any>(service, 'drawSegments').and.callThrough();
         drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
+        createNewSegmentSpy = spyOn<any>(service, 'createNewSegment').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -85,10 +87,11 @@ describe('PencilService', () => {
         expect(drawSegmentsSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseMove should call drawSegments if mouse was already down', () => {
+    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.onMouseDown(mouseEvent);
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
@@ -120,6 +123,32 @@ describe('PencilService', () => {
 
         service.onMouseUp(mouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();
+    });
+
+    it(' onMouseLeave should set mouseInCanvas property to false when leaving the canvas', () => {
+        service.onMouseLeave(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(false);
+    });
+
+    it(' onMouseEnter should set mouseInCanvas property to true when entering the canvas', () => {
+        service.onMouseEnter(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(true);
+    });
+
+    it(' onMouseEnter should call createNewSegment if mouse was down', () => {
+        service.mouseInCanvas = false;
+        service.mouseDown = true;
+
+        service.onMouseEnter(mouseEvent);
+        expect(createNewSegmentSpy).toHaveBeenCalled();
+    });
+
+    it(' onMouseEnter should not call createNewSegment if mouse was not down', () => {
+        service.mouseInCanvas = false;
+        service.mouseDown = false;
+
+        service.onMouseEnter(mouseEvent);
+        expect(createNewSegmentSpy).not.toHaveBeenCalled();
     });
 
     // Exemple de test d'intégration qui est quand même utile

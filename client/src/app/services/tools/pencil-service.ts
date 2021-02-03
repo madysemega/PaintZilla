@@ -37,8 +37,7 @@ export class PencilService extends Tool {
             this.clearSegments();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.segments[this.currentSegmentIndex] = [];
-            this.segments[this.currentSegmentIndex].push(this.mouseDownCoord);
+            this.createNewSegment(this.mouseDownCoord);
             this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
         }
     }
@@ -59,7 +58,7 @@ export class PencilService extends Tool {
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
-            if (this.segments[this.currentSegmentIndex]) this.segments[this.currentSegmentIndex].push(mousePosition);
+            this.segments[this.currentSegmentIndex].push(mousePosition);
 
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSegments(this.drawingService.previewCtx);
@@ -68,19 +67,13 @@ export class PencilService extends Tool {
 
     onMouseLeave(event: MouseEvent): void {
         this.mouseInCanvas = false;
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.segments[this.currentSegmentIndex].push(mousePosition);
-        }
     }
 
     onMouseEnter(event: MouseEvent): void {
         this.mouseInCanvas = true;
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
-            this.currentSegmentIndex++;
-            this.segments[this.currentSegmentIndex] = [];
-            this.segments[this.currentSegmentIndex].push(mousePosition);
+            this.createNewSegment(mousePosition);
         }
     }
 
@@ -88,17 +81,15 @@ export class PencilService extends Tool {
         ctx.lineCap = 'round';
         ctx.beginPath();
         for (const point of path) {
-            if (point) ctx.lineTo(point.x, point.y);
+            ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
     }
 
     private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
-        if (point) {
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
-            ctx.fill();
-        }
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
+        ctx.fill();
     }
 
     private drawSegments(ctx: CanvasRenderingContext2D): void {
@@ -109,6 +100,12 @@ export class PencilService extends Tool {
 
     private clearSegments(): void {
         this.segments = [];
+    }
+
+    private createNewSegment(initialPoint: Vec2): void {
+        this.currentSegmentIndex++;
+        this.segments[this.currentSegmentIndex] = [];
+        this.segments[this.currentSegmentIndex].push(initialPoint);
     }
 
     setLineWidth(width: number): void {
