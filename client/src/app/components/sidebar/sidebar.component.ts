@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -6,14 +6,22 @@ import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.s
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
-    selectedToolName: string = 'pencil';
-
+export class SidebarComponent implements OnInit {
+    selectedToolName: string;
     toolNames: string[];
-    toolIcons: Map<string, string> = new Map<string, string>();
+
+    @HostListener('keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent): void {
+        this.toolSelectorService.getSelectedTool().onKeyDown(event);
+    }
+
+    @HostListener('keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        this.toolSelectorService.selectTool(this.toolSelectorService.fromKeyboardShortcut(event.key));
+        this.toolSelectorService.getSelectedTool().onKeyUp(event);
+    }
 
     selectTool(toolName: string): void {
-        this.selectedToolName = toolName;
         this.toolSelectorService.selectTool(toolName);
     }
 
@@ -23,15 +31,15 @@ export class SidebarComponent {
     }
 
     getIconName(toolName: string): string {
-        const iconName: string | undefined = this.toolIcons.get(toolName);
+        const iconName = this.toolSelectorService.getIcon(toolName);
         return iconName === undefined ? 'unknown' : iconName;
     }
 
     constructor(private toolSelectorService: ToolSelectorService) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
+    }
 
-        this.toolIcons.set('pencil', 'pencil');
-        this.toolIcons.set('ellipse', 'ellipse-contoured');
-        this.toolIcons.set('line', 'pencil-with-line');
+    ngOnInit(): void {
+        this.toolSelectorService.name.subscribe((name) => (this.selectedToolName = name));
     }
 }
