@@ -1,5 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+import { DiscardChangesDialogComponent } from '../dialog/discard-changes-dialog/discard-changes-dialog.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -35,11 +38,24 @@ export class SidebarComponent implements OnInit {
         return iconName === undefined ? 'unknown' : iconName;
     }
 
-    constructor(private toolSelectorService: ToolSelectorService) {
+    constructor(private toolSelectorService: ToolSelectorService, private drawingService: DrawingService, public dialog: MatDialog) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 
     ngOnInit(): void {
         this.toolSelectorService.name.subscribe((name) => (this.selectedToolName = name));
+    }
+
+    createNewDrawing(): void {
+        if (!this.drawingService.isCanvasEmpty()) {
+            let dialogReference = this.dialog.open(DiscardChangesDialogComponent);
+
+            dialogReference.afterClosed().subscribe(changesAreDiscarded => {
+                if (changesAreDiscarded) {
+                    this.drawingService.clearCanvas(this.drawingService.baseCtx);
+                    // Create new drawing
+                }
+            });
+        }
     }
 }

@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,6 +13,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
+import { DiscardChangesDialogComponent } from './components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
@@ -28,6 +30,7 @@ import { RectangleToolConfigurationComponent } from './components/tool-configura
         MainPageComponent,
         EllipseToolConfigurationComponent,
         RectangleToolConfigurationComponent,
+        DiscardChangesDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -42,8 +45,10 @@ import { RectangleToolConfigurationComponent } from './components/tool-configura
         MatMenuModule,
         MatSelectModule,
         MatButtonToggleModule,
+        MatDialogModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
+    entryComponents: [DiscardChangesDialogComponent],
 })
 export class AppModule {}
