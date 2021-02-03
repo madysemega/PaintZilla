@@ -19,6 +19,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EllipseToolConfigurationComponent } from './components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { PencilToolConfigurationComponent } from './components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { RectangleToolConfigurationComponent } from './components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -29,6 +30,7 @@ import { PencilToolConfigurationComponent } from './components/tool-configuratio
         MainPageComponent,
         EllipseToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        RectangleToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,

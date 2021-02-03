@@ -19,5 +19,17 @@ export class AppComponent {
             'ellipse-contoured-and-filled',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/ellipse-contoured-and-filled.svg'),
         );
+        this.iconRegistryService.addSvgIcon(
+            'rectangle-contoured',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured.svg'),
+        );
+        this.iconRegistryService.addSvgIcon(
+            'rectangle-filled',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-filled.svg'),
+        );
+        this.iconRegistryService.addSvgIcon(
+            'rectangle-contoured-and-filled',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured-and-filled.svg'),
+        );
     }
 }

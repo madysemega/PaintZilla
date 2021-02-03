@@ -15,6 +15,11 @@ describe('DrawingComponent', () => {
     let fixture: ComponentFixture<DrawingComponent>;
     let toolStub: ToolStub;
     let drawingStub: DrawingService;
+    let keyboardZEvent: KeyboardEvent;
+
+    keyboardZEvent = {
+        key: 'Z',
+    } as KeyboardEvent;
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
@@ -81,6 +86,20 @@ describe('DrawingComponent', () => {
         component.onMouseEnter(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it(" should call the tool's key down when receiving a key down event", () => {
+        const keyboardEventSpy = spyOn(toolStub, 'onKeyDown').and.callThrough();
+        component.onKeyDown(keyboardZEvent);
+        expect(keyboardEventSpy).toHaveBeenCalled();
+        expect(keyboardEventSpy).toHaveBeenCalledWith(keyboardZEvent);
+    });
+
+    it(" should call the tool's key ip when receiving a key up event", () => {
+        const keyboardEventSpy = spyOn(toolStub, 'onKeyUp').and.callThrough();
+        component.onKeyUp(keyboardZEvent);
+        expect(keyboardEventSpy).toHaveBeenCalled();
+        expect(keyboardEventSpy).toHaveBeenCalledWith(keyboardZEvent);
     });
 
     it(" should call the tool's mouse up when receiving a mouse up event", () => {

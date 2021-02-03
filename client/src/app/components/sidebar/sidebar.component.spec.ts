@@ -5,6 +5,16 @@ import { SidebarComponent } from './sidebar.component';
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
+    let keyboard1Event: KeyboardEvent;
+    let keyboardShiftEvent: KeyboardEvent;
+
+    keyboard1Event = {
+        key: '1',
+    } as KeyboardEvent;
+
+    keyboardShiftEvent = {
+        key: 'Shift',
+    } as KeyboardEvent;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -23,9 +33,21 @@ describe('SidebarComponent', () => {
     });
 
     it('should set selectedToolName to new toolName when calling selectTool', () => {
-        const toolName = 'pencil';
-        component.selectTool('pencil');
+        const toolName = 'rectangle';
+        component.selectTool('rectangle');
         expect(component.selectedToolName).toBe(toolName);
+    });
+
+    it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
+        const toolName = 'rectangle';
+        component.onKeyUp(keyboard1Event);
+        expect(component.selectedToolName).toBe(toolName);
+    });
+
+    it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
+        const toolName = component.selectedToolName;
+        component.onKeyDown(keyboardShiftEvent);
+        expect(component.selectedToolName).toEqual(toolName);
     });
 
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
