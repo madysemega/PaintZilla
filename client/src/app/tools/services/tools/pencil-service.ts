@@ -29,6 +29,7 @@ export class PencilService extends ResizableTool {
     }
 
     adjustLineWidth(lineWidth: number): void {
+        console.log('changed');
         this.lineWidth = lineWidth;
         this.drawingService.previewCtx.lineWidth = lineWidth;
         this.drawingService.baseCtx.lineWidth = lineWidth;
@@ -67,14 +68,16 @@ export class PencilService extends ResizableTool {
     }
 
     private drawLine(ctx: CanvasRenderingContext2D, path: Vec2[]): void {
-        ctx.save();
+        this.drawingService.baseCtx.save();
+        this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
         ctx.beginPath();
         for (const point of path) {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
-        ctx.restore();
+        this.drawingService.baseCtx.restore();
+        this.drawingService.previewCtx.restore();
     }
 
     private clearPath(): void {
