@@ -13,7 +13,7 @@ export class EllipseService extends ShapeTool {
 
     private startPoint: Vec2 = { x: 0, y: 0 };
 
-    private startPointInCanvas: boolean = false;
+    startPointInCanvas: boolean = false;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);

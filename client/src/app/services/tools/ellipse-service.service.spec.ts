@@ -58,11 +58,13 @@ describe('EllipseService', () => {
 
     it(' mouseDown should set mouseDownCoord to correct position', () => {
         const expectedResult: Vec2 = { x: 25, y: 25 };
+        service.mouseInCanvas = true;
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
 
     it(' mouseDown should set mouseDown property to true on left click', () => {
+        service.mouseInCanvas = true;
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
@@ -73,6 +75,7 @@ describe('EllipseService', () => {
             offsetY: 25,
             button: 1, // TODO: Avoir ceci dans un enum accessible
         } as MouseEvent;
+        service.mouseInCanvas = true;
         service.onMouseDown(mouseEventRClick);
         expect(service.mouseDown).toEqual(false);
     });
@@ -80,6 +83,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should call drawEllipse if mouse was already down', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.onMouseUp(mouseEvent);
         expect(drawEllipseSpy).toHaveBeenCalled();
@@ -88,6 +92,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should not call drawEllipse if mouse was not already down', () => {
         service.mouseDown = false;
         service.mouseDownCoord = { x: 0, y: 0 };
+        service.startPointInCanvas = true;
 
         service.onMouseUp(mouseEvent);
         expect(drawEllipseSpy).not.toHaveBeenCalled();
@@ -96,6 +101,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should call drawEllipse if mouse was already down', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
@@ -105,6 +111,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should not call drawEllipse if mouse was not already down', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
+        service.startPointInCanvas = true;
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
@@ -114,6 +121,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should call stroke on preview canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Contoured;
         service.onMouseMove(mouseEvent);
@@ -123,6 +131,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should call stroke on preview canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
         service.onMouseMove(mouseEvent);
@@ -132,6 +141,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should call fill on preview canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Filled;
         service.onMouseMove(mouseEvent);
@@ -141,6 +151,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should call fill on preview canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
         service.onMouseMove(mouseEvent);
@@ -150,6 +161,7 @@ describe('EllipseService', () => {
     it(' onMouseMove should not call fill on preview canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Contoured;
         service.onMouseMove(mouseEvent);
@@ -159,6 +171,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should call stroke on base canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Contoured;
         service.onMouseUp(mouseEvent);
@@ -168,6 +181,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
         service.onMouseUp(mouseEvent);
@@ -177,6 +191,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should call fill on base canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
@@ -186,6 +201,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should call fill on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
         service.onMouseUp(mouseEvent);
@@ -195,6 +211,7 @@ describe('EllipseService', () => {
     it(' onMouseUp should not call fill on base canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Contoured;
         service.onMouseUp(mouseEvent);
@@ -204,12 +221,22 @@ describe('EllipseService', () => {
     it(' onMouseUp should not call stroke on base canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+        service.startPointInCanvas = true;
 
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
     });
 
+    it(' mouseEnter should set mouseInCanvas to true', () => {
+        service.onMouseEnter(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(true);
+    });
+
+    it(' mouseLeave should set mouseInCanvas to false', () => {
+        service.onMouseLeave(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(false);
+    });
     it(' not a test ', () => {
         // remove this test once method overriden properly
         expect(adjustLineWidthSpy).toThrowError();
@@ -217,6 +244,7 @@ describe('EllipseService', () => {
 
     it(' should change the pixel of the canvas ', () => {
         mouseEvent = { offsetX: 0, offsetY: 0, button: 0 } as MouseEvent;
+        service.mouseInCanvas = true;
         service.onMouseDown(mouseEvent);
         mouseEvent = { offsetX: 1, offsetY: 0, button: 0 } as MouseEvent;
         service.onMouseUp(mouseEvent);
