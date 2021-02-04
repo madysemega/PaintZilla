@@ -218,7 +218,7 @@ describe('EllipseService', () => {
         expect(service.lineWidth).toBe(lineWidth);
     });
 
-    it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {
+    it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {/////
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
@@ -246,7 +246,7 @@ describe('EllipseService', () => {
         expect(service.isShiftDown).toBe(true);
     });
 
-    it('onKeyUp should set isShiftDown to false if event was triggered from shift key', () => {
+    it('onKeyUp should set isShiftDown to false if event was triggered from shift key', () => {////
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
