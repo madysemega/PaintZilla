@@ -9,7 +9,7 @@ class ResizableToolStub extends ResizableTool {
     }
 
     adjustLineWidth(): void {
-        this.name = 'just-to-test';
+        this.key = 'just-to-test';
     }
 }
 // tslint:disable:no-any

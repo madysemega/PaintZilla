@@ -23,8 +23,8 @@ export class ToolSelectorService {
 
         if (this.tools.has(name)) {
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
-            this.selectedTool.tool.select();
             this.name.next(name);
+            console.log(name);
             return true;
         }
         return false;
@@ -35,7 +35,7 @@ export class ToolSelectorService {
     }
 
     getDisplayName(toolName: string): string | undefined {
-        return this.tools.get(toolName)?.name;
+        return this.tools.get(toolName)?.displayName;
     }
 
     getIcon(toolName: string): string | undefined {
@@ -56,20 +56,20 @@ export class ToolSelectorService {
     }
 
     constructor(pencilService: PencilService, ellipseService: EllipseService, rectangleService: RectangleService) {
-        this.tools.set('pencil', {
-            name: pencilService.name,
+        this.tools.set(pencilService.key, {
+            displayName: 'Crayon',
             icon: 'pencil',
             keyboardShortcut: 'c',
             tool: pencilService,
         });
-        this.tools.set('rectangle', {
-            name: rectangleService.name,
+        this.tools.set(rectangleService.key, {
+            displayName: 'Rectangle',
             icon: 'rectangle-contoured',
             keyboardShortcut: '1',
             tool: rectangleService,
         });
-        this.tools.set('ellipse', {
-            name: ellipseService.name,
+        this.tools.set(ellipseService.key, {
+            displayName: 'Ellipse',
             icon: 'ellipse-contoured',
             keyboardShortcut: '2',
             tool: ellipseService,

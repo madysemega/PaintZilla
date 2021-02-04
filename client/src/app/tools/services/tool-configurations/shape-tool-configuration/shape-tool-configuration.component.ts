@@ -13,7 +13,9 @@ export class ShapeToolConfigurationComponent implements AfterContentInit {
     toolName: string;
     shapeType: string;
     @Input() toolService: ShapeTool;
-    iconNames: string[] = [];
+    contouredIcon: string;
+    filledIcon: string;
+    contouredAndFilledIcon: string;
 
     constructor(public toolSelectorService: ToolSelectorService) {}
 
@@ -46,8 +48,8 @@ export class ShapeToolConfigurationComponent implements AfterContentInit {
                 break;
         }
 
-        this.iconNames.push(this.toolService.name.concat('-contoured'));
-        this.iconNames.push(this.toolService.name.concat('-filled'));
-        this.iconNames.push(this.toolService.name.concat('-contoured-and-filled'));
+        this.contouredIcon = this.toolService.key.concat('-contoured');
+        this.filledIcon = this.toolService.key.concat('-filled');
+        this.contouredAndFilledIcon = this.toolService.key.concat('-contoured-and-filled');
     }
 }

@@ -1,41 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
-import { PencilService } from '@app/tools/services/tools/pencil-service';
-import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
-    let toolSelectorServiceStub: ToolSelectorService;
-    let drawingStub: DrawingService;
-    let ellipseStub: EllipseService;
-    let rectangleStub: RectangleService;
-    let pencilStub: PencilService;
-
-    class ToolServiceStub extends RectangleService {
-        constructor(drawingService: DrawingService, name: string) {
-            super(drawingService);
-            this.name = name;
-        }
-
-        select(): void {
-            this.name = 'just-to-test';
-        }
-    }
 
     beforeEach(() => {
-        drawingStub = new DrawingService();
-        rectangleStub = new ToolServiceStub(drawingStub, 'rectangle');
-        pencilStub = (new ToolServiceStub(drawingStub, 'Crayon') as unknown) as PencilService;
-        ellipseStub = (new ToolServiceStub(drawingStub, 'ellipse') as unknown) as EllipseService;
-        toolSelectorServiceStub = new ToolSelectorService(pencilStub, ellipseStub, rectangleStub);
-
-        TestBed.configureTestingModule({
-            providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
-        }).compileComponents();
-
         service = TestBed.inject(ToolSelectorService);
     });
 

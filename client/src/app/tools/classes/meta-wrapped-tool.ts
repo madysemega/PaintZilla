@@ -1,7 +1,7 @@
 import { Tool } from './tool';
 
 export type MetaWrappedTool = {
-    name: string;
+    displayName: string;
     icon: string;
     keyboardShortcut: string;
     tool: Tool;

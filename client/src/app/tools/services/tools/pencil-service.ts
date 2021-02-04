@@ -25,11 +25,7 @@ export class PencilService extends ResizableTool {
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.clearPath();
-        this.name = 'Crayon';
-    }
-
-    select(): void {
-        this.adjustLineWidth(this.lineWidth);
+        this.key = 'pencil';
     }
 
     adjustLineWidth(lineWidth: number): void {
@@ -71,11 +67,14 @@ export class PencilService extends ResizableTool {
     }
 
     private drawLine(ctx: CanvasRenderingContext2D, path: Vec2[]): void {
+        ctx.save();
+        this.adjustLineWidth(this.lineWidth);
         ctx.beginPath();
         for (const point of path) {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
+        ctx.restore();
     }
 
     private clearPath(): void {

@@ -22,11 +22,7 @@ export class RectangleService extends ShapeTool {
         this.height = 0;
         this.shiftDown = false;
         this.lastMouseCoords = { x: 0, y: 0 };
-        this.name = 'rectangle';
-    }
-
-    select(): void {
-        this.adjustLineWidth(this.lineWidth);
+        this.key = 'rectangle';
     }
 
     adjustLineWidth(lineWidth: number): void {
@@ -99,6 +95,8 @@ export class RectangleService extends ShapeTool {
     }
 
     private drawRect(ctx: CanvasRenderingContext2D): void {
+        ctx.save();
+        this.adjustLineWidth(this.lineWidth);
         // On dessine sur le canvas de prévisualisation et on l'efface à chaque déplacement de la souris
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
@@ -109,5 +107,6 @@ export class RectangleService extends ShapeTool {
                 ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
             }
         } else ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
+        ctx.restore();
     }
 }

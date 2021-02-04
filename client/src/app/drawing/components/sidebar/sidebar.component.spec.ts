@@ -30,10 +30,6 @@ describe('SidebarComponent', () => {
         constructor(drawingService: DrawingService) {
             super(drawingService);
         }
-
-        select(): void {
-            this.name = 'just-to-test';
-        }
     }
 
     beforeEach(async(() => {

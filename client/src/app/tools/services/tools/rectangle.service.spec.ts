@@ -21,7 +21,6 @@ describe('RectangleService', () => {
     let previewCtxFillSpy: jasmine.Spy<any>;
     let baseCtxStrokeSpy: jasmine.Spy<any>;
     let baseCtxFillSpy: jasmine.Spy<any>;
-    let adjustLineWidthSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -36,7 +35,6 @@ describe('RectangleService', () => {
         service = TestBed.inject(RectangleService);
 
         drawRectSpy = spyOn<any>(service, 'drawRect').and.callThrough();
-        adjustLineWidthSpy = spyOn<any>(service, 'adjustLineWidth').and.callThrough();
         previewCtxStrokeSpy = spyOn<any>(previewCtxStub, 'strokeRect').and.callThrough();
         previewCtxFillSpy = spyOn<any>(previewCtxStub, 'fillRect').and.callThrough();
         baseCtxStrokeSpy = spyOn<any>(baseCtxStub, 'strokeRect').and.callThrough();
@@ -250,13 +248,6 @@ describe('RectangleService', () => {
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
-    });
-
-    it(' Selecting the tool should ajustLineWidth with the actual line width', () => {
-        const testVal = 7;
-        service.lineWidth = testVal;
-        service.select();
-        expect(adjustLineWidthSpy).toHaveBeenCalledWith(testVal);
     });
 
     it('Adjusting the line width should update the lineWidth property', () => {
