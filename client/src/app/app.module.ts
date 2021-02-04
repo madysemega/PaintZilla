@@ -17,11 +17,11 @@ import { MainPageComponent } from './app/components/main-page/main-page.componen
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
 import { SidebarComponent } from './drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
-import { EllipseToolConfigurationComponent } from './tools/services/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
-import { PencilToolConfigurationComponent } from './tools/services/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
-import { RectangleToolConfigurationComponent } from './tools/services/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
-import { ResizableToolConfigurationComponent } from './tools/services/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
-import { ShapeToolConfigurationComponent } from './tools/services/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { EllipseToolConfigurationComponent } from './tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { PencilToolConfigurationComponent } from './tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { RectangleToolConfigurationComponent } from './tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
+import { ResizableToolConfigurationComponent } from './tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
+import { ShapeToolConfigurationComponent } from './tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 
 @NgModule({
     declarations: [
