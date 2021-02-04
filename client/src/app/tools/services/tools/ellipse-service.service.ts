@@ -10,9 +10,13 @@ import { MouseButton } from './pencil-service';
 })
 export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
+    private readonly DEFAULT_STROKE_WIDTH: number = 1;
 
     private startPoint: Vec2 = { x: 0, y: 0 };
-    private strokeWidth: number = 1;
+
+    strokeWidth: number = this.DEFAULT_STROKE_WIDTH;
+
+    isShiftDown: boolean = false;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
@@ -51,8 +55,41 @@ export class EllipseService extends ShapeTool {
         }
     }
 
-    private drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+    onKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Shift') {
+            this.isShiftDown = true;
+        }
+    }
+
+    onKeyUp(event: KeyboardEvent): void {
+        if (event.key === 'Shift') {
+            this.isShiftDown = false;
+        }
+    }
+
+    getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
+        const endPointWithRespectToStartPoint: Vec2 = {
+            x: endPoint.x - startPoint.x,
+            y: endPoint.y - startPoint.y,
+        };
+
+        const endPointShortestComponent = Math.min(Math.abs(endPointWithRespectToStartPoint.x), Math.abs(endPointWithRespectToStartPoint.y));
+
+        const isXComponentPositive: boolean = startPoint.x < endPoint.x;
+        const isYComponentPositive: boolean = startPoint.y < endPoint.y;
+
+        return {
+            x: startPoint.x + (isXComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
+            y: startPoint.y + (isYComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
+        };
+    }
+
+    drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         const DASH_NUMBER = 8;
+
+        if (this.isShiftDown) {
+            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+        }
 
         const topLeft: Vec2 = {
             x: Math.min(startPoint.x, endPoint.x),
@@ -73,7 +110,11 @@ export class EllipseService extends ShapeTool {
         ctx.restore();
     }
 
-    private drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+    drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        if (this.isShiftDown) {
+            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+        }
+
         const center: Vec2 = {
             x: (startPoint.x + endPoint.x) / 2,
             y: (startPoint.y + endPoint.y) / 2,
