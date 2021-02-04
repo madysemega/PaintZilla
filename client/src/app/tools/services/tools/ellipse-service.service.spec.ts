@@ -6,6 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { EllipseService } from './ellipse-service.service';
 
 // tslint:disable:no-any
+// tslint:disable:max-file-line-count
 describe('EllipseService', () => {
     let service: EllipseService;
     let mouseEvent: MouseEvent;
@@ -15,11 +16,11 @@ describe('EllipseService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
     let drawEllipseSpy: jasmine.Spy<any>;
+    let getSquareAjustedPerimeterSpy: jasmine.Spy<any>;
     let previewCtxStrokeSpy: jasmine.Spy<any>;
     let previewCtxFillSpy: jasmine.Spy<any>;
     let baseCtxStrokeSpy: jasmine.Spy<any>;
     let baseCtxFillSpy: jasmine.Spy<any>;
-    let adjustLineWidthSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -34,7 +35,7 @@ describe('EllipseService', () => {
         service = TestBed.inject(EllipseService);
 
         drawEllipseSpy = spyOn<any>(service, 'drawEllipse').and.callThrough();
-        adjustLineWidthSpy = spyOn<any>(service, 'adjustLineWidth').and.callThrough();
+        getSquareAjustedPerimeterSpy = spyOn<any>(service, 'getSquareAjustedPerimeter').and.callThrough();
         previewCtxStrokeSpy = spyOn<any>(previewCtxStub, 'stroke').and.callThrough();
         previewCtxFillSpy = spyOn<any>(previewCtxStub, 'fill').and.callThrough();
         baseCtxStrokeSpy = spyOn<any>(baseCtxStub, 'stroke').and.callThrough();
@@ -210,9 +211,259 @@ describe('EllipseService', () => {
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
     });
 
-    it(' not a test ', () => {
-        // remove this test once method overriden properly
-        expect(adjustLineWidthSpy).toThrowError();
+    it('ajustLineWidth should set strokeWidth attribute to the correct value', () => {
+        const lineWidth = 3;
+
+        service.adjustLineWidth(lineWidth);
+        expect(service.strokeWidth).toBe(lineWidth);
+    });
+
+    it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {
+        const keyboardEvent: KeyboardEvent = {
+            key: 'Shift',
+        } as KeyboardEvent;
+
+        service.isShiftDown = false;
+        service.onKeyDown(keyboardEvent);
+        expect(service.isShiftDown).toBe(true);
+
+        service.isShiftDown = true;
+        service.onKeyDown(keyboardEvent);
+        expect(service.isShiftDown).toBe(true);
+    });
+
+    it('onKeyDown should not set isShiftDown to true if event was not triggered from shift key', () => {
+        const keyboardEvent: KeyboardEvent = {
+            key: 'c',
+        } as KeyboardEvent;
+
+        service.isShiftDown = false;
+        service.onKeyDown(keyboardEvent);
+        expect(service.isShiftDown).toBe(false);
+
+        service.isShiftDown = true;
+        service.onKeyDown(keyboardEvent);
+        expect(service.isShiftDown).toBe(true);
+    });
+
+    it('onKeyUp should set isShiftDown to false if event was triggered from shift key', () => {
+        const keyboardEvent: KeyboardEvent = {
+            key: 'Shift',
+        } as KeyboardEvent;
+
+        service.isShiftDown = false;
+        service.onKeyUp(keyboardEvent);
+        expect(service.isShiftDown).toBe(false);
+
+        service.isShiftDown = true;
+        service.onKeyUp(keyboardEvent);
+        expect(service.isShiftDown).toBe(false);
+    });
+
+    it('onKeyUp should not set isShiftDown to false if event was not triggered from shift key', () => {
+        const keyboardEvent: KeyboardEvent = {
+            key: 'c',
+        } as KeyboardEvent;
+
+        service.isShiftDown = false;
+        service.onKeyUp(keyboardEvent);
+        expect(service.isShiftDown).toBe(false);
+
+        service.isShiftDown = true;
+        service.onKeyUp(keyboardEvent);
+        expect(service.isShiftDown).toBe(true);
+    });
+
+    it('getSquareAjustedPerimeter should return a square if given a square', () => {
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 6,
+            y: 8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: 6,
+            y: 8,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('getSquareAjustedPerimeter should return the biggest square possible if given a rectangle', () => {
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 8,
+            y: 8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: 6,
+            y: 8,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('getSquareAjustedPerimeter should return a bottom-left bound square if given a bottom-left bound rectangle', () => {
+        const startPoint: Vec2 = {
+            x: 0,
+            y: 0,
+        };
+
+        const endPoint: Vec2 = {
+            x: -3,
+            y: 8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: -3,
+            y: 3,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('getSquareAjustedPerimeter should return a top-left bound square if given a top-left bound rectangle', () => {
+        const startPoint: Vec2 = {
+            x: 0,
+            y: 0,
+        };
+
+        const endPoint: Vec2 = {
+            x: -3,
+            y: -8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: -3,
+            y: -3,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('getSquareAjustedPerimeter should return a bottom-right bound square if given a bottom-right bound rectangle', () => {
+        const startPoint: Vec2 = {
+            x: 0,
+            y: 0,
+        };
+
+        const endPoint: Vec2 = {
+            x: 3,
+            y: 8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: 3,
+            y: 3,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('getSquareAjustedPerimeter should return a top-right bound square if given a top-right bound rectangle', () => {
+        const startPoint: Vec2 = {
+            x: 0,
+            y: 0,
+        };
+
+        const endPoint: Vec2 = {
+            x: 3,
+            y: -8,
+        };
+
+        const expectedResult: Vec2 = {
+            x: 3,
+            y: -3,
+        };
+
+        const obtainedResult: Vec2 = service.getSquareAjustedPerimeter(startPoint, endPoint);
+        expect(obtainedResult).toEqual(expectedResult);
+    });
+
+    it('drawPerimeter should call getSquareAjustedPerimeter with correct start and end points if shift key is pressed', () => {
+        const drawingContext = drawServiceSpy.previewCtx;
+
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 8,
+            y: 8,
+        };
+
+        service.isShiftDown = true;
+        service.drawPerimeter(drawingContext, startPoint, endPoint);
+        expect(getSquareAjustedPerimeterSpy).toHaveBeenCalledWith(startPoint, endPoint);
+    });
+
+    it('drawPerimeter should not call getSquareAjustedPerimeter with correct start and end points if shift key is not pressed', () => {
+        const drawingContext = drawServiceSpy.previewCtx;
+
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 8,
+            y: 8,
+        };
+
+        service.isShiftDown = false;
+        service.drawPerimeter(drawingContext, startPoint, endPoint);
+        expect(getSquareAjustedPerimeterSpy).not.toHaveBeenCalledWith(startPoint, endPoint);
+    });
+
+    it('drawEllipse should call getSquareAjustedPerimeter with correct start and end points if shift key is pressed', () => {
+        const drawingContext = drawServiceSpy.previewCtx;
+
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 8,
+            y: 8,
+        };
+
+        service.isShiftDown = true;
+        service.drawEllipse(drawingContext, startPoint, endPoint);
+        expect(getSquareAjustedPerimeterSpy).toHaveBeenCalledWith(startPoint, endPoint);
+    });
+
+    it('drawEllipse should not call getSquareAjustedPerimeter with correct start and end points if shift key is not pressed', () => {
+        const drawingContext = drawServiceSpy.previewCtx;
+
+        const startPoint: Vec2 = {
+            x: 3,
+            y: 5,
+        };
+
+        const endPoint: Vec2 = {
+            x: 8,
+            y: 8,
+        };
+
+        service.isShiftDown = false;
+        service.drawEllipse(drawingContext, startPoint, endPoint);
+        expect(getSquareAjustedPerimeterSpy).not.toHaveBeenCalledWith(startPoint, endPoint);
     });
 
     it(' should change the pixel of the canvas ', () => {
