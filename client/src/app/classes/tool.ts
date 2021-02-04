@@ -7,6 +7,7 @@ export abstract class Tool {
     mouseDownCoord: Vec2;
     mouseDown: boolean = false;
     mouseInCanvas: boolean;
+    name: string;
 
     constructor(protected drawingService: DrawingService) {}
 
@@ -27,4 +28,6 @@ export abstract class Tool {
     getPositionFromMouse(event: MouseEvent): Vec2 {
         return { x: event.offsetX, y: event.offsetY };
     }
+
+    select(): void {}
 }

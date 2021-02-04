@@ -17,9 +17,6 @@
             <mat-icon [svgIcon]="getIconName(toolName)"></mat-icon>
         </button>
     </div>
-
-    <mat-divider></mat-divider>
-
     <div class="navbar-section vertical">
         <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
         <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'"></app-pencil-tool-configuration>

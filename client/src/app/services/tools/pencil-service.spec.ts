@@ -13,9 +13,11 @@ describe('PencilService', () => {
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
+
     let drawSegmentsSpy: jasmine.Spy<any>;
     let drawPointSpy: jasmine.Spy<any>;
     let createNewSegmentSpy: jasmine.Spy<any>;
+    let adjustLineWidthSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -31,6 +33,8 @@ describe('PencilService', () => {
         drawSegmentsSpy = spyOn<any>(service, 'drawSegments').and.callThrough();
         drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
         createNewSegmentSpy = spyOn<any>(service, 'createNewSegment').and.callThrough();
+
+        adjustLineWidthSpy = spyOn<any>(service, 'adjustLineWidth').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -149,6 +153,19 @@ describe('PencilService', () => {
 
         service.onMouseEnter(mouseEvent);
         expect(createNewSegmentSpy).not.toHaveBeenCalled();
+    });
+
+    it(' Selecting the tool should ajustLineWidth with the actual line width', () => {
+        const testVal = 7;
+        service.lineWidth = testVal;
+        service.select();
+        expect(adjustLineWidthSpy).toHaveBeenCalledWith(testVal);
+    });
+
+    it('Adjusting the line width should update the lineWidth property', () => {
+        const testVal = 27;
+        service.adjustLineWidth(testVal);
+        expect(service.lineWidth).toEqual(testVal);
     });
 
     // Exemple de test d'intégration qui est quand même utile

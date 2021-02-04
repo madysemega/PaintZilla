@@ -1,4 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DrawingService } from '@app/services/drawing/drawing.service';
+import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+import { EllipseService } from '@app/services/tools/ellipse-service.service';
+import { PencilService } from '@app/services/tools/pencil-service';
+import { RectangleService } from '@app/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
@@ -7,6 +12,11 @@ describe('SidebarComponent', () => {
     let fixture: ComponentFixture<SidebarComponent>;
     let keyboard1Event: KeyboardEvent;
     let keyboardShiftEvent: KeyboardEvent;
+    let toolSelectorServiceStub: ToolSelectorService;
+    let drawingStub: DrawingService;
+    let ellipseToolStub: EllipseService;
+    let rectangleService: RectangleService;
+    let pencilStoolStub: PencilService;
 
     keyboard1Event = {
         key: '1',
@@ -16,9 +26,26 @@ describe('SidebarComponent', () => {
         key: 'Shift',
     } as KeyboardEvent;
 
+    class RectangleServiceStub extends RectangleService {
+        constructor(drawingService: DrawingService) {
+            super(drawingService);
+        }
+
+        select(): void {
+            this.name = 'just-to-test';
+        }
+    }
+
     beforeEach(async(() => {
+        drawingStub = new DrawingService();
+        pencilStoolStub = new PencilService(drawingStub);
+        ellipseToolStub = new EllipseService(drawingStub);
+        rectangleService = new RectangleServiceStub(drawingStub);
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, ellipseToolStub, rectangleService);
+
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
+            providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
         }).compileComponents();
     }));
 
@@ -41,14 +68,19 @@ describe('SidebarComponent', () => {
     it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
         const toolName = 'rectangle';
         component.onKeyUp(keyboard1Event);
-        expect(component.selectedToolName).toBe(toolName);
+        expect(component.selectedToolName).toEqual(toolName);
     });
 
     it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
         const toolName = component.selectedToolName;
         component.onKeyDown(keyboardShiftEvent);
-        expect(component.selectedToolName).toEqual(toolName);
+        expect(component.selectedToolName).toBe(toolName);
     });
+
+    /*it('should call onMouseUp on the currently selected tool of the tool selector', () => {
+        component.onKeyUp(keyboard1Event);
+        expect(toolSelectorSpy.getSelectedTool).toHaveBeenCalled();
+    });*/
 
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = 'Crayon';

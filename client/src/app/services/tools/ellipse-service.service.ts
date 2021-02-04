@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ShapeTool } from '@app/classes/shape-tool';
 import { ShapeType } from '@app/classes/shape-type';
-import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { MouseButton } from './pencil-service';
@@ -8,15 +8,19 @@ import { MouseButton } from './pencil-service';
 @Injectable({
     providedIn: 'root',
 })
-export class EllipseService extends Tool {
+export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     private startPoint: Vec2 = { x: 0, y: 0 };
-    shapeType: ShapeType;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
+        this.name = 'ellipse';
+    }
+
+    adjustLineWidth(lineWidth: number): void {
+        throw new Error('Method not implemented.');
     }
 
     onMouseDown(event: MouseEvent): void {

@@ -20,6 +20,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EllipseToolConfigurationComponent } from './components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { PencilToolConfigurationComponent } from './components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from './components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
+import { ResizableToolConfigurationComponent } from './components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
+import { ShapeToolConfigurationComponent } from './components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,9 @@ import { RectangleToolConfigurationComponent } from './components/tool-configura
         EllipseToolConfigurationComponent,
         PencilToolConfigurationComponent,
         RectangleToolConfigurationComponent,
+        ShapeToolConfigurationComponent,
+        ResizableToolConfigurationComponent,
+        PencilToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,
