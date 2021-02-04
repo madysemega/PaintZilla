@@ -10,11 +10,11 @@ import { MouseButton } from './pencil-service';
 })
 export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
-    private readonly DEFAULT_STROKE_WIDTH: number = 1;
+    //private readonly DEFAULT_STROKE_WIDTH: number = 1;
 
     private startPoint: Vec2 = { x: 0, y: 0 };
 
-    strokeWidth: number = this.DEFAULT_STROKE_WIDTH;
+    //strokeWidth: number = this.DEFAULT_STROKE_WIDTH;
 
     isShiftDown: boolean = false;
 

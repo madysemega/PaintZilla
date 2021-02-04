@@ -215,7 +215,7 @@ describe('EllipseService', () => {
         const lineWidth = 3;
 
         service.adjustLineWidth(lineWidth);
-        expect(service.strokeWidth).toBe(lineWidth);
+        expect(service.lineWidth).toBe(lineWidth);
     });
 
     it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {
