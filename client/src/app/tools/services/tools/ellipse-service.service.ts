@@ -10,11 +10,8 @@ import { MouseButton } from './pencil-service';
 })
 export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
-    //private readonly DEFAULT_STROKE_WIDTH: number = 1;
-
+    
     private startPoint: Vec2 = { x: 0, y: 0 };
-
-    //strokeWidth: number = this.DEFAULT_STROKE_WIDTH;
 
     isShiftDown: boolean = false;
 
@@ -26,8 +23,6 @@ export class EllipseService extends ShapeTool {
 
     adjustLineWidth(lineWidth: number): void {
         this.lineWidth = lineWidth;
-        this.drawingService.previewCtx.lineWidth = lineWidth;
-        this.drawingService.baseCtx.lineWidth = lineWidth;
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -104,7 +99,6 @@ export class EllipseService extends ShapeTool {
         };
 
         ctx.save();
-        this.adjustLineWidth(this.lineWidth);
         ctx.beginPath();
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
@@ -129,9 +123,8 @@ export class EllipseService extends ShapeTool {
         };
 
         ctx.save();
-        this.adjustLineWidth(this.lineWidth);
         ctx.beginPath();
-        // ctx.lineWidth = this.strokeWidth;
+        ctx.lineWidth = this.lineWidth;
         ctx.fillStyle = '#AAA';
         ctx.strokeStyle = '#000';
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
