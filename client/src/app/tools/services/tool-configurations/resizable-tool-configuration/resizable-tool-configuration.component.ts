@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ResizableTool } from '@app/classes/resizable-tool';
-import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+import { ResizableTool } from '@app/app/classes/resizable-tool';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
     selector: 'app-resizable-tool-configuration',

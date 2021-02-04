@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ResizableTool } from '@app/classes/resizable-tool';
-import { DrawingService } from '@app/services/drawing/drawing.service';
+import { ResizableTool } from '@app/app/classes/resizable-tool';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ResizableToolConfigurationComponent } from './resizable-tool-configuration.component';
 
 class ResizableToolStub extends ResizableTool {

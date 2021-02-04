@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DrawingService } from '@app/services/drawing/drawing.service';
-import { RectangleService } from '@app/services/tools/rectangle.service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
 
 // tslint:disable:no-any

@@ -1,8 +1,8 @@
 import { AfterContentInit, Component, Input } from '@angular/core';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
-import { ShapeTool } from '@app/classes/shape-tool';
-import { ShapeType } from '@app/classes/shape-type';
-import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+import { ShapeTool } from '@app/app/classes/shape-tool';
+import { ShapeType } from '@app/app/classes/shape-type';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
     selector: 'app-shape-tool-configuration',

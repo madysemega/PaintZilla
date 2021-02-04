@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { MetaWrappedTool } from '@app/classes/meta-wrapped-tool';
-import { Tool } from '@app/classes/tool';
-import { EllipseService } from '@app/services/tools/ellipse-service.service';
-import { PencilService } from '@app/services/tools/pencil-service';
-import { RectangleService } from '@app/services/tools/rectangle.service';
+import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
+import { Tool } from '@app/tools/classes/tool';
+import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

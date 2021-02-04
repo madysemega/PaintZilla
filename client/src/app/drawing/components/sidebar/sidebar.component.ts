@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
     selector: 'app-sidebar',

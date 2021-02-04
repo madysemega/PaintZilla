@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ResizableTool } from '@app/classes/resizable-tool';
-import { Vec2 } from '@app/classes/vec2';
-import { DrawingService } from '@app/services/drawing/drawing.service';
+import { ResizableTool } from '@app/app/classes/resizable-tool';
+import { Vec2 } from '@app/app/classes/vec2';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 
 // TODO : Déplacer ça dans un fichier séparé accessible par tous
 export enum MouseButton {

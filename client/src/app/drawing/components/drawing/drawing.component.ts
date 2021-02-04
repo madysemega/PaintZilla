@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
-import { ToolSelectorService } from '@app/services/tool-selector/tool-selector.service';
 import { Tool } from '@app/tools/classes/tool';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 // TODO : Avoir un fichier séparé pour les constantes ?
 export const DEFAULT_WIDTH = 1000;

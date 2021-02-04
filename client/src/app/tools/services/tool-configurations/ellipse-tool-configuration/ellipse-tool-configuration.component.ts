@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EllipseService } from '@app/services/tools/ellipse-service.service';
+import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
 
 @Component({
     selector: 'app-ellipse-tool-configuration',
