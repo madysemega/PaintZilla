@@ -49,7 +49,5 @@ export class ShapeToolConfigurationComponent implements AfterContentInit {
         this.iconNames.push(this.toolService.name.concat('-contoured'));
         this.iconNames.push(this.toolService.name.concat('-filled'));
         this.iconNames.push(this.toolService.name.concat('-contoured-and-filled'));
-
-        console.log(this.iconNames[0]);
     }
 }
