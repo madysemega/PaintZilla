@@ -1,5 +1,5 @@
-import { DrawingService } from '@app/services/drawing/drawing.service';
-import { Vec2 } from './vec2';
+import { Vec2 } from '@app/app/classes/vec2';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 
 // Ceci est justifié vu qu'on a des fonctions qui seront gérés par les classes enfant
 // tslint:disable:no-empty

@@ -1,5 +1,5 @@
-import { Tool } from '@app/classes/tool';
-import { DrawingService } from '@app/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { Tool } from '@app/tools/classes/tool';
 
 export abstract class ResizableTool extends Tool {
     lineWidth: number;
