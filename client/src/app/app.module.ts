@@ -7,17 +7,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './components/app/app.component';
-import { DrawingComponent } from './components/drawing/drawing.component';
-import { EditorComponent } from './components/editor/editor.component';
-import { MainPageComponent } from './components/main-page/main-page.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { EllipseToolConfigurationComponent } from './components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
-import { RectangleToolConfigurationComponent } from './components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
+import { AppComponent } from './app/components/app/app.component';
+import { MainPageComponent } from './app/components/main-page/main-page.component';
+import { DrawingComponent } from './drawing/components/drawing/drawing.component';
+import { SidebarComponent } from './drawing/components/sidebar/sidebar.component';
+import { EditorComponent } from './editor/components/editor/editor.component';
+import { EllipseToolConfigurationComponent } from './tools/services/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { PencilToolConfigurationComponent } from './tools/services/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { RectangleToolConfigurationComponent } from './tools/services/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
+import { ResizableToolConfigurationComponent } from './tools/services/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
+import { ShapeToolConfigurationComponent } from './tools/services/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +32,9 @@ import { RectangleToolConfigurationComponent } from './components/tool-configura
         MainPageComponent,
         EllipseToolConfigurationComponent,
         RectangleToolConfigurationComponent,
+        ShapeToolConfigurationComponent,
+        ResizableToolConfigurationComponent,
+        PencilToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,
@@ -42,6 +49,7 @@ import { RectangleToolConfigurationComponent } from './components/tool-configura
         MatMenuModule,
         MatSelectModule,
         MatButtonToggleModule,
+        MatSliderModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
