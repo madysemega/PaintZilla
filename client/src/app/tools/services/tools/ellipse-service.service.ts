@@ -10,7 +10,7 @@ import { MouseButton } from './pencil-service';
 })
 export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
-    
+
     private startPoint: Vec2 = { x: 0, y: 0 };
 
     isShiftDown: boolean = false;
