@@ -12,6 +12,7 @@ export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     private startPoint: Vec2 = { x: 0, y: 0 };
+    private strokeWidth: number = 1;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
@@ -20,7 +21,7 @@ export class EllipseService extends ShapeTool {
     }
 
     adjustLineWidth(lineWidth: number): void {
-        throw new Error('Method not implemented.');
+        this.strokeWidth = lineWidth;
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -85,6 +86,7 @@ export class EllipseService extends ShapeTool {
 
         ctx.save();
         ctx.beginPath();
+        ctx.lineWidth = this.strokeWidth;
         ctx.fillStyle = '#AAA';
         ctx.strokeStyle = '#000';
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
