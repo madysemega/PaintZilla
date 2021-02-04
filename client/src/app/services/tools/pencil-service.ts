@@ -78,6 +78,7 @@ export class PencilService extends Tool {
     }
 
     private drawLine(ctx: CanvasRenderingContext2D, path: Vec2[]): void {
+        ctx.save();
         ctx.strokeStyle = 'black';
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -85,6 +86,7 @@ export class PencilService extends Tool {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
+        ctx.restore();
     }
 
     private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
