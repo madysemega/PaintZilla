@@ -16,6 +16,7 @@ export class LineService extends Tool {
     }
 
     private removeLastVertex(): void {
+        this.vertices.pop();
         this.renderPreview();
     }
 
@@ -65,6 +66,7 @@ export class LineService extends Tool {
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        this.removeLastVertex();
         this.removeLastVertex();
 
         if (this.isShapeCloseable()) {
