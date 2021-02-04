@@ -13,6 +13,8 @@ export class EllipseService extends ShapeTool {
 
     private startPoint: Vec2 = { x: 0, y: 0 };
 
+    private startPointInCanvas: boolean = false;
+
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
@@ -25,29 +27,39 @@ export class EllipseService extends ShapeTool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown) {
+        if (this.mouseDown && this.mouseInCanvas) {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.startPoint = this.mouseDownCoord;
+            this.startPointInCanvas = true;
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown) {
+        if (this.mouseDown && this.startPointInCanvas) {
             const mousePosition = this.getPositionFromMouse(event);
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
+        this.startPointInCanvas = false;
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown) {
+        if (this.mouseDown && this.startPointInCanvas) {
             const mousePosition = this.getPositionFromMouse(event);
 
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawEllipse(this.drawingService.previewCtx, this.startPoint, mousePosition);
             this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition);
         }
+    }
+
+    onMouseLeave(event: MouseEvent): void {
+        this.mouseInCanvas = false;
+    }
+
+    onMouseEnter(event: MouseEvent): void {
+        this.mouseInCanvas = true;
     }
 
     private drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
