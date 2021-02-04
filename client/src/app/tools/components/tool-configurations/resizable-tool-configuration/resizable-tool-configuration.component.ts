@@ -12,7 +12,7 @@ export class ResizableToolConfigurationComponent implements OnInit {
     lineWidth: number;
 
     constructor(public toolSelectorService: ToolSelectorService) {
-        this.lineWidth =1;
+        this.lineWidth = 1;
     }
 
     changeWidth(width: number): void {

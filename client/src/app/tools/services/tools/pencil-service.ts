@@ -29,7 +29,7 @@ export class PencilService extends ResizableTool {
     }
 
     adjustLineWidth(lineWidth: number): void {
-        console.log("changed");
+        console.log('changed');
         this.lineWidth = lineWidth;
         this.drawingService.previewCtx.lineWidth = lineWidth;
         this.drawingService.baseCtx.lineWidth = lineWidth;

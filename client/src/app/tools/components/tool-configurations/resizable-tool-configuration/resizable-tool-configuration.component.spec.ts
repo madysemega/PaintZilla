@@ -18,7 +18,6 @@ describe('ResizableToolConfigurationComponent', () => {
     let fixture: ComponentFixture<ResizableToolConfigurationComponent>;
     let resizableToolStub: ResizableTool;
     let drawingServiceStub: DrawingService;
-    let adjustLineWidthSpy: jasmine.Spy<any>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -29,7 +28,6 @@ describe('ResizableToolConfigurationComponent', () => {
     beforeEach(() => {
         drawingServiceStub = new DrawingService();
         resizableToolStub = new ResizableToolStub(drawingServiceStub);
-        adjustLineWidthSpy = spyOn<any>(resizableToolStub, 'adjustLineWidth').and.callThrough();
         resizableToolStub.lineWidth = 1;
         fixture = TestBed.createComponent(ResizableToolConfigurationComponent);
         component = fixture.componentInstance;
@@ -41,13 +39,9 @@ describe('ResizableToolConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('changeWidth should update the line width property ', () => {
+    it('changing width should reflect on the toolService line width', () => {
+        resizableToolStub.lineWidth = 1;
         component.changeWidth(2);
-        expect(component.lineWidth).toEqual(2);
-    });
-
-    it('changeWidth should call adjustLineWidth of the toolService ', () => {
-        component.changeWidth(2);
-        expect(adjustLineWidthSpy).toHaveBeenCalled();
+        expect(resizableToolStub.lineWidth).toEqual(2);
     });
 });
