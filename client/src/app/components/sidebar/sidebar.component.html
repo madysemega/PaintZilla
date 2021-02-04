@@ -18,12 +18,10 @@
         </button>
     </div>
 
-    <mat-divider></mat-divider>
+    <app-pencil-tool-configuration  *ngIf="selectedToolName === 'pencil'"></app-pencil-tool-configuration>
+    <app-ellipse-tool-configuration  *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
+    <app-rectangle-tool-configuration  *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
 
-    <div class="navbar-section vertical">
-        <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
-        <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
-    </div>
 </div>
 
 

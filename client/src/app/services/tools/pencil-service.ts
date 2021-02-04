@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Tool } from '@app/classes/tool';
+import { ResizableTool } from '@app/classes/resizable-tool';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 
@@ -19,12 +19,23 @@ export enum MouseButton {
 @Injectable({
     providedIn: 'root',
 })
-export class PencilService extends Tool {
+export class PencilService extends ResizableTool {
     private pathData: Vec2[];
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.clearPath();
+        this.name = 'Crayon';
+    }
+
+    select(): void {
+        this.adjustLineWidth(this.lineWidth);
+    }
+
+    adjustLineWidth(lineWidth: number): void {
+        this.lineWidth = lineWidth;
+        this.drawingService.previewCtx.lineWidth = lineWidth;
+        this.drawingService.baseCtx.lineWidth = lineWidth;
     }
 
     onMouseDown(event: MouseEvent): void {

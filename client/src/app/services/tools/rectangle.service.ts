@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ShapeTool } from '@app/classes/shape-tool';
 import { ShapeType } from '@app/classes/shape-type';
-import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { MouseButton } from './pencil-service';
@@ -8,13 +8,12 @@ import { MouseButton } from './pencil-service';
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService extends Tool {
+export class RectangleService extends ShapeTool {
     startingPos: Vec2;
     width: number;
     height: number;
     shiftDown: boolean;
     lastMouseCoords: Vec2;
-    shapeType: ShapeType = ShapeType.Contoured;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
@@ -23,13 +22,18 @@ export class RectangleService extends Tool {
         this.height = 0;
         this.shiftDown = false;
         this.lastMouseCoords = { x: 0, y: 0 };
+        this.name = 'rectangle';
     }
-    /*
-    setLineWidth(width: number): void {
-        this.drawingService.previewCtx.lineWidth = width;
-        this.drawingService.baseCtx.lineWidth = width;
+
+    select(): void {
+        this.adjustLineWidth(this.lineWidth);
     }
-*/
+
+    adjustLineWidth(lineWidth: number): void {
+        this.lineWidth = lineWidth;
+        this.drawingService.previewCtx.lineWidth = lineWidth;
+        this.drawingService.baseCtx.lineWidth = lineWidth;
+    }
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {

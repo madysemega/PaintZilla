@@ -19,6 +19,7 @@ describe('EllipseService', () => {
     let previewCtxFillSpy: jasmine.Spy<any>;
     let baseCtxStrokeSpy: jasmine.Spy<any>;
     let baseCtxFillSpy: jasmine.Spy<any>;
+    let adjustLineWidthSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -33,6 +34,7 @@ describe('EllipseService', () => {
         service = TestBed.inject(EllipseService);
 
         drawEllipseSpy = spyOn<any>(service, 'drawEllipse').and.callThrough();
+        adjustLineWidthSpy = spyOn<any>(service, 'adjustLineWidth').and.callThrough();
         previewCtxStrokeSpy = spyOn<any>(previewCtxStub, 'stroke').and.callThrough();
         previewCtxFillSpy = spyOn<any>(previewCtxStub, 'fill').and.callThrough();
         baseCtxStrokeSpy = spyOn<any>(baseCtxStub, 'stroke').and.callThrough();
@@ -206,6 +208,11 @@ describe('EllipseService', () => {
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
+    });
+
+    it(' not a test ', () => {
+        // remove this test once method overriden properly
+        expect(adjustLineWidthSpy).toThrowError();
     });
 
     it(' should change the pixel of the canvas ', () => {
