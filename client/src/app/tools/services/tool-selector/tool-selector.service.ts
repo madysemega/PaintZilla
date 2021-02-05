@@ -75,6 +75,6 @@ export class ToolSelectorService {
             tool: ellipseService,
         });
 
-        this.selectedTool = this.tools.get('pencil') as MetaWrappedTool;
+        this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
     }
 }

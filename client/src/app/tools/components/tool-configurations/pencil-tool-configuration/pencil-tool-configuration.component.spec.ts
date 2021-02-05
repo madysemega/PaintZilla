@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { PencilToolConfigurationComponent } from '@app/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
-import { DrawingService } from '@app/services/drawing/drawing.service';
-import { PencilService } from '@app/services/tools/pencil-service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { PencilService } from '@app/tools/services/tools/pencil-service';
 
 describe('PencilToolConfigurationComponent', () => {
     let component: PencilToolConfigurationComponent;

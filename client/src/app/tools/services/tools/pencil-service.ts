@@ -29,15 +29,10 @@ export class PencilService extends ResizableTool {
         this.currentSegmentIndex = 0;
         this.segments = [];
         this.name = 'Crayon';
-    }
-
-    select(): void {
-        this.adjustLineWidth(this.lineWidth);
         this.key = 'pencil';
     }
 
     adjustLineWidth(lineWidth: number): void {
-        console.log('changed');
         this.lineWidth = lineWidth;
         this.drawingService.previewCtx.lineWidth = lineWidth;
         this.drawingService.baseCtx.lineWidth = lineWidth;
@@ -95,6 +90,7 @@ export class PencilService extends ResizableTool {
         this.adjustLineWidth(this.lineWidth);
         ctx.strokeStyle = 'black';
         ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         ctx.beginPath();
         for (const point of path) {
             ctx.lineTo(point.x, point.y);

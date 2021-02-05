@@ -57,6 +57,16 @@ describe('EllipseService', () => {
         expect(service).toBeTruthy();
     });
 
+    it(' mouseEnter should set mouseInCanvas to true', () => {
+        service.onMouseEnter(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(true);
+    });
+
+    it(' mouseLeave should set mouseInCanvas to false', () => {
+        service.onMouseLeave(mouseEvent);
+        expect(service.mouseInCanvas).toEqual(false);
+    });
+
     it(' mouseDown should set mouseDownCoord to correct position', () => {
         const expectedResult: Vec2 = { x: 25, y: 25 };
         service.mouseInCanvas = true;

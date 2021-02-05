@@ -17,8 +17,6 @@ describe('PencilService', () => {
     let drawSegmentsSpy: jasmine.Spy<any>;
     let drawPointSpy: jasmine.Spy<any>;
     let createNewSegmentSpy: jasmine.Spy<any>;
-    let adjustLineWidthSpy: jasmine.Spy<any>;
-
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -34,8 +32,6 @@ describe('PencilService', () => {
         drawSegmentsSpy = spyOn<any>(service, 'drawSegments').and.callThrough();
         drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
         createNewSegmentSpy = spyOn<any>(service, 'createNewSegment').and.callThrough();
-        adjustLineWidthSpy = spyOn<any>(service, 'adjustLineWidth').and.callThrough();
-
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
