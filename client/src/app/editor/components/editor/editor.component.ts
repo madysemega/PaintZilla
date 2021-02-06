@@ -7,8 +7,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent {
-
-    constructor(public toolSelector: ToolSelectorService){}
+    constructor(public toolSelector: ToolSelectorService) {}
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
@@ -31,6 +30,4 @@ export class EditorComponent {
     onMouseUp(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseUp(event);
     }
-
-    
 }

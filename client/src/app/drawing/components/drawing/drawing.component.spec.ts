@@ -52,8 +52,6 @@ describe('DrawingComponent', () => {
         expect(currentTool).toEqual(toolStub);
     });
 
-    
-
     it(" should call the tool's mouse down when receiving a mouse down event", () => {
         const event = {} as MouseEvent;
         const mouseEventSpy = spyOn(toolStub, 'onMouseDown').and.callThrough();
@@ -77,5 +75,4 @@ describe('DrawingComponent', () => {
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
     });
-
 });

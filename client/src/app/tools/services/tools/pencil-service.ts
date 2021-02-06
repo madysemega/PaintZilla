@@ -63,7 +63,6 @@ export class PencilService extends ResizableTool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.segments[this.currentSegmentIndex].push(mousePosition);
@@ -73,12 +72,12 @@ export class PencilService extends ResizableTool {
     }
 
     onMouseLeave(event: MouseEvent): void {
-        console.log("left");
+        console.log('left');
         this.mouseInCanvas = false;
     }
 
     onMouseEnter(event: MouseEvent): void {
-        console.log("entered");
+        console.log('entered');
         this.mouseInCanvas = true;
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
