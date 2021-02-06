@@ -1,6 +1,7 @@
 import { AfterViewInit, HostListener, Component, ElementRef,  ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 
@@ -21,7 +22,7 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
 
-    constructor(private drawingService: DrawingService, private toolSelector: ToolSelectorService) {}
+    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService) {}
 
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -52,5 +53,9 @@ export class DrawingComponent implements AfterViewInit {
 
     get height(): number {
         return this.canvasSize.y;
+    }
+
+    getCurrentTool(): Tool {
+        return this.toolSelector.getSelectedTool();
     }
 }

@@ -1,5 +1,4 @@
 import { Component, HostListener } from '@angular/core';
-import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -33,7 +32,5 @@ export class EditorComponent {
         this.toolSelector.getSelectedTool().onMouseUp(event);
     }
 
-    getCurrentTool(): Tool {
-        return this.toolSelector.getSelectedTool();
-    }
+    
 }
