@@ -48,18 +48,28 @@ export class DrawingComponent implements AfterViewInit {
         this.toolSelector.getSelectedTool().onMouseMove(event);
     }
 
-    @HostListener('mousedown', ['$event'])
+    @HostListener('window:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseDown(event);
     }
 
-    @HostListener('mouseup', ['$event'])
+    @HostListener('window:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseUp(event);
     }
 
     getCurrentTool(): Tool {
         return this.toolSelector.getSelectedTool();
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    onMouseLeave(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseLeave(event);
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onMouseEnter(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseEnter(event);
     }
 
     get width(): number {

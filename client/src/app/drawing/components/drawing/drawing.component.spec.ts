@@ -73,6 +73,22 @@ describe('DrawingComponent', () => {
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
     });
 
+    it(" should call the tool's mouse leave when receiving a mouse leave event", () => {
+        const event = {} as MouseEvent;
+        const mouseEventSpy = spyOn(toolStub, 'onMouseLeave').and.callThrough();
+        component.onMouseLeave(event);
+        expect(mouseEventSpy).toHaveBeenCalled();
+        expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it(" should call the tool's mouse enter when receiving a mouse enter event", () => {
+        const event = {} as MouseEvent;
+        const mouseEventSpy = spyOn(toolStub, 'onMouseEnter').and.callThrough();
+        component.onMouseEnter(event);
+        expect(mouseEventSpy).toHaveBeenCalled();
+        expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
     it(" should call the tool's key down when receiving a key down event", () => {
         const keyboardEventSpy = spyOn(toolStub, 'onKeyDown').and.callThrough();
         component.onKeyDown(keyboardZEvent);

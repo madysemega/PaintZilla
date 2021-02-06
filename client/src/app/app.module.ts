@@ -31,6 +31,7 @@ import { ShapeToolConfigurationComponent } from './tools/components/tool-configu
         DrawingComponent,
         MainPageComponent,
         EllipseToolConfigurationComponent,
+        PencilToolConfigurationComponent,
         RectangleToolConfigurationComponent,
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
