@@ -23,6 +23,7 @@ describe('RectangleService', () => {
     let baseCtxFillSpy: jasmine.Spy<any>;
 
     let canvas: HTMLCanvasElement;
+    let canvasPosition: Vec2;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -35,11 +36,14 @@ describe('RectangleService', () => {
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
 
         canvas = canvasTestHelper.canvas;
+        canvasPosition = { x: 50, y: 40 };
 
         service = TestBed.inject(RectangleService);
 
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
-            jasmine.createSpy('getBoundingClientRect').and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: 50, y: 50 }),
+            jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
         drawRectSpy = spyOn<any>(service, 'drawRect').and.callThrough();
@@ -74,7 +78,7 @@ describe('RectangleService', () => {
     });
 
     it(' mouseDown should set mouseDownCoord to correct position', () => {
-        const expectedResult: Vec2 = { x: 50, y: 50 };
+        const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
@@ -314,9 +318,9 @@ describe('RectangleService', () => {
     });
 
     it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: 50, clientY: 50, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseDown(mouseEvent);
-        mouseEvent = { clientX: 51, clientY: 50, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseMove(mouseEvent);
         service.onMouseUp(mouseEvent);
 

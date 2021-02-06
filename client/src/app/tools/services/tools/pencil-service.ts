@@ -72,12 +72,10 @@ export class PencilService extends ResizableTool {
     }
 
     onMouseLeave(event: MouseEvent): void {
-        console.log('left');
         this.mouseInCanvas = false;
     }
 
     onMouseEnter(event: MouseEvent): void {
-        console.log('entered');
         this.mouseInCanvas = true;
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);

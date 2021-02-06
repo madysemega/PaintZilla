@@ -18,6 +18,7 @@ describe('PencilService', () => {
     let drawPointSpy: jasmine.Spy<any>;
     let createNewSegmentSpy: jasmine.Spy<any>;
 
+    let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
@@ -31,11 +32,14 @@ describe('PencilService', () => {
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
 
         canvas = canvasTestHelper.canvas;
+        canvasPosition = { x: 50, y: 40 };
 
         service = TestBed.inject(PencilService);
 
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
-            jasmine.createSpy('getBoundingClientRect').and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: 50, y: 50 }),
+            jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
         drawSegmentsSpy = spyOn<any>(service, 'drawSegments').and.callThrough();
@@ -60,7 +64,7 @@ describe('PencilService', () => {
     });
 
     it(' mouseDown should set mouseDownCoord to correct position', () => {
-        const expectedResult: Vec2 = { x: 50, y: 50 };
+        const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.mouseInCanvas = true;
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
@@ -170,10 +174,10 @@ describe('PencilService', () => {
 
     // Exemple de test d'intégration qui est quand même utile
     it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: 50, clientY: 50, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseDown(mouseEvent);
         service.mouseInCanvas = true;
-        mouseEvent = { clientX: 51, clientY: 50, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseUp(mouseEvent);
 
         // Premier pixel seulement
