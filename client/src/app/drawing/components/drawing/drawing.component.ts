@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, HostListener, Component, ElementRef,  ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
-import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+
 
 // TODO : Avoir un fichier séparé pour les constantes ?
 export const DEFAULT_WIDTH = 1000;
@@ -21,7 +21,7 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService) {}
+    constructor(private drawingService: DrawingService, private toolSelector: ToolSelectorService) {}
 
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -31,35 +31,9 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
     }
 
-    @HostListener('keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        this.toolSelector.getSelectedTool().onKeyDown(event);
-    }
-
-    @HostListener('keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
-        this.toolSelector.selectTool(toolName);
-        this.toolSelector.getSelectedTool().onKeyUp(event);
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseMove(event);
-    }
-
-    @HostListener('window:mousedown', ['$event'])
+    @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseDown(event);
-    }
-
-    @HostListener('window:mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseUp(event);
-    }
-
-    getCurrentTool(): Tool {
-        return this.toolSelector.getSelectedTool();
     }
 
     @HostListener('mouseleave', ['$event'])

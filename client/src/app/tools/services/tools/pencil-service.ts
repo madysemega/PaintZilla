@@ -40,7 +40,7 @@ export class PencilService extends ResizableTool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown && this.mouseInCanvas) {
+        if (this.mouseDown) {
             this.clearSegments();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
@@ -50,7 +50,7 @@ export class PencilService extends ResizableTool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown && this.mouseInCanvas) {
+        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             if (this.segments[this.currentSegmentIndex]) this.segments[this.currentSegmentIndex].push(mousePosition);
 
@@ -63,20 +63,22 @@ export class PencilService extends ResizableTool {
     }
 
     onMouseMove(event: MouseEvent): void {
+        
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.segments[this.currentSegmentIndex].push(mousePosition);
-
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSegments(this.drawingService.previewCtx);
         }
     }
 
     onMouseLeave(event: MouseEvent): void {
+        console.log("left");
         this.mouseInCanvas = false;
     }
 
     onMouseEnter(event: MouseEvent): void {
+        console.log("entered");
         this.mouseInCanvas = true;
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
