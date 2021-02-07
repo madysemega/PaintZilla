@@ -22,6 +22,9 @@ describe('RectangleService', () => {
     let baseCtxStrokeSpy: jasmine.Spy<any>;
     let baseCtxFillSpy: jasmine.Spy<any>;
 
+    let canvas: HTMLCanvasElement;
+    let canvasPosition: Vec2;
+
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
 
@@ -32,7 +35,16 @@ describe('RectangleService', () => {
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
 
+        canvas = canvasTestHelper.canvas;
+        canvasPosition = { x: 50, y: 40 };
+
         service = TestBed.inject(RectangleService);
+
+        spyOn(canvas, 'getBoundingClientRect').and.callFake(
+            jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
+        );
 
         drawRectSpy = spyOn<any>(service, 'drawRect').and.callThrough();
         previewCtxStrokeSpy = spyOn<any>(previewCtxStub, 'strokeRect').and.callThrough();
@@ -44,10 +56,11 @@ describe('RectangleService', () => {
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
+        service['drawingService'].canvas = canvas;
 
         mouseEvent = {
-            offsetX: 25,
-            offsetY: 25,
+            clientX: 100,
+            clientY: 100,
             button: 0,
         } as MouseEvent;
 
@@ -65,7 +78,7 @@ describe('RectangleService', () => {
     });
 
     it(' mouseDown should set mouseDownCoord to correct position', () => {
-        const expectedResult: Vec2 = { x: 25, y: 25 };
+        const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
@@ -305,9 +318,9 @@ describe('RectangleService', () => {
     });
 
     it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { offsetX: 0, offsetY: 0, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseDown(mouseEvent);
-        mouseEvent = { offsetX: 1, offsetY: 0, button: 0 } as MouseEvent;
+        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
         service.onMouseMove(mouseEvent);
         service.onMouseUp(mouseEvent);
 

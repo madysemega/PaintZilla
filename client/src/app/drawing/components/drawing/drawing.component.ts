@@ -16,6 +16,7 @@ export const DEFAULT_HEIGHT = 800;
 export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
+    // @ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>;
 
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
@@ -31,35 +32,9 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
     }
 
-    @HostListener('keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        this.toolSelector.getSelectedTool().onKeyDown(event);
-    }
-
-    @HostListener('keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
-        this.toolSelector.selectTool(toolName);
-        this.toolSelector.getSelectedTool().onKeyUp(event);
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseMove(event);
-    }
-
-    @HostListener('window:mousedown', ['$event'])
+    @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseDown(event);
-    }
-
-    @HostListener('window:mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseUp(event);
-    }
-
-    getCurrentTool(): Tool {
-        return this.toolSelector.getSelectedTool();
     }
 
     @HostListener('mouseleave', ['$event'])
@@ -78,5 +53,9 @@ export class DrawingComponent implements AfterViewInit {
 
     get height(): number {
         return this.canvasSize.y;
+    }
+
+    getCurrentTool(): Tool {
+        return this.toolSelector.getSelectedTool();
     }
 }

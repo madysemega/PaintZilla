@@ -17,6 +17,7 @@ export class ResizableToolConfigurationComponent implements OnInit {
 
     changeWidth(width: number): void {
         this.toolService.lineWidth = width;
+        this.lineWidth = width;
     }
 
     ngOnInit(): void {

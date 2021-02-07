@@ -27,6 +27,11 @@ export abstract class Tool {
     onMouseEnter(event: MouseEvent): void {}
 
     getPositionFromMouse(event: MouseEvent): Vec2 {
-        return { x: event.offsetX, y: event.offsetY };
+        const clientX: number = event.clientX;
+        const clientY: number = event.clientY;
+        const canvaCoords = this.drawingService.canvas.getBoundingClientRect() as DOMRect;
+        const x: number = clientX - canvaCoords.x;
+        const y: number = clientY - canvaCoords.y;
+        return { x, y };
     }
 }
