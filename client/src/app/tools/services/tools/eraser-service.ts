@@ -45,7 +45,7 @@ export class EraserService extends ResizableTool {
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.createNewSegment(this.mouseDownCoord);
-            this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
+
         }
     }
 
@@ -55,7 +55,7 @@ export class EraserService extends ResizableTool {
             if (this.segments[this.currentSegmentIndex]) this.segments[this.currentSegmentIndex].push(mousePosition);
 
             this.drawSegments(this.drawingService.baseCtx);
-            this.drawPoint(this.drawingService.baseCtx, this.mouseDownCoord);
+ 
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
@@ -88,7 +88,7 @@ export class EraserService extends ResizableTool {
         this.drawingService.baseCtx.save();
         this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = 'white';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.beginPath();
@@ -100,11 +100,7 @@ export class EraserService extends ResizableTool {
         this.drawingService.previewCtx.restore();
     }
 
-    private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
-        ctx.fill();
-    }
+
 
     private drawSegments(ctx: CanvasRenderingContext2D): void {
         for (const segment of this.segments) {
