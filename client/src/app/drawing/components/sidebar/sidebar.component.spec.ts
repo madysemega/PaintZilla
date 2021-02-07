@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
@@ -17,6 +18,7 @@ describe('SidebarComponent', () => {
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let pencilStoolStub: PencilService;
+    let eraserStoolStub: EraserService;
 
     keyboard1Event = {
         key: '1',
@@ -35,9 +37,10 @@ describe('SidebarComponent', () => {
     beforeEach(async(() => {
         drawingStub = new DrawingService();
         pencilStoolStub = new PencilService(drawingStub);
+        eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub);
         rectangleService = new RectangleServiceStub(drawingStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, ellipseToolStub, rectangleService);
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService);
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
