@@ -10,6 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class AppComponent {
     constructor(private iconRegistryService: MatIconRegistry, private domSanitizer: DomSanitizer) {
         this.iconRegistryService.addSvgIcon('pencil', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/pencil.svg'));
+        this.iconRegistryService.addSvgIcon('eraser', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/eraser.svg'));
         this.iconRegistryService.addSvgIcon(
             'ellipse-contoured',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/ellipse-contoured.svg'),

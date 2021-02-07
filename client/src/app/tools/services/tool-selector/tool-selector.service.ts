@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
@@ -55,12 +56,18 @@ export class ToolSelectorService {
         return undefined;
     }
 
-    constructor(pencilService: PencilService, ellipseService: EllipseService, rectangleService: RectangleService) {
+    constructor(pencilService: PencilService, eraserService : EraserService, ellipseService: EllipseService, rectangleService: RectangleService) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
             icon: 'pencil',
             keyboardShortcut: 'c',
             tool: pencilService,
+        });
+        this.tools.set(eraserService.key, {
+            displayName: 'Efface',
+            icon: 'eraser',
+            keyboardShortcut: 'e',
+            tool: eraserService,
         });
         this.tools.set(rectangleService.key, {
             displayName: 'Rectangle',
