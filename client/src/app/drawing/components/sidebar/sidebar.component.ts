@@ -25,8 +25,8 @@ export class SidebarComponent implements OnInit {
         this.toolSelectorService.selectTool(toolName);
     }
 
-    getTooltipInfo(toolName: string): string{
-        return (this.getDisplayName(toolName).concat(" (" + this.getKeyboardShortcut(toolName) + ")"));
+    getTooltipInfo(toolName: string): string {
+        return this.getDisplayName(toolName).concat(' (' + this.getKeyboardShortcut(toolName) + ')');
     }
 
     getKeyboardShortcut(toolName: string): string {

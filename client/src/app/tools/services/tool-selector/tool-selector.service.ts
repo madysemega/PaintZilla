@@ -33,7 +33,7 @@ export class ToolSelectorService {
         return this.tools;
     }
 
-    getKeyboardShortcut(toolName: string): string | undefined{
+    getKeyboardShortcut(toolName: string): string | undefined {
         return this.tools.get(toolName)?.keyboardShortcut;
     }
 

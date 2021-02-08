@@ -10,8 +10,8 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class ResizableToolConfigurationComponent implements OnInit {
     @Input() toolService: ResizableTool;
     lineWidth: number;
-    info : string ="Épaisseur du trait";
-    position : string = "right";
+    info: string = 'Épaisseur du trait';
+    position: string = 'right';
 
     constructor(public toolSelectorService: ToolSelectorService) {
         this.lineWidth = 1;

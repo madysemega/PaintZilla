@@ -36,7 +36,7 @@ export class EllipseService extends ShapeTool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown ) {
+        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
@@ -46,7 +46,7 @@ export class EllipseService extends ShapeTool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown ) {
+        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
 
