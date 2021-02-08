@@ -95,7 +95,8 @@ export class RectangleService extends ShapeTool {
     }
 
     private drawRect(ctx: CanvasRenderingContext2D): void {
-        ctx.save();
+        this.drawingService.baseCtx.save();
+        this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
         // On dessine sur le canvas de prévisualisation et on l'efface à chaque déplacement de la souris
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -107,6 +108,7 @@ export class RectangleService extends ShapeTool {
                 ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
             }
         } else ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
-        ctx.restore();
+        this.drawingService.baseCtx.restore();
+        this.drawingService.previewCtx.restore();
     }
 }

@@ -1,12 +1,6 @@
 <div class="container">
     <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
 
-    <div id="server-message">
-        <p>Petit message de l'équipe 201 de 2990 : {{ message | async }}</p>
-        <button class="button" (click)="getMessagesFromServer()">Voir le message de l'équipe</button>
-        <button class="button" (click)="sendTimeToServer()">Envoyer un message au serveur</button>
-    </div>
-
     <button class="button" routerLink="/editor">Créer un nouveau dessin</button>
     <button class="button" routerLink="">Ouvrir le carrousel de dessins</button>
     <button class="button" *ngIf="false">Continuer un dessin</button>

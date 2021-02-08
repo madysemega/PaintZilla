@@ -11,11 +11,13 @@ export class ResizableToolConfigurationComponent implements OnInit {
     @Input() toolService: ResizableTool;
     lineWidth: number;
 
-    constructor(public toolSelectorService: ToolSelectorService) {}
+    constructor(public toolSelectorService: ToolSelectorService) {
+        this.lineWidth = 1;
+    }
 
     changeWidth(width: number): void {
+        this.toolService.lineWidth = width;
         this.lineWidth = width;
-        this.toolService.adjustLineWidth(width);
     }
 
     ngOnInit(): void {

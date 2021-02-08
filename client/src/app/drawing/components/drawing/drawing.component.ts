@@ -31,31 +31,9 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
     }
 
-    @HostListener('keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        this.toolSelector.getSelectedTool().onKeyDown(event);
-    }
-
-    @HostListener('keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
-        this.toolSelector.selectTool(toolName);
-        this.toolSelector.getSelectedTool().onKeyUp(event);
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseMove(event);
-    }
-
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseDown(event);
-    }
-
-    @HostListener('mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseUp(event);
     }
 
     @HostListener('click', ['$event'])
@@ -68,8 +46,14 @@ export class DrawingComponent implements AfterViewInit {
         this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
     }
 
-    getCurrentTool(): Tool {
-        return this.toolSelector.getSelectedTool();
+    @HostListener('mouseleave', ['$event'])
+    onMouseLeave(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseLeave(event);
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onMouseEnter(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseEnter(event);
     }
 
     get width(): number {
@@ -78,5 +62,9 @@ export class DrawingComponent implements AfterViewInit {
 
     get height(): number {
         return this.canvasSize.y;
+    }
+
+    getCurrentTool(): Tool {
+        return this.toolSelector.getSelectedTool();
     }
 }

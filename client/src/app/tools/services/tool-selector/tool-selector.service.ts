@@ -25,7 +25,6 @@ export class ToolSelectorService {
         if (this.tools.has(name)) {
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
             this.name.next(name);
-            console.log(name);
             return true;
         }
         return false;
@@ -82,6 +81,6 @@ export class ToolSelectorService {
             tool: lineService,
         });
 
-        this.selectedTool = this.tools.get('pencil') as MetaWrappedTool;
+        this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
     }
 }
