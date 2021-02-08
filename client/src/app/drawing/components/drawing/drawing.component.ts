@@ -19,7 +19,7 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: this.canvasAttributes.DEFAULT_WIDTH, y: this.canvasAttributes.DEFAULT_HEIGHT };
-
+    private isResizing: boolean = false;
     constructor(
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
@@ -35,28 +35,52 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
     }
 
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        this.drawingSurfaceResizingService.checkIfOnBorder(event);
+        if (this.isResizing) {
+            this.drawingSurfaceResizingService.resizingCanvas(event);
+        } else {
+            this.toolSelector.getSelectedTool().onMouseMove(event);
+        }
+    }
+
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseDown(event);
         if (this.drawingSurfaceResizingService.isResizing(event)) {
-            this.drawingSurfaceResizingService.checkIfOnBorder(event);
+            this.isResizing = true;
+        } else {
+            this.toolSelector.getSelectedTool().onMouseDown(event);
+        }
+    }
+
+    @HostListener('document: mouseup', ['$event'])
+    onMouseUp(event: MouseEvent): void {
+        if (this.isResizing) {
+            this.isResizing = false;
+            this.canvasSize.x = this.drawingSurfaceResizingService.resizeCanvasX();
+            this.canvasSize.y = this.drawingSurfaceResizingService.resizeCanvasY();
+        } else {
+            this.toolSelector.getSelectedTool().onMouseUp(event);
         }
     }
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseLeave(event);
-        if (this.drawingSurfaceResizingService.isResizing(event)) {
-            this.drawingSurfaceResizingService.checkIfOnBorder(event);
-        }
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseEnter(event);
-        if (this.drawingSurfaceResizingService.isResizing(event)) {
-            this.drawingSurfaceResizingService.checkIfOnBorder(event);
-        }
+    }
+
+    get resizeWidth(): number {
+        return this.drawingSurfaceResizingService.canvasResize.x;
+    }
+
+    get resizeHeight(): number {
+        return this.drawingSurfaceResizingService.canvasResize.y;
     }
 
     get width(): number {
