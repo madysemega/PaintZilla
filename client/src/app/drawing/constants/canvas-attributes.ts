@@ -1,6 +1,4 @@
-export class CanvasAttributes {
-    DEFAULT_WIDTH = 1000;
-    DEFAULT_HEIGHT = 800;
-    BORDER_SIZE = 5;
-    MINIMUM_SIZE = 250;
-}
+export const DEFAULT_WIDTH = 1000;
+export const DEFAULT_HEIGHT = 800;
+export const BORDER_SIZE = 5;
+export const MINIMUM_SIZE = 250;

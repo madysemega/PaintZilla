@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import { CanvasAttributes } from '../../constants/canvas-attributes';
+import * as CanvasAttributes from '../../constants/canvas-attributes';
 
 @Injectable({
     providedIn: 'root',
@@ -9,9 +9,9 @@ export class DrawingSurfaceResizingService {
     isResizingHorizontally: boolean = false;
     isResizingVertically: boolean = false;
     isResizingDiagonally: boolean = false;
-    canvasResize: Vec2 = { x: this.canvasAttributes.DEFAULT_WIDTH, y: this.canvasAttributes.DEFAULT_HEIGHT };
+    canvasResize: Vec2 = { x: CanvasAttributes.DEFAULT_WIDTH, y: CanvasAttributes.DEFAULT_HEIGHT };
 
-    constructor(private canvasAttributes: CanvasAttributes) {}
+    constructor() {}
 
     checkIfOnBorder(event: MouseEvent): void {
         const canvas = document.getElementsByTagName('canvas');
@@ -45,8 +45,8 @@ export class DrawingSurfaceResizingService {
 
     isOnBorderX(event: MouseEvent): boolean {
         if (
-            event.offsetX >= this.canvasResize.x - this.canvasAttributes.BORDER_SIZE &&
-            event.offsetX <= this.canvasResize.x + this.canvasAttributes.BORDER_SIZE
+            event.offsetX >= this.canvasResize.x - CanvasAttributes.BORDER_SIZE &&
+            event.offsetX <= this.canvasResize.x + CanvasAttributes.BORDER_SIZE
         ) {
             return true;
         }
@@ -55,8 +55,8 @@ export class DrawingSurfaceResizingService {
 
     isOnBorderY(event: MouseEvent): boolean {
         if (
-            event.offsetY >= this.canvasResize.y - this.canvasAttributes.BORDER_SIZE &&
-            event.offsetY <= this.canvasResize.y + this.canvasAttributes.BORDER_SIZE
+            event.offsetY >= this.canvasResize.y - CanvasAttributes.BORDER_SIZE &&
+            event.offsetY <= this.canvasResize.y + CanvasAttributes.BORDER_SIZE
         ) {
             return true;
         }
@@ -80,15 +80,15 @@ export class DrawingSurfaceResizingService {
     }
 
     resizingCanvas(event: MouseEvent): void {
-        if (this.isResizingHorizontally && event.offsetX > this.canvasAttributes.MINIMUM_SIZE) {
+        if (this.isResizingHorizontally && event.offsetX > CanvasAttributes.MINIMUM_SIZE) {
             this.canvasResize.x = event.offsetX;
-        } else if (this.isResizingVertically && event.offsetY > this.canvasAttributes.MINIMUM_SIZE) {
+        } else if (this.isResizingVertically && event.offsetY > CanvasAttributes.MINIMUM_SIZE) {
             this.canvasResize.y = event.offsetY;
         } else if (this.isResizingDiagonally) {
-            if (event.offsetX > this.canvasAttributes.MINIMUM_SIZE) {
+            if (event.offsetX > CanvasAttributes.MINIMUM_SIZE) {
                 this.canvasResize.x = event.offsetX;
             }
-            if (event.offsetY > this.canvasAttributes.MINIMUM_SIZE) {
+            if (event.offsetY > CanvasAttributes.MINIMUM_SIZE) {
                 this.canvasResize.y = event.offsetY;
             }
         }

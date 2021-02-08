@@ -3,7 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { CanvasAttributes } from '../../constants/canvas-attributes';
+import * as canvasAttributes from '../../constants/canvas-attributes';
 import { DrawingSurfaceResizingService } from '../../services/drawing/drawing-surface-resizing.service';
 
 @Component({
@@ -18,12 +18,11 @@ export class DrawingComponent implements AfterViewInit {
 
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
-    private canvasSize: Vec2 = { x: this.canvasAttributes.DEFAULT_WIDTH, y: this.canvasAttributes.DEFAULT_HEIGHT };
+    private canvasSize: Vec2 = { x: canvasAttributes.DEFAULT_WIDTH, y: canvasAttributes.DEFAULT_HEIGHT };
     private isResizing: boolean = false;
     constructor(
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
-        private canvasAttributes: CanvasAttributes,
         private drawingSurfaceResizingService: DrawingSurfaceResizingService,
     ) {}
 
