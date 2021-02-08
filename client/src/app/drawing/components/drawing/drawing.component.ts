@@ -5,7 +5,6 @@ import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { CanvasAttributes } from '../../constants/canvas-attributes';
 import { DrawingSurfaceResizingService } from '../../services/drawing/drawing-surface-resizing.service';
-// TODO : Avoir un fichier séparé pour les constantes ?
 
 @Component({
     selector: 'app-drawing',
