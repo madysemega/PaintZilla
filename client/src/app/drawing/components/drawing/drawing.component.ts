@@ -4,6 +4,7 @@ import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { CanvasAttributes } from '../../constants/canvas-attributes';
+import { DrawingSurfaceResizingService } from '../../services/drawing/drawing-surface-resizing.service';
 // TODO : Avoir un fichier séparé pour les constantes ?
 
 @Component({
@@ -20,7 +21,12 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: this.canvasAttributes.DEFAULT_WIDTH, y: this.canvasAttributes.DEFAULT_HEIGHT };
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, private canvasAttributes: CanvasAttributes) {}
+    constructor(
+        private drawingService: DrawingService,
+        public toolSelector: ToolSelectorService,
+        private canvasAttributes: CanvasAttributes,
+        private drawingSurfaceResizingService: DrawingSurfaceResizingService,
+    ) {}
 
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -33,16 +39,25 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseDown(event);
+        if (this.drawingSurfaceResizingService.isResizing(event)) {
+            this.drawingSurfaceResizingService.checkIfOnBorder(event);
+        }
     }
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseLeave(event);
+        if (this.drawingSurfaceResizingService.isResizing(event)) {
+            this.drawingSurfaceResizingService.checkIfOnBorder(event);
+        }
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseEnter(event);
+        if (this.drawingSurfaceResizingService.isResizing(event)) {
+            this.drawingSurfaceResizingService.checkIfOnBorder(event);
+        }
     }
 
     get width(): number {
