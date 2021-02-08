@@ -15,11 +15,6 @@ describe('DrawingComponent', () => {
     let fixture: ComponentFixture<DrawingComponent>;
     let toolStub: ToolStub;
     let drawingStub: DrawingService;
-    let keyboardZEvent: KeyboardEvent;
-
-    keyboardZEvent = {
-        key: 'Z',
-    } as KeyboardEvent;
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
@@ -57,14 +52,6 @@ describe('DrawingComponent', () => {
         expect(currentTool).toEqual(toolStub);
     });
 
-    it(" should call the tool's mouse move when receiving a mouse move event", () => {
-        const event = {} as MouseEvent;
-        const mouseEventSpy = spyOn(toolStub, 'onMouseMove').and.callThrough();
-        component.onMouseMove(event);
-        expect(mouseEventSpy).toHaveBeenCalled();
-        expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });
-
     it(" should call the tool's mouse down when receiving a mouse down event", () => {
         const event = {} as MouseEvent;
         const mouseEventSpy = spyOn(toolStub, 'onMouseDown').and.callThrough();
@@ -85,28 +72,6 @@ describe('DrawingComponent', () => {
         const event = {} as MouseEvent;
         const mouseEventSpy = spyOn(toolStub, 'onMouseEnter').and.callThrough();
         component.onMouseEnter(event);
-        expect(mouseEventSpy).toHaveBeenCalled();
-        expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });
-
-    it(" should call the tool's key down when receiving a key down event", () => {
-        const keyboardEventSpy = spyOn(toolStub, 'onKeyDown').and.callThrough();
-        component.onKeyDown(keyboardZEvent);
-        expect(keyboardEventSpy).toHaveBeenCalled();
-        expect(keyboardEventSpy).toHaveBeenCalledWith(keyboardZEvent);
-    });
-
-    it(" should call the tool's key ip when receiving a key up event", () => {
-        const keyboardEventSpy = spyOn(toolStub, 'onKeyUp').and.callThrough();
-        component.onKeyUp(keyboardZEvent);
-        expect(keyboardEventSpy).toHaveBeenCalled();
-        expect(keyboardEventSpy).toHaveBeenCalledWith(keyboardZEvent);
-    });
-
-    it(" should call the tool's mouse up when receiving a mouse up event", () => {
-        const event = {} as MouseEvent;
-        const mouseEventSpy = spyOn(toolStub, 'onMouseUp').and.callThrough();
-        component.onMouseUp(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
     });

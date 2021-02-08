@@ -25,7 +25,6 @@ export class ToolSelectorService {
         if (this.tools.has(name)) {
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
             this.name.next(name);
-            console.log(name);
             return true;
         }
         return false;
