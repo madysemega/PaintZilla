@@ -16,7 +16,6 @@ export const DEFAULT_HEIGHT = 800;
 export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
-    // @ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>;
 
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;

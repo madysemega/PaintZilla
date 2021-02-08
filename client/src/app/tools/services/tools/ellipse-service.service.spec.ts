@@ -259,7 +259,6 @@ describe('EllipseService', () => {
     });
 
     it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {
-        /////
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
@@ -288,7 +287,6 @@ describe('EllipseService', () => {
     });
 
     it('onKeyUp should set isShiftDown to false if event was triggered from shift key', () => {
-        ////
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
