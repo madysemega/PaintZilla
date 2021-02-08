@@ -16,8 +16,6 @@ export class EllipseService extends ShapeTool {
 
     isShiftDown: boolean = false;
 
-    startPointInCanvas: boolean = false;
-
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
@@ -30,27 +28,25 @@ export class EllipseService extends ShapeTool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown && this.mouseInCanvas) {
+        if (this.mouseDown) {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
-            this.startPointInCanvas = true;
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown && this.startPointInCanvas) {
+        if (this.mouseDown ) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
-        this.startPointInCanvas = false;
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown && this.startPointInCanvas) {
+        if (this.mouseDown ) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
 
@@ -58,14 +54,6 @@ export class EllipseService extends ShapeTool {
             this.drawEllipse(this.drawingService.previewCtx, this.startPoint, mousePosition);
             this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition);
         }
-    }
-
-    onMouseLeave(event: MouseEvent): void {
-        this.mouseInCanvas = false;
-    }
-
-    onMouseEnter(event: MouseEvent): void {
-        this.mouseInCanvas = true;
     }
 
     onKeyDown(event: KeyboardEvent): void {
