@@ -60,6 +60,6 @@ describe('LineShape', () => {
         vertices.push({x: 0, y: 20});
         vertices.push({x: 20, y: 20});
         lineShape.clear();
-        expect(vertices.length).toEqual(0);
+        expect(lineShape.vertices.length).toEqual(0);
     });
 });
