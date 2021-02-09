@@ -38,7 +38,6 @@ import { ShapeToolConfigurationComponent } from './tools/components/tool-configu
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
-        EraserToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,
