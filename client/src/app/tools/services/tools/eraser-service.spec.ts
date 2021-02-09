@@ -182,8 +182,11 @@ describe('EraserService', () => {
 
         // Premier pixel seulement
         const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
+        // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[0]).toEqual(255); // R
+        // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[1]).toEqual(255); // G
+        // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[2]).toEqual(255); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
