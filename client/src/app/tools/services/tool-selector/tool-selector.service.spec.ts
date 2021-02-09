@@ -38,7 +38,7 @@ describe('ToolSelectorService', () => {
         expect(toolName).toBe(expectedToolName);
     });
     it("fromKeyboardShortcut should map 'e' to 'eraser'", () => {
-        const expectedToolName = 'pencil';
+        const expectedToolName = 'eraser';
         const toolName = service.fromKeyboardShortcut('e');
         expect(toolName).toBe(expectedToolName);
     });
