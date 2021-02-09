@@ -60,7 +60,13 @@ export class ToolSelectorService {
         return undefined;
     }
 
-    constructor(pencilService: PencilService, eraserService : EraserService, ellipseService: EllipseService, rectangleService: RectangleService, lineService: LineService) {
+    constructor(
+        pencilService: PencilService,
+        eraserService: EraserService,
+        ellipseService: EllipseService,
+        rectangleService: RectangleService,
+        lineService: LineService,
+    ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
             icon: 'pencil',
