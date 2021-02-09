@@ -12,6 +12,10 @@ export class AppComponent {
         this.iconRegistryService.addSvgIcon('pencil', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/pencil.svg'));
         this.iconRegistryService.addSvgIcon('eraser', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/eraser.svg'));
         this.iconRegistryService.addSvgIcon(
+            'pencil-with-line',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/pencil-with-line.svg'),
+        );
+        this.iconRegistryService.addSvgIcon(
             'ellipse-contoured',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/ellipse-contoured.svg'),
         );

@@ -3,6 +3,7 @@ import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
@@ -17,8 +18,10 @@ describe('SidebarComponent', () => {
     let drawingStub: DrawingService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
+    let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
     let eraserStoolStub: EraserService;
+    let onKeyDownSpy: jasmine.Spy<any>;
 
     keyboard1Event = {
         key: '1',
@@ -40,12 +43,15 @@ describe('SidebarComponent', () => {
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub);
         rectangleService = new RectangleServiceStub(drawingStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService);
+        lineServiceStub = new LineService(drawingStub);
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
         }).compileComponents();
+
+        onKeyDownSpy = spyOn<any>(toolSelectorServiceStub.selectedTool.tool, 'onKeyDown').and.callThrough();
     }));
 
     beforeEach(() => {
@@ -64,6 +70,17 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
+    it('should return <Outil inconnu>', () => {
+        const toolName = 'rectangle';
+        component.selectTool('rectangle');
+        expect(component.selectedToolName).toBe(toolName);
+    });
+
+    it('should call onKeyDown on selectedTool when pressing down a key', () => {
+        component.onKeyDown(keyboard1Event);
+        expect(onKeyDownSpy).toHaveBeenCalled();
+    });
+
     it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
         const toolName = 'rectangle';
         component.onKeyUp(keyboard1Event);
@@ -72,14 +89,15 @@ describe('SidebarComponent', () => {
 
     it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
         const toolName = component.selectedToolName;
-        component.onKeyDown(keyboardShiftEvent);
+        component.onKeyUp(keyboardShiftEvent);
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    /*it('should call onMouseUp on the currently selected tool of the tool selector', () => {
-        component.onKeyUp(keyboard1Event);
-        expect(toolSelectorSpy.getSelectedTool).toHaveBeenCalled();
-    });*/
+    it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
+        const expectedDisplayName = '<Outil inconnu>';
+        const obtainedDisplayName: string = component.getDisplayName('fdfs');
+        expect(obtainedDisplayName).toBe(expectedDisplayName);
+    });
 
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = 'Crayon';
@@ -87,9 +105,9 @@ describe('SidebarComponent', () => {
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
 
-    it("should return '<Outil inconnu>' when getDisplayName is called with an invalid tool name", () => {
+    it("should return '<Outil inconnu>' when asking for a keyboard shortcut of non-existing tool", () => {
         const expectedDisplayName = '<Outil inconnu>';
-        const obtainedDisplayName: string = component.getDisplayName('invalid tool');
+        const obtainedDisplayName: string = component.getKeyboardShortcut('invalid tool');
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
 

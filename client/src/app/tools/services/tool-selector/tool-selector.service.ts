@@ -3,6 +3,7 @@ import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
@@ -34,6 +35,10 @@ export class ToolSelectorService {
         return this.tools;
     }
 
+    getKeyboardShortcut(toolName: string): string | undefined {
+        return this.tools.get(toolName)?.keyboardShortcut;
+    }
+
     getDisplayName(toolName: string): string | undefined {
         return this.tools.get(toolName)?.displayName;
     }
@@ -55,7 +60,7 @@ export class ToolSelectorService {
         return undefined;
     }
 
-    constructor(pencilService: PencilService, eraserService : EraserService, ellipseService: EllipseService, rectangleService: RectangleService) {
+    constructor(pencilService: PencilService, eraserService : EraserService, ellipseService: EllipseService, rectangleService: RectangleService, lineService: LineService) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
             icon: 'pencil',
@@ -79,6 +84,12 @@ export class ToolSelectorService {
             icon: 'ellipse-contoured',
             keyboardShortcut: '2',
             tool: ellipseService,
+        });
+        this.tools.set('line', {
+            displayName: 'Ligne',
+            icon: 'pencil-with-line',
+            keyboardShortcut: 'l',
+            tool: lineService,
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
