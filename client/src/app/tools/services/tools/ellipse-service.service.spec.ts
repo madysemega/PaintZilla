@@ -238,6 +238,16 @@ describe('EllipseService', () => {
             key: 'Shift',
         } as KeyboardEvent;
 
+        service.startPoint = {
+            x: 0,
+            y: 0,
+        };
+
+        service.lastMousePosition = {
+            x: 3,
+            y: 4,
+        };
+
         service.isShiftDown = false;
         service.onKeyDown(keyboardEvent);
         expect(service.isShiftDown).toBe(true);
@@ -265,6 +275,16 @@ describe('EllipseService', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
+
+        service.startPoint = {
+            x: 0,
+            y: 0,
+        };
+
+        service.lastMousePosition = {
+            x: 3,
+            y: 4,
+        };
 
         service.isShiftDown = false;
         service.onKeyUp(keyboardEvent);

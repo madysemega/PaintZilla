@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
@@ -16,6 +17,7 @@ describe('SidebarComponent', () => {
     let drawingStub: DrawingService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
+    let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
     let onKeyDownSpy: jasmine.Spy<any>;
 
@@ -38,7 +40,8 @@ describe('SidebarComponent', () => {
         pencilStoolStub = new PencilService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub);
         rectangleService = new RectangleServiceStub(drawingStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, ellipseToolStub, rectangleService);
+        lineServiceStub = new LineService(drawingStub);
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
