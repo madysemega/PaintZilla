@@ -12,23 +12,39 @@ export class ColourSliderComponent implements OnInit, AfterViewInit {
   private ctx: CanvasRenderingContext2D;
   public height: number;
   public width: number;
+  public mousedown: boolean = false;
+  private selectedHeight: number;
   
   @Output()
   colour: EventEmitter<string> = new EventEmitter()
 
   onMouseDown(evt: MouseEvent) {
 
-    this.service.onMouseDown(evt, this.height, this.width, this.ctx);
+    this.mousedown = true;
+    this.selectedHeight = evt.offsetY;
+    this.draw();
+    this.emitColor(evt.offsetX, evt.offsetY);
+    console.log("mouse down");
+  }
+  
+  
+  onMouseMove(evt: MouseEvent) {
+    if (this.mousedown) {
+      this.selectedHeight = evt.offsetY
+      this.draw();
+      this.emitColor(evt.offsetX, evt.offsetY)
+      console.log("mouse onmoved");
+    }
   }
 
-  onMouseMove(evt: MouseEvent) {
-    
-    this.service.onMouseMove(evt, this.height, this.width, this.ctx);
+  emitColor(x: number, y: number) {
+    const rgbaColor = this.getColorAtPosition(x, y);
+    this.colour.emit(rgbaColor);
   }
 
   @HostListener('window:mouseup', ['$event'])
   onMouseUp(evt: MouseEvent) {
-    this.service.mousedown = false;
+    this.mousedown = false;
 }
 
   constructor(public service: ColourToolService) { }
@@ -38,7 +54,7 @@ export class ColourSliderComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     
-    this.service.colour = this.colour;
+    
     this.draw();
   }
 
@@ -48,7 +64,38 @@ export class ColourSliderComponent implements OnInit, AfterViewInit {
     }
     this.width = this.canvas.nativeElement.width;
     this.height = this.canvas.nativeElement.height;
-    this.service.draw(this.height, this.width, this.ctx);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
+    gradient.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
+    gradient.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
+    gradient.addColorStop(0.51, 'rgba(0, 255, 255, 1)');
+    gradient.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
+    gradient.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
+    gradient.addColorStop(1, 'rgba(255, 0, 0, 1)');
+    this.ctx.beginPath();
+    this.ctx.rect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = gradient;
+    this.ctx.fill();
+    this.ctx.closePath();
+    if (this.selectedHeight) { 
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = 'white';
+      this.ctx.lineWidth = 5;
+      this.ctx.rect(0, this.selectedHeight - 5, this.width, 10);
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
   }
 
+  getColorAtPosition(x: number, y: number): string {
+    const imageData = this.ctx.getImageData(x, y, 1, 1).data;
+    return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+  }
+
+
+  printPropage() {
+
+    console.log("Blabla");
+  }
 }

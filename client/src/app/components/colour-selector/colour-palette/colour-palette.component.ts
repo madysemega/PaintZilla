@@ -14,6 +14,9 @@ import { PaletteToolService } from '../../../services/tools/palette-tool.service
 export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges {
 
   private ctx: CanvasRenderingContext2D;
+  public mousedown: boolean = false;
+  public selectedPosition: { x: number; y: number };
+  
 
   @Input()
   hue: string;
@@ -30,9 +33,7 @@ export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges 
   }
 
   ngAfterViewInit() {
-    this.service.canvas = this.canvas;
-    this.service.colour = this.colour;
-    this.service.hue = this.hue;
+    this.draw();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -40,31 +41,35 @@ export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges 
     if (changes['hue'] && !changes['hue'].firstChange) {
 
       this.draw();
-      const pos = this.service.selectedPosition;
+      const pos = this.selectedPosition;
       if (pos) {
 
-        this.service.colour.emit(this.service.getColourAtPosition(pos.x, pos.y, this.ctx));
+        this.colour.emit(this.getColourAtPosition(pos.x, pos.y));
       }
     }
   }
 
+  
+
   @HostListener('window:mouseup', ['$event'])
   onMouseUp(evt: MouseEvent) {
-    this.service.onMouseUp(evt);
+    this.mousedown = false;
   }
 
   onMouseDown(evt: MouseEvent) {
-    this.service.mousedown = true
-    this.service.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
+    this.mousedown = true
+    this.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
     this.draw()
-    this.service.colour.emit(this.service.getColourAtPosition(evt.offsetX, evt.offsetY, this.ctx));
+    this.colour.emit(this.getColourAtPosition(evt.offsetX, evt.offsetY));
+    
   }
 
   onMouseMove(evt: MouseEvent) {
-    if (this.service.mousedown) {
-      this.service.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
+    if (this.mousedown) {
+      this.selectedPosition = { x: evt.offsetX, y: evt.offsetY }
       this.draw();
-      this.service.emitColour(evt.offsetX, evt.offsetY, this.ctx);
+      this.emitColour(evt.offsetX, evt.offsetY);
+    
     }
   }
 
@@ -74,7 +79,48 @@ export class ColourPaletteComponent implements OnInit, AfterViewInit, OnChanges 
     }
     const width = this.canvas.nativeElement.width;
     const height = this.canvas.nativeElement.height;
-    this.service.draw(width, height, this.ctx);
+    this.ctx.fillStyle = this.hue || 'rgba(255,255,255,1)';
+    this.ctx.fillRect(0, 0, width, height);
+
+    const whiteGrad = this.ctx.createLinearGradient(0, 0, width, 0);
+    whiteGrad.addColorStop(0, 'rgba(255,255,255,1)');
+    whiteGrad.addColorStop(1, 'rgba(255,255,255,0)');
+
+    this.ctx.fillStyle = whiteGrad;
+    this.ctx.fillRect(0, 0, width, height);
+
+    const blackGrad = this.ctx.createLinearGradient(0, 0, 0, height);
+    blackGrad.addColorStop(0, 'rgba(0,0,0,0)');
+    blackGrad.addColorStop(1, 'rgba(0,0,0,1)');
+
+    this.ctx.fillStyle = blackGrad;
+    this.ctx.fillRect(0, 0, width, height);
+
+    if (this.selectedPosition) {
+      this.ctx.strokeStyle = 'white';
+      this.ctx.fillStyle = 'white';
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.selectedPosition.x,
+        this.selectedPosition.y,
+        10,
+        0,
+        2 * Math.PI
+      );
+      this.ctx.lineWidth = 5;
+      this.ctx.stroke();
+    }
   }
 
+  getColourAtPosition(x: number, y: number) {
+    const imageData = this.ctx.getImageData(x, y, 1, 1).data
+    return (
+      'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)'
+    )
+  }
+
+  emitColour(x: number, y: number) {
+    const rgbaColor = this.getColourAtPosition(x, y)
+    this.colour.emit(rgbaColor)
+  }
 }

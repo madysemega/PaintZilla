@@ -1,15 +1,29 @@
 <div class="colour-wrapper">
-    <app-colour-palette [hue]="hue" (colour)="colour = $event"></app-colour-palette>
-    <app-colour-slider
-      (color)="hue=$event"
-      style="margin-left:16px">
-    </app-colour-slider>
-  </div>
-  <div class="input-wrapper">
-    <span class="text">{{colour}}</span>
-    <div
-      class="color-div"
-      [ngStyle]="{'background-color': colour || 'white'}">
-    </div>
+  <app-colour-palette [hue]="hue" (colour)="colour =$event"></app-colour-palette>
+  <app-colour-slider
+    (colour)="hue=$event"
+    style="margin-left:16px">
+  </app-colour-slider>
 </div>
-  
+<div class="input-wrapper">
+  <span class="text">{{colour}}</span>
+  <button (click)="switchCol()" class="switchButton" type = "button">
+  </button>
+  <button (click)="addFirstCol(true)"
+    class="color-div"
+    [ngStyle]="{'background-color': service.colour1 || 'white'}">
+</button>
+  <button (click)="addSecCol(true)"
+    class="color-div2"
+    [ngStyle]="{'background-color': service.colour2 || 'white'}">
+</button>
+<input type="text" id="colorHex" maxlength="8" 
+  size="10" value="#" (keyup)="takeHexClr($event)">
+</div>
+<button (click)=showList()></button>
+<div *ngIf="show">
+  <span *ngFor="let element of service.colourList">
+    <button [ngStyle]="{'background-color' : element || 'white'}"
+    (click)="addFirstCol(false)" (contextmenu)="addSecCol(false)"></button>
+  </span>
+</div>
