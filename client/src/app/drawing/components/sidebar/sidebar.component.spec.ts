@@ -17,6 +17,7 @@ describe('SidebarComponent', () => {
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let pencilStoolStub: PencilService;
+    let onKeyDownSpy: jasmine.Spy<any>;
 
     keyboard1Event = {
         key: '1',
@@ -43,6 +44,8 @@ describe('SidebarComponent', () => {
             declarations: [SidebarComponent],
             providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
         }).compileComponents();
+
+        onKeyDownSpy = spyOn<any>(toolSelectorServiceStub.selectedTool.tool, 'onKeyDown').and.callThrough();
     }));
 
     beforeEach(() => {
@@ -61,6 +64,17 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
+    it('should return <Outil inconnu>', () => {
+        const toolName = 'rectangle';
+        component.selectTool('rectangle');
+        expect(component.selectedToolName).toBe(toolName);
+    });
+
+    it('should call onKeyDown on selectedTool when pressing down a key', () => {
+        component.onKeyDown(keyboard1Event);
+        expect(onKeyDownSpy).toHaveBeenCalled();
+    });
+
     it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
         const toolName = 'rectangle';
         component.onKeyUp(keyboard1Event);
@@ -69,14 +83,15 @@ describe('SidebarComponent', () => {
 
     it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
         const toolName = component.selectedToolName;
-        component.onKeyDown(keyboardShiftEvent);
+        component.onKeyUp(keyboardShiftEvent);
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    /*it('should call onMouseUp on the currently selected tool of the tool selector', () => {
-        component.onKeyUp(keyboard1Event);
-        expect(toolSelectorSpy.getSelectedTool).toHaveBeenCalled();
-    });*/
+    it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
+        const expectedDisplayName = '<Outil inconnu>';
+        const obtainedDisplayName: string = component.getDisplayName('fdfs');
+        expect(obtainedDisplayName).toBe(expectedDisplayName);
+    });
 
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = 'Crayon';
@@ -84,9 +99,9 @@ describe('SidebarComponent', () => {
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
 
-    it("should return '<Outil inconnu>' when getDisplayName is called with an invalid tool name", () => {
+    it("should return '<Outil inconnu>' when asking for a keyboard shortcut of non-existing tool", () => {
         const expectedDisplayName = '<Outil inconnu>';
-        const obtainedDisplayName: string = component.getDisplayName('invalid tool');
+        const obtainedDisplayName: string = component.getKeyboardShortcut('invalid tool');
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
 
