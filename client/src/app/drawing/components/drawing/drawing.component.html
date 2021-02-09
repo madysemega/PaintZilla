@@ -1,4 +1,33 @@
 <div id="canvas-container" #container>
+    <div
+        id="down"
+        draggable="false"
+        class="drawingSurfaceResizingPoint"
+        [ngStyle]="{'top': height+3+'px'}, 'left': (width+3)/2+'px'}"
+        (mouseDown)="onMouseDownResizer($event, 'vertical')"
+    ></div>
+    <div
+        id="rightDown"
+        draggable="false"
+        class="drawingSurfaceResizingPoint"
+        [ngStyle]="{ top: height + 3 + 'px', left: width + 3 + 'px' }"
+        (mouseDown)="onMouseDownResizer($event, 'none')"
+    ></div>
+    <div
+        id="right"
+        draggable="false"
+        class="drawingSurfaceResizingPoint"
+        [ngStyle]="{ top: (height + 3) / 2 + 'px', left: width + 3 + 'px' }"
+        (mouseDown)="onMouseDownResizer($event, 'horizontal')"
+    ></div>
+
     <canvas id="canvas" #baseCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>
-    <canvas id="previewLayer" #previewCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
+    <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>
+    <canvas id="pointerLayer" #pointerCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>
+
+    <div
+        id="drawingSurfaceResize"
+        [hidden]="!drawingSurfaceResizingService.isResizing()"
+        [ngStyle]="{ width: previewWidth + 'px', height: previewHeight + 'px' }"
+    ></div>
 </div>

@@ -15,7 +15,6 @@ export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
     // @ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>;
-
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: canvasAttributes.DEFAULT_WIDTH, y: canvasAttributes.DEFAULT_HEIGHT };
@@ -57,8 +56,14 @@ export class DrawingComponent implements AfterViewInit {
     onMouseUp(event: MouseEvent): void {
         if (this.isResizing) {
             this.isResizing = false;
+            let inMemCanvas = document.createElement('canvas');
+            let inMemCtx = inMemCanvas.getContext('2d');
+            inMemCanvas.width = this.canvasSize.x;
+            inMemCanvas.height = this.canvasSize.y;
+            inMemCtx?.drawImage(this.drawingService.canvas, 0, 0);
             this.canvasSize.x = this.drawingSurfaceResizingService.resizeCanvasX();
             this.canvasSize.y = this.drawingSurfaceResizingService.resizeCanvasY();
+            this.baseCtx.drawImage(inMemCanvas, 0, 0);
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
         }

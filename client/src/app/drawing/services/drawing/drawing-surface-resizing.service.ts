@@ -1,113 +1,68 @@
 import { Injectable } from '@angular/core';
-import { Vec2 } from '@app/app/classes/vec2';
-import * as CanvasAttributes from '../../constants/canvas-attributes';
+import { MouseButton } from '@app/app/classes/mouse';
+import { Vec2, VectorOperations } from '@app/app/classes/vec2';
+
+export enum Constraint {
+    None = 'none',
+    Vertical = 'vertical',
+    Horizontal = 'horizontal',
+}
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingSurfaceResizingService {
-    isResizingHorizontally: boolean = false;
-    isResizingVertically: boolean = false;
-    isResizingDiagonally: boolean = false;
-    canvasResize: Vec2 = { x: CanvasAttributes.DEFAULT_WIDTH, y: CanvasAttributes.DEFAULT_HEIGHT };
-
-    constructor() {}
-
-    checkIfOnBorder(event: MouseEvent): void {
-        const canvas = document.getElementsByTagName('canvas');
-        if (canvas != null) {
-            const isOnRightBorder = this.isOnBorderX(event);
-            const isOnBottomBorder = this.isOnBorderY(event);
-            if (isOnBottomBorder && isOnRightBorder) {
-                canvas[1].style.cursor = 'nwse-resize';
-            } else if (isOnRightBorder) {
-                canvas[1].style.cursor = 'ew-resize';
-            } else if (isOnBottomBorder) {
-                canvas[1].style.cursor = 'ns-resize';
-            } else {
-                canvas[1].style.cursor = 'crosshair';
-            }
-        }
-    }
-    isResizing(event: MouseEvent): boolean {
-        const resizeX = this.isResizingX(event);
-        const resizeY = this.isResizingY(event);
-        if (resizeX && resizeY) {
-            this.isResizingVertically = false;
-            this.isResizingHorizontally = false;
-            this.isResizingDiagonally = true;
-            return true;
-        } else if (resizeX || resizeY) {
-            return true;
-        }
-        return false;
-    }
-
-    isOnBorderX(event: MouseEvent): boolean {
-        if (
-            event.offsetX >= this.canvasResize.x - CanvasAttributes.BORDER_SIZE &&
-            event.offsetX <= this.canvasResize.x + CanvasAttributes.BORDER_SIZE
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    isOnBorderY(event: MouseEvent): boolean {
-        if (
-            event.offsetY >= this.canvasResize.y - CanvasAttributes.BORDER_SIZE &&
-            event.offsetY <= this.canvasResize.y + CanvasAttributes.BORDER_SIZE
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    isResizingX(event: MouseEvent): boolean {
-        if (this.isOnBorderX(event)) {
-            this.isResizingHorizontally = true;
-            return true;
-        }
-        return false;
-    }
-
-    isResizingY(event: MouseEvent): boolean {
-        if (this.isOnBorderY(event)) {
-            this.isResizingVertically = true;
-            return true;
-        }
-        return false;
-    }
-
-    resizingCanvas(event: MouseEvent): void {
-        if (this.isResizingHorizontally && event.offsetX > CanvasAttributes.MINIMUM_SIZE) {
-            this.canvasResize.x = event.offsetX;
-        } else if (this.isResizingVertically && event.offsetY > CanvasAttributes.MINIMUM_SIZE) {
-            this.canvasResize.y = event.offsetY;
-        } else if (this.isResizingDiagonally) {
-            if (event.offsetX > CanvasAttributes.MINIMUM_SIZE) {
-                this.canvasResize.x = event.offsetX;
-            }
-            if (event.offsetY > CanvasAttributes.MINIMUM_SIZE) {
-                this.canvasResize.y = event.offsetY;
-            }
+    private firstPosition: Vec2;
+    private resizing: boolean;
+    private newSize: Vec2;
+    private modified: boolean;
+    private constraint: Constraint;
+    private anchorPoint: Vec2;
+    private vectorOperations: VectorOperations;
+    onMouseDown(event: MouseEvent, constraint: Constraint): void {
+        if (event.button === MouseButton.Left) {
+            this.firstPosition = this.vectorOperations.sub({ x: event.pageX, y: event.pageY }, this.anchorPoint);
+            this.resizing = true;
+            this.constraint = constraint;
         }
     }
 
-    resizeCanvasX(): number {
-        this.isResizingHorizontally = false;
-        return this.canvasResize.x;
+    onMouseMove(event: MouseEvent): void {
+        if (this.resizing) {
+            this.newSize = this.vectorOperations.sub({ x: event.pageX, y: event.pageY }, this.firstPosition);
+            this.newSize = {
+                x: this.constraint === Constraint.Vertical ? 0 : this.newSize.x,
+                y: this.constraint === Constraint.Horizontal ? 0 : this.newSize.y,
+            };
+        }
     }
 
-    resizeCanvasY(): number {
-        this.isResizingVertically = false;
-        this.isResizingDiagonally = false;
-        return this.canvasResize.y;
+    onMouseUp(event: MouseEvent): void {
+        if (this.resizing && event.button === MouseButton.Left) {
+            this.onMouseMove(event);
+            this.resizing = false;
+            this.modified = true;
+        }
     }
 
-    restoreImage(ctx: CanvasRenderingContext2D, url: string): void {
-        const image = new Image();
-        image.src = url;
-        ctx.drawImage(image, 0, 0);
+    isModified(): boolean {
+        return this.modified;
+    }
+
+    isResizing(): boolean {
+        return this.resizing;
+    }
+
+    getNewSize(): Vec2 {
+        return this.newSize;
+    }
+
+    popNewSize(): Vec2 {
+        this.modified = false;
+        return this.newSize;
+    }
+
+    initAnchorPoint(anchorPoint: Vec2): void {
+        this.anchorPoint = anchorPoint;
     }
 }
