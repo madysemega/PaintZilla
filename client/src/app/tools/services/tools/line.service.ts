@@ -56,9 +56,23 @@ export class LineService extends Tool {
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.key === 'Shift') {
-            this.isShiftDown = false;
-            this.previewLine(this.lastMousePosition);
+        switch (event.key) {
+            case 'Shift':
+                this.isShiftDown = false;
+                this.previewLine(this.lastMousePosition);
+                break;
+            case 'Escape':
+                this.lineShape.clear();
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                break;
+            case 'Backspace':
+                this.lineShape.vertices.pop();
+
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.lineShape.vertices.push(this.lastMousePosition);
+                this.lineShapeRenderer.render(this.drawingService.previewCtx);
+                this.lineShape.vertices.pop();
+                break;
         }
     }
 
