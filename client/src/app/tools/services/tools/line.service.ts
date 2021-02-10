@@ -96,8 +96,8 @@ export class LineService extends ResizableTool {
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.lineShape = new LineShape([(this.strokeWidthProperty = new StrokeWidthProperty())], []);
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape);
+        this.lineShape = new LineShape([]);
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
         this.isShiftDown = false;
     }
 }

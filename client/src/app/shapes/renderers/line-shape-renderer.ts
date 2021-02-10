@@ -1,4 +1,5 @@
 import { LineShape } from '@app/shapes/line-shape';
+import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
 export class LineShapeRenderer extends ShapeRenderer<LineShape> {
@@ -10,7 +11,7 @@ export class LineShapeRenderer extends ShapeRenderer<LineShape> {
         ctx.stroke();
     }
 
-    constructor(shape: LineShape) {
-        super(shape);
+    constructor(shape: LineShape, properties: ShapeProperty[]) {
+        super(shape, properties);
     }
 }
