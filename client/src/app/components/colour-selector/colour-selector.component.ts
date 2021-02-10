@@ -16,6 +16,13 @@ export class ColourSelectorComponent implements OnInit {
   public colourInput: string;
   
   constructor(public service: ColourToolService) { }
+  addColEv(event: any) {
+    console.log(event.target.style.backgroundcolor);
+    this.service.colour1 = event.target.style.backgroundColor;
+  }
+  addSecEv(event: any) {
+    this.service.colour2 = event.target.style.backgroundColor;
+  }
   addFirstCol(isSelected: boolean) {
     this.service.colour1 = this.colour;
     if (isSelected) {

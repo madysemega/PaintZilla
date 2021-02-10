@@ -24,6 +24,6 @@
 <div *ngIf="show">
   <span *ngFor="let element of service.colourList">
     <button [ngStyle]="{'background-color' : element || 'white'}"
-    (click)="addFirstCol(false)" (contextmenu)="addSecCol(false)"></button>
+    (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></button>
   </span>
 </div>
