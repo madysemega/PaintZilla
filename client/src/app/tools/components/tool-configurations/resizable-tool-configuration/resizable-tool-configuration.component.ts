@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -14,11 +15,11 @@ export class ResizableToolConfigurationComponent implements OnInit {
     position: string = 'right';
 
     constructor(public toolSelectorService: ToolSelectorService) {
-        this.lineWidth = 1;
+        this.lineWidth = StrokeWidthProperty.DEFAULT_STROKE_WIDTH;
     }
 
     changeWidth(width: number): void {
-        this.toolService.lineWidth = width;
+        this.toolService.adjustLineWidth(width);
         this.lineWidth = width;
     }
 
