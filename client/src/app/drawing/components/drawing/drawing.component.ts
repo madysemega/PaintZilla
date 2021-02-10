@@ -19,6 +19,7 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: canvasAttributes.DEFAULT_WIDTH, y: canvasAttributes.DEFAULT_HEIGHT };
     private isResizing: boolean = false;
+    private image: ImageData;
     constructor(
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
@@ -38,6 +39,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingSurfaceResizingService.checkIfOnBorder(event);
         if (this.isResizing) {
             this.drawingSurfaceResizingService.resizingCanvas(event);
+            this.previewCtx.putImageData(this.image, 0, 0);
+            this.baseCanvas.nativeElement.style.border = 'medium dotted black';
         } else {
             this.toolSelector.getSelectedTool().onMouseMove(event);
         }
@@ -47,6 +50,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (this.drawingSurfaceResizingService.isResizing(event)) {
             this.isResizing = true;
+            this.image = this.baseCtx.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y);
         } else {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
@@ -56,14 +60,10 @@ export class DrawingComponent implements AfterViewInit {
     onMouseUp(event: MouseEvent): void {
         if (this.isResizing) {
             this.isResizing = false;
-            let inMemCanvas = document.createElement('canvas');
-            let inMemCtx = inMemCanvas.getContext('2d');
-            inMemCanvas.width = this.canvasSize.x;
-            inMemCanvas.height = this.canvasSize.y;
-            inMemCtx?.drawImage(this.drawingService.canvas, 0, 0);
             this.canvasSize.x = this.drawingSurfaceResizingService.resizeCanvasX();
             this.canvasSize.y = this.drawingSurfaceResizingService.resizeCanvasY();
-            this.baseCtx.drawImage(inMemCanvas, 0, 0);
+            this.baseCtx.putImageData(this.image, 0, 0);
+            this.baseCanvas.nativeElement.style.border = 'medium none black';
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
         }
