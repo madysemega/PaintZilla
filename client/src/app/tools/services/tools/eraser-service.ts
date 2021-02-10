@@ -9,13 +9,11 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 })
 export class EraserService extends ResizableTool {
     lineWidth: number;
-    private currentSegmentIndex: number;
-    private segments: Vec2[][];
+    private vertices: Vec2[];
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.currentSegmentIndex = 0;
-        this.segments = [];
+        this.vertices = [];
         this.name = 'Efface';
         this.key = 'eraser';
     }
@@ -29,10 +27,9 @@ export class EraserService extends ResizableTool {
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
-            this.clearSegments();
+            this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.createNewSegment(this.mouseDownCoord);
             this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
         }
     }
@@ -40,38 +37,26 @@ export class EraserService extends ResizableTool {
     onMouseUp(event: MouseEvent): void {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
-            if (this.segments[this.currentSegmentIndex]) this.segments[this.currentSegmentIndex].push(mousePosition);
+            this.vertices.push(mousePosition);
 
-            this.drawSegments(this.drawingService.baseCtx);
+            this.drawVertices(this.drawingService.baseCtx);
             this.drawPoint(this.drawingService.baseCtx, this.mouseDownCoord);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
-        this.clearSegments();
+        this.clearVertices();
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
-            this.segments[this.currentSegmentIndex].push(mousePosition);
+            this.vertices.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.drawSegments(this.drawingService.previewCtx);
+            this.drawVertices(this.drawingService.previewCtx);
         }
     }
 
-    onMouseLeave(event: MouseEvent): void {
-        this.mouseInCanvas = false;
-    }
-
-    onMouseEnter(event: MouseEvent): void {
-        this.mouseInCanvas = true;
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.createNewSegment(mousePosition);
-        }
-    }
-
-    private drawLine(ctx: CanvasRenderingContext2D, path: Vec2[]): void {
+    private drawVertices(ctx: CanvasRenderingContext2D): void {
         this.drawingService.baseCtx.save();
         this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
@@ -79,7 +64,7 @@ export class EraserService extends ResizableTool {
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.beginPath();
-        for (const point of path) {
+        for (const point of this.vertices) {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
@@ -92,19 +77,7 @@ export class EraserService extends ResizableTool {
         ctx.fill();
     }
 
-    private drawSegments(ctx: CanvasRenderingContext2D): void {
-        for (const segment of this.segments) {
-            if (segment) this.drawLine(ctx, segment);
-        }
-    }
-
-    private clearSegments(): void {
-        this.segments = [];
-    }
-
-    private createNewSegment(initialPoint: Vec2): void {
-        this.currentSegmentIndex++;
-        this.segments[this.currentSegmentIndex] = [];
-        this.segments[this.currentSegmentIndex].push(initialPoint);
+    private clearVertices(): void {
+        this.vertices = [];
     }
 }
