@@ -1,14 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +8,7 @@ import { MainPageComponent } from './app/components/main-page/main-page.componen
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
 import { SidebarComponent } from './drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
+import { MaterialModule } from './material.module';
 import { EllipseToolConfigurationComponent } from './tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { PencilToolConfigurationComponent } from './tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
@@ -39,21 +31,7 @@ import { ShapeToolConfigurationComponent } from './tools/components/tool-configu
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatSidenavModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatDividerModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatButtonToggleModule,
-        MatSliderModule,
-    ],
+    imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
     providers: [],
     bootstrap: [AppComponent],
 })
