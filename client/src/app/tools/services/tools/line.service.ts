@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
+import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';
-import { Tool } from '@app/tools/classes/tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LineService extends Tool {
+export class LineService extends ResizableTool {
     private lineShape: LineShape;
     private lineShapeRenderer: LineShapeRenderer;
     private lastMousePosition: Vec2;
 
     private isShiftDown: boolean;
+
+    private strokeWidthProperty: StrokeWidthProperty;
+
+    adjustLineWidth(lineWidth: number): void {
+        this.strokeWidthProperty.strokeWidth = lineWidth;
+    }
 
     onMouseClick(event: MouseEvent): void {
         if (event.button === MouseButton.Left) {
@@ -89,7 +96,7 @@ export class LineService extends Tool {
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.lineShape = new LineShape([], []);
+        this.lineShape = new LineShape([(this.strokeWidthProperty = new StrokeWidthProperty())], []);
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape);
         this.isShiftDown = false;
     }
