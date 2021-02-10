@@ -18,6 +18,7 @@ import { DrawingComponent } from './drawing/components/drawing/drawing.component
 import { SidebarComponent } from './drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
 import { EllipseToolConfigurationComponent } from './tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { PencilToolConfigurationComponent } from './tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from './tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from './tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
@@ -32,6 +33,7 @@ import { ShapeToolConfigurationComponent } from './tools/components/tool-configu
         MainPageComponent,
         EllipseToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        EraserToolConfigurationComponent,
         RectangleToolConfigurationComponent,
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,

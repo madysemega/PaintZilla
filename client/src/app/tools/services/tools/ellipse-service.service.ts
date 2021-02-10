@@ -59,7 +59,6 @@ export class EllipseService extends ShapeTool {
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isShiftDown = true;
-
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
             this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
