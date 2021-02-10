@@ -132,7 +132,7 @@ describe('LineService', () => {
         expect(service['isShiftDown']).toBeTruthy();
     });
 
-    it('onKeyDown should not set isShiftDown to true if key is not shift', () => {
+    it('onKeyDown should not set isShiftDown to true if key is invalid', () => {
         service['isShiftDown'] = false;
         service.onKeyDown({ key: 'Fake key' } as KeyboardEvent);
         expect(service['isShiftDown']).toBeFalsy();
@@ -152,7 +152,7 @@ describe('LineService', () => {
         expect(service['isShiftDown']).toBeFalsy();
     });
 
-    it('onKeyUp should not set isShiftDown to false if key is not shift', () => {
+    it('onKeyUp should not set isShiftDown to false if key is invalid', () => {
         service['isShiftDown'] = false;
         service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
         expect(service['isShiftDown']).toBeFalsy();
