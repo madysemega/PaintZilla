@@ -121,4 +121,80 @@ describe('LineService', () => {
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
         expect(lineShapeRendererRenderMethodStub).not.toHaveBeenCalled();
     });
+
+    it('onKeyDown should set isShiftDown to true if key is shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+
+        service['isShiftDown'] = true;
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
+
+    it('onKeyDown should not set isShiftDown to true if key is invalid', () => {
+        service['isShiftDown'] = false;
+        service.onKeyDown({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyDown({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
+
+    it('onKeyUp should set isShiftDown to false if key is shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+    });
+
+    it('onKeyUp should not set isShiftDown to false if key is invalid', () => {
+        service['isShiftDown'] = false;
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
+
+    it('onKeyUp should remove all vertices from shape if key is escape', () => {
+        const INITIAL_NB_VERTICES = 3;
+        lineShapeStub.vertices.length = INITIAL_NB_VERTICES;
+
+        service.onKeyUp({ key: 'Escape' } as KeyboardEvent);
+
+        expect(lineShapeStub.vertices.length).toEqual(0);
+    });
+
+    it('onKeyUp should not remove any vertex from shape if key is invalid', () => {
+        const INITIAL_NB_VERTICES = 3;
+        lineShapeStub.vertices.length = INITIAL_NB_VERTICES;
+
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+
+        expect(lineShapeStub.vertices.length).toEqual(INITIAL_NB_VERTICES);
+    });
+
+    it('onKeyUp should remove the last vertex from shape if key is backspace', () => {
+        const INITIAL_NB_VERTICES = 3;
+        lineShapeStub.vertices.length = INITIAL_NB_VERTICES;
+
+        service.onKeyUp({ key: 'Backspace' } as KeyboardEvent);
+
+        expect(lineShapeStub.vertices.length).toEqual(INITIAL_NB_VERTICES - 1);
+    });
+
+    it('onKeyUp should not remove the last vertex from shape if key is invalid', () => {
+        const INITIAL_NB_VERTICES = 3;
+        lineShapeStub.vertices.length = INITIAL_NB_VERTICES;
+
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+
+        expect(lineShapeStub.vertices.length).toEqual(INITIAL_NB_VERTICES);
+    });
 });
