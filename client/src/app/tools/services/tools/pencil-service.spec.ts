@@ -14,9 +14,8 @@ describe('PencilService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-    let drawSegmentsSpy: jasmine.Spy<any>;
+    let drawVerticesSpy: jasmine.Spy<any>;
     let drawPointSpy: jasmine.Spy<any>;
-    let createNewSegmentSpy: jasmine.Spy<any>;
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
@@ -42,9 +41,8 @@ describe('PencilService', () => {
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        drawSegmentsSpy = spyOn<any>(service, 'drawSegments').and.callThrough();
+        drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
         drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
-        createNewSegmentSpy = spyOn<any>(service, 'createNewSegment').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -91,7 +89,7 @@ describe('PencilService', () => {
         service.mouseDown = true;
 
         service.onMouseUp(mouseEvent);
-        expect(drawSegmentsSpy).toHaveBeenCalled();
+        expect(drawVerticesSpy).toHaveBeenCalled();
     });
 
     it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
@@ -99,7 +97,7 @@ describe('PencilService', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
 
         service.onMouseUp(mouseEvent);
-        expect(drawSegmentsSpy).not.toHaveBeenCalled();
+        expect(drawVerticesSpy).not.toHaveBeenCalled();
     });
 
     it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
@@ -110,7 +108,7 @@ describe('PencilService', () => {
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawSegmentsSpy).toHaveBeenCalled();
+        expect(drawVerticesSpy).toHaveBeenCalled();
     });
 
     it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
@@ -119,7 +117,7 @@ describe('PencilService', () => {
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
-        expect(drawSegmentsSpy).not.toHaveBeenCalled();
+        expect(drawVerticesSpy).not.toHaveBeenCalled();
     });
 
     it(' onMouseMove should call drawPoint if mouse was down but did not move', () => {
@@ -138,32 +136,6 @@ describe('PencilService', () => {
 
         service.onMouseUp(mouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseLeave should set mouseInCanvas property to false when leaving the canvas', () => {
-        service.onMouseLeave(mouseEvent);
-        expect(service.mouseInCanvas).toEqual(false);
-    });
-
-    it(' onMouseEnter should set mouseInCanvas property to true when entering the canvas', () => {
-        service.onMouseEnter(mouseEvent);
-        expect(service.mouseInCanvas).toEqual(true);
-    });
-
-    it(' onMouseEnter should call createNewSegment if mouse was down', () => {
-        service.mouseInCanvas = false;
-        service.mouseDown = true;
-
-        service.onMouseEnter(mouseEvent);
-        expect(createNewSegmentSpy).toHaveBeenCalled();
-    });
-
-    it(' onMouseEnter should not call createNewSegment if mouse was not down', () => {
-        service.mouseInCanvas = false;
-        service.mouseDown = false;
-
-        service.onMouseEnter(mouseEvent);
-        expect(createNewSegmentSpy).not.toHaveBeenCalled();
     });
 
     it('Adjusting the line width should update the lineWidth property', () => {
