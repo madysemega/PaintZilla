@@ -1,7 +1,40 @@
 <div id="canvas-container" #container>
+    <div
+        id="rightDown"
+        [ngStyle]="{
+            position: 'relative',
+            top: height - 3 + 'px',
+            left: width - 3 + 'px',
+            width: 12 + 'px',
+            height: 12 + 'px',
+            'background-color': 'black',
+            'border-radius': '50%'
+        }"
+    ></div>
+    <div
+        id="down"
+        [ngStyle]="{
+            position: 'relative',
+            top: height - 14 + 'px',
+            left: (width - 3) / 2 + 'px',
+            width: 12 + 'px',
+            height: 12 + 'px',
+            'background-color': 'black',
+            'border-radius': '50%'
+        }"
+    ></div>
+    <div
+        id="right"
+        [ngStyle]="{
+            position: 'relative',
+            top: (height - 24) / 2 + 'px',
+            left: width - 3 + 'px',
+            width: 12 + 'px',
+            height: 12 + 'px',
+            'background-color': 'black',
+            'border-radius': '50%'
+        }"
+    ></div>
     <canvas id="canvas" #baseCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
     <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>
-    <div id="rightDown" draggable="true" [ngStyle]="{ top: height + 300 + 'px', left: width + 3 + 'px' }"></div>
-    <div id="down"></div>
-    <div id="right"></div>
 </div>

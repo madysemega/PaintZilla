@@ -20,6 +20,7 @@ export class DrawingComponent implements AfterViewInit {
     private canvasSize: Vec2 = { x: canvasAttributes.DEFAULT_WIDTH, y: canvasAttributes.DEFAULT_HEIGHT };
     private isResizing: boolean = false;
     private image: ImageData;
+    
     constructor(
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
