@@ -62,4 +62,66 @@ describe('LineShape', () => {
         lineShape.clear();
         expect(lineShape.vertices.length).toEqual(0);
     });
+
+    it('getFinalMousePosition should return real mouse position if shift is not down', () => {
+        const realMousePositions: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: -36, y: 52 },
+            { x: 128, y: 128 },
+        ];
+        realMousePositions.forEach((mousePosition) => {
+            expect(lineShape.getFinalMousePosition(mousePosition, false)).toEqual(mousePosition);
+        });
+    });
+
+    it('getFinalMousePosition should return a point at the same distance from the last vertex that the given mouse position is', () => {
+        const mousePositions: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: -36, y: 52 },
+            { x: 128, y: 128 },
+        ];
+        const verticesToAdd: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 128, y: 128 },
+            { x: -36, y: 52 },
+        ];
+
+        for (let i = 0; i < verticesToAdd.length; ++i) {
+            const latestVertex = verticesToAdd[i];
+            const latestMousePosition = mousePositions[i];
+            lineShape.vertices.push(latestVertex);
+
+            const expectedMagnitude = Math.sqrt((latestMousePosition.x - latestVertex.x) ** 2 + (latestMousePosition.y - latestVertex.y) ** 2);
+            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
+            const obtainedMagnitude = Math.sqrt((ajustedMousePosition.x - latestVertex.x) ** 2 + (ajustedMousePosition.y - latestVertex.y) ** 2);
+
+            expect(obtainedMagnitude).toEqual(expectedMagnitude);
+        }
+    });
+
+    it('getFinalMousePosition should make a segment with angle multiple of 45deg with last vertex in shape', () => {
+        const FOURTH = 0.25;
+
+        const mousePositions: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: -36, y: 52 },
+            { x: 128, y: 128 },
+        ];
+        const verticesToAdd: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 128, y: 128 },
+            { x: -36, y: 52 },
+        ];
+
+        for (let i = 0; i < verticesToAdd.length; ++i) {
+            const latestVertex = verticesToAdd[i];
+            const latestMousePosition = mousePositions[i];
+            lineShape.vertices.push(latestVertex);
+
+            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
+            const ajustedAngle = Math.atan2(ajustedMousePosition.y - latestVertex.y, ajustedMousePosition.x - latestVertex.x);
+
+            expect(Math.abs(ajustedAngle % (Math.PI * FOURTH))).toEqual(0);
+        }
+    });
 });

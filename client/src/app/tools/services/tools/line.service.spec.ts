@@ -121,4 +121,44 @@ describe('LineService', () => {
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
         expect(lineShapeRendererRenderMethodStub).not.toHaveBeenCalled();
     });
+
+    it('onKeyDown should set isShiftDown to true if key is shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+
+        service['isShiftDown'] = true;
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
+
+    it('onKeyDown should not set isShiftDown to true if key is not shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyDown({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyDown({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
+
+    it('onKeyUp should set isShiftDown to false if key is shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+    });
+
+    it('onKeyUp should not set isShiftDown to false if key is not shift', () => {
+        service['isShiftDown'] = false;
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeFalsy();
+
+        service['isShiftDown'] = true;
+        service.onKeyUp({ key: 'Fake key' } as KeyboardEvent);
+        expect(service['isShiftDown']).toBeTruthy();
+    });
 });
