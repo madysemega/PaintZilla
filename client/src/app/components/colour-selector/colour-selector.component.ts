@@ -14,10 +14,21 @@ export class ColourSelectorComponent implements OnInit {
   public hue: string;
   public colour: string;
   public colourInput: string;
+  public opacity: number = 1;
+  public position: string = 'right';
   
   constructor(public service: ColourToolService) { }
+  changeOpacity(event: any) {
+    
+    let indexThirdComma = this.colour.split(',', 3).join(',').length;
+    let opacityString = this.colour.substring(indexThirdComma+1, this.colour.length - 1);
+    console.log(opacityString);
+    this.opacity = parseInt(opacityString)
+    this.opacity = event.value;
+    this.colour = this.colour.substring(0, indexThirdComma+1) + this.opacity.toString() + ')';
+  }
   addColEv(event: any) {
-    console.log(event.target.style.backgroundcolor);
+    
     this.service.colour1 = event.target.style.backgroundColor;
   }
   addSecEv(event: any) {
@@ -36,6 +47,9 @@ export class ColourSelectorComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    // RGB(FF, FF, FF, 1)
+    
+    
   }
 
   takeHexClr(event: any) {
