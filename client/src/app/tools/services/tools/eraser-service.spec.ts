@@ -2,11 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
-import { PencilService } from './pencil-service';
-
+import { EraserService } from './eraser-service';
 // tslint:disable:no-any
-describe('PencilService', () => {
-    let service: PencilService;
+describe('EraserService', () => {
+    let service: EraserService;
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
@@ -33,7 +32,7 @@ describe('PencilService', () => {
         canvas = canvasTestHelper.canvas;
         canvasPosition = { x: 50, y: 40 };
 
-        service = TestBed.inject(PencilService);
+        service = TestBed.inject(EraserService);
 
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
             jasmine
@@ -154,9 +153,12 @@ describe('PencilService', () => {
 
         // Premier pixel seulement
         const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        expect(imageData.data[0]).toEqual(0); // R
-        expect(imageData.data[1]).toEqual(0); // G
-        expect(imageData.data[2]).toEqual(0); // B
+        // tslint:disable-next-line:no-magic-numbers
+        expect(imageData.data[0]).toEqual(255); // R
+        // tslint:disable-next-line:no-magic-numbers
+        expect(imageData.data[1]).toEqual(255); // G
+        // tslint:disable-next-line:no-magic-numbers
+        expect(imageData.data[2]).toEqual(255); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
     });

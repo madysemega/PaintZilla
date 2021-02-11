@@ -1,6 +1,9 @@
 <div class="container vertical">
     <div class="navbar-section vertical">
-        <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right">
+        <button mat-icon-button aria-label="Accueil"
+                matTooltip="Accueil"
+                matTooltipPosition="right"
+                routerLink="/home">
             <mat-icon>home</mat-icon>
         </button>
         <button mat-icon-button aria-label="Créer un nouveau dessin" 
@@ -18,7 +21,7 @@
                 [ngClass]="{selected: selectedToolName === toolName}"
                 (click)="selectTool(toolName)"
                 mat-icon-button
-                [matTooltip]="getDisplayName(toolName)"
+                [matTooltip]="getTooltipInfo(toolName)"
                 matTooltipPosition="right">
             <mat-icon [svgIcon]="getIconName(toolName)"></mat-icon>
         </button>
@@ -26,6 +29,7 @@
     <div class="navbar-section vertical">
         <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
         <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'"></app-pencil-tool-configuration>
+        <app-eraser-tool-configuration class="vertical" *ngIf="selectedToolName === 'eraser'"></app-eraser-tool-configuration>
         <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
     </div>
 </div>
