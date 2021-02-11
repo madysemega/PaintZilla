@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
@@ -7,7 +7,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
 })
-export class EditorComponent {
+export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
 
     ngAfterViewInit(): void {

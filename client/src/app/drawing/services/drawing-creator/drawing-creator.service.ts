@@ -14,7 +14,7 @@ export class DrawingCreatorService {
     constructor(private drawingService: DrawingService, public dialog: MatDialog) {}
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key == 'O') {
+        if (event.ctrlKey && event.key === 'O') {
             this.createNewDrawing();
         }
     }

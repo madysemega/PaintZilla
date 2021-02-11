@@ -18,8 +18,8 @@ export class DrawingService {
     // Taken from https://stackoverflow.com/questions/17386707/how-to-check-if-a-canvas-is-blank
     // Move this somewhere else?
     isCanvasEmpty(): boolean {
-        const originX: number = 0;
-        const originY: number = 0;
+        const originX = 0;
+        const originY = 0;
         return !this.baseCtx.getImageData(originX, originY, this.canvas.width, this.canvas.height).data.some((channel) => channel !== BLANK);
     }
 
