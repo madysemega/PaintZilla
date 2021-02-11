@@ -1,101 +1,94 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
-import { ColourToolService } from '../../../services/tools/colour-tool.service';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import { ColourToolService } from '@app/services/tools/colour-tool.service';
 
+const GRDSTEP1 = 0.17;
+const GRDSTEP2 = 0.34;
+const GRDSTEP3 = 0.51;
+const GRDSTEP4 = 0.68;
+const GRDSTEP5 = 0.85;
+
+const RECTHEIGHT = 10;
+const RECTWIDTH = 5;
 @Component({
-  selector: 'app-colour-slider',
-  templateUrl: './colour-slider.component.html',
-  styleUrls: ['./colour-slider.component.scss']
+    selector: 'app-colour-slider',
+    templateUrl: './colour-slider.component.html',
+    styleUrls: ['./colour-slider.component.scss'],
 })
-export class ColourSliderComponent implements OnInit, AfterViewInit {
-  @ViewChild('canvas')
-  canvas: ElementRef<HTMLCanvasElement>;
-  private ctx: CanvasRenderingContext2D;
-  public height: number;
-  public width: number;
-  public mousedown: boolean = false;
-  private selectedHeight: number;
-  
-  @Output()
-  colour: EventEmitter<string> = new EventEmitter()
+export class ColourSliderComponent implements AfterViewInit {
+    @ViewChild('canvas')
+    canvas: ElementRef<HTMLCanvasElement>;
+    private ctx: CanvasRenderingContext2D;
+    height: number;
+    width: number;
+    mousedown: boolean = false;
+    private selectedHeight: number;
 
-  onMouseDown(evt: MouseEvent) {
+    @Output()
+    colour: EventEmitter<string> = new EventEmitter();
 
-    this.mousedown = true;
-    this.selectedHeight = evt.offsetY;
-    this.draw();
-    this.emitColor(evt.offsetX, evt.offsetY);
-    console.log("mouse down");
-  }
-  
-  
-  onMouseMove(evt: MouseEvent) {
-    if (this.mousedown) {
-      this.selectedHeight = evt.offsetY
-      this.draw();
-      this.emitColor(evt.offsetX, evt.offsetY)
-      console.log("mouse onmoved");
+    onMouseDown(evt: MouseEvent): void {
+        this.mousedown = true;
+        this.selectedHeight = evt.offsetY;
+        this.draw();
+        this.emitColor(evt.offsetX, evt.offsetY);
     }
-  }
 
-  emitColor(x: number, y: number) {
-    const rgbaColor = this.getColorAtPosition(x, y);
-    this.colour.emit(rgbaColor);
-  }
-
-  @HostListener('window:mouseup', ['$event'])
-  onMouseUp(evt: MouseEvent) {
-    this.mousedown = false;
-}
-
-  constructor(public service: ColourToolService) { }
-  
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit() {
-    
-    
-    this.draw();
-  }
-
-  draw() {
-    if (!this.ctx) {
-      this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    onMouseMove(evt: MouseEvent): void {
+        if (this.mousedown) {
+            this.selectedHeight = evt.offsetY;
+            this.draw();
+            this.emitColor(evt.offsetX, evt.offsetY);
+        }
     }
-    this.width = this.canvas.nativeElement.width;
-    this.height = this.canvas.nativeElement.height;
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-    gradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
-    gradient.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
-    gradient.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
-    gradient.addColorStop(0.51, 'rgba(0, 255, 255, 1)');
-    gradient.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
-    gradient.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
-    gradient.addColorStop(1, 'rgba(255, 0, 0, 1)');
-    this.ctx.beginPath();
-    this.ctx.rect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = gradient;
-    this.ctx.fill();
-    this.ctx.closePath();
-    if (this.selectedHeight) { 
-      this.ctx.beginPath();
-      this.ctx.strokeStyle = 'white';
-      this.ctx.lineWidth = 5;
-      this.ctx.rect(0, this.selectedHeight - 5, this.width, 10);
-      this.ctx.stroke();
-      this.ctx.closePath();
+
+    emitColor(x: number, y: number): void {
+        const rgbaColor = this.getColorAtPosition(x, y);
+        this.colour.emit(rgbaColor);
     }
-  }
 
-  getColorAtPosition(x: number, y: number): string {
-    const imageData = this.ctx.getImageData(x, y, 1, 1).data;
-    return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
-  }
+    @HostListener('window:mouseup', ['$event'])
+    onMouseUp(evt: MouseEvent): void {
+        this.mousedown = false;
+    }
 
+    constructor(public service: ColourToolService) {}
 
-  printPropage() {
+    ngAfterViewInit(): void {
+        this.draw();
+    }
 
-    console.log("Blabla");
-  }
+    draw(): void {
+        if (!this.ctx) {
+            this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        }
+        this.width = this.canvas.nativeElement.width;
+        this.height = this.canvas.nativeElement.height;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        const GRADIENT = this.ctx.createLinearGradient(0, 0, 0, this.height);
+        GRADIENT.addColorStop(0, 'rgba(255, 0, 0, 1)');
+        GRADIENT.addColorStop(GRDSTEP1, 'rgba(255, 255, 0, 1)');
+        GRADIENT.addColorStop(GRDSTEP2, 'rgba(0, 255, 0, 1)');
+        GRADIENT.addColorStop(GRDSTEP3, 'rgba(0, 255, 255, 1)');
+        GRADIENT.addColorStop(GRDSTEP4, 'rgba(0, 0, 255, 1)');
+        GRADIENT.addColorStop(GRDSTEP5, 'rgba(255, 0, 255, 1)');
+        GRADIENT.addColorStop(1, 'rgba(255, 0, 0, 1)');
+        this.ctx.beginPath();
+        this.ctx.rect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = GRADIENT;
+        this.ctx.fill();
+        this.ctx.closePath();
+        if (this.selectedHeight) {
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = 'white';
+            this.ctx.lineWidth = RECTWIDTH;
+            this.ctx.rect(0, this.selectedHeight - RECTWIDTH, this.width, RECTHEIGHT);
+            this.ctx.stroke();
+            this.ctx.closePath();
+        }
+    }
+
+    getColorAtPosition(x: number, y: number): string {
+        const imageData = this.ctx.getImageData(x, y, 1, 1).data;
+        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+    }
 }

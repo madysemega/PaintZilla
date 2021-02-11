@@ -22,10 +22,10 @@
 </div>
 <button (click)=showList()></button>
 <div *ngIf="show">
-  <span *ngFor="let element of service.colourList">
-    <button [ngStyle]="{'background-color' : element || 'white'}"
+  <span *ngFor="let element of service.colourList; let i=index">
+    <button [ngClass]="'colEl'+(i)" [ngStyle]="{'background-color' : element || 'white'}"
     (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></button>
   </span>
 </div>
 <mat-slider thumbLabel
-step="0.1" min="0" max="1" [value]="this.opacity" (change)="changeOpacity($event)"></mat-slider>
+step="0.1" min="0" max="1" [value]="value" (change)="changeOpacity($event)"></mat-slider>
