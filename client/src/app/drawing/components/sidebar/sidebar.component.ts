@@ -36,7 +36,7 @@ export class SidebarComponent implements OnInit {
         return iconName === undefined ? 'unknown' : iconName;
     }
 
-    constructor(private toolSelectorService: ToolSelectorService, private drawingCreatorService : DrawingCreatorService) {
+    constructor(private toolSelectorService: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 

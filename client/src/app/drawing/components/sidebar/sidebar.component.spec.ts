@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
@@ -41,7 +42,11 @@ describe('SidebarComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
-            providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
+            providers: [
+                { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
+                { provide: MatDialog, useValue: {} },
+                { provide: MatDialogRef, useValue: {} },
+            ],
         }).compileComponents();
     }));
 

@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -55,7 +55,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         MatDialogModule,
         MatSliderModule,
     ],
-    providers: [],
+    providers: [MatDialog],
     bootstrap: [AppComponent],
     entryComponents: [DiscardChangesDialogComponent],
 })

@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
@@ -25,8 +26,10 @@ describe('EditorComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
+                { provide: MatDialog, useValue: {} },
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
+                { provide: MatDialogRef, useValue: {} },
             ],
         }).compileComponents();
     }));
