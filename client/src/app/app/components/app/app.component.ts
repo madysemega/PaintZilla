@@ -36,5 +36,13 @@ export class AppComponent {
             'rectangle-contoured-and-filled',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured-and-filled.svg'),
         );
+        this.iconRegistryService.addSvgIcon(
+            'line-with-joints',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/line-with-joints.svg'),
+        );
+        this.iconRegistryService.addSvgIcon(
+            'line-without-joints',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/line-without-joints.svg'),
+        );
     }
 }
