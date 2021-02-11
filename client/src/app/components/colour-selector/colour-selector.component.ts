@@ -80,9 +80,9 @@ export class ColourSelectorComponent {
 
     rememberCol(newCol: string): void {
         const LISTSIZE = 10;
-        if (this.service.colourList.length < LISTSIZE) {
+        if (this.service.colourList.length < LISTSIZE && newCol !== undefined) {
             this.service.colourList.push(newCol);
-        } else if (this.service.colourList.length === LISTSIZE) {
+        } else if (this.service.colourList.length === LISTSIZE && newCol !== undefined) {
             this.service.colourList.shift();
             this.service.colourList.push(newCol);
         }

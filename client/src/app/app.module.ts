@@ -1,6 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,7 +24,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         ColourSliderComponent,
         ColourPaletteComponent,
     ],
-    imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule, FormsModule],
+    imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule],
     providers: [],
     bootstrap: [AppComponent],
 })

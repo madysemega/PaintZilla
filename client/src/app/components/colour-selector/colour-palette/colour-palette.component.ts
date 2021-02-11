@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { PaletteToolService } from '@app/services/tools/palette-tool.service';
 
 @Component({
     selector: 'app-colour-palette',
@@ -19,8 +18,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
 
     @ViewChild('canvas')
     canvas: ElementRef<HTMLCanvasElement>;
-
-    constructor(public service: PaletteToolService) {}
 
     ngAfterViewInit(): void {
         this.draw();
