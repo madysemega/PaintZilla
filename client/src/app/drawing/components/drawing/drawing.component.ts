@@ -33,7 +33,7 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         if (this.isresizingService) {
-            this.resizingService.resizingCanvas(event);
+            this.resizingService.resizeCanvas(event);
         } else {
             this.toolSelector.getSelectedTool().onMouseMove(event);
         }

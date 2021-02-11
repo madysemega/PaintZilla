@@ -22,7 +22,7 @@ export class ResizingService {
         return false;
     }
 
-    resizingCanvas(event: MouseEvent): void {
+    resizeCanvas(event: MouseEvent): void {
         if (this.rightResizerEnabled && event.offsetX > CanvasAttributes.MINIMUM_SIZE && event.offsetX < CanvasAttributes.MAX_WIDTH) {
             this.canvasResize.x = event.offsetX;
         } else if (this.downResizerEnabled && event.offsetY > CanvasAttributes.MINIMUM_SIZE && event.offsetY < CanvasAttributes.MAX_HEIGHT) {
@@ -63,10 +63,8 @@ export class ResizingService {
         this.drawingService.canvas.style.border = 'medium dotted black';
     }
 
-    updateCanvasSize(){
+    updateCanvasSize() {
         this.drawingService.canvasSize.x = this.canvasResize.x;
         this.drawingService.canvasSize.y = this.canvasResize.y;
     }
-
-    
 }
