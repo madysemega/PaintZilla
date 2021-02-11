@@ -3,7 +3,7 @@ import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { MouseButton } from './pencil-service';
+import { MouseButton } from '@app/tools/classes/mouse-button';
 
 @Injectable({
     providedIn: 'root',
@@ -11,12 +11,10 @@ import { MouseButton } from './pencil-service';
 export class EllipseService extends ShapeTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    private startPoint: Vec2 = { x: 0, y: 0 };
-    private lastMousePosition: Vec2 = { x: 0, y: 0 };
+    startPoint: Vec2 = { x: 0, y: 0 };
+    lastMousePosition: Vec2;
 
     isShiftDown: boolean = false;
-
-    startPointInCanvas: boolean = false;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
@@ -30,27 +28,25 @@ export class EllipseService extends ShapeTool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown && this.mouseInCanvas) {
+        if (this.mouseDown) {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
-            this.startPointInCanvas = true;
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown && this.startPointInCanvas) {
+        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
-        this.startPointInCanvas = false;
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown && this.startPointInCanvas) {
+        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.lastMousePosition = mousePosition;
 
@@ -60,18 +56,9 @@ export class EllipseService extends ShapeTool {
         }
     }
 
-    onMouseLeave(event: MouseEvent): void {
-        this.mouseInCanvas = false;
-    }
-
-    onMouseEnter(event: MouseEvent): void {
-        this.mouseInCanvas = true;
-    }
-
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isShiftDown = true;
-
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
             this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);

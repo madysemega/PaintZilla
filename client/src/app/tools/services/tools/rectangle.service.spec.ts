@@ -185,7 +185,7 @@ describe('RectangleService', () => {
     it(' onMouseMove should call fill on preview canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
-        ////////////////////////
+
         service.shapeType = ShapeType.Filled;
         service.onMouseMove(mouseEvent);
         expect(previewCtxFillSpy).toHaveBeenCalled();
@@ -230,7 +230,7 @@ describe('RectangleService', () => {
     it(' onMouseUp should call fill on base canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
-        ////////////////////////
+
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxFillSpy).toHaveBeenCalled();

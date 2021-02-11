@@ -20,6 +20,10 @@ export abstract class Tool {
 
     onMouseUp(event: MouseEvent): void {}
 
+    onMouseClick(event: MouseEvent): void {}
+
+    onMouseDoubleClick(event: MouseEvent): void {}
+
     onMouseMove(event: MouseEvent): void {}
 
     onMouseLeave(event: MouseEvent): void {}

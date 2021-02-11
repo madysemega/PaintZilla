@@ -14,7 +14,6 @@ import { ResizingService } from '../../services/drawing-service/resizing.service
 export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
-    // @ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>;
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
@@ -56,6 +55,16 @@ export class DrawingComponent implements AfterViewInit {
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
         }
+    }
+
+    @HostListener('click', ['$event'])
+    onMouseClick(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseClick(event);
+    }
+
+    @HostListener('dblclick', ['$event'])
+    onMouseDoubleClick(event: MouseEvent): void {
+        this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
     }
 
     @HostListener('mouseleave', ['$event'])

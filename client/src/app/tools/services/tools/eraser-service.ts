@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 
 @Injectable({
     providedIn: 'root',
 })
-export class PencilService extends ResizableTool {
+export class EraserService extends ResizableTool {
     lineWidth: number;
     private vertices: Vec2[];
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.vertices = [];
-        this.name = 'Crayon';
-        this.key = 'pencil';
+        this.name = 'Efface';
+        this.key = 'eraser';
     }
 
     adjustLineWidth(lineWidth: number): void {
@@ -60,7 +60,7 @@ export class PencilService extends ResizableTool {
         this.drawingService.baseCtx.save();
         this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = 'white';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.beginPath();
@@ -74,7 +74,6 @@ export class PencilService extends ResizableTool {
 
     private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
         ctx.beginPath();
-        ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
         ctx.fill();
     }
 
