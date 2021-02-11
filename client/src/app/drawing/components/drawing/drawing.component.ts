@@ -17,6 +17,7 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    private isResizing: boolean = false;
     constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, private resizingService: ResizingService) {}
 
     ngAfterViewInit(): void {
@@ -47,6 +48,7 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('document: mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         if (this.resizingService.isResizing(event)) {
+            this.isResizing = true;
             this.resizingService.disableResizer();
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
@@ -55,9 +57,10 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('click', ['$event'])
     onMouseClick(event: MouseEvent): void {
-        if (!this.resizingService.isResizing(event)) {
+        if (!this.isResizing) {
             this.toolSelector.getSelectedTool().onMouseClick(event);
         }
+        this.isResizing = false;
     }
 
     @HostListener('dblclick', ['$event'])
