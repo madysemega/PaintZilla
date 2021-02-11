@@ -20,11 +20,13 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
+        event.preventDefault();
         this.toolSelector.getSelectedTool().onKeyDown(event);
     }
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
+        event.preventDefault();
         const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
         this.toolSelector.selectTool(toolName);
         this.toolSelector.getSelectedTool().onKeyUp(event);

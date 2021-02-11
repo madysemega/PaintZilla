@@ -19,6 +19,9 @@ describe('EditorComponent', () => {
 
     keyboardZEvent = {
         key: 'Z',
+        preventDefault: () => {
+            return;
+        },
     } as KeyboardEvent;
 
     beforeEach(async(() => {

@@ -14,13 +14,13 @@ export class DrawingCreatorService {
     constructor(private drawingService: DrawingService, public dialog: MatDialog) {}
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === 'O') {
+        if (event.ctrlKey && event.key === 'o') {
             this.createNewDrawing();
         }
     }
 
     createNewDrawing(): void {
-        if (!this.drawingService.isCanvasEmpty()) {
+        if (!this.drawingService.isCanvasEmpty() && this.dialog.openDialogs.length === 0) {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true });
 
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {

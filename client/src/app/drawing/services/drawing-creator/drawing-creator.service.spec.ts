@@ -20,7 +20,7 @@ describe('DrawingCreatorService', () => {
 
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
 
-        matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+        matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
         matDialogSpy.open.and.callFake(() => {
             return matDialogRefSpy;
         });
@@ -43,9 +43,9 @@ describe('DrawingCreatorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('onKeyUp should call createNewDrawing() with keys Ctrl + O', () => {
+    it('onKeyUp should call createNewDrawing() with keys Ctrl + o', () => {
         keyboardEvent = {
-            key: 'O',
+            key: 'o',
             ctrlKey: true,
         } as KeyboardEvent;
         drawingServiceSpy.isCanvasEmpty.and.returnValue(true);
