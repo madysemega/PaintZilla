@@ -3,37 +3,44 @@
         id="rightDown"
         [ngStyle]="{
             position: 'relative',
-            top: height - 3 + 'px',
-            left: width - 3 + 'px',
-            width: 12 + 'px',
-            height: 12 + 'px',
+            top: height - 6 + 'px',
+            left: width - 6 + 'px',
+            width: 16 + 'px',
+            height: 16 + 'px',
             'background-color': 'black',
-            'border-radius': '50%'
+            'border-radius': '50%',
+            cursor: 'nwse-resize'
         }"
+        (mousedown)="activateResizer('rightDown')"
     ></div>
     <div
         id="down"
         [ngStyle]="{
             position: 'relative',
-            top: height - 14 + 'px',
-            left: (width - 3) / 2 + 'px',
-            width: 12 + 'px',
-            height: 12 + 'px',
+            top: height - 20 + 'px',
+            left: width / 2 + 'px',
+            width: 16 + 'px',
+            height: 16 + 'px',
             'background-color': 'black',
-            'border-radius': '50%'
+            'border-radius': '50%',
+            cursor: 'ns-resize'
         }"
+        (mousedown)="activateResizer('down')"
     ></div>
     <div
         id="right"
+        class="resizeButton"
         [ngStyle]="{
             position: 'relative',
-            top: (height - 24) / 2 + 'px',
-            left: width - 3 + 'px',
-            width: 12 + 'px',
-            height: 12 + 'px',
+            top: (height - 96) / 2 + 'px',
+            left: width - 2 + 'px',
+            width: 16 + 'px',
+            height: 16 + 'px',
             'background-color': 'black',
-            'border-radius': '50%'
+            'border-radius': '50%',
+            cursor: 'ew-resize'
         }"
+        (mousedown)="activateResizer('right')"
     ></div>
     <canvas id="canvas" #baseCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
     <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>

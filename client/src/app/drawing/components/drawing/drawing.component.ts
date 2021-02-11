@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import * as canvasAttributes from '../../constants/canvas-attributes';
-import { DrawingSurfaceResizingService } from '../../services/drawing/drawing-surface-resizing.service';
+import { DrawingSurfaceResizingService } from '../../services/drawing-service/drawing-surface-resizing.service';
 
 @Component({
     selector: 'app-drawing',
@@ -20,7 +20,6 @@ export class DrawingComponent implements AfterViewInit {
     private canvasSize: Vec2 = { x: canvasAttributes.DEFAULT_WIDTH, y: canvasAttributes.DEFAULT_HEIGHT };
     private isResizing: boolean = false;
     private image: ImageData;
-    
     constructor(
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
@@ -37,7 +36,6 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.drawingSurfaceResizingService.checkIfOnBorder(event);
         if (this.isResizing) {
             this.drawingSurfaceResizingService.resizingCanvas(event);
             this.previewCtx.putImageData(this.image, 0, 0);
@@ -51,7 +49,6 @@ export class DrawingComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (this.drawingSurfaceResizingService.isResizing(event)) {
             this.isResizing = true;
-            this.image = this.baseCtx.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y);
         } else {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
@@ -65,6 +62,7 @@ export class DrawingComponent implements AfterViewInit {
             this.canvasSize.y = this.drawingSurfaceResizingService.resizeCanvasY();
             this.baseCtx.putImageData(this.image, 0, 0);
             this.baseCanvas.nativeElement.style.border = 'medium none black';
+            this.drawingSurfaceResizingService.disableResizer();
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
         }
@@ -94,6 +92,11 @@ export class DrawingComponent implements AfterViewInit {
 
     get height(): number {
         return this.canvasSize.y;
+    }
+
+    activateResizer(button: string): void {
+        this.image = this.baseCtx.getImageData(0, 0, this.canvasSize.x, this.canvasSize.y);
+        this.drawingSurfaceResizingService.activateResizer(button);
     }
 
     getCurrentTool(): Tool {
