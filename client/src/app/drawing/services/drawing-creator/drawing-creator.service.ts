@@ -24,7 +24,6 @@ export class DrawingCreatorService {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true });
 
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {
-                console.log(changesAreDiscarded);
                 if (changesAreDiscarded) {
                     this.setDefaultCanvasSize();
                 }
@@ -33,9 +32,6 @@ export class DrawingCreatorService {
     }
 
     setDefaultCanvasSize(): void {
-        this.drawingService.canvas.width = 0.5 * this.drawingComponentWidth;
-        this.drawingService.canvas.height = 0.5 * this.drawingComponentHeight;
-        this.drawingService.previewCanvas.width = 0.5 * this.drawingComponentWidth;
-        this.drawingService.previewCanvas.height = 0.5 * this.drawingComponentHeight;
+        this.drawingService.setCanvasSize(this.drawingComponentWidth / 2.0, this.drawingComponentHeight / 2.0);
     }
 }

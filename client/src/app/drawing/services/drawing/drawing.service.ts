@@ -20,8 +20,13 @@ export class DrawingService {
     isCanvasEmpty(): boolean {
         const originX: number = 0;
         const originY: number = 0;
-        return !this.baseCtx
-                .getImageData(originX, originY, this.canvas.width, this.canvas.height).data
-                .some(channel => channel !== BLANK);
+        return !this.baseCtx.getImageData(originX, originY, this.canvas.width, this.canvas.height).data.some((channel) => channel !== BLANK);
+    }
+
+    setCanvasSize(width: number, height: number): void {
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.previewCanvas.width = width;
+        this.previewCanvas.height = height;
     }
 }

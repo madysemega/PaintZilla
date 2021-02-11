@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
@@ -18,6 +18,7 @@ describe('SidebarComponent', () => {
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let pencilStoolStub: PencilService;
+    let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
 
     keyboard1Event = {
         key: '1',
@@ -39,13 +40,13 @@ describe('SidebarComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub);
         rectangleService = new RectangleServiceStub(drawingStub);
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, ellipseToolStub, rectangleService);
+        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
-                { provide: MatDialog, useValue: {} },
-                { provide: MatDialogRef, useValue: {} },
+                { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
         }).compileComponents();
     }));
@@ -105,5 +106,10 @@ describe('SidebarComponent', () => {
         const expectedIconName = 'unknown';
         const obtainedIconName: string = component.getIconName('invalid tool');
         expect(obtainedIconName).toBe(expectedIconName);
+    });
+
+    it('createNewDrawing should call DrawingCreatorService createNewDrawing method', () => {
+        component.createNewDrawing();
+        expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
     });
 });
