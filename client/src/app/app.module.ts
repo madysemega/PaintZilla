@@ -11,6 +11,7 @@ import { EditorComponent } from './editor/components/editor/editor.component';
 import { MaterialModule } from './material.module';
 import { EllipseToolConfigurationComponent } from './tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
+import { LineToolConfigurationComponent } from './tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { PencilToolConfigurationComponent } from './tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from './tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from './tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
@@ -30,6 +31,7 @@ import { ShapeToolConfigurationComponent } from './tools/components/tool-configu
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        LineToolConfigurationComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
     providers: [],

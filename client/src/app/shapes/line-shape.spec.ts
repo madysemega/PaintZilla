@@ -1,16 +1,13 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { LineShape } from './line-shape';
-import { ShapeProperty } from './properties/shape-property';
 
 describe('LineShape', () => {
     let lineShape: LineShape;
-    let properties: ShapeProperty[];
     let vertices: Vec2[];
 
     beforeEach(() => {
-        properties = new Array<ShapeProperty>();
         vertices = new Array<Vec2>();
-        lineShape = new LineShape(properties, vertices);
+        lineShape = new LineShape(vertices);
     });
 
     it('should should be closeable if it has enough vertices and we are trying to close it at <= 20px from first vertex', () => {
