@@ -12,6 +12,8 @@
             cursor: 'nwse-resize'
         }"
         (mousedown)="activateResizer('rightDown')"
+        (click)="activateResizer('rightDown')"
+        (dblclick)="activateResizer('rightDown')"
     ></div>
     <div
         id="down"
@@ -26,6 +28,8 @@
             cursor: 'ns-resize'
         }"
         (mousedown)="activateResizer('down')"
+        (click)="activateResizer('down')"
+        (dblclick)="activateResizer('down')"
     ></div>
     <div
         id="right"
@@ -41,6 +45,8 @@
             cursor: 'ew-resize'
         }"
         (mousedown)="activateResizer('right')"
+        (click)="activateResizer('right')"
+        (dblclick)="activateResizer('right')"
     ></div>
     <canvas id="canvas" #baseCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
     <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>

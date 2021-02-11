@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import * as CanvasAttributes from '../../constants/Constants';
-import { DrawingService } from './drawing.service';
+import * as CanvasAttributes from '@app/drawing/constants/constants';
+import { ResizingType } from '@app/drawing/enums/resizing-type';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,10 +17,7 @@ export class ResizingService {
     constructor(private drawingService: DrawingService) {}
 
     isResizing(event: MouseEvent): boolean {
-        if (this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled) {
-            return true;
-        }
-        return false;
+        return this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled;
     }
 
     resizeCanvas(event: MouseEvent): void {
@@ -38,33 +36,37 @@ export class ResizingService {
         this.restorePreviewImageData();
     }
 
-    activateResizer(button: string): void {
-        this.image = this.drawingService.baseCtx.getImageData(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
-        if (button === 'right') this.rightResizerEnabled = true;
-        else if (button === 'down') this.downResizerEnabled = true;
-        else if (button === 'rightDown') this.rightDownResizerEnabled = true;
-    }
-
-    disableResizer(): void {
-        this.restoreBaseImageData();
-        this.updateCanvasSize();
-        this.drawingService.canvas.style.border = 'medium none black';
-        this.rightResizerEnabled = false;
-        this.rightDownResizerEnabled = false;
-        this.downResizerEnabled = false;
-    }
-
-    restoreBaseImageData(): void {
-        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
-    }
-
     restorePreviewImageData(): void {
         this.drawingService.previewCtx.putImageData(this.image, 0, 0);
         this.drawingService.canvas.style.border = 'medium dotted black';
     }
 
-    updateCanvasSize() {
+    activateResizer(button: string): void {
+        this.saveCurrentImage();
+        this.rightResizerEnabled = button === ResizingType.RIGHT;
+        this.downResizerEnabled = button === ResizingType.DOWN;
+        this.rightDownResizerEnabled = button === ResizingType.RIGHTDOWN;
+    }
+
+    saveCurrentImage(): void {
+        this.image = this.drawingService.baseCtx.getImageData(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
+    }
+
+    disableResizer(): void {
+        this.restoreBaseImageData();
+        this.updateCanvasSize();
+        this.rightResizerEnabled = false;
+        this.rightDownResizerEnabled = false;
+        this.downResizerEnabled = false;
+    }
+
+    updateCanvasSize(): void {
         this.drawingService.canvasSize.x = this.canvasResize.x;
         this.drawingService.canvasSize.y = this.canvasResize.y;
+        this.drawingService.canvas.style.border = 'medium solid black';
+    }
+
+    restoreBaseImageData(): void {
+        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
     }
 }

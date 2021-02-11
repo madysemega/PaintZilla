@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Vec2} from '@app/app/classes/vec2';
+import { Vec2 } from '@app/app/classes/vec2';
+
 @Injectable({
     providedIn: 'root',
 })

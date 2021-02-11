@@ -1,4 +1,4 @@
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
 
 export abstract class ResizableTool extends Tool {

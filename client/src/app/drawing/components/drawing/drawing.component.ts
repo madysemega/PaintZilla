@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import * as Constants from '@app/drawing/constants/constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import * as Constants from '../../constants/Constants';
-import { ResizingService } from '../../services/drawing-service/resizing.service';
 
 @Component({
     selector: 'app-drawing',
@@ -17,7 +17,6 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-    private isresizingService: boolean = false;
     constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, private resizingService: ResizingService) {}
 
     ngAfterViewInit(): void {
@@ -31,7 +30,7 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        if (this.isresizingService) {
+        if (this.resizingService.isResizing(event)) {
             this.resizingService.resizeCanvas(event);
         } else {
             this.toolSelector.getSelectedTool().onMouseMove(event);
@@ -40,17 +39,14 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (this.resizingService.isResizing(event)) {
-            this.isresizingService = true;
-        } else {
+        if (!this.resizingService.isResizing(event)) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
     }
 
     @HostListener('document: mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        if (this.isresizingService) {
-            this.isresizingService = false;
+        if (this.resizingService.isResizing(event)) {
             this.resizingService.disableResizer();
         } else {
             this.toolSelector.getSelectedTool().onMouseUp(event);
@@ -59,22 +55,30 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('click', ['$event'])
     onMouseClick(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseClick(event);
+        if (!this.resizingService.isResizing(event)) {
+            this.toolSelector.getSelectedTool().onMouseClick(event);
+        }
     }
 
     @HostListener('dblclick', ['$event'])
     onMouseDoubleClick(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
+        if (!this.resizingService.isResizing(event)) {
+            this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
+        }
     }
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseLeave(event);
+        if (!this.resizingService.isResizing(event)) {
+            this.toolSelector.getSelectedTool().onMouseLeave(event);
+        }
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
-        this.toolSelector.getSelectedTool().onMouseEnter(event);
+        if (!this.resizingService.isResizing(event)) {
+            this.toolSelector.getSelectedTool().onMouseEnter(event);
+        }
     }
 
     get resizeWidth(): number {

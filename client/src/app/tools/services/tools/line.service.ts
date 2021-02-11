@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';
