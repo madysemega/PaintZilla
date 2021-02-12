@@ -30,7 +30,6 @@ export class PencilService extends ResizableTool {
             this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
         }
     }
 
@@ -40,7 +39,6 @@ export class PencilService extends ResizableTool {
             this.vertices.push(mousePosition);
 
             this.drawVertices(this.drawingService.baseCtx);
-            this.drawPoint(this.drawingService.baseCtx, this.mouseDownCoord);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
@@ -60,7 +58,6 @@ export class PencilService extends ResizableTool {
         this.drawingService.baseCtx.save();
         this.drawingService.previewCtx.save();
         this.adjustLineWidth(this.lineWidth);
-        ctx.strokeStyle = 'black';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.beginPath();
@@ -70,12 +67,6 @@ export class PencilService extends ResizableTool {
         ctx.stroke();
         this.drawingService.baseCtx.restore();
         this.drawingService.previewCtx.restore();
-    }
-
-    private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
-        ctx.fill();
     }
 
     private clearVertices(): void {
