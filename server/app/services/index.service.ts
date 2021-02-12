@@ -23,9 +23,8 @@ export class IndexService {
             .currentTime()
             .then((timeMessage: Message) => {
                 return {
-                    title:
-                        'Bonjour, bienvenue dans notre projet de 2990. Nous esperons que vous passerez une expérience agréable, et si vous avez des questions, hésitez pas à nous contacter!',
-                    body: 'Heure locale : ' + timeMessage.body,
+                    title: 'Hello world',
+                    body: 'Time is : ' + timeMessage.body,
                 };
             })
             .catch((error: unknown) => {
