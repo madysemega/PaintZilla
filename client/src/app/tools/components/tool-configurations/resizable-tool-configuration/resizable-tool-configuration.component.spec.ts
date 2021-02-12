@@ -8,8 +8,9 @@ class ResizableToolStub extends ResizableTool {
         super(drawingService);
     }
 
-    adjustLineWidth(): void {
+    adjustLineWidth(lineWidth: number): void {
         this.key = 'just-to-test';
+        this.lineWidth = lineWidth;
     }
 }
 // tslint:disable:no-any

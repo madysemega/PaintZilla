@@ -20,8 +20,8 @@ describe('LineShapeRenderer', () => {
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         vertices = new Array<Vec2>();
-        lineShape = new LineShape(properties, vertices);
-        lineShapeRenderer = new LineShapeRenderer(lineShape);
+        lineShape = new LineShape(vertices);
+        lineShapeRenderer = new LineShapeRenderer(lineShape, properties);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;

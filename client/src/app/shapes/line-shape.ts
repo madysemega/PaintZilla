@@ -1,5 +1,4 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { ShapeProperty } from './properties/shape-property';
 import { Shape } from './shape';
 
 export class LineShape extends Shape {
@@ -58,7 +57,7 @@ export class LineShape extends Shape {
         this.vertices = [];
     }
 
-    constructor(properties: ShapeProperty[], public vertices: Vec2[]) {
-        super(properties);
+    constructor(public vertices: Vec2[]) {
+        super();
     }
 }
