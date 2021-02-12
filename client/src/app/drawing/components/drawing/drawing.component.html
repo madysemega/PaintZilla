@@ -37,7 +37,7 @@
         [ngStyle]="{
             position: 'relative',
             top: (height - 96) / 2 + 'px',
-            left: width - 2 + 'px',
+            left: width - 4 + 'px',
             width: 16 + 'px',
             height: 16 + 'px',
             'background-color': 'black',
@@ -49,5 +49,5 @@
         (dblclick)="activateResizer('right')"
     ></div>
     <canvas id="canvas" #baseCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
-    <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"></canvas>
+    <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"> </canvas>
 </div>

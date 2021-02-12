@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import * as Constants from '@app/drawing/constants/constants';
+import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';

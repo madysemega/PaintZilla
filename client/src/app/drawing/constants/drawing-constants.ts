@@ -1,0 +1,9 @@
+export const DEFAULT_WIDTH = 945;
+export const DEFAULT_HEIGHT = 920;
+export const BORDER_SIZE = 5;
+export const MINIMUM_SIZE = 250;
+export const MAX_WIDTH = 2365;
+export const MAX_HEIGHT = 1185;
+export const BORDER_INITIAL_STYLE = 'medium solid black';
+export const BORDER_RESISING_STYLE = 'medium dotted black';
+export const CTX_COLOR = 'white';
