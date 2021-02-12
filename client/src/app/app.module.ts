@@ -1,17 +1,23 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './components/app/app.component';
+import { AppRoutingModule } from '@app/app-routing.module';
+import { AppComponent } from '@app/app/components/app/app.component';
+import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
+import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
+import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
+import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { ColourPaletteComponent } from './components/colour-selector/colour-palette/colour-palette.component';
 import { ColourSelectorComponent } from './components/colour-selector/colour-selector.component';
 import { ColourSliderComponent } from './components/colour-selector/colour-slider/colour-slider.component';
-import { DrawingComponent } from './components/drawing/drawing.component';
-import { EditorComponent } from './components/editor/editor.component';
-import { MainPageComponent } from './components/main-page/main-page.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { MaterialModule } from './material.module';
+import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -20,11 +26,19 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         SidebarComponent,
         DrawingComponent,
         MainPageComponent,
+        EllipseToolConfigurationComponent,
+        PencilToolConfigurationComponent,
+        EraserToolConfigurationComponent,
+        RectangleToolConfigurationComponent,
+        ShapeToolConfigurationComponent,
+        ResizableToolConfigurationComponent,
+        PencilToolConfigurationComponent,
+        ColourPaletteComponent,
         ColourSelectorComponent,
         ColourSliderComponent,
-        ColourPaletteComponent,
     ],
-    imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule],
+    imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
+
     providers: [],
     bootstrap: [AppComponent],
 })
