@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -45,7 +46,11 @@ export class SidebarComponent implements OnInit {
         return iconName === undefined ? 'unknown' : iconName;
     }
 
-    constructor(private toolSelectorService: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {
+    constructor(
+        private toolSelectorService: ToolSelectorService,
+        private drawingCreatorService: DrawingCreatorService,
+        public drawingService: DrawingService,
+    ) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 
@@ -55,5 +60,6 @@ export class SidebarComponent implements OnInit {
 
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
+        this.drawingService.canvasIsEmpty = true;
     }
 }

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -16,7 +17,11 @@ export class EditorComponent implements AfterViewInit {
         this.drawingCreatorService.setDefaultCanvasSize();
     }
 
-    constructor(public toolSelector: ToolSelectorService, public drawingCreatorService: DrawingCreatorService) {}
+    constructor(
+        public toolSelector: ToolSelectorService,
+        private drawingCreatorService: DrawingCreatorService,
+        private drawingService: DrawingService,
+    ) {}
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
@@ -36,6 +41,7 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseMove(event);
+        this.drawingService.isCanvasEmpty();
     }
 
     @HostListener('window:mouseup', ['$event'])
