@@ -75,4 +75,9 @@ export class ResizingService {
         this.drawingService.canvasSize.x = this.canvasResize.x;
         this.drawingService.canvasSize.y = this.canvasResize.y;
     }
+
+    resetCanvasDimensions(): void {
+        this.canvasResize.x = Constants.HALF_WINDOW_WIDTH;
+        this.canvasResize.y = Constants.HALF_WINDOW_HEIGHT;
+    }
 }

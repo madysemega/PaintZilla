@@ -1,5 +1,4 @@
-import { Component, HostListener } from '@angular/core';
-import * as constants from '@app/app/constants/main-page-constants';
+import { Component } from '@angular/core';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { IndexService } from '@app/tools/services/index/index.service';
 import { Message } from '@common/communication/message';
@@ -37,9 +36,8 @@ export class MainPageComponent {
             )
             .subscribe(this.message);
     }
-    @HostListener('window:resize', ['$event'])
+
     resetCanvasDimensions(): void {
-        this.resizingService.canvasResize.x = constants.HALF_WINDOW_WIDTH;
-        this.resizingService.canvasResize.y = constants.HALF_WINDOW_HEIGHT;
+        this.resizingService.resetCanvasDimensions();
     }
 }
