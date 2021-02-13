@@ -10,7 +10,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { LineService } from './line.service';
 
 // tslint:disable:no-any
-// tslint:disable: max-file-line-count
+// tslint:disable:max-file-line-count
 describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
 
