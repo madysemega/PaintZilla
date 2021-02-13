@@ -68,9 +68,9 @@ export class LineService extends ResizableTool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        const mousePosition: Vec2 = this.lineShape.getFinalMousePosition(this.getPositionFromMouse(event), this.isShiftDown);
+        const mousePosition: Vec2 = this.getPositionFromMouse(event);
         this.lastMousePosition = mousePosition;
-        this.previewLine(mousePosition);
+        this.previewLine(this.lineShape.getFinalMousePosition(mousePosition, this.isShiftDown));
     }
 
     onKeyDown(event: KeyboardEvent): void {
