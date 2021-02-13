@@ -55,7 +55,7 @@ export class LineService extends ResizableTool {
             if (this.lineShape.isCloseableWith(this.lastMousePosition)) {
                 this.lineShape.close();
             } else {
-                this.lineShape.vertices.push(this.lastMousePosition);
+                this.lineShape.vertices.push(this.lineShape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown));
             }
 
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
