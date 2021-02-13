@@ -18,12 +18,6 @@ export class PencilService extends ResizableTool {
         this.key = 'pencil';
     }
 
-    adjustLineWidth(lineWidth: number): void {
-        this.lineWidth = lineWidth;
-        this.drawingService.previewCtx.lineWidth = lineWidth;
-        this.drawingService.baseCtx.lineWidth = lineWidth;
-    }
-
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
