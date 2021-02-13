@@ -14,7 +14,7 @@ export class ResizingService {
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
     image: ImageData;
 
-    constructor(private drawingService: DrawingService) {}
+    constructor(public drawingService: DrawingService) {}
 
     isResizing(event: MouseEvent): boolean {
         return this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled;

@@ -1,8 +1,8 @@
 import { async, TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
-import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
+import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 
@@ -25,10 +25,10 @@ describe('ResizingService', () => {
         previewCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         service = TestBed.inject(ResizingService);
         canvasSizeStub = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-        service['drawingService'].canvas = canvasTestHelper.canvas;
-        service['drawingService'].baseCtx = baseCtxStub;
-        service['drawingService'].previewCtx = previewCtxStub;
-        service['drawingService'].canvasSize = canvasSizeStub;
+        service.drawingService.canvas = canvasTestHelper.canvas;
+        service.drawingService.baseCtx = baseCtxStub;
+        service.drawingService.previewCtx = previewCtxStub;
+        service.drawingService.canvasSize = canvasSizeStub;
         testMouseEvent = {
             offsetX: Constants.MAX_WIDTH - Constants.DEFAULT_WIDTH,
             offsetY: Constants.MAX_HEIGHT - Constants.DEFAULT_HEIGHT,
@@ -292,7 +292,7 @@ describe('ResizingService', () => {
         expect(getImageDataStub).toHaveBeenCalled();
         expect(getImageDataStub).toHaveBeenCalledWith(0, 0, drawingServiceStub.canvasSize.x, drawingServiceStub.canvasSize.y);
     });
-    
+
     it('disableResizer(): all resizing booleans should be false', () => {
         spyOn(service, 'restoreBaseImageData').and.returnValue();
         spyOn(service, 'updateCanvasSize').and.returnValue();
