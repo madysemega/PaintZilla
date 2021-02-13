@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
 

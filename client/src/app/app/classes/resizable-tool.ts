@@ -1,4 +1,4 @@
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { Tool } from '@app/tools/classes/tool';
 

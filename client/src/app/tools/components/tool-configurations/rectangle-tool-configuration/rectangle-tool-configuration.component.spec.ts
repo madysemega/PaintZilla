@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
 

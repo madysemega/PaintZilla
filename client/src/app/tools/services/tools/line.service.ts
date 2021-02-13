@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
