@@ -2,6 +2,8 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { Shape } from './shape';
 
 export class LineShape extends Shape {
+    static readonly DEFAULT_JOINTS_DIAMETER: number = 5;
+
     getFinalMousePosition(realMousePosition: Vec2, isShiftDown: boolean): Vec2 {
         const HALF_ANGLE_OFFSET_FACTOR_INV = 8;
         const QUARTER_CIRCLE_FACTOR_INV = 4;
@@ -57,7 +59,7 @@ export class LineShape extends Shape {
         this.vertices = [];
     }
 
-    constructor(public vertices: Vec2[]) {
+    constructor(public vertices: Vec2[], public jointsDiameter: number = LineShape.DEFAULT_JOINTS_DIAMETER) {
         super();
     }
 }
