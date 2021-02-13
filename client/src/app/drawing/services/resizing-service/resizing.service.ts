@@ -21,19 +21,27 @@ export class ResizingService {
     }
 
     resizeCanvas(event: MouseEvent): void {
-        if (this.rightResizerEnabled && event.offsetX > Constants.MINIMUM_SIZE && event.offsetX < Constants.MAX_WIDTH) {
+        if (this.rightResizerEnabled && this.canBeResizedHorizontally(event)) {
             this.canvasResize.x = event.offsetX;
-        } else if (this.downResizerEnabled && event.offsetY > Constants.MINIMUM_SIZE && event.offsetY < Constants.MAX_HEIGHT) {
+        } else if (this.downResizerEnabled && this.canBeResizedVertically(event)) {
             this.canvasResize.y = event.offsetY;
         } else if (this.rightDownResizerEnabled) {
-            if (event.offsetX > Constants.MINIMUM_SIZE && event.offsetX < Constants.MAX_WIDTH) {
+            if (this.canBeResizedHorizontally(event)) {
                 this.canvasResize.x = event.offsetX;
             }
-            if (event.offsetY > Constants.MINIMUM_SIZE && event.offsetY < Constants.MAX_HEIGHT) {
+            if (this.canBeResizedVertically(event)) {
                 this.canvasResize.y = event.offsetY;
             }
         }
         this.restorePreviewImageData();
+    }
+
+    canBeResizedHorizontally(event: MouseEvent): boolean {
+        return event.offsetX > Constants.MINIMUM_SIZE && event.offsetX < Constants.MAX_WIDTH;
+    }
+
+    canBeResizedVertically(event: MouseEvent): boolean {
+        return event.offsetY > Constants.MINIMUM_SIZE && event.offsetY < Constants.MAX_HEIGHT;
     }
 
     restorePreviewImageData(): void {
