@@ -333,4 +333,13 @@ describe('ResizingService', () => {
         expect(drawingServiceStub.canvasSize.x).toEqual(service.canvasResize.x);
         expect(drawingServiceStub.canvasSize.y).toEqual(service.canvasResize.y);
     });
+
+    it('resetCanvasDimensions(): canvasResize.x should be equal to HALF_WINDOW_WIDTH and canvasResize.y \
+    should be equal to HALF_WINDOW_HEIGHT', () => {
+        service.canvasResize.x = 0;
+        service.canvasResize.y = 0;
+        service.resetCanvasDimensions();
+        expect(service.canvasResize.x).toEqual(Constants.HALF_WINDOW_WIDTH);
+        expect(service.canvasResize.y).toEqual(Constants.HALF_WINDOW_HEIGHT);
+    });
 });
