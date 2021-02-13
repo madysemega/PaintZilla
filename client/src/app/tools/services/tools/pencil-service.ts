@@ -8,7 +8,6 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
     providedIn: 'root',
 })
 export class PencilService extends ResizableTool {
-    lineWidth: number;
     private vertices: Vec2[];
 
     constructor(drawingService: DrawingService) {
@@ -51,19 +50,20 @@ export class PencilService extends ResizableTool {
     }
 
     private drawVertices(ctx: CanvasRenderingContext2D): void {
-        this.drawingService.baseCtx.save();
-        this.drawingService.previewCtx.save();
-        this.adjustLineWidth(this.lineWidth);
+        ctx.save();
+
+        ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'black';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
+
         ctx.beginPath();
         for (const point of this.vertices) {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
-        this.drawingService.baseCtx.restore();
-        this.drawingService.previewCtx.restore();
+
+        ctx.restore();
     }
 
     private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
