@@ -125,5 +125,7 @@ export class LineService extends ResizableTool {
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
         this.isShiftDown = false;
+        this.lineType = LineType.WITHOUT_JOINTS;
+        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 }
