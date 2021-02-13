@@ -1,20 +1,39 @@
 import { Injectable } from '@angular/core';
+import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
+import { LineType } from '@app/shapes/types/line-type';
 import { MouseButton } from '@app/tools/classes/mouse-button';
-import { Tool } from '@app/tools/classes/tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LineService extends Tool {
+export class LineService extends ResizableTool {
     private lineShape: LineShape;
     private lineShapeRenderer: LineShapeRenderer;
+    private lineJointsRenderer: LineJointsRenderer;
     private lastMousePosition: Vec2;
 
     private isShiftDown: boolean;
+    private lineType: LineType;
+
+    private strokeWidthProperty: StrokeWidthProperty;
+
+    adjustLineWidth(lineWidth: number): void {
+        this.strokeWidthProperty.strokeWidth = lineWidth;
+    }
+
+    setLineType(lineType: LineType): void {
+        this.lineType = lineType;
+    }
+
+    setJointsDiameter(jointsDiameter: number): void {
+        this.lineShape.jointsDiameter = jointsDiameter;
+    }
 
     onMouseClick(event: MouseEvent): void {
         if (event.button === MouseButton.Left) {
@@ -23,6 +42,9 @@ export class LineService extends Tool {
 
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.lineShapeRenderer.render(this.drawingService.previewCtx);
+            if (this.lineType === LineType.WITH_JOINTS) {
+                this.lineJointsRenderer.render(this.drawingService.previewCtx);
+            }
         }
     }
 
@@ -38,6 +60,9 @@ export class LineService extends Tool {
 
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.lineShapeRenderer.render(this.drawingService.baseCtx);
+            if (this.lineType === LineType.WITH_JOINTS) {
+                this.lineJointsRenderer.render(this.drawingService.baseCtx);
+            }
             this.lineShape.clear();
         }
     }
@@ -71,6 +96,9 @@ export class LineService extends Tool {
                 this.drawingService.clearCanvas(this.drawingService.previewCtx);
                 this.lineShape.vertices.push(this.lastMousePosition);
                 this.lineShapeRenderer.render(this.drawingService.previewCtx);
+                if (this.lineType === LineType.WITH_JOINTS) {
+                    this.lineJointsRenderer.render(this.drawingService.previewCtx);
+                }
                 this.lineShape.vertices.pop();
                 break;
         }
@@ -83,14 +111,18 @@ export class LineService extends Tool {
 
             this.lineShape.vertices.push(this.lineShape.getFinalMousePosition(mousePosition, this.isShiftDown));
             this.lineShapeRenderer.render(this.drawingService.previewCtx);
+            if (this.lineType === LineType.WITH_JOINTS) {
+                this.lineJointsRenderer.render(this.drawingService.previewCtx);
+            }
             this.lineShape.vertices.pop();
         }
     }
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.lineShape = new LineShape([], []);
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape);
+        this.lineShape = new LineShape([]);
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
+        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
         this.isShiftDown = false;
     }
 }

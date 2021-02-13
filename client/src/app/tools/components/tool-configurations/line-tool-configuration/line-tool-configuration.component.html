@@ -1,0 +1,33 @@
+<app-resizable-tool-configuration [toolService]="lineTool"></app-resizable-tool-configuration>
+
+<label>Type de jonctions</label>
+<div>
+    <mat-button-toggle-group [value]="lineType"
+                             (change)="onLineTypeChange($event)"
+                             vertical="true">
+    
+        <mat-button-toggle value="without-joints" matTooltip="Sans points" matTooltipPosition="right">
+            <mat-icon svgIcon="line-without-joints"></mat-icon>
+        </mat-button-toggle>
+    
+        <mat-button-toggle value="with-joints" matTooltip="Avec points" matTooltipPosition="right">
+            <mat-icon svgIcon="line-with-joints"></mat-icon>
+        </mat-button-toggle>
+    
+    </mat-button-toggle-group>
+</div>
+
+<span *ngIf="lineType === 'with-joints'">
+    <label>Diamètre des points de jonction</label>
+    <div>
+        <mat-slider thumbLabel
+                    matTooltip="Diamètre des points"
+                    matTooltipPosition="right"
+                    step="1"
+                    min="1"
+                    max="50"
+                    [value]="jointsDiameter"
+                    (valueChange)="onJointsDiameterChange($event)">
+        </mat-slider>
+    </div>
+</span>

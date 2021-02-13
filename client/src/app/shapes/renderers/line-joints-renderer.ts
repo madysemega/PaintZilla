@@ -2,13 +2,17 @@ import { LineShape } from '@app/shapes/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
-export class LineShapeRenderer extends ShapeRenderer<LineShape> {
+export class LineJointsRenderer extends ShapeRenderer<LineShape> {
     draw(ctx: CanvasRenderingContext2D): void {
-        ctx.beginPath();
+        const FULL_CIRCLE_DEGREES = 360;
+
+        const radius = this.shape.jointsDiameter / 2;
+
         this.shape.vertices.forEach((vertex) => {
-            ctx.lineTo(vertex.x, vertex.y);
+            ctx.beginPath();
+            ctx.ellipse(vertex.x, vertex.y, radius, radius, 0, 0, FULL_CIRCLE_DEGREES);
+            ctx.fill();
         });
-        ctx.stroke();
     }
 
     constructor(shape: LineShape, properties: ShapeProperty[]) {
