@@ -335,12 +335,14 @@ describe('LineService', () => {
         expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
     });
 
-    it("ajustLineWidth() method should change the line's stroke width property", () => {
+    it("onLineWidthChanged() method should update the line's stroke width property", () => {
         const INITIAL_LINE_WIDTH = 1;
         const NEW_LINE_WIDTH = 3;
 
         service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
-        service.adjustLineWidth(NEW_LINE_WIDTH);
+
+        service.lineWidth = NEW_LINE_WIDTH;
+        service.onLineWidthChanged();
 
         expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
     });
