@@ -197,4 +197,14 @@ describe('LineService', () => {
 
         expect(lineShapeStub.vertices.length).toEqual(INITIAL_NB_VERTICES);
     });
+
+    it("ajustLineWidth() method should change the line's stroke width property", () => {
+        const INITIAL_LINE_WIDTH = 1;
+        const NEW_LINE_WIDTH = 3;
+
+        service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
+        service.adjustLineWidth(NEW_LINE_WIDTH);
+
+        expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
+    });
 });

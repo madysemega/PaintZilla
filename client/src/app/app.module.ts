@@ -16,6 +16,7 @@ import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { MaterialModule } from './material.module';
 import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
+import { LineToolConfigurationComponent } from './tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import { EraserToolConfigurationComponent } from './tools/components/tool-config
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        LineToolConfigurationComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
     providers: [],
