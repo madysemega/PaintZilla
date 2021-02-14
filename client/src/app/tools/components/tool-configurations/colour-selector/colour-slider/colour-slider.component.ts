@@ -27,6 +27,7 @@ export class ColourSliderComponent implements AfterViewInit {
     colour: EventEmitter<string> = new EventEmitter();
 
     onMouseDown(evt: MouseEvent): void {
+        console.log('Appeler slider');
         this.mousedown = true;
         this.selectedHeight = evt.offsetY;
         this.draw();
