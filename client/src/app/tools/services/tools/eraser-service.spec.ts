@@ -99,27 +99,7 @@ describe('EraserService', () => {
         expect(drawVerticesSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = true;
-        service.onMouseDown(mouseEvent);
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawVerticesSpy).toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = false;
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should call drawPoint if mouse was down but did not move', () => {
+    it(' onMouseUp should call drawPoint if mouse was down but did not move', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
@@ -128,7 +108,7 @@ describe('EraserService', () => {
         expect(drawPointSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseMove should not call drawPoint if mouse was not down', () => {
+    it(' onMouseUp should not call drawPoint if mouse was not down', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
