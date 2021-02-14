@@ -196,6 +196,12 @@ describe('DrawingComponent', () => {
         expect(resizerSpy).toHaveBeenCalledWith(argument);
     });
 
+    it("disableResizer(): should call resizerService's disable resizer method", () => {
+        const disableResizerStub = spyOn(resizingServiceStub, 'disableResizer').and.stub();
+        component.disableResizer();
+        expect(disableResizerStub).toHaveBeenCalled();
+    });
+
     it('getCurrentTool(): should get stubTool', () => {
         const currentTool = component.getCurrentTool();
         expect(currentTool).toEqual(toolStub);

@@ -197,11 +197,10 @@ describe('ResizingService', () => {
         expect(clearCanvasStub).toHaveBeenCalledWith(service.drawingService.baseCtx);
     });
     it('resizeCanvas(): restorePreviewImageData() should be called', () => {
-        const mouseEvent: MouseEvent = testMouseEvent;
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
-        service.resizeCanvas(mouseEvent);
+        service.resizeCanvas(testMouseEvent);
         expect(service.restorePreviewImageData).toHaveBeenCalled();
     });
     it('canBeResizedHorizontally(): should return false if event.offsetx is less than MINIMUM_SIZE', () => {
@@ -312,6 +311,7 @@ describe('ResizingService', () => {
         service.disableResizer();
         expect(fillCanvasStub).toHaveBeenCalled();
         expect(fillCanvasStub).toHaveBeenCalledWith(service.drawingService.baseCtx, service.canvasResize.x, service.canvasResize.y);
+        expect(fillCanvasStub).toHaveBeenCalledWith(service.drawingService.previewCtx, service.canvasResize.x, service.canvasResize.y);
     });
     it('disableResizer(): restoreBaseImageData() should be called', () => {
         const restoreBaseImageDataStub = spyOn(service, 'restoreBaseImageData').and.stub();
