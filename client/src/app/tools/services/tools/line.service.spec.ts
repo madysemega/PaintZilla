@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
@@ -13,6 +13,8 @@ import { LineService } from './line.service';
 // tslint:disable:max-file-line-count
 describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
+    // tslint:disable-next-line: no-magic-numbers
+    const SAMPLE_DIAMETERS = [5, 0, 52, 42];
 
     let service: LineService;
     let lineShapeStub: LineShape;
@@ -353,22 +355,26 @@ describe('LineService', () => {
         LINE_TYPES.forEach((initialType) => {
             LINE_TYPES.forEach((givenType) => {
                 service['lineType'] = initialType;
-                service.setLineType(givenType);
+                service.lineType = givenType;
                 expect(service['lineType']).toEqual(givenType);
             });
         });
     });
 
     it("setJointsDiameter() method should change the shape's jointsDiameter attribute accordingly", () => {
-        // tslint:disable-next-line: no-magic-numbers
-        const SAMPLE_DIAMETERS = [5, 0, 52, 42];
-
         SAMPLE_DIAMETERS.forEach((initialDiameter) => {
             SAMPLE_DIAMETERS.forEach((givenDiameter) => {
                 lineShapeStub.jointsDiameter = initialDiameter;
-                service.setJointsDiameter(givenDiameter);
+                service.jointsDiameter = givenDiameter;
                 expect(lineShapeStub.jointsDiameter).toEqual(givenDiameter);
             });
+        });
+    });
+
+    it('if the jointsDiameter property is changed, the new value should be given when accessing jointsDiameter thereafter', () => {
+        SAMPLE_DIAMETERS.forEach((diameter) => {
+            service.jointsDiameter = diameter;
+            expect(service.jointsDiameter).toEqual(diameter);
         });
     });
 });

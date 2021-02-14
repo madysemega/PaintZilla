@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component } from '@angular/core';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
-import { LineShape } from '@app/shapes/line-shape';
 import { LineType } from '@app/shapes/types/line-type';
 import { LineService } from '@app/tools/services/tools/line.service';
 
@@ -9,22 +8,24 @@ import { LineService } from '@app/tools/services/tools/line.service';
     templateUrl: './line-tool-configuration.component.html',
     styleUrls: ['./line-tool-configuration.component.scss'],
 })
-export class LineToolConfigurationComponent {
+export class LineToolConfigurationComponent implements AfterContentInit {
     lineType: string;
     jointsDiameter: number;
 
     onLineTypeChange(lineType: MatButtonToggleGroup): void {
         this.lineType = lineType.value;
-        this.lineTool.setLineType(this.lineType as LineType);
+        this.lineTool.lineType = this.lineType as LineType;
     }
 
     onJointsDiameterChange(jointsDiameter: number): void {
         this.jointsDiameter = jointsDiameter;
-        this.lineTool.setJointsDiameter(jointsDiameter);
+        this.lineTool.jointsDiameter = jointsDiameter;
     }
 
-    constructor(public lineTool: LineService) {
-        this.lineType = LineType.WITHOUT_JOINTS as string;
-        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+    ngAfterContentInit(): void {
+        this.lineType = this.lineTool.lineType;
+        this.jointsDiameter = this.lineTool.jointsDiameter;
     }
+
+    constructor(public lineTool: LineService) {}
 }
