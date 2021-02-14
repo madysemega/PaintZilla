@@ -10,7 +10,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { LineService } from './line.service';
 
 // tslint:disable:no-any
-// tslint:disable: max-file-line-count
+// tslint:disable:max-file-line-count
 describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
     // tslint:disable-next-line: no-magic-numbers
@@ -337,12 +337,14 @@ describe('LineService', () => {
         expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
     });
 
-    it("ajustLineWidth() method should change the line's stroke width property", () => {
+    it("onLineWidthChanged() method should update the line's stroke width property", () => {
         const INITIAL_LINE_WIDTH = 1;
         const NEW_LINE_WIDTH = 3;
 
         service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
-        service.adjustLineWidth(NEW_LINE_WIDTH);
+
+        service.lineWidth = NEW_LINE_WIDTH;
+        service.onLineWidthChanged();
 
         expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
     });

@@ -26,6 +26,7 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.baseCtx = this.baseCtx;
         this.drawingService.previewCtx = this.previewCtx;
         this.drawingService.canvas = this.baseCanvas.nativeElement;
+        this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
         this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
         this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
@@ -63,6 +64,7 @@ export class DrawingComponent implements AfterViewInit {
             this.toolSelector.getSelectedTool().onMouseClick(event);
         }
         this.wasResizing = false;
+        this.drawingService.isCanvasEmpty();
     }
 
     @HostListener('dblclick', ['$event'])
@@ -70,6 +72,7 @@ export class DrawingComponent implements AfterViewInit {
         if (!this.resizingService.isResizing(event)) {
             this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
         }
+        this.drawingService.isCanvasEmpty();
     }
 
     @HostListener('mouseleave', ['$event'])

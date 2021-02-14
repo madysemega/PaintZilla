@@ -89,7 +89,6 @@ export class RectangleService extends ShapeTool {
     }
 
     private drawRect(ctx: CanvasRenderingContext2D): void {
-        // On dessine sur le canvas de prévisualisation et on l'efface à chaque déplacement de la souris
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
         ctx.save();

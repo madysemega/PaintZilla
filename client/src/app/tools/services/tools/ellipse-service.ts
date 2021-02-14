@@ -22,10 +22,6 @@ export class EllipseService extends ShapeTool {
         this.key = 'ellipse';
     }
 
-    adjustLineWidth(lineWidth: number): void {
-        this.lineWidth = lineWidth;
-    }
-
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {

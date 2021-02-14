@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -13,7 +14,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 @Injectable({
     providedIn: 'root',
 })
-export class LineService extends ResizableTool implements IDeselectableTool {
+export class LineService extends ResizableTool implements IDeselectableTool, ILineWidthChangeListener {
     private lineShape: LineShape;
     private lineShapeRenderer: LineShapeRenderer;
     private lineJointsRenderer: LineJointsRenderer;
@@ -25,8 +26,10 @@ export class LineService extends ResizableTool implements IDeselectableTool {
 
     private strokeWidthProperty: StrokeWidthProperty;
 
-    adjustLineWidth(lineWidth: number): void {
-        this.strokeWidthProperty.strokeWidth = lineWidth;
+    onLineWidthChanged(): void {
+        if (this.strokeWidthProperty) {
+            this.strokeWidthProperty.strokeWidth = this.lineWidth;
+        }
     }
 
     set jointsDiameter(jointsDiameter: number) {

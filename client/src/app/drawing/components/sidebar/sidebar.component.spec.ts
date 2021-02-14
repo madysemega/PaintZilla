@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
@@ -20,6 +21,7 @@ describe('SidebarComponent', () => {
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
+    let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
     let onKeyDownSpy: jasmine.Spy<any>;
 
@@ -43,12 +45,16 @@ describe('SidebarComponent', () => {
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub);
         rectangleService = new RectangleServiceStub(drawingStub);
+        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub);
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
-            providers: [{ provide: ToolSelectorService, useValue: toolSelectorServiceStub }],
+            providers: [
+                { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
+                { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+            ],
         }).compileComponents();
 
         onKeyDownSpy = spyOn<any>(toolSelectorServiceStub.selectedTool.tool, 'onKeyDown').and.callThrough();
@@ -121,5 +127,10 @@ describe('SidebarComponent', () => {
         const expectedIconName = 'unknown';
         const obtainedIconName: string = component.getIconName('invalid tool');
         expect(obtainedIconName).toBe(expectedIconName);
+    });
+
+    it('createNewDrawing should call DrawingCreatorService createNewDrawing method', () => {
+        component.createNewDrawing();
+        expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
     });
 });

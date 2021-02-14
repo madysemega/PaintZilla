@@ -8,7 +8,6 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
     providedIn: 'root',
 })
 export class PencilService extends ResizableTool {
-    lineWidth: number;
     private vertices: Vec2[];
 
     constructor(drawingService: DrawingService) {
@@ -18,19 +17,12 @@ export class PencilService extends ResizableTool {
         this.key = 'pencil';
     }
 
-    adjustLineWidth(lineWidth: number): void {
-        this.lineWidth = lineWidth;
-        this.drawingService.previewCtx.lineWidth = lineWidth;
-        this.drawingService.baseCtx.lineWidth = lineWidth;
-    }
-
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
         }
     }
 
@@ -40,7 +32,6 @@ export class PencilService extends ResizableTool {
             this.vertices.push(mousePosition);
 
             this.drawVertices(this.drawingService.baseCtx);
-            this.drawPoint(this.drawingService.baseCtx, this.mouseDownCoord);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
@@ -57,25 +48,20 @@ export class PencilService extends ResizableTool {
     }
 
     private drawVertices(ctx: CanvasRenderingContext2D): void {
-        this.drawingService.baseCtx.save();
-        this.drawingService.previewCtx.save();
-        this.adjustLineWidth(this.lineWidth);
+        ctx.save();
+
+        ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'black';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
+
         ctx.beginPath();
         for (const point of this.vertices) {
             ctx.lineTo(point.x, point.y);
         }
         ctx.stroke();
-        this.drawingService.baseCtx.restore();
-        this.drawingService.previewCtx.restore();
-    }
 
-    private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI, true);
-        ctx.fill();
+        ctx.restore();
     }
 
     private clearVertices(): void {
