@@ -7,12 +7,13 @@ import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-propert
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LineService extends ResizableTool {
+export class LineService extends ResizableTool implements IDeselectableTool {
     private lineShape: LineShape;
     private lineShapeRenderer: LineShapeRenderer;
     private lineJointsRenderer: LineJointsRenderer;
@@ -52,18 +53,8 @@ export class LineService extends ResizableTool {
         if (event.button === MouseButton.Left) {
             this.lineShape.vertices.length -= 2;
 
-            if (this.lineShape.isCloseableWith(this.lastMousePosition)) {
-                this.lineShape.close();
-            } else {
-                this.lineShape.vertices.push(this.lineShape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown));
-            }
-
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.lineShapeRenderer.render(this.drawingService.baseCtx);
-            if (this.lineType === LineType.WITH_JOINTS) {
-                this.lineJointsRenderer.render(this.drawingService.baseCtx);
-            }
-            this.lineShape.clear();
+            this.finalizeLine();
+            this.renderFinalizedLine();
         }
     }
 
@@ -104,6 +95,25 @@ export class LineService extends ResizableTool {
         }
     }
 
+    finalizeLine(): void {
+        if (this.lineShape.isCloseableWith(this.lastMousePosition)) {
+            this.lineShape.close();
+        } else {
+            this.lineShape.vertices.push(this.lineShape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown));
+        }
+    }
+
+    renderFinalizedLine(): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+
+        this.lineShapeRenderer.render(this.drawingService.baseCtx);
+        if (this.lineType === LineType.WITH_JOINTS) {
+            this.lineJointsRenderer.render(this.drawingService.baseCtx);
+        }
+
+        this.lineShape.clear();
+    }
+
     previewLine(mousePosition: Vec2): void {
         const isShapeBeingDrawn = this.lineShape.vertices.length !== 0;
         if (isShapeBeingDrawn) {
@@ -116,6 +126,11 @@ export class LineService extends ResizableTool {
             }
             this.lineShape.vertices.pop();
         }
+    }
+
+    onToolDeselect(): void {
+        this.finalizeLine();
+        this.renderFinalizedLine();
     }
 
     constructor(drawingService: DrawingService) {
