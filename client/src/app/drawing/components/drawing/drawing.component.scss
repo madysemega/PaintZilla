@@ -8,6 +8,7 @@ canvas {
 
 #canvas {
     z-index: 0;
+    border-style: dotted;
 }
 
 #drawCanvas {
@@ -16,4 +17,16 @@ canvas {
 
 #canvas-container {
     position: relative;
+    z-index: 0;
+}
+
+.resizingButton {
+    transform: translate(-25%, -25%);
+    position: absolute;
+    border: black 1px solid;
+    height: 8px;
+    width: 8px;
+    background-color: teal;
+    z-index: 2;
+    border-radius: 50%;
 }

@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -60,6 +60,5 @@ export class SidebarComponent implements OnInit {
 
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
-        this.drawingService.canvasIsEmpty = true;
     }
 }

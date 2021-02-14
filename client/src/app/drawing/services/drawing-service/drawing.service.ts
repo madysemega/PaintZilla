@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Vec2 } from '@app/app/classes/vec2';
 
 const BLANK = 0;
 
@@ -11,6 +12,7 @@ export class DrawingService {
     canvas: HTMLCanvasElement;
     previewCanvas: HTMLCanvasElement;
     canvasIsEmpty: boolean = true;
+    canvasSize: Vec2;
 
     clearCanvas(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -27,12 +29,5 @@ export class DrawingService {
                 .data.some((channel) => channel !== BLANK);
         }
         return this.canvasIsEmpty;
-    }
-
-    setCanvasSize(width: number, height: number): void {
-        this.canvas.width = width;
-        this.canvas.height = height;
-        this.previewCanvas.width = width;
-        this.previewCanvas.height = height;
     }
 }

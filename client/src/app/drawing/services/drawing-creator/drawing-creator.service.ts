@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,7 @@ export class DrawingCreatorService {
     drawingComponentHeight: number;
     drawingComponentWidth: number;
 
-    constructor(private drawingService: DrawingService, public dialog: MatDialog) {}
+    constructor(private drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
 
     onKeyUp(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
@@ -25,13 +26,11 @@ export class DrawingCreatorService {
 
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {
                 if (changesAreDiscarded) {
-                    this.setDefaultCanvasSize();
+                    this.drawingService.clearCanvas(this.drawingService.baseCtx);
+                    this.resizingService.resetCanvasDimensions();
+                    this.resizingService.updateCanvasSize();
                 }
             });
         }
-    }
-
-    setDefaultCanvasSize(): void {
-        this.drawingService.setCanvasSize(this.drawingComponentWidth / 2.0, this.drawingComponentHeight / 2.0);
     }
 }

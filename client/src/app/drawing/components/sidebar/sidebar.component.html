@@ -9,7 +9,6 @@
             matTooltip="Créer un nouveau dessin"
             matTooltipPosition="right"
             (click)="createNewDrawing()"
-            [disabled]="this.drawingService.canvasIsEmpty"
         >
             <mat-icon>add_box</mat-icon>
         </button>
