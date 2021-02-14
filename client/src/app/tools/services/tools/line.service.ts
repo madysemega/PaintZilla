@@ -19,7 +19,8 @@ export class LineService extends ResizableTool {
     private lastMousePosition: Vec2;
 
     private isShiftDown: boolean;
-    private lineType: LineType;
+
+    lineType: LineType;
 
     private strokeWidthProperty: StrokeWidthProperty;
 
@@ -27,12 +28,12 @@ export class LineService extends ResizableTool {
         this.strokeWidthProperty.strokeWidth = lineWidth;
     }
 
-    setLineType(lineType: LineType): void {
-        this.lineType = lineType;
+    set jointsDiameter(jointsDiameter: number) {
+        this.lineShape.jointsDiameter = jointsDiameter;
     }
 
-    setJointsDiameter(jointsDiameter: number): void {
-        this.lineShape.jointsDiameter = jointsDiameter;
+    get jointsDiameter(): number {
+        return this.lineShape.jointsDiameter;
     }
 
     onMouseClick(event: MouseEvent): void {
@@ -124,5 +125,7 @@ export class LineService extends ResizableTool {
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
         this.isShiftDown = false;
+        this.lineType = LineType.WITHOUT_JOINTS;
+        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 }
