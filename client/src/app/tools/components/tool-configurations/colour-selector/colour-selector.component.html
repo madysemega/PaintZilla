@@ -1,6 +1,7 @@
+<div>
 <div class="colour-wrapper">
-  <app-colour-palette [hue]="hue" (colour)="colour =$event"></app-colour-palette>
-  <app-colour-slider
+  <app-colour-palette id="truc1" [hue]="hue" (colour)="colour =$event"></app-colour-palette>
+  <app-colour-slider id="truc2"
     (colour)="hue=$event"
     style="margin-left:16px">
   </app-colour-slider>
@@ -26,6 +27,7 @@
     <button [ngClass]="'colEl'+(i)" [ngStyle]="{'background-color' : element || 'white'}"
     (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></button>
   </span>
+</div>
 </div>
 <mat-slider thumbLabel
 step="0.1" min="0" max="1" [value]="value" (change)="changeOpacity($event)"></mat-slider>

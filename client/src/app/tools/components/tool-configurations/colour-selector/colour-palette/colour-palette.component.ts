@@ -24,12 +24,15 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        console.log('rendu 1');
         if (changes.hue && !changes.hue.firstChange) {
+            console.log('rendu 2');
             this.draw();
             const pos = this.selectedPosition;
             if (pos) {
                 this.colour.emit(this.getColourAtPosition(pos.x, pos.y));
             }
+            console.log('la couleur est:', this.hue);
         }
     }
 

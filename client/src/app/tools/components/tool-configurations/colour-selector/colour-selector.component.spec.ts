@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ColourSelectorComponent } from './colour-selector.component';
 
 describe('ColourSelectorComponent', () => {

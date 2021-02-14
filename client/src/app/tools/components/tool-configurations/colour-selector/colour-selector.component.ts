@@ -1,7 +1,8 @@
+// source: https://malcoded.com/posts/angular-color-picker/
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
-import { ColourToolService } from '@app/services/tools/colour-tool.service';
-
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+const NBCOL = 3;
 @Component({
     selector: 'app-colour-selector',
     templateUrl: './colour-selector.component.html',
@@ -20,13 +21,16 @@ export class ColourSelectorComponent {
     constructor(public service: ColourToolService) {}
     changeOpacity(event: MatSliderChange): void {
         // source: https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
-        const NBCOL = 3;
         console.log(event.value);
-        const indexThirdComma = this.colour.split(',', NBCOL).join(',').length;
-        const opacityString = this.colour.substring(indexThirdComma + 1, this.colour.length - 1);
+        const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
+        const opacityString = this.colour.substring(INDEXTHIRDCOMMA + 1, this.colour.length - 1);
         this.opacity = parseInt(opacityString, 10);
         this.opacity = event.value as number;
-        this.colour = this.colour.substring(0, indexThirdComma + 1) + this.opacity.toString() + ')';
+        this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + this.opacity.toString() + ')';
+    }
+    setOpacityOne(col: string): void {
+        const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
+        this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
     }
     addColEv(event: MouseEvent): void {
         this.service.colour1 = (event.target as HTMLInputElement).style.backgroundColor;
@@ -36,12 +40,14 @@ export class ColourSelectorComponent {
     }
     addFirstCol(isSelected: boolean): void {
         this.service.colour1 = this.colour;
+        this.setOpacityOne(this.service.colour1);
         if (isSelected) {
             this.rememberCol(this.colour);
         }
     }
     addSecCol(isSelected: boolean): void {
         this.service.colour2 = this.colour;
+        this.setOpacityOne(this.service.colour2);
         if (isSelected) {
             this.rememberCol(this.colour);
         }
@@ -60,16 +66,20 @@ export class ColourSelectorComponent {
             }
 
             if (isValid) {
-                const RPOS = 1;
-                const GPOS = 3;
-                const BPOS = 5;
-                const rValue: number = parseInt(inputString.substr(RPOS, 2), 16);
-                const gValue: number = parseInt(inputString.substr(GPOS, 2), 16);
-                const bValue: number = parseInt(inputString.substr(BPOS, 2), 16);
-                this.colour = 'rgba(' + rValue.toString(10) + ',' + bValue.toString(10) + ',' + gValue.toString(10) + ',1)';
+                this.includeOpacity(inputString);
                 this.rememberCol(this.colour);
             }
         }
+    }
+
+    includeOpacity(col: string): void {
+        const RPOS = 1;
+        const GPOS = 3;
+        const BPOS = 5;
+        const rValue: number = parseInt(col.substr(RPOS, 2), 16);
+        const gValue: number = parseInt(col.substr(GPOS, 2), 16);
+        const bValue: number = parseInt(col.substr(BPOS, 2), 16);
+        this.colour = 'rgba(' + rValue.toString(10) + ',' + bValue.toString(10) + ',' + gValue.toString(10) + ',1)';
     }
 
     switchCol(): void {
@@ -79,7 +89,11 @@ export class ColourSelectorComponent {
     }
 
     rememberCol(newCol: string): void {
+        if (this.service.colourList.indexOf(newCol) >= 0) {
+            return;
+        }
         const LISTSIZE = 10;
+        this.setOpacityOne(newCol);
         if (this.service.colourList.length < LISTSIZE && newCol !== undefined) {
             this.service.colourList.push(newCol);
         } else if (this.service.colourList.length === LISTSIZE && newCol !== undefined) {

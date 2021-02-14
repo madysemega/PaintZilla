@@ -1,5 +1,5 @@
+// source: https://malcoded.com/posts/angular-color-picker/
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
-import { ColourToolService } from '@app/services/tools/colour-tool.service';
 
 const GRDSTEP1 = 0.17;
 const GRDSTEP2 = 0.34;
@@ -17,7 +17,7 @@ const RECTWIDTH = 5;
 export class ColourSliderComponent implements AfterViewInit {
     @ViewChild('canvas')
     canvas: ElementRef<HTMLCanvasElement>;
-    private ctx: CanvasRenderingContext2D;
+    ctx: CanvasRenderingContext2D;
     height: number;
     width: number;
     mousedown: boolean = false;
@@ -30,28 +30,26 @@ export class ColourSliderComponent implements AfterViewInit {
         this.mousedown = true;
         this.selectedHeight = evt.offsetY;
         this.draw();
-        this.emitColor(evt.offsetX, evt.offsetY);
+        this.emitColour(evt.offsetX, evt.offsetY);
     }
 
     onMouseMove(evt: MouseEvent): void {
         if (this.mousedown) {
             this.selectedHeight = evt.offsetY;
             this.draw();
-            this.emitColor(evt.offsetX, evt.offsetY);
+            this.emitColour(evt.offsetX, evt.offsetY);
         }
     }
 
-    emitColor(x: number, y: number): void {
-        const rgbaColor = this.getColorAtPosition(x, y);
-        this.colour.emit(rgbaColor);
+    emitColour(x: number, y: number): void {
+        const rgbaColour = this.getColourAtPosition(x, y);
+        this.colour.emit(rgbaColour);
     }
 
     @HostListener('window:mouseup', ['$event'])
     onMouseUp(evt: MouseEvent): void {
         this.mousedown = false;
     }
-
-    constructor(public service: ColourToolService) {}
 
     ngAfterViewInit(): void {
         this.draw();
@@ -87,7 +85,7 @@ export class ColourSliderComponent implements AfterViewInit {
         }
     }
 
-    getColorAtPosition(x: number, y: number): string {
+    getColourAtPosition(x: number, y: number): string {
         const imageData = this.ctx.getImageData(x, y, 1, 1).data;
         return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
     }

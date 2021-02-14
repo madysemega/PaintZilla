@@ -59,7 +59,6 @@ export class ToolSelectorService {
         }
         return undefined;
     }
-
     constructor(
         pencilService: PencilService,
         eraserService: EraserService,

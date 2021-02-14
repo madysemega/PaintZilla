@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ColourToolService } from './colour-tool.service';
 
 describe('ColourToolService', () => {

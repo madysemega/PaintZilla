@@ -36,5 +36,6 @@ export class AppComponent {
             'rectangle-contoured-and-filled',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/rectangle-contoured-and-filled.svg'),
         );
+        this.iconRegistryService.addSvgIcon('paintbrush', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/paintbrush.svg'));
     }
 }
