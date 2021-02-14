@@ -3,26 +3,35 @@
     <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"> </canvas>
     <div
         id="rightDown"
+        draggable="false"
         class="resizingButton"
         [style.top.px]="resizeHeight"
         [style.left.px]="resizeWidth"
         [ngStyle]="{ cursor: 'nwse-resize' }"
         (mousedown)="activateResizer('rightDown')"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
     <div
         id="down"
         class="resizingButton"
+        draggable="false"
         [style.top.px]="resizeHeight"
         [style.left.px]="resizeWidth / 2"
         [ngStyle]="{ cursor: 'ns-resize' }"
         (mousedown)="activateResizer('down')"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
     <div
         id="right"
         class="resizingButton"
+        draggable="false"
         [style.top.px]="resizeHeight / 2"
         [style.left.px]="resizeWidth"
         [ngStyle]="{ cursor: 'ew-resize' }"
         (mousedown)="activateResizer('right')"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
 </div>

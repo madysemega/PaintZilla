@@ -13,6 +13,8 @@ import { LineService } from './line.service';
 // tslint:disable: max-file-line-count
 describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
+    // tslint:disable-next-line: no-magic-numbers
+    const SAMPLE_DIAMETERS = [5, 0, 52, 42];
 
     let service: LineService;
     let lineShapeStub: LineShape;
@@ -351,20 +353,17 @@ describe('LineService', () => {
         LINE_TYPES.forEach((initialType) => {
             LINE_TYPES.forEach((givenType) => {
                 service['lineType'] = initialType;
-                service.setLineType(givenType);
+                service.lineType = givenType;
                 expect(service['lineType']).toEqual(givenType);
             });
         });
     });
 
     it("setJointsDiameter() method should change the shape's jointsDiameter attribute accordingly", () => {
-        // tslint:disable-next-line: no-magic-numbers
-        const SAMPLE_DIAMETERS = [5, 0, 52, 42];
-
         SAMPLE_DIAMETERS.forEach((initialDiameter) => {
             SAMPLE_DIAMETERS.forEach((givenDiameter) => {
                 lineShapeStub.jointsDiameter = initialDiameter;
-                service.setJointsDiameter(givenDiameter);
+                service.jointsDiameter = givenDiameter;
                 expect(lineShapeStub.jointsDiameter).toEqual(givenDiameter);
             });
         });
@@ -384,5 +383,12 @@ describe('LineService', () => {
         service.onToolDeselect();
 
         expect(renderFinalizedLineSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('if the jointsDiameter property is changed, the new value should be given when accessing jointsDiameter thereafter', () => {
+        SAMPLE_DIAMETERS.forEach((diameter) => {
+            service.jointsDiameter = diameter;
+            expect(service.jointsDiameter).toEqual(diameter);
+        });
     });
 });

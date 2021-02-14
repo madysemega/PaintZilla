@@ -42,10 +42,10 @@ describe('LineToolConfigurationComponent', () => {
         });
     });
 
-    it('onLineTypeChange() should propagate event to line service with given parameter', () => {
+    it('onLineTypeChange() should set the line type in the line service to the given parameter', () => {
         LINE_TYPES.forEach((lineType) => {
             component.onLineTypeChange({ value: lineType } as MatButtonToggleGroup);
-            expect(lineServiceStub.setLineType).toHaveBeenCalledWith(lineType);
+            expect(lineServiceStub.lineType).toEqual(lineType);
         });
     });
 
@@ -59,10 +59,10 @@ describe('LineToolConfigurationComponent', () => {
         });
     });
 
-    it('onJointsDiameterChange() should propagate the event to line service with given parameter', () => {
+    it('onJointsDiameterChange() should set joints diameter in the line service to the given parameter', () => {
         SAMPLE_DIAMETERS.forEach((diameter) => {
             component.onJointsDiameterChange(diameter);
-            expect(lineServiceStub.setJointsDiameter).toHaveBeenCalledWith(diameter);
+            expect(lineServiceStub.jointsDiameter).toEqual(diameter);
         });
     });
 });
