@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { LineService } from '@app/tools/services/tools/line.service';
 
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
@@ -69,5 +70,13 @@ describe('ToolSelectorService', () => {
     it('should return undefined when calling getDisplayName with an invalid tool name', () => {
         const displayName = service.getDisplayName('invalid tool');
         expect(displayName).toBe(undefined);
+    });
+
+    it('should call onToolDeselect on current tool when changing to valid tool if current tool implements IDeselectableTool', () => {
+        service.selectTool('line');
+        const onToolDeselectSpy = spyOn(service.selectedTool.tool as LineService, 'onToolDeselect');
+
+        service.selectTool('pencil');
+        expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
     });
 });
