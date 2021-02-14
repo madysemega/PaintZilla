@@ -17,8 +17,8 @@ export class ResizableToolConfigurationComponent {
     }
 
     changeWidth(width: number): void {
-        this.toolService.adjustLineWidth(width);
+        this.toolService.lineWidth = width;
     }
 
-    constructor(protected toolSelectorService: ToolSelectorService) {}
+    constructor(public toolSelectorService: ToolSelectorService) {}
 }

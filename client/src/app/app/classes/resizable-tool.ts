@@ -1,16 +1,24 @@
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { Tool } from '@app/tools/classes/tool';
+import { ILineWidthChangeListener } from './line-width-change-listener';
 
 export abstract class ResizableTool extends Tool {
-    lineWidth: number;
+    private mlineWidth: number;
+
+    get lineWidth(): number {
+        return this.mlineWidth;
+    }
+
+    set lineWidth(newWidth: number) {
+        this.mlineWidth = newWidth;
+        if ('onLineWidthChanged' in this) {
+            (this as ILineWidthChangeListener).onLineWidthChanged();
+        }
+    }
 
     constructor(protected drawingService: DrawingService) {
         super(drawingService);
         this.lineWidth = StrokeWidthProperty.DEFAULT_STROKE_WIDTH;
-    }
-
-    adjustLineWidth(lineWidth: number): void {
-        this.lineWidth = lineWidth;
     }
 }

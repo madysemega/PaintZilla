@@ -263,12 +263,6 @@ describe('RectangleService', () => {
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
     });
 
-    it('Adjusting the line width should update the lineWidth property', () => {
-        const testVal = 27;
-        service.adjustLineWidth(testVal);
-        expect(service.lineWidth).toEqual(testVal);
-    });
-
     it(' after having been adjusted width should be negative if it was so before the adjustment', () => {
         const x = 0;
         const y = 11;

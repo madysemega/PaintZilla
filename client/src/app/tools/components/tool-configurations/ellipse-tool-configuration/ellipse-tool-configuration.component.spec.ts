@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { EllipseService } from '@app/tools/services/tools/ellipse-service.service';
+import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
 
 // tslint:disable:no-any
