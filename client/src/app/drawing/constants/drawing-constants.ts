@@ -6,6 +6,6 @@ export const MAX_WIDTH = 2350;
 export const MAX_HEIGHT = 1155;
 export const BORDER_INITIAL_STYLE = 'medium solid black';
 export const BORDER_RESISING_STYLE = 'medium dotted black';
-export const CTX_COLOR = 'white';
+export const CTX_COLOR = '#ffffff';
 export const HALF_WINDOW_WIDTH = 945;
 export const HALF_WINDOW_HEIGHT = 920;

@@ -14,7 +14,7 @@ export class DrawingService {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
+    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): void {
         ctx.beginPath();
         ctx.rect(0, 0, width, height);
         ctx.fillStyle = 'white';

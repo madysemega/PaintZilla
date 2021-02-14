@@ -206,9 +206,20 @@ describe('ResizingService', () => {
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
         spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
-        drawingServiceStub.canvas.style.zIndex = '0';
+        service.drawingService.canvas.style.zIndex = '0';
         service.resizeCanvas(mouseEvent);
         expect(service.drawingService.canvas.style.zIndex).toEqual('2');
+    });
+
+    it('resizeCanvas(): drawingService.clearCanvas() should be set called', () => {
+        const mouseEvent: MouseEvent = testMouseEvent;
+        spyOn(service, 'restorePreviewImageData').and.returnValue();
+        spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
+        spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        const clearCanvasStub = spyOn(drawingServiceStub, 'clearCanvas').and.stub();
+        service.resizeCanvas(mouseEvent);
+        expect(clearCanvasStub).toHaveBeenCalled();
+        expect(clearCanvasStub).toHaveBeenCalledWith(service.drawingService.baseCtx);
     });
 
     it('resizeCanvas(): restorePreviewImageData() should be called', () => {
@@ -325,6 +336,24 @@ describe('ResizingService', () => {
         expect(service.rightResizerEnabled).toBeFalse();
         expect(service.rightDownResizerEnabled).toBeFalse();
         expect(service.downResizerEnabled).toBeFalse();
+    });
+
+    it('disableResizer(): drawingService.canvas.style.zIndex should be set to 0', () => {
+        spyOn(service, 'restoreBaseImageData').and.returnValue();
+        spyOn(service, 'updateCanvasSize').and.returnValue();
+        spyOn(drawingServiceStub, 'fillCanvas').and.returnValue();
+        service.drawingService.canvas.style.zIndex = '2';
+        service.disableResizer();
+        expect(service.drawingService.canvas.style.zIndex).toEqual('0');
+    });
+
+    it('disableResizer(): drawingService.fillCanvas() should be called', () => {
+        spyOn(service, 'restoreBaseImageData').and.returnValue();
+        spyOn(service, 'updateCanvasSize').and.returnValue();
+        const fillCanvasStub = spyOn(drawingServiceStub, 'fillCanvas').and.stub();
+        service.disableResizer();
+        expect(fillCanvasStub).toHaveBeenCalled();
+        expect(fillCanvasStub).toHaveBeenCalledWith(service.drawingService.baseCtx, service.canvasResize.x, service.canvasResize.y);
     });
 
     it('disableResizer(): restoreBaseImageData() should be called', () => {
