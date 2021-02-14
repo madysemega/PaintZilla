@@ -27,4 +27,12 @@ export class DrawingService {
             .data.some((channel) => channel !== BLANK);
         return this.canvasIsEmpty;
     }
+
+    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): void {
+        ctx.beginPath();
+        ctx.rect(0, 0, width, height);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.closePath();
+    }
 }

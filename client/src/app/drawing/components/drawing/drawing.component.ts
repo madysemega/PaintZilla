@@ -28,6 +28,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
+        this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
+        this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -105,6 +107,10 @@ export class DrawingComponent implements AfterViewInit {
 
     activateResizer(button: string): void {
         this.resizingService.activateResizer(button);
+    }
+
+    disableResizer(): void {
+        this.resizingService.disableResizer();
     }
 
     getCurrentTool(): Tool {

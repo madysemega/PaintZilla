@@ -33,7 +33,10 @@ export class ResizingService {
                 this.canvasResize.y = event.offsetY;
             }
         }
+        this.drawingService.canvas.style.zIndex = '2';
+        this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
+        this.restoreBaseImageData();
     }
 
     canBeResizedHorizontally(event: MouseEvent): boolean {
@@ -60,11 +63,14 @@ export class ResizingService {
     }
 
     disableResizer(): void {
-        this.restoreBaseImageData();
-        this.updateCanvasSize();
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
+        this.drawingService.canvas.style.zIndex = '0';
+        this.drawingService.fillCanvas(this.drawingService.baseCtx, this.canvasResize.x, this.canvasResize.y);
+        this.drawingService.fillCanvas(this.drawingService.previewCtx, this.canvasResize.x, this.canvasResize.y);
+        this.restoreBaseImageData();
+        this.updateCanvasSize();
     }
 
     restoreBaseImageData(): void {
