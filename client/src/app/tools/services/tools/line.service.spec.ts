@@ -369,4 +369,20 @@ describe('LineService', () => {
             });
         });
     });
+
+    it('onToolDeselect should finalize the line', () => {
+        const finalizeLineSpy = spyOn(service, 'onToolDeselect').and.stub();
+
+        service.onToolDeselect();
+
+        expect(finalizeLineSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onToolDeselect should render the finalized line', () => {
+        const renderFinalizedLineSpy = spyOn(service, 'renderFinalizedLine').and.stub();
+
+        service.onToolDeselect();
+
+        expect(renderFinalizedLineSpy).toHaveBeenCalledTimes(1);
+    });
 });
