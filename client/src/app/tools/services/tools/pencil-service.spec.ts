@@ -15,7 +15,6 @@ describe('PencilService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
 
     let drawVerticesSpy: jasmine.Spy<any>;
-    let drawPointSpy: jasmine.Spy<any>;
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
@@ -42,7 +41,6 @@ describe('PencilService', () => {
         );
 
         drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
-        drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -118,24 +116,6 @@ describe('PencilService', () => {
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
         expect(drawVerticesSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should call drawPoint if mouse was down but did not move', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = true;
-
-        service.onMouseUp(mouseEvent);
-        expect(drawPointSpy).toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should not call drawPoint if mouse was not down', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = false;
-
-        service.onMouseUp(mouseEvent);
-        expect(drawPointSpy).not.toHaveBeenCalled();
     });
 
     // Exemple de test d'intégration qui est quand même utile
