@@ -27,26 +27,18 @@ describe('DrawingService', () => {
         expect(hasColoredPixels).toEqual(false);
     });
 
-    it('isCanvasEmpty should be true if canvas has been cleared', () => {
+    it('isCanvasEmpty should be true if canvas is empty', () => {
         service.clearCanvas(service.baseCtx);
         expect(service.isCanvasEmpty()).toEqual(true);
     });
 
-    it('should set canvas to the correct size', () => {
-        const width = 100;
-        const height = 100;
-        service.setCanvasSize(width, height);
-        const hasGoodWidth = service.canvas.width === width;
-        const hasGoodHeight = service.canvas.height === height;
-        expect(hasGoodWidth && hasGoodHeight).toEqual(true);
-    });
-
-    it('should set preview canvas to the correct size', () => {
-        const width = 100;
-        const height = 100;
-        service.setCanvasSize(width, height);
-        const hasGoodWidth = service.previewCanvas.width === width;
-        const hasGoodHeight = service.previewCanvas.height === height;
-        expect(hasGoodWidth && hasGoodHeight).toEqual(true);
+    it('isCanvasEmpty should be false if canvas is not empty', () => {
+        service.baseCtx.beginPath();
+        // tslint:disable-next-line: no-magic-numbers
+        service.baseCtx.lineTo(5, 5);
+        // tslint:disable-next-line: no-magic-numbers
+        service.baseCtx.lineTo(10, 10);
+        service.baseCtx.stroke();
+        expect(service.isCanvasEmpty()).toEqual(false);
     });
 });

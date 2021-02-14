@@ -70,6 +70,7 @@ export class DrawingComponent implements AfterViewInit {
         if (!this.resizingService.isResizing(event)) {
             this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
         }
+        this.drawingService.isCanvasEmpty();
     }
 
     @HostListener('mouseleave', ['$event'])

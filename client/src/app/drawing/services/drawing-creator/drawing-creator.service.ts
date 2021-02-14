@@ -9,8 +9,6 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 })
 export class DrawingCreatorService {
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
-    drawingComponentHeight: number;
-    drawingComponentWidth: number;
 
     constructor(private drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
 
@@ -23,7 +21,6 @@ export class DrawingCreatorService {
     createNewDrawing(): void {
         if (!this.drawingService.isCanvasEmpty() && this.dialog.openDialogs.length === 0) {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true });
-
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {
                 if (changesAreDiscarded) {
                     this.drawingService.clearCanvas(this.drawingService.baseCtx);
