@@ -44,7 +44,6 @@ export class DrawingComponent implements AfterViewInit {
         if (!this.resizingService.isResizing(event)) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
-        console.log(true);
     }
 
     @HostListener('document: mouseup', ['$event'])
@@ -63,6 +62,7 @@ export class DrawingComponent implements AfterViewInit {
             this.toolSelector.getSelectedTool().onMouseClick(event);
         }
         this.wasResizing = false;
+        this.drawingService.isCanvasEmpty();
     }
 
     @HostListener('dblclick', ['$event'])
