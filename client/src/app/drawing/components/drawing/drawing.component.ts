@@ -106,6 +106,10 @@ export class DrawingComponent implements AfterViewInit {
         this.resizingService.activateResizer(button);
     }
 
+    disableResizer(): void {
+        this.resizingService.disableResizer();
+    }
+
     getCurrentTool(): Tool {
         return this.toolSelector.getSelectedTool();
     }
