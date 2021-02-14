@@ -33,13 +33,6 @@ describe('ResizingService', () => {
             offsetY: Constants.MAX_HEIGHT - Constants.MINIMUM_SIZE,
         } as MouseEvent;
     }));
-    beforeEach(() => {
-        service.canvasResize.x = Constants.DEFAULT_WIDTH;
-        service.canvasResize.y = Constants.DEFAULT_HEIGHT;
-        service.downResizerEnabled = false;
-        service.rightDownResizerEnabled = false;
-        service.rightResizerEnabled = false;
-    });
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
@@ -65,7 +58,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should not change canvasResize.x if righResizerEnabled is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -76,8 +69,8 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should not change canvasResize.x if canBeResizedHorizontally() is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
-        spyOn(service.drawingService, 'clearCanvas').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
         const initialValue: number = service.canvasResize.x;
@@ -87,7 +80,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should change canvasResize.x if righResizerEnabled AND canBeResizedHorizontally() are true', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -100,7 +93,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should not change canvasResize.y if downResizerEnabled is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -111,10 +104,10 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should not change canvasResize.y if canBeResizedVertically() is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
-        spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(service, 'canBeResizedVertically').and.returnValue(false);
         service.downResizerEnabled = true;
         const initialValue: number = service.canvasResize.y;
         service.resizeCanvas(testMouseEvent);
@@ -123,7 +116,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should change canvasResize.y if downResizerEnabled AND canBeResizedVertically() are true', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -137,7 +130,7 @@ describe('ResizingService', () => {
      canBeResizedHorizontally() AND canBeResizedVertically() are false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(false);
         spyOn(service, 'canBeResizedVertically').and.returnValue(false);
@@ -151,7 +144,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should change canvasResize.x if rightDownResizerEnabled AND canBeResizedHorizontally() are true', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -164,7 +157,7 @@ describe('ResizingService', () => {
     it('resizeCanvas(): should change canvasResize.y if rightDownResizerEnabled AND canBeResizedVertically() are true', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -178,7 +171,7 @@ describe('ResizingService', () => {
     AND canBeResizedVertically() are true', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
-        spyOn(service, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
@@ -197,7 +190,7 @@ describe('ResizingService', () => {
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
-        const updateStyleStub = spyOn(service, 'updateCanvasStyle').and.stub();
+        const updateStyleStub = spyOn(service.drawingService, 'updateCanvasStyle').and.stub();
         service.resizeCanvas(testMouseEvent);
         expect(updateStyleStub).toHaveBeenCalled();
     });
@@ -205,6 +198,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'restoreBaseImageData').and.returnValue();
         spyOn(service.drawingService, 'clearCanvas').and.returnValue();
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
         service.resizeCanvas(testMouseEvent);
@@ -212,6 +206,7 @@ describe('ResizingService', () => {
         expect(service.drawingService.clearCanvas).toHaveBeenCalledWith(service.drawingService.baseCtx);
         expect(service.restorePreviewImageData).toHaveBeenCalled();
         expect(service.restoreBaseImageData).toHaveBeenCalled();
+        expect(drawingServiceStub.updateCanvasStyle).toHaveBeenCalled();
     });
     it('canBeResizedHorizontally(): should return false if event.offsetx is less than MINIMUM_SIZE', () => {
         const mouseEvent: MouseEvent = {
@@ -298,7 +293,7 @@ describe('ResizingService', () => {
     it('disableResizer(): all resizing booleans should be false', () => {
         spyOn(service, 'restoreBaseImageData').and.returnValue();
         spyOn(service, 'updateCanvasSize').and.returnValue();
-        spyOn(service, 'restoreCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
         service.rightDownResizerEnabled = true;
         service.rightResizerEnabled = true;
         service.downResizerEnabled = true;
@@ -310,18 +305,20 @@ describe('ResizingService', () => {
     it('disableResizer(): restoreCanvasStyle() should be called', () => {
         spyOn(service, 'restoreBaseImageData').and.returnValue();
         spyOn(service, 'updateCanvasSize').and.returnValue();
-        const restoreStyleStub = spyOn(service, 'restoreCanvasStyle').and.stub();
+        const restoreStyleStub = spyOn(drawingServiceStub, 'restoreCanvasStyle').and.stub();
         service.disableResizer();
         expect(restoreStyleStub).toHaveBeenCalled();
     });
     it('disableResizer(): restoreBaseImageData() should be called', () => {
         const restoreBaseImageDataStub = spyOn(service, 'restoreBaseImageData').and.stub();
         spyOn(service, 'updateCanvasSize').and.returnValue();
+        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
         service.disableResizer();
         expect(restoreBaseImageDataStub).toHaveBeenCalled();
     });
     it('disableResizer(): updateCanvasSize() should be called', () => {
         spyOn(service, 'restoreBaseImageData').and.returnValue();
+        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
         const updateCanvasSizeStub = spyOn(service, 'updateCanvasSize').and.stub();
         service.disableResizer();
         expect(updateCanvasSizeStub).toHaveBeenCalled();

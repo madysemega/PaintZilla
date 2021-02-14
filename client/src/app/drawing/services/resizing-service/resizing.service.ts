@@ -33,7 +33,7 @@ export class ResizingService {
                 this.canvasResize.y = event.offsetY;
             }
         }
-        this.updateCanvasStyle();
+        this.drawingService.updateCanvasStyle();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
         this.restoreBaseImageData();
@@ -45,12 +45,6 @@ export class ResizingService {
 
     canBeResizedVertically(event: MouseEvent): boolean {
         return event.offsetY > Constants.MINIMUM_SIZE && event.offsetY < Constants.MAX_HEIGHT;
-    }
-
-    updateCanvasStyle(): void {
-        this.drawingService.canvas.style.zIndex = '2';
-        this.drawingService.canvas.style.background = 'none';
-        this.drawingService.previewCanvas.style.background = Constants.CTX_COLOR;
     }
 
     restorePreviewImageData(): void {
@@ -72,24 +66,18 @@ export class ResizingService {
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
-        this.restoreCanvasStyle();
+        this.drawingService.restoreCanvasStyle();
         this.restoreBaseImageData();
         this.updateCanvasSize();
-    }
-
-    restoreCanvasStyle(): void {
-        this.drawingService.canvas.style.zIndex = '0';
-        this.drawingService.canvas.style.background = 'white';
-        this.drawingService.previewCanvas.style.background = 'none';
-    }
-
-    restoreBaseImageData(): void {
-        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
     }
 
     updateCanvasSize(): void {
         this.drawingService.canvasSize.x = this.canvasResize.x;
         this.drawingService.canvasSize.y = this.canvasResize.y;
+    }
+
+    restoreBaseImageData(): void {
+        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
     }
 
     resetCanvasDimensions(): void {
