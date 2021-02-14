@@ -137,12 +137,6 @@ describe('EraserService', () => {
         expect(drawPointSpy).not.toHaveBeenCalled();
     });
 
-    it('Adjusting the line width should update the lineWidth property', () => {
-        const testVal = 27;
-        service.adjustLineWidth(testVal);
-        expect(service.lineWidth).toEqual(testVal);
-    });
-
     // Exemple de test d'intégration qui est quand même utile
     it(' should change the pixel of the canvas ', () => {
         mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
