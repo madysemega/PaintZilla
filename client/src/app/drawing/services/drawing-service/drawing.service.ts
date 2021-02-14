@@ -13,4 +13,12 @@ export class DrawingService {
     clearCanvas(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
+        ctx.beginPath();
+        ctx.rect(0, 0, width, height);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.closePath();
+    }
 }
