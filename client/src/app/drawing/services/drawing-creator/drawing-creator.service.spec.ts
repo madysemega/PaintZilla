@@ -86,6 +86,7 @@ describe('DrawingCreatorService', () => {
 
     it('createNewDrawing() should open dialog if canvas is not empty', () => {
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
         matDialogRefSpy.afterClosed.and.returnValue(of(true));
         service.createNewDrawing();
         expect(matDialogSpy.open).toHaveBeenCalled();
@@ -102,6 +103,7 @@ describe('DrawingCreatorService', () => {
         const clearCanvasStub = spyOn(drawingServiceSpy, 'clearCanvas').and.stub();
         const resetCanvasDimensionsStub = spyOn(resizingServiceSpy, 'resetCanvasDimensions').and.stub();
         const updateCanvasSizeStub = spyOn(resizingServiceSpy, 'updateCanvasSize').and.stub();
+        spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
         matDialogRefSpy.afterClosed.and.returnValue(of(true));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         service.createNewDrawing();
@@ -114,6 +116,7 @@ describe('DrawingCreatorService', () => {
         const clearCanvasStub = spyOn(drawingServiceSpy, 'clearCanvas').and.stub();
         const resetCanvasDimensionsStub = spyOn(resizingServiceSpy, 'resetCanvasDimensions').and.stub();
         const updateCanvasSizeStub = spyOn(resizingServiceSpy, 'updateCanvasSize').and.stub();
+        spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
         matDialogRefSpy.afterClosed.and.returnValue(of(false));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         service.createNewDrawing();

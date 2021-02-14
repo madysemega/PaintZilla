@@ -33,7 +33,7 @@ export class ResizingService {
                 this.canvasResize.y = event.offsetY;
             }
         }
-        this.drawingService.canvas.style.zIndex = '2';
+        this.drawingService.updateCanvasStyle();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
         this.restoreBaseImageData();
@@ -66,15 +66,9 @@ export class ResizingService {
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
-        this.drawingService.canvas.style.zIndex = '0';
-        this.drawingService.fillCanvas(this.drawingService.baseCtx, this.canvasResize.x, this.canvasResize.y);
-        this.drawingService.fillCanvas(this.drawingService.previewCtx, this.canvasResize.x, this.canvasResize.y);
+        this.drawingService.restoreCanvasStyle();
         this.restoreBaseImageData();
         this.updateCanvasSize();
-    }
-
-    restoreBaseImageData(): void {
-        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
     }
 
     updateCanvasSize(): void {
@@ -82,8 +76,12 @@ export class ResizingService {
         this.drawingService.canvasSize.y = this.canvasResize.y;
     }
 
+    restoreBaseImageData(): void {
+        this.drawingService.baseCtx.putImageData(this.image, 0, 0);
+    }
+
     resetCanvasDimensions(): void {
-        this.canvasResize.x = Constants.HALF_WINDOW_WIDTH;
-        this.canvasResize.y = Constants.HALF_WINDOW_HEIGHT;
+        this.canvasResize.x = Constants.DEFAULT_WIDTH;
+        this.canvasResize.y = Constants.DEFAULT_HEIGHT;
     }
 }
