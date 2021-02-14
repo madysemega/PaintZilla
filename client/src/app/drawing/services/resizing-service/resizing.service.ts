@@ -36,6 +36,7 @@ export class ResizingService {
         this.drawingService.canvas.style.zIndex = '2';
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
+        this.restoreBaseImageData();
     }
 
     canBeResizedHorizontally(event: MouseEvent): boolean {

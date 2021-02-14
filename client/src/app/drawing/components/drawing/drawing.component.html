@@ -9,7 +9,8 @@
         [style.left.px]="resizeWidth"
         [ngStyle]="{ cursor: 'nwse-resize' }"
         (mousedown)="activateResizer('rightDown')"
-        (click)="disableResizer"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
     <div
         id="down"
@@ -19,7 +20,8 @@
         [style.left.px]="resizeWidth / 2"
         [ngStyle]="{ cursor: 'ns-resize' }"
         (mousedown)="activateResizer('down')"
-        (click)="disableResizer"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
     <div
         id="right"
@@ -29,6 +31,7 @@
         [style.left.px]="resizeWidth"
         [ngStyle]="{ cursor: 'ew-resize' }"
         (mousedown)="activateResizer('right')"
-        (click)="disableResizer"
+        (click)="(disableResizer)"
+        (dblclick)="(disableResizer)"
     ></div>
 </div>
