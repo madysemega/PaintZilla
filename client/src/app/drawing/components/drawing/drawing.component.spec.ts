@@ -49,10 +49,10 @@ describe('DrawingComponent', () => {
         const mouseEvent: MouseEvent = { clientX: 0, clientY: 0 } as MouseEvent;
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(true);
         spyOn(resizingServiceStub, 'restorePreviewImageData').and.returnValue();
-        const resizingSpy = spyOn(resizingServiceStub, 'resizeCanvas').and.callThrough();
+        const resizeCanvasStub = spyOn(resizingServiceStub, 'resizeCanvas').and.stub();
         component.onMouseMove(mouseEvent);
-        expect(resizingSpy).toHaveBeenCalled();
-        expect(resizingSpy).toHaveBeenCalledWith(mouseEvent);
+        expect(resizeCanvasStub).toHaveBeenCalled();
+        expect(resizeCanvasStub).toHaveBeenCalledWith(mouseEvent);
     });
 
     it("onMouseMove(): should call the tool's mouse move when receiving a mouse move event and canvas is not resizing", () => {
@@ -95,9 +95,9 @@ describe('DrawingComponent', () => {
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(true);
         spyOn(resizingServiceStub, 'restoreBaseImageData').and.returnValue();
         spyOn(resizingServiceStub, 'updateCanvasSize').and.returnValue();
-        const resizingSpy = spyOn(resizingServiceStub, 'disableResizer').and.callThrough();
+        const disableResizerStub = spyOn(resizingServiceStub, 'disableResizer').and.stub();
         component.onMouseUp(event);
-        expect(resizingSpy).toHaveBeenCalled();
+        expect(disableResizerStub).toHaveBeenCalled();
         expect(component.wasResizing).toEqual(true);
     });
 

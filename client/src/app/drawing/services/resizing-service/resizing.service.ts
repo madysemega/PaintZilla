@@ -62,10 +62,10 @@ export class ResizingService {
     }
 
     disableResizer(): void {
-        this.drawingService.canvas.style.zIndex = '0';
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
+        this.drawingService.canvas.style.zIndex = '0';
         this.drawingService.fillCanvas(this.drawingService.baseCtx, this.canvasResize.x, this.canvasResize.y);
         this.restoreBaseImageData();
         this.updateCanvasSize();

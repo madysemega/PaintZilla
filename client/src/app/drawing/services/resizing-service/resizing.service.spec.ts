@@ -21,6 +21,7 @@ describe('ResizingService', () => {
             providers: [{ provide: DrawingService, useValue: drawingServiceStub }],
         }).compileComponents();
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
+        drawingServiceStub = TestBed.inject(DrawingService);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         service = TestBed.inject(ResizingService);
@@ -30,8 +31,8 @@ describe('ResizingService', () => {
         service.drawingService.previewCtx = previewCtxStub;
         service.drawingService.canvasSize = canvasSizeStub;
         testMouseEvent = {
-            offsetX: Constants.MAX_WIDTH - Constants.DEFAULT_WIDTH,
-            offsetY: Constants.MAX_HEIGHT - Constants.DEFAULT_HEIGHT,
+            offsetX: Constants.MAX_WIDTH - Constants.MINIMUM_SIZE,
+            offsetY: Constants.MAX_HEIGHT - Constants.MINIMUM_SIZE,
         } as MouseEvent;
     }));
 
@@ -75,6 +76,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         const initialValue: number = service.canvasResize.x;
         service.resizeCanvas(mouseEvent);
         expect(service.canvasResize.x).toEqual(initialValue);
@@ -85,6 +87,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         const initialValue: number = service.canvasResize.x;
         service.resizeCanvas(mouseEvent);
         expect(service.canvasResize.x).toEqual(initialValue);
@@ -95,6 +98,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.rightResizerEnabled = true;
         const initialValue: number = service.canvasResize.x;
         service.resizeCanvas(mouseEvent);
@@ -107,6 +111,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         const initialValue: number = service.canvasResize.y;
         service.resizeCanvas(mouseEvent);
         expect(service.canvasResize.y).toEqual(initialValue);
@@ -117,6 +122,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(false);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.downResizerEnabled = true;
         const initialValue: number = service.canvasResize.y;
         service.resizeCanvas(mouseEvent);
@@ -128,6 +134,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.downResizerEnabled = true;
         const initialValue: number = service.canvasResize.y;
         service.resizeCanvas(mouseEvent);
@@ -141,6 +148,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(false);
         spyOn(service, 'canBeResizedVertically').and.returnValue(false);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.rightDownResizerEnabled = true;
         const initialValueX: number = service.canvasResize.x;
         const initialValueY: number = service.canvasResize.y;
@@ -154,6 +162,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(false);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.rightDownResizerEnabled = true;
         const initialValue: number = service.canvasResize.x;
         service.resizeCanvas(mouseEvent);
@@ -166,6 +175,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(false);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.rightDownResizerEnabled = true;
         const initialValue: number = service.canvasResize.y;
         service.resizeCanvas(mouseEvent);
@@ -179,6 +189,7 @@ describe('ResizingService', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
         service.rightDownResizerEnabled = true;
         const initialValueX: number = service.canvasResize.x;
         const initialValueY: number = service.canvasResize.y;
@@ -187,6 +198,17 @@ describe('ResizingService', () => {
         expect(service.canvasResize.y).not.toEqual(initialValueY);
         expect(service.canvasResize.x).toEqual(mouseEvent.offsetX);
         expect(service.canvasResize.y).toEqual(mouseEvent.offsetY);
+    });
+
+    it('resizeCanvas(): drawingService.canvas.style.zIndex should be set to 2', () => {
+        const mouseEvent: MouseEvent = testMouseEvent;
+        spyOn(service, 'restorePreviewImageData').and.returnValue();
+        spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
+        spyOn(service, 'canBeResizedVertically').and.returnValue(true);
+        spyOn(drawingServiceStub, 'clearCanvas').and.returnValue();
+        drawingServiceStub.canvas.style.zIndex = '0';
+        service.resizeCanvas(mouseEvent);
+        expect(service.drawingService.canvas.style.zIndex).toEqual('2');
     });
 
     it('resizeCanvas(): restorePreviewImageData() should be called', () => {
