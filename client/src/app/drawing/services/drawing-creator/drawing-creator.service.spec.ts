@@ -1,14 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { Vec2 } from '@app/app/classes/vec2';
+import * as Constants from '@app/drawing/constants/drawing-constants';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { of } from 'rxjs';
-import { DrawingCreatorService } from './drawing-creator.service';
 
 // tslint:disable:no-any
 describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
     let drawingServiceSpy: DrawingService;
+
+    let canvasTestHelper: CanvasTestHelper;
+    let baseCtxStub: CanvasRenderingContext2D;
+    let previewCtxStub: CanvasRenderingContext2D;
+    let canvasSizeStub: Vec2;
+
     let resizingServiceSpy: ResizingService;
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let matDialogSpy: jasmine.SpyObj<MatDialog>;
@@ -19,7 +28,6 @@ describe('DrawingCreatorService', () => {
     beforeEach(() => {
         drawingServiceSpy = new DrawingService();
         resizingServiceSpy = new ResizingService(drawingServiceSpy);
-
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
@@ -36,7 +44,16 @@ describe('DrawingCreatorService', () => {
             ],
         });
 
+        canvasTestHelper = TestBed.inject(CanvasTestHelper);
         service = TestBed.inject(DrawingCreatorService);
+
+        baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
+        previewCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
+        canvasSizeStub = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+        drawingServiceSpy.canvas = canvasTestHelper.canvas;
+        drawingServiceSpy.baseCtx = baseCtxStub;
+        drawingServiceSpy.previewCtx = previewCtxStub;
+        drawingServiceSpy.canvasSize = canvasSizeStub;
 
         createNewDrawingSpy = spyOn<any>(service, 'createNewDrawing').and.callThrough();
     });
