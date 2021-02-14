@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
@@ -10,11 +11,12 @@ import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
+import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LineService extends ResizableTool implements IDeselectableTool, ILineWidthChangeListener {
+export class LineService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
     private lineShape: LineShape;
     private lineShapeRenderer: LineShapeRenderer;
     private lineJointsRenderer: LineJointsRenderer;
@@ -25,6 +27,10 @@ export class LineService extends ResizableTool implements IDeselectableTool, ILi
     lineType: LineType;
 
     private strokeWidthProperty: StrokeWidthProperty;
+
+    onToolSelect(): void {
+        this.drawingService.setCursorType(CursorType.CROSSHAIR);
+    }
 
     onLineWidthChanged(): void {
         if (this.strokeWidthProperty) {
