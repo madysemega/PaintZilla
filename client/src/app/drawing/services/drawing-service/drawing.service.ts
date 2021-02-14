@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-
 const BLANK = 0;
 
 @Injectable({

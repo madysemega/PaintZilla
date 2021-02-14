@@ -33,7 +33,7 @@ export class ResizingService {
                 this.canvasResize.y = event.offsetY;
             }
         }
-        this.drawingService.canvas.style.zIndex = '2';
+        this.updateCanvasStyle();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
         this.restoreBaseImageData();
@@ -45,6 +45,12 @@ export class ResizingService {
 
     canBeResizedVertically(event: MouseEvent): boolean {
         return event.offsetY > Constants.MINIMUM_SIZE && event.offsetY < Constants.MAX_HEIGHT;
+    }
+
+    updateCanvasStyle(): void {
+        this.drawingService.canvas.style.zIndex = '2';
+        this.drawingService.canvas.style.background = 'none';
+        this.drawingService.previewCanvas.style.background = Constants.CTX_COLOR;
     }
 
     restorePreviewImageData(): void {
@@ -66,11 +72,15 @@ export class ResizingService {
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
-        this.drawingService.canvas.style.zIndex = '0';
-        this.drawingService.fillCanvas(this.drawingService.baseCtx, this.canvasResize.x, this.canvasResize.y);
-        this.drawingService.fillCanvas(this.drawingService.previewCtx, this.canvasResize.x, this.canvasResize.y);
+        this.restoreCanvasStyle();
         this.restoreBaseImageData();
         this.updateCanvasSize();
+    }
+
+    restoreCanvasStyle(): void {
+        this.drawingService.canvas.style.zIndex = '0';
+        this.drawingService.canvas.style.background = 'white';
+        this.drawingService.previewCanvas.style.background = 'none';
     }
 
     restoreBaseImageData(): void {
@@ -83,7 +93,7 @@ export class ResizingService {
     }
 
     resetCanvasDimensions(): void {
-        this.canvasResize.x = Constants.HALF_WINDOW_WIDTH;
-        this.canvasResize.y = Constants.HALF_WINDOW_HEIGHT;
+        this.canvasResize.x = Constants.DEFAULT_WIDTH;
+        this.canvasResize.y = Constants.DEFAULT_HEIGHT;
     }
 }
