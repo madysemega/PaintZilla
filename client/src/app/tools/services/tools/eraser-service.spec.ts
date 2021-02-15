@@ -9,7 +9,6 @@ describe('EraserService', () => {
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
-
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
@@ -20,7 +19,7 @@ describe('EraserService', () => {
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
-        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
 
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
@@ -71,10 +70,25 @@ describe('EraserService', () => {
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
+    it(' mouseMove should set the mouse to move', () => {
+        service.onMouseMove(mouseEvent);
+        expect(service.getPositionFromMouse(mouseEvent)).toEqual({ x: 50, y: 60 });
+    });
+    // tslint:disable:no-magic-numbers
+    it(' a eraser width less than 5 should set the width to 5', () => {
+        let width = 20;
+        width = service.changeWidth(width);
+        expect(width).toEqual(20);
+    });
+    it(' a eraser width more than 5 should set the width to the same thing', () => {
+        let width = 2;
+        width = service.changeWidth(width);
+        expect(width).toEqual(service.minimumWidth);
+    });
 
-    it('tool deselect should call setcursorType', () => {
+    it(' onToolDeselect should change the cursor to crosshair', () => {
         service.onToolDeselect();
-        expect(drawServiceSpy).toHaveBeenCalled();
+        expect(drawServiceSpy.canvas.style.cursor).toEqual('');
     });
     it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
         service.mouseInCanvas = true;

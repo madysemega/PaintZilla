@@ -5,7 +5,6 @@ import { LineService } from '@app/tools/services/tools/line.service';
 
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
-
     beforeEach(() => {
         service = TestBed.inject(ToolSelectorService);
     });
