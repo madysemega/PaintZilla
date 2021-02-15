@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class ColourToolService {
-    colour1: string;
-    colour2: string;
+    primaryColour: string;
+    secondaryColour: string;
     colourList: string[] = [];
 }

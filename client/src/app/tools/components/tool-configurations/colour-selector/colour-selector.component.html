@@ -12,11 +12,11 @@
   </button>
   <button (click)="addFirstCol(true)"
     class="color-div"
-    [ngStyle]="{'background-color': service.colour1 || 'white'}">
+    [ngStyle]="{'background-color': service.primaryColour || 'white'}">
 </button>
   <button (click)="addSecCol(true)"
     class="color-div2"
-    [ngStyle]="{'background-color': service.colour2 || 'white'}">
+    [ngStyle]="{'background-color': service.secondaryColour || 'white'}">
 </button>
 <input type="text" id="colorHex" maxlength="8" 
   size="10" value="#" (keyup)="takeHexClr($event)">
