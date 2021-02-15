@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from './drawing.service';
 
@@ -31,6 +32,10 @@ describe('DrawingService', () => {
     it('isCanvasEmpty should be true if canvas is empty', () => {
         service.clearCanvas(service.baseCtx);
         expect(service.isCanvasEmpty()).toEqual(true);
+    });
+    it('set cursor should set the cursor', () => {
+        service.setCursorType(CursorType.CROSSHAIR);
+        expect(service.previewCanvas.style.cursor).toEqual(CursorType.CROSSHAIR);
     });
 
     it('isCanvasEmpty should be false if canvas is not empty', () => {

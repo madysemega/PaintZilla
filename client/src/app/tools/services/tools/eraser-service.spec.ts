@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EraserService } from './eraser-service';
 // tslint:disable:no-any
@@ -75,7 +74,7 @@ describe('EraserService', () => {
 
     it('tool deselect should call setcursorType', () => {
         service.onToolDeselect();
-        expect(drawServiceSpy.previewCanvas.style.cursor).toEqual(CursorType.CROSSHAIR);
+        expect(drawServiceSpy).toHaveBeenCalled();
     });
     it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
         service.mouseInCanvas = true;
@@ -84,10 +83,11 @@ describe('EraserService', () => {
         service.onMouseDown(mouseEvent);
 
         service.onMouseMove(mouseEvent);
+    
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawVerticesSpy).toHaveBeenCalled();
     });
-
+ 
     it(' mouseDown should set mouseDown property to false on right click', () => {
         const mouseEventRClick = {
             offsetX: 25,
