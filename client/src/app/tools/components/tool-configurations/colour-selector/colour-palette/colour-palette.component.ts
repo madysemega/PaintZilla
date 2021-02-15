@@ -28,7 +28,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
             this.draw();
             const pos = this.selectedPosition;
             if (pos) {
-                console.log('appeler');
                 this.colour.emit(this.getColourAtPosition(pos.x, pos.y));
             }
         }
