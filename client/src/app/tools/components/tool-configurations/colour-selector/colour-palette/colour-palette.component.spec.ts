@@ -66,6 +66,7 @@ describe('ColourPaletteComponent', () => {
         expect(emitStub).not.toHaveBeenCalled();
     });
     it('onMouseMove calls getColour', () => {
+        component.onMouseDown(mouseEvent);
         component.onMouseMove(mouseEvent);
         expect(getColourStub).toHaveBeenCalledWith(component.selectedPosition.x, component.selectedPosition.y);
     });

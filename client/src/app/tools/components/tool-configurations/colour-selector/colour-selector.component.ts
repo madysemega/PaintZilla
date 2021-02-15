@@ -10,18 +10,17 @@ const NBCOL = 3;
 })
 export class ColourSelectorComponent {
     show: boolean = false;
-    @ViewChild('colorHex') colorHex: ElementRef;
+    @ViewChild('color-div') colordiv: ElementRef<HTMLButtonElement>;
     @Input()
     value: number = 1;
     hue: string;
     colour: string;
     colourInput: string;
     opacity: number = 1;
-
     constructor(public service: ColourToolService) {}
     changeOpacity(event: MatSliderChange): void {
         // source: https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
-        console.log(event.value);
+        console.log(event);
         const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
         const opacityString = this.colour.substring(INDEXTHIRDCOMMA + 1, this.colour.length - 1);
         this.opacity = parseInt(opacityString, 10);
@@ -30,9 +29,11 @@ export class ColourSelectorComponent {
     }
     setOpacityOne(col: string): void {
         const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
+        this.opacity = 1;
         this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
     }
     addColEv(event: MouseEvent): void {
+        console.log(event.target);
         this.service.colour1 = (event.target as HTMLInputElement).style.backgroundColor;
     }
     addSecEv(event: MouseEvent): void {
@@ -66,20 +67,21 @@ export class ColourSelectorComponent {
             }
 
             if (isValid) {
-                this.includeOpacity(inputString);
+                this.toHex(inputString);
                 this.rememberCol(this.colour);
             }
         }
     }
 
-    includeOpacity(col: string): void {
-        const RPOS = 1;
-        const GPOS = 3;
-        const BPOS = 5;
+    toHex(col: string): void {
+        const RPOS = 0;
+        const GPOS = 2;
+        const BPOS = 4;
         const rValue: number = parseInt(col.substr(RPOS, 2), 16);
         const gValue: number = parseInt(col.substr(GPOS, 2), 16);
         const bValue: number = parseInt(col.substr(BPOS, 2), 16);
         this.colour = 'rgba(' + rValue.toString(10) + ',' + bValue.toString(10) + ',' + gValue.toString(10) + ',1)';
+        this.opacity = 1;
     }
 
     switchCol(): void {
