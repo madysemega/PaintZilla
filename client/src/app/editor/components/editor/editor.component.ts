@@ -18,17 +18,15 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        event.preventDefault();
         this.toolSelector.getSelectedTool().onKeyDown(event);
+        this.drawingCreatorService.onKeyDown(event);
     }
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
-        event.preventDefault();
         const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
         this.toolSelector.selectTool(toolName);
         this.toolSelector.getSelectedTool().onKeyUp(event);
-        this.drawingCreatorService.onKeyUp(event);
     }
 
     @HostListener('mousemove', ['$event'])
