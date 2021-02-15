@@ -12,8 +12,9 @@ describe('ColourPaletteComponent', () => {
     let getColourStub: jasmine.Spy<jasmine.Func>;
     let emitStub: jasmine.Spy<jasmine.Func>;
     let emitCStub: jasmine.Spy<jasmine.Func>;
-    // let componentSel: ColourSelectorComponent;
-    const mouseEvent = { offsetX: 50, offsetY: 30, button: 0 } as MouseEvent;
+    let componentSlider: ColourSliderComponent;
+    const mouseEvent = { offsetX: 0, offsetY: 0, button: 0 } as MouseEvent;
+    const mouseEvent2 = { offsetX: 5, offsetY: 5, button: 0 } as MouseEvent;
     let TEST: string;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -26,7 +27,7 @@ describe('ColourPaletteComponent', () => {
         fixture2 = TestBed.createComponent(ColourSliderComponent);
         fixture3 = TestBed.createComponent(ColourSelectorComponent);
         component = fixture.componentInstance;
-        // componentSel = fixture3.componentInstance;
+        componentSlider = fixture2.componentInstance;
         emitStub = spyOn(component, 'emitColour').and.stub();
         getColourStub = spyOn(component, 'getColourAtPosition').and.stub();
         getColourStub.and.callThrough();
@@ -37,19 +38,16 @@ describe('ColourPaletteComponent', () => {
         fixture2.detectChanges();
         fixture3.detectChanges();
         component.onMouseDown(mouseEvent);
-        component.selectedPosition = { x: 20, y: 20 };
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-    it('ngOnChanges changes the hue value', () => {
+    it('ngOnChanges calls emit', () => {
+        componentSlider.onMouseMove(mouseEvent2);
         const CHANGES = { hue: new SimpleChange(TEST, 'rgba(10, 10, 10, 1)', false) } as SimpleChanges;
         component.ngOnChanges(CHANGES);
-        fixture.detectChanges();
-        const CURHUE = component.hue;
-        console.log(CURHUE + 'lolol');
-        expect(TEST).not.toEqual(CURHUE);
+        expect(emitCStub).toHaveBeenCalled();
     });
     it('onMouseUp does not allow onMouseDown to call emitColour', () => {
         component.onMouseUp(mouseEvent);
