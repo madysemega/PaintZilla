@@ -12,8 +12,9 @@ export class DrawingCreatorService {
 
     constructor(public drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
 
-    onKeyUp(event: KeyboardEvent): void {
+    onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
+            event.preventDefault();
             this.createNewDrawing();
         }
     }
