@@ -5,8 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}"
+        },
+
+        {
+            "command": "npm start",
+            "name": "Run npm start",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
             "name": "Debug server (Attach)",
-            "port": 9229,
+            "port": 4200,
             "request": "attach",
             "skipFiles": ["<node_internals>/**"],
             "restart": true,

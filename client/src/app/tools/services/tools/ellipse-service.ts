@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 
 @Injectable({
@@ -20,10 +20,6 @@ export class EllipseService extends ShapeTool {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
-    }
-
-    adjustLineWidth(lineWidth: number): void {
-        this.lineWidth = lineWidth;
     }
 
     onMouseDown(event: MouseEvent): void {

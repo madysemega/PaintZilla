@@ -24,8 +24,8 @@ class StubShape extends Shape {}
 class StubShapeRenderer extends ShapeRenderer<Shape> {
     draw(ctx: CanvasRenderingContext2D): void {}
 
-    constructor(shape: Shape) {
-        super(shape);
+    constructor(shape: Shape, properties: ShapeProperty[]) {
+        super(shape, properties);
     }
 }
 
@@ -39,8 +39,8 @@ describe('ShapeRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
-        shape = new StubShape(properties);
-        shapeRenderer = new StubShapeRenderer(shape);
+        shape = new StubShape();
+        shapeRenderer = new StubShapeRenderer(shape, properties);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;

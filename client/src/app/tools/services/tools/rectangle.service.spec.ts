@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { RectangleService } from './rectangle.service';
 
 // tslint:disable:no-any
@@ -261,12 +261,6 @@ describe('RectangleService', () => {
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
-    });
-
-    it('Adjusting the line width should update the lineWidth property', () => {
-        const testVal = 27;
-        service.adjustLineWidth(testVal);
-        expect(service.lineWidth).toEqual(testVal);
     });
 
     it(' after having been adjusted width should be negative if it was so before the adjustment', () => {

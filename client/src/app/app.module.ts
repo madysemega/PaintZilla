@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
@@ -18,6 +19,7 @@ import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { MaterialModule } from './material.module';
 import { EraserToolConfigurationComponent } from './tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
+import { LineToolConfigurationComponent } from './tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -30,16 +32,19 @@ import { EraserToolConfigurationComponent } from './tools/components/tool-config
         PencilToolConfigurationComponent,
         EraserToolConfigurationComponent,
         RectangleToolConfigurationComponent,
+        DiscardChangesDialogComponent,
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
         ColourPaletteComponent,
         ColourSelectorComponent,
         ColourSliderComponent,
+        LineToolConfigurationComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
 
     providers: [],
     bootstrap: [AppComponent],
+    entryComponents: [DiscardChangesDialogComponent],
 })
 export class AppModule {}

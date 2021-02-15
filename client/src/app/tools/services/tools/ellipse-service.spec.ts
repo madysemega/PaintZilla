@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
-import { EllipseService } from './ellipse-service.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { EllipseService } from './ellipse-service';
 
 // tslint:disable:no-any
 // tslint:disable:max-file-line-count
@@ -224,13 +224,6 @@ describe('EllipseService', () => {
         service.shapeType = ShapeType.Filled;
         service.onMouseUp(mouseEvent);
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
-    });
-
-    it('ajustLineWidth should set strokeWidth attribute to the correct value', () => {
-        const lineWidth = 3;
-
-        service.adjustLineWidth(lineWidth);
-        expect(service.lineWidth).toBe(lineWidth);
     });
 
     it('onKeyDown should set isShiftDown to true if event was triggered from shift key', () => {

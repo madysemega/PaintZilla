@@ -1,5 +1,5 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { Tool } from './tool';
 
 class ToolStub extends Tool {}

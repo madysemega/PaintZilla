@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { IndexService } from '@app/tools/services/index/index.service';
 import { Message } from '@common/communication/message';
 import { BehaviorSubject } from 'rxjs';
@@ -13,7 +14,7 @@ export class MainPageComponent {
     readonly title: string = 'LOG2990';
     message: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-    constructor(private basicService: IndexService) {}
+    constructor(private basicService: IndexService, private resizingService: ResizingService) {}
 
     sendTimeToServer(): void {
         const newTimeMessage: Message = {
@@ -34,5 +35,9 @@ export class MainPageComponent {
                 }),
             )
             .subscribe(this.message);
+    }
+
+    resetCanvasDimensions(): void {
+        this.resizingService.resetCanvasDimensions();
     }
 }

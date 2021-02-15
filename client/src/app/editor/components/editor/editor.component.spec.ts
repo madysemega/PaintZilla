@@ -1,32 +1,40 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { DrawingService } from '@app/drawing/services/drawing/drawing.service';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { EditorComponent } from './editor.component';
 
 class ToolStub extends Tool {}
 
+// tslint:disable:no-any
 describe('EditorComponent', () => {
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
     let drawingStub: DrawingService;
     let keyboardZEvent: KeyboardEvent;
+    let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
 
     keyboardZEvent = {
         key: 'Z',
+        preventDefault: () => {
+            return;
+        },
     } as KeyboardEvent;
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
         drawingStub = new DrawingService();
+        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyUp']);
 
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
+                { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
         }).compileComponents();
     }));

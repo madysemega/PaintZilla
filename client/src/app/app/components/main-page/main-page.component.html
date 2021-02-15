@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
 
-    <button class="button" routerLink="/editor">Créer un nouveau dessin</button>
+    <button class="button" routerLink="/editor" (click)="resetCanvasDimensions()">Créer un nouveau dessin</button>
     <button class="button" routerLink="">Ouvrir le carrousel de dessins</button>
     <button class="button" *ngIf="false">Continuer un dessin</button>
 
