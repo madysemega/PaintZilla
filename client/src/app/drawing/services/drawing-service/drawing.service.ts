@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
-
-const BLANK = 0;
+import * as Constants from '@app/drawing/constants/drawing-constants';
 
 @Injectable({
     providedIn: 'root',
@@ -31,15 +30,27 @@ export class DrawingService {
         const originY = 0;
         this.canvasIsEmpty = !this.baseCtx
             .getImageData(originX, originY, this.canvas.width, this.canvas.height)
-            .data.some((channel) => channel !== BLANK);
+            .data.some((channel) => channel !== Constants.BLANK);
         return this.canvasIsEmpty;
     }
 
     fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): void {
         ctx.beginPath();
         ctx.rect(0, 0, width, height);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = Constants.CTX_COLOR;
         ctx.fill();
         ctx.closePath();
+    }
+
+    updateCanvasStyle(): void {
+        this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
+        this.canvas.style.background = Constants.PREVIEW_CTX_COLOR;
+        this.previewCanvas.style.background = Constants.CTX_COLOR;
+    }
+
+    restoreCanvasStyle(): void {
+        this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
+        this.canvas.style.background = Constants.CTX_COLOR;
+        this.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
     }
 }

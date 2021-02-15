@@ -10,7 +10,7 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 export class DrawingCreatorService {
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
 
-    constructor(private drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
+    constructor(public drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
 
     onKeyUp(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
@@ -26,6 +26,8 @@ export class DrawingCreatorService {
                     this.drawingService.clearCanvas(this.drawingService.baseCtx);
                     this.resizingService.resetCanvasDimensions();
                     this.resizingService.updateCanvasSize();
+                    this.drawingService.restoreCanvasStyle();
+                    this.drawingService.canvasIsEmpty = true;
                 }
             });
         }
