@@ -83,11 +83,11 @@ describe('EraserService', () => {
         service.onMouseDown(mouseEvent);
 
         service.onMouseMove(mouseEvent);
-    
+
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawVerticesSpy).toHaveBeenCalled();
     });
- 
+
     it(' mouseDown should set mouseDown property to false on right click', () => {
         const mouseEventRClick = {
             offsetX: 25,

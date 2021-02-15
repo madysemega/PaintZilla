@@ -13,6 +13,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 export class EraserService extends ResizableTool implements ISelectableTool, IDeselectableTool {
     private readonly CURSOR_FILL_STYLE: string = '#FFF';
     private readonly CURSOR_STROKE_STYLE: string = '#000';
+    private minimumWidth: number = 5;
 
     private vertices: Vec2[];
 
@@ -66,9 +67,11 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         this.drawCursor(mousePosition, this.drawingService.previewCtx);
     }
 
-    private drawVertices(ctx: CanvasRenderingContext2D): void {
+    drawVertices(ctx: CanvasRenderingContext2D): void {
         ctx.save();
-
+        if (this.lineWidth < this.minimumWidth) {
+            this.lineWidth = this.minimumWidth;
+        }
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'white';
         ctx.lineCap = 'round';
