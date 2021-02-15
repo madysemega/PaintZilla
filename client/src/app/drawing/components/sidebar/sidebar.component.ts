@@ -60,6 +60,5 @@ export class SidebarComponent implements OnInit {
 
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
-        this.drawingService.canvasIsEmpty = true;
     }
 }

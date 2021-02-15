@@ -110,6 +110,7 @@ describe('DrawingCreatorService', () => {
         expect(clearCanvasStub).toHaveBeenCalled();
         expect(resetCanvasDimensionsStub).toHaveBeenCalled();
         expect(updateCanvasSizeStub).toHaveBeenCalled();
+        expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
     it('createNewDrawing() should not clear canvas and reset canvas dimensions if changes are not discarded and canvas is not empty', () => {
@@ -119,9 +120,11 @@ describe('DrawingCreatorService', () => {
         spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
         matDialogRefSpy.afterClosed.and.returnValue(of(false));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        drawingServiceSpy.canvasIsEmpty = false;
         service.createNewDrawing();
         expect(clearCanvasStub).not.toHaveBeenCalled();
         expect(resetCanvasDimensionsStub).not.toHaveBeenCalled();
         expect(updateCanvasSizeStub).not.toHaveBeenCalled();
+        expect(drawingServiceSpy.canvasIsEmpty).toEqual(false);
     });
 });

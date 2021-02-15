@@ -27,6 +27,7 @@ export class DrawingCreatorService {
                     this.resizingService.resetCanvasDimensions();
                     this.resizingService.updateCanvasSize();
                     this.drawingService.restoreCanvasStyle();
+                    this.drawingService.canvasIsEmpty = true;
                 }
             });
         }
