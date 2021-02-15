@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
+import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipseService extends ShapeTool {
+export class EllipseService extends ShapeTool implements ISelectableTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     startPoint: Vec2 = { x: 0, y: 0 };
@@ -20,6 +22,10 @@ export class EllipseService extends ShapeTool {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
+    }
+
+    onToolSelect(): void {
+        this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
     onMouseDown(event: MouseEvent): void {

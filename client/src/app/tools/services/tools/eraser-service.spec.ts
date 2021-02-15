@@ -9,7 +9,6 @@ describe('EraserService', () => {
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
-
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
@@ -20,7 +19,7 @@ describe('EraserService', () => {
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
-        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
 
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
@@ -71,6 +70,37 @@ describe('EraserService', () => {
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
+    it(' mouseMove should set the mouse to move', () => {
+        service.onMouseMove(mouseEvent);
+        expect(service.getPositionFromMouse(mouseEvent)).toEqual({ x: 50, y: 60 });
+    });
+    // tslint:disable:no-magic-numbers
+    it(' a eraser width less than 5 should set the width to 5', () => {
+        let width = 20;
+        width = service.changeWidth(width);
+        expect(width).toEqual(20);
+    });
+    it(' a eraser width more than 5 should set the width to the same thing', () => {
+        let width = 2;
+        width = service.changeWidth(width);
+        expect(width).toEqual(service.minimumWidth);
+    });
+
+    it(' onToolDeselect should change the cursor to crosshair', () => {
+        service.onToolDeselect();
+        expect(drawServiceSpy.canvas.style.cursor).toEqual('');
+    });
+    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
+        service.mouseInCanvas = true;
+        service.mouseDownCoord = { x: 0, y: 0 };
+        service.mouseDown = true;
+        service.onMouseDown(mouseEvent);
+
+        service.onMouseMove(mouseEvent);
+
+        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
+        expect(drawVerticesSpy).toHaveBeenCalled();
+    });
 
     it(' mouseDown should set mouseDown property to false on right click', () => {
         const mouseEventRClick = {
@@ -99,27 +129,7 @@ describe('EraserService', () => {
         expect(drawVerticesSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = true;
-        service.onMouseDown(mouseEvent);
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawVerticesSpy).toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = false;
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should call drawPoint if mouse was down but did not move', () => {
+    it(' onMouseUp should call drawPoint if mouse was down but did not move', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
@@ -128,7 +138,7 @@ describe('EraserService', () => {
         expect(drawPointSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseMove should not call drawPoint if mouse was not down', () => {
+    it(' onMouseUp should not call drawPoint if mouse was not down', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;

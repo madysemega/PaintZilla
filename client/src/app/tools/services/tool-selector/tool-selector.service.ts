@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
+import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -29,6 +30,9 @@ export class ToolSelectorService {
                 (this.selectedTool.tool as IDeselectableTool).onToolDeselect();
             }
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
+            if ('onToolSelect' in this.selectedTool.tool) {
+                (this.selectedTool.tool as ISelectableTool).onToolSelect();
+            }
             this.name.next(name);
             return true;
         }

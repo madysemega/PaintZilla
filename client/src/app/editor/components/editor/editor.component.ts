@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
@@ -7,10 +7,14 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
 })
-export class EditorComponent {
+export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
 
     constructor(public toolSelector: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {}
+
+    ngAfterViewInit(): void {
+        this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+    }
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {

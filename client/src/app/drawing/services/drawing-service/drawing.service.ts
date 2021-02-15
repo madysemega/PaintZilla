@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 
 @Injectable({
@@ -12,6 +13,12 @@ export class DrawingService {
     previewCanvas: HTMLCanvasElement;
     canvasIsEmpty: boolean = true;
     canvasSize: Vec2;
+
+    setCursorType(type: CursorType): void {
+        if (this.previewCanvas) {
+            this.previewCanvas.style.setProperty('cursor', type as string);
+        }
+    }
 
     clearCanvas(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);

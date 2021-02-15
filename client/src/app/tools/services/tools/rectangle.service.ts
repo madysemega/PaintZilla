@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
+import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService extends ShapeTool {
+export class RectangleService extends ShapeTool implements ISelectableTool {
     startingPos: Vec2;
     width: number;
     height: number;
@@ -23,6 +25,10 @@ export class RectangleService extends ShapeTool {
         this.shiftDown = false;
         this.lastMouseCoords = { x: 0, y: 0 };
         this.key = 'rectangle';
+    }
+
+    onToolSelect(): void {
+        this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
     onKeyDown(event: KeyboardEvent): void {

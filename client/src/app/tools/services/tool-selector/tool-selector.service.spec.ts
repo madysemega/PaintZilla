@@ -3,9 +3,9 @@ import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 
+// tslint:disable:prefer-const
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
-
     beforeEach(() => {
         service = TestBed.inject(ToolSelectorService);
     });
