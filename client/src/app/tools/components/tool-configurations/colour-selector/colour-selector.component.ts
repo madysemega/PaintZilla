@@ -56,32 +56,42 @@ export class ColourSelectorComponent {
 
     takeHexClr(event: KeyboardEvent): void {
         console.log(event);
-        let isValid = true;
         const inputString: string = (event.target as HTMLInputElement).value;
         const hexSize = 7;
-        if (inputString.length === hexSize && inputString[0] === '#') {
-            for (let i = 1; i < hexSize; i++) {
-                if (inputString[i] >= '9' && inputString[i] <= '0') {
-                    isValid = false;
-                }
-            }
-
-            if (isValid) {
-                this.toHex(inputString);
-                this.rememberCol(this.colour);
-            }
+        if (inputString.length === hexSize && inputString[0] === '#' && this.isHex(inputString)) {
+            this.toHex(inputString);
+            this.rememberCol(this.colour);
         }
     }
 
     toHex(col: string): void {
-        const RPOS = 0;
-        const GPOS = 2;
-        const BPOS = 4;
+        const RPOS = 1;
+        const GPOS = 3;
+        const BPOS = 5;
         const rValue: number = parseInt(col.substr(RPOS, 2), 16);
         const gValue: number = parseInt(col.substr(GPOS, 2), 16);
         const bValue: number = parseInt(col.substr(BPOS, 2), 16);
-        this.colour = 'rgba(' + rValue.toString(10) + ',' + bValue.toString(10) + ',' + gValue.toString(10) + ',1)';
+        this.colour = 'rgba(' + rValue.toString(10) + ',' + gValue.toString(10) + ',' + bValue.toString(10) + ',1)';
         this.opacity = 1;
+    }
+
+    isHex(value: string): boolean {
+        const NUMBMIN = 48;
+        const NUMBMAX = 57;
+        const CAPITALMIN = 65;
+        const CAPITALMAX = 70;
+        const SMALLMIN = 97;
+        const SMALLMAX = 102;
+        for (let i = 1; i < value.length; i++) {
+            if (value.charCodeAt(i) < NUMBMIN || value.charCodeAt(i) > SMALLMAX) {
+                return false;
+            } else if (value.charCodeAt(i) < CAPITALMIN && value.charCodeAt(i) > NUMBMAX) {
+                return false;
+            } else if (value.charCodeAt(i) < SMALLMIN && value.charCodeAt(i) > CAPITALMAX) {
+                return false;
+            }
+        }
+        return true;
     }
 
     switchCol(): void {
@@ -96,13 +106,12 @@ export class ColourSelectorComponent {
         }
         const LISTSIZE = 10;
         this.setOpacityOne(newCol);
-        if (this.service.colourList.length < LISTSIZE && newCol !== undefined) {
+        if (this.service.colourList.length < LISTSIZE) {
             this.service.colourList.push(newCol);
-        } else if (this.service.colourList.length === LISTSIZE && newCol !== undefined) {
+        } else if (this.service.colourList.length === LISTSIZE) {
             this.service.colourList.shift();
             this.service.colourList.push(newCol);
         }
-        console.log(this.service.colourList);
     }
 
     showList(): void {
