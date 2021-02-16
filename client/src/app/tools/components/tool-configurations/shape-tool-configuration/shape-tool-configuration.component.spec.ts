@@ -1,12 +1,26 @@
+import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MaterialModule } from '@app/material.module';
+import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { ShapeToolConfigurationComponent } from './shape-tool-configuration.component';
 
 // tslint:disable:no-any
 describe('ShapeToolConfigurationComponent', () => {
+    @Component({
+        selector: 'mat-icon',
+        template: '<span></span>',
+    })
+    class MockMatIconComponent {
+        @Input() svgIcon: any;
+        @Input() fontSet: any;
+        @Input() fontIcon: any;
+    }
+
     let component: ShapeToolConfigurationComponent;
     let fixture: ComponentFixture<ShapeToolConfigurationComponent>;
     let drawingStub: DrawingService;
@@ -19,9 +33,21 @@ describe('ShapeToolConfigurationComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            declarations: [ShapeToolConfigurationComponent],
+            imports: [MaterialModule],
+            declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: EllipseService, useValue: ellipseToolStub }],
-        }).compileComponents();
+        })
+            .overrideModule(MatIconModule, {
+                remove: {
+                    declarations: [MatIcon],
+                    exports: [MatIcon],
+                },
+                add: {
+                    declarations: [MockMatIconComponent],
+                    exports: [MockMatIconComponent],
+                },
+            })
+            .compileComponents();
     }));
 
     beforeEach(() => {

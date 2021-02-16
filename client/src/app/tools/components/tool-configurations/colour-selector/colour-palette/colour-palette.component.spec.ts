@@ -1,7 +1,9 @@
 import { SimpleChange, SimpleChanges } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MaterialModule } from '@app/material.module';
 import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { ColourSliderComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-slider/colour-slider.component';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { ColourPaletteComponent } from './colour-palette.component';
 
 describe('ColourPaletteComponent', () => {
@@ -19,7 +21,9 @@ describe('ColourPaletteComponent', () => {
     let TEST: string;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MaterialModule],
             declarations: [ColourPaletteComponent, ColourSelectorComponent, ColourSliderComponent],
+            providers: [ColourToolService],
         }).compileComponents();
     }));
 

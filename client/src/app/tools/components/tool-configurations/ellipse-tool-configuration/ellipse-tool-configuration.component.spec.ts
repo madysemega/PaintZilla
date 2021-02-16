@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MaterialModule } from '@app/material.module';
+import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
@@ -18,7 +20,8 @@ describe('EllipseToolConfigurationComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            declarations: [EllipseToolConfigurationComponent],
+            imports: [MaterialModule],
+            declarations: [EllipseToolConfigurationComponent, ShapeToolConfigurationComponent],
             providers: [{ provide: EllipseService, useValue: ellipseToolStub }],
         }).compileComponents();
     }));

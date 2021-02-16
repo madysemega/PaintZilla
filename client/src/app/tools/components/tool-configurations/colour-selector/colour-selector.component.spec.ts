@@ -1,21 +1,51 @@
+import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatSliderChange } from '@angular/material/slider';
 import { By } from '@angular/platform-browser';
+import { MaterialModule } from '@app/material.module';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+import { ColourPaletteComponent } from './colour-palette/colour-palette.component';
 import { ColourSelectorComponent } from './colour-selector.component';
+import { ColourSliderComponent } from './colour-slider/colour-slider.component';
+
 const NOTONE = 0.7;
 
+// tslint:disable: no-any
 describe('ColourSelectorComponent', () => {
+    @Component({
+        selector: 'mat-icon',
+        template: '<span></span>',
+    })
+    class MockMatIconComponent {
+        @Input() svgIcon: any;
+        @Input() fontSet: any;
+        @Input() fontIcon: any;
+    }
+
     let component: ColourSelectorComponent;
     let fixture: ComponentFixture<ColourSelectorComponent>;
     let rmbClrStub: jasmine.Spy<jasmine.Func>;
     const CLRTEST = 'rgba(255,255,255,1)';
     let input: HTMLInputElement;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ColourSelectorComponent],
+            imports: [MaterialModule],
+            declarations: [ColourSelectorComponent, ColourSliderComponent, ColourPaletteComponent],
             providers: [{ provide: ColourToolService }],
-        }).compileComponents();
+        })
+            .overrideModule(MatIconModule, {
+                remove: {
+                    declarations: [MatIcon],
+                    exports: [MatIcon],
+                },
+                add: {
+                    declarations: [MockMatIconComponent],
+                    exports: [MockMatIconComponent],
+                },
+            })
+            .compileComponents();
     }));
 
     beforeEach(() => {
