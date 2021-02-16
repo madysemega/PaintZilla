@@ -62,6 +62,7 @@ export class ColourSelectorComponent {
             this.toHex(inputString);
             this.rememberCol(this.colour);
         }
+        event.stopPropagation();
     }
 
     toHex(col: string): void {
