@@ -78,8 +78,6 @@ describe('ColourSelectorComponent', () => {
         ];
         component.rememberCol('rgba(0,0,2,1)');
         const NEWINDEX = 8;
-        console.log('lol');
-        console.log(component.service.colourList.length);
         expect(component.service.colourList.indexOf(CLRTEST)).toEqual(NEWINDEX);
     });
     it('rememberCol does not push to colourList when its length is above 10', () => {
