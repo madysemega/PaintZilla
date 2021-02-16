@@ -5,6 +5,8 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
+import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
+import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
@@ -12,6 +14,7 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -27,13 +30,25 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     lineType: LineType;
 
     private strokeWidthProperty: StrokeWidthProperty;
+    private strokeColourProperty: StrokeStyleProperty;
+    private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, colourService: ColourToolService) {
         super(drawingService);
         this.lineShape = new LineShape([]);
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
-        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
+
+        this.strokeWidthProperty = new StrokeWidthProperty();
+        this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
+        this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
+
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [this.strokeWidthProperty, this.strokeColourProperty]);
+        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
+
+        colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
+        colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
+
         this.isShiftDown = false;
+
         this.lineType = LineType.WITHOUT_JOINTS;
         this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
