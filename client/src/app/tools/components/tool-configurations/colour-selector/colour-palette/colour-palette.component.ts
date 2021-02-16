@@ -40,7 +40,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
     }
 
     onMouseDown(evt: MouseEvent): void {
-        console.log('appeler Palette');
         this.mousedown = true;
         this.selectedPosition = { x: evt.offsetX, y: evt.offsetY };
         this.draw();
@@ -61,7 +60,14 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
         }
         const width = this.canvas.nativeElement.width;
         const height = this.canvas.nativeElement.height;
-        this.ctx.fillStyle = this.hue || 'rgba(255,255,255,1)';
+        const NB_COL = 3;
+        let hueDrawn = 'rgba(255,255,255,1)';
+        if (this.hue) {
+            const INDEXTHIRDCOMMA = this.hue.split(',', NB_COL).join(',').length;
+            hueDrawn = this.hue.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
+        }
+        console.log('le hue est', this.hue);
+        this.ctx.fillStyle = hueDrawn || 'rgba(255,255,255,1)';
         this.ctx.fillRect(0, 0, width, height);
 
         const whiteGrad = this.ctx.createLinearGradient(0, 0, width, 0);
