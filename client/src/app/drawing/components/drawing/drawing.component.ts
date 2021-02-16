@@ -74,7 +74,7 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('dblclick', ['$event'])
     onMouseDoubleClick(event: MouseEvent): void {
-        if (!this.resizingService.isResizing(event)) {
+        if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseDoubleClick(event);
         }
         this.drawingService.isCanvasEmpty();
@@ -82,14 +82,14 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
-        if (!this.resizingService.isResizing(event)) {
+        if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
         }
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
-        if (!this.resizingService.isResizing(event)) {
+        if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
         }
     }
