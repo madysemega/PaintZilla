@@ -1,3 +1,4 @@
+// source: https://malcoded.com/posts/angular-color-picker/
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
@@ -67,7 +68,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
             hueDrawn = this.hue.substring(0, INDEX_THIRD_COMMA + 1) + '1)';
         }
         console.log('le hue est', this.hue);
-        this.ctx.fillStyle = hueDrawn || 'rgba(255,255,255,1)';
+        this.ctx.fillStyle = hueDrawn;
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         const WHITE_GRAD = this.ctx.createLinearGradient(0, 0, WIDTH, 0);

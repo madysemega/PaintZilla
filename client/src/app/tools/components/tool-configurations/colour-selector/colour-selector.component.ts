@@ -46,15 +46,16 @@ export class ColourSelectorComponent {
 
     addFirstCol(isSelected: boolean): void {
         this.service.primaryColour = this.colour;
-        if (isSelected) {
-            this.rememberCol(this.setOpacityOne(this.service.primaryColour));
-        }
+        this.rememberAddedCol(this.service.secondaryColour, isSelected);
     }
 
     addSecCol(isSelected: boolean): void {
         this.service.secondaryColour = this.colour;
+        this.rememberAddedCol(this.service.secondaryColour, isSelected);
+    }
+    rememberAddedCol(col: string, isSelected: boolean): void {
         if (isSelected) {
-            this.rememberCol(this.setOpacityOne(this.service.secondaryColour));
+            this.rememberCol(this.setOpacityOne(col));
         }
     }
 
@@ -63,6 +64,7 @@ export class ColourSelectorComponent {
         const HEX_SIZE = 7;
         if (INPUT_STRING.length === HEX_SIZE && INPUT_STRING[0] === '#') {
             this.toHex(INPUT_STRING);
+            this.rememberCol(this.colour);
         }
         event.stopPropagation();
     }
@@ -104,7 +106,7 @@ export class ColourSelectorComponent {
     }
 
     rememberCol(newCol: string): void {
-        if (this.service.colourList.indexOf(newCol) >= 0) {
+        if (this.service.colourList.find((col) => col === newCol)) {
             return;
         }
         const LIST_SIZE = 10;
