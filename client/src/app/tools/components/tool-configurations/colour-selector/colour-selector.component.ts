@@ -2,7 +2,7 @@
 import { Component, Input } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
-const NBCOL = 3;
+const NB_COL = 3;
 @Component({
     selector: 'app-colour-selector',
     templateUrl: './colour-selector.component.html',
@@ -21,73 +21,78 @@ export class ColourSelectorComponent {
 
     changeOpacity(event: MatSliderChange): void {
         // source: https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
-        const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
-        const opacityString = this.colour.substring(INDEXTHIRDCOMMA + 1, this.colour.length - 1);
-        this.opacity = parseInt(opacityString, 10);
+        const INDEX_THIRD_COMMA = this.colour.split(',', NB_COL).join(',').length;
+        const OPACITY_STRING = this.colour.substring(INDEX_THIRD_COMMA + 1, this.colour.length - 1);
+        this.opacity = parseInt(OPACITY_STRING, 10);
         this.opacity = event.value as number;
         this.service.opacity = this.opacity;
-        this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + this.opacity.toString() + ')';
+        this.colour = this.colour.substring(0, INDEX_THIRD_COMMA + 1) + this.opacity.toString() + ')';
     }
-    setOpacityOne(col: string): void {
-        const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
+
+    setOpacityOne(col: string): string {
+        const INDEXTHIRDCOMMA = this.colour.split(',', NB_COL).join(',').length;
         this.opacity = 1;
-        this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
+        const COLOUR_ONE_OPACITY = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
+        return COLOUR_ONE_OPACITY;
     }
+
     addColEv(event: MouseEvent): void {
         this.service.primaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
+
     addSecEv(event: MouseEvent): void {
         this.service.secondaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
+
     addFirstCol(isSelected: boolean): void {
         this.service.primaryColour = this.colour;
-        this.setOpacityOne(this.service.primaryColour);
-        if (isSelected) {
-            this.rememberCol(this.colour);
-        }
+        this.rememberAddedCol(this.service.secondaryColour, isSelected);
     }
+
     addSecCol(isSelected: boolean): void {
         this.service.secondaryColour = this.colour;
-        this.setOpacityOne(this.service.secondaryColour);
+        this.rememberAddedCol(this.service.secondaryColour, isSelected);
+    }
+    rememberAddedCol(col: string, isSelected: boolean): void {
         if (isSelected) {
-            this.rememberCol(this.colour);
+            this.rememberCol(this.setOpacityOne(col));
         }
     }
 
     takeHexClr(event: KeyboardEvent): void {
-        const inputString: string = (event.target as HTMLInputElement).value;
-        const hexSize = 7;
-        if (inputString.length === hexSize && inputString[0] === '#') {
-            this.toHex(inputString);
+        const INPUT_STRING: string = (event.target as HTMLInputElement).value;
+        const HEX_SIZE = 7;
+        if (INPUT_STRING.length === HEX_SIZE && INPUT_STRING[0] === '#') {
+            this.toHex(INPUT_STRING);
             this.rememberCol(this.colour);
         }
         event.stopPropagation();
     }
 
     toHex(col: string): void {
-        const RPOS = 1;
-        const GPOS = 3;
-        const BPOS = 5;
-        const rValue: number = parseInt(col.substr(RPOS, 2), 16);
-        const gValue: number = parseInt(col.substr(GPOS, 2), 16);
-        const bValue: number = parseInt(col.substr(BPOS, 2), 16);
-        this.colour = 'rgba(' + rValue.toString(10) + ',' + gValue.toString(10) + ',' + bValue.toString(10) + ',1)';
+        const R_POS = 1;
+        const G_POS = 3;
+        const B_POS = 5;
+        const R_VALUE: number = parseInt(col.substr(R_POS, 2), 16);
+        const G_VALUE: number = parseInt(col.substr(G_POS, 2), 16);
+        const B_VALUE: number = parseInt(col.substr(B_POS, 2), 16);
+        this.colour = 'rgba(' + R_VALUE.toString(10) + ',' + G_VALUE.toString(10) + ',' + B_VALUE.toString(10) + ',1)';
         this.opacity = 1;
     }
 
     isHex(value: string): boolean {
-        const NUMBMIN = 48;
-        const NUMBMAX = 57;
-        const CAPITALMIN = 65;
-        const CAPITALMAX = 70;
-        const SMALLMIN = 97;
-        const SMALLMAX = 102;
+        const NUMB_MIN = 48;
+        const NUMB_MAX = 57;
+        const CAPITAL_MIN = 65;
+        const CAPITAL_MAX = 70;
+        const SMALL_MIN = 97;
+        const SMALL_MAX = 102;
         for (let i = 1; i < value.length; i++) {
-            if (value.charCodeAt(i) < NUMBMIN || value.charCodeAt(i) > SMALLMAX) {
+            if (value.charCodeAt(i) < NUMB_MIN || value.charCodeAt(i) > SMALL_MAX) {
                 return false;
-            } else if (value.charCodeAt(i) < CAPITALMIN && value.charCodeAt(i) > NUMBMAX) {
+            } else if (value.charCodeAt(i) < CAPITAL_MIN && value.charCodeAt(i) > NUMB_MAX) {
                 return false;
-            } else if (value.charCodeAt(i) < SMALLMIN && value.charCodeAt(i) > CAPITALMAX) {
+            } else if (value.charCodeAt(i) < SMALL_MIN && value.charCodeAt(i) > CAPITAL_MAX) {
                 return false;
             }
         }
@@ -95,30 +100,26 @@ export class ColourSelectorComponent {
     }
 
     switchCol(): void {
-        const temp = this.service.primaryColour;
+        const TEMP = this.service.primaryColour;
         this.service.primaryColour = this.service.secondaryColour;
-        this.service.secondaryColour = temp;
+        this.service.secondaryColour = TEMP;
     }
 
     rememberCol(newCol: string): void {
-        if (this.service.colourList.indexOf(newCol) >= 0) {
+        if (this.service.colourList.find((col) => col === newCol)) {
             return;
         }
-        const LISTSIZE = 10;
+        const LIST_SIZE = 10;
         this.setOpacityOne(newCol);
-        if (this.service.colourList.length < LISTSIZE) {
+        if (this.service.colourList.length < LIST_SIZE) {
             this.service.colourList.push(newCol);
-        } else if (this.service.colourList.length === LISTSIZE) {
+        } else if (this.service.colourList.length === LIST_SIZE) {
             this.service.colourList.shift();
             this.service.colourList.push(newCol);
         }
     }
 
     showList(): void {
-        if (!this.show) {
-            this.show = true;
-        } else {
-            this.show = false;
-        }
+        this.show = !this.show;
     }
 }

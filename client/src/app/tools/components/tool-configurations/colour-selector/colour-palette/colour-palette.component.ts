@@ -1,3 +1,4 @@
+// source: https://malcoded.com/posts/angular-color-picker/
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
@@ -27,9 +28,9 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.hue && !changes.hue.firstChange) {
             this.draw();
-            const pos = this.selectedPosition;
-            if (pos) {
-                this.colour.emit(this.getColourAtPosition(pos.x, pos.y));
+            const POS = this.selectedPosition;
+            if (POS) {
+                this.colour.emit(this.getColourAtPosition(POS.x, POS.y));
             }
         }
     }
@@ -40,7 +41,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
     }
 
     onMouseDown(evt: MouseEvent): void {
-        console.log('appeler Palette');
         this.mousedown = true;
         this.selectedPosition = { x: evt.offsetX, y: evt.offsetY };
         this.draw();
@@ -59,40 +59,47 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
         if (!this.ctx) {
             this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         }
-        const width = this.canvas.nativeElement.width;
-        const height = this.canvas.nativeElement.height;
-        this.ctx.fillStyle = this.hue || 'rgba(255,255,255,1)';
-        this.ctx.fillRect(0, 0, width, height);
+        const WIDTH = this.canvas.nativeElement.width;
+        const HEIGHT = this.canvas.nativeElement.height;
+        const NB_COL = 3;
+        let hueDrawn = 'rgba(255,255,255,1)';
+        if (this.hue) {
+            const INDEX_THIRD_COMMA = this.hue.split(',', NB_COL).join(',').length;
+            hueDrawn = this.hue.substring(0, INDEX_THIRD_COMMA + 1) + '1)';
+        }
+        console.log('le hue est', this.hue);
+        this.ctx.fillStyle = hueDrawn;
+        this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        const whiteGrad = this.ctx.createLinearGradient(0, 0, width, 0);
-        whiteGrad.addColorStop(0, 'rgba(255,255,255,1)');
-        whiteGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        const WHITE_GRAD = this.ctx.createLinearGradient(0, 0, WIDTH, 0);
+        WHITE_GRAD.addColorStop(0, 'rgba(255,255,255,1)');
+        WHITE_GRAD.addColorStop(1, 'rgba(255,255,255,0)');
 
-        this.ctx.fillStyle = whiteGrad;
-        this.ctx.fillRect(0, 0, width, height);
+        this.ctx.fillStyle = WHITE_GRAD;
+        this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        const blackGrad = this.ctx.createLinearGradient(0, 0, 0, height);
-        blackGrad.addColorStop(0, 'rgba(0,0,0,0)');
-        blackGrad.addColorStop(1, 'rgba(0,0,0,1)');
+        const BLACK_GRAD = this.ctx.createLinearGradient(0, 0, 0, HEIGHT);
+        BLACK_GRAD.addColorStop(0, 'rgba(0,0,0,0)');
+        BLACK_GRAD.addColorStop(1, 'rgba(0,0,0,1)');
 
-        this.ctx.fillStyle = blackGrad;
-        this.ctx.fillRect(0, 0, width, height);
+        this.ctx.fillStyle = BLACK_GRAD;
+        this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         if (this.selectedPosition) {
-            const ARCRADIUS = 10;
-            const LINEWIDTH = 5;
+            const ARC_RADIUS = 10;
+            const LINE_WIDTH = 5;
             this.ctx.strokeStyle = 'white';
             this.ctx.fillStyle = 'white';
             this.ctx.beginPath();
-            this.ctx.arc(this.selectedPosition.x, this.selectedPosition.y, ARCRADIUS, 0, 2 * Math.PI);
-            this.ctx.lineWidth = LINEWIDTH;
+            this.ctx.arc(this.selectedPosition.x, this.selectedPosition.y, ARC_RADIUS, 0, 2 * Math.PI);
+            this.ctx.lineWidth = LINE_WIDTH;
             this.ctx.stroke();
         }
     }
 
     getColourAtPosition(x: number, y: number): string {
-        const imageData = this.ctx.getImageData(x, y, 1, 1).data;
-        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + `,${this.service.opacity})`;
+        const IMAGE_DATA = this.ctx.getImageData(x, y, 1, 1).data;
+        return 'rgba(' + IMAGE_DATA[0] + ',' + IMAGE_DATA[1] + ',' + IMAGE_DATA[2] + `,${this.service.opacity})`;
     }
 
     emitColour(x: number, y: number): void {
