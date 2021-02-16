@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -11,17 +11,6 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class SidebarComponent implements OnInit {
     selectedToolName: string;
     toolNames: string[];
-
-    @HostListener('keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        this.toolSelectorService.getSelectedTool().onKeyDown(event);
-    }
-
-    @HostListener('keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        this.toolSelectorService.selectTool(this.toolSelectorService.fromKeyboardShortcut(event.key));
-        this.toolSelectorService.getSelectedTool().onKeyUp(event);
-    }
 
     selectTool(toolName: string): void {
         this.toolSelectorService.selectTool(toolName);

@@ -14,16 +14,11 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
-
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-
-    wasResizing: boolean;
-
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
-        this.wasResizing = false;
-    }
+    wasResizing: boolean = false;
+    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {}
 
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
