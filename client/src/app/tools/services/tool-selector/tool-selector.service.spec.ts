@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
+import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 
@@ -78,5 +79,21 @@ describe('ToolSelectorService', () => {
 
         service.selectTool('pencil');
         expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call onToolSelect on new tool when changing to valid tool if new tool implements ISelectableTool', () => {
+        service.selectTool('pencil');
+        const onToolSelectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolSelect');
+
+        service.selectTool('line');
+
+        expect(onToolSelectSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not crash when selecting a tool which does not implement ISelectableTool', () => {
+        // tslint:disable-next-line: no-string-literal
+        service['tools'].set('not-selectable', { tool: {} as Tool } as MetaWrappedTool);
+        service.selectTool('not-selectable');
+        expect(service.selectedTool).toBeTruthy();
     });
 });
