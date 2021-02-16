@@ -62,25 +62,43 @@ describe('DrawingCreatorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('onKeyUp should call createNewDrawing() with keys Ctrl + o', () => {
+    it('onKeyDown should call createNewDrawing() with keys Ctrl + o', () => {
         keyboardEvent = {
             key: 'o',
             ctrlKey: true,
+            preventDefault(): void {
+                return;
+            },
         } as KeyboardEvent;
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(true);
         matDialogRefSpy.afterClosed.and.returnValue(of(false));
-        service.onKeyUp(keyboardEvent);
+        service.onKeyDown(keyboardEvent);
         expect(createNewDrawingSpy).toHaveBeenCalled();
     });
 
-    it('onKeyUp should not call createNewDrawing() with other keys', () => {
+    it('onKeyDown should call preventDefault() with keys Ctrl + o', () => {
+        keyboardEvent = {
+            key: 'o',
+            ctrlKey: true,
+            preventDefault(): void {
+                return;
+            },
+        } as KeyboardEvent;
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(true);
+        const preventDefaultSpy = spyOn<any>(keyboardEvent, 'preventDefault').and.callThrough();
+        matDialogRefSpy.afterClosed.and.returnValue(of(false));
+        service.onKeyDown(keyboardEvent);
+        expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('onKeyDown should not call createNewDrawing() with other keys', () => {
         keyboardEvent = {
             key: 'T',
             ctrlKey: true,
         } as KeyboardEvent;
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(true);
         matDialogRefSpy.afterClosed.and.returnValue(of(true));
-        service.onKeyUp(keyboardEvent);
+        service.onKeyDown(keyboardEvent);
         expect(createNewDrawingSpy).not.toHaveBeenCalled();
     });
 

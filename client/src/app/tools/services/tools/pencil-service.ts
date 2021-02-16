@@ -5,6 +5,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 export class PencilService extends ResizableTool implements ISelectableTool {
     private vertices: Vec2[];
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
         super(drawingService);
         this.vertices = [];
         this.name = 'Crayon';
@@ -57,7 +58,7 @@ export class PencilService extends ResizableTool implements ISelectableTool {
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = this.colourService.primaryColour;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 

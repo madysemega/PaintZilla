@@ -11,24 +11,25 @@
     <input type="checkbox">
     <span class="slider" (click)="switchCol()"></span>
   </label>  
-  <button (click)="addFirstCol(true)"
+  <div (click)="addFirstCol(true)"
     class="color-div"
-    [ngStyle]="{'background-color': service.colour1 || 'white'}">
-</button>
-  <button (click)="addSecCol(true)"
+    [ngStyle]="{'background-color': service.primaryColour || 'white'}">
+</div>
+  <div (click)="addSecCol(true)"
     class="color-div2"
-    [ngStyle]="{'background-color': service.colour2 || 'white'}">
-</button>
+    [ngStyle]="{'background-color': service.secondaryColour || 'white'}">
+</div>
 <input type="text" id="colorHex" maxlength="8" 
   size="10" value="#" (keyup)="takeHexClr($event)">
 </div>
-<button (click)=showList()></button>
+<mat-slider thumbLabel
+step="0.1" min="0" max="1" [value]="value" (change)="changeOpacity($event)"></mat-slider>
+<br>
+<mat-icon svgIcon="history-24px" (click)=showList()></mat-icon>
 <div *ngIf="show">
   <span *ngFor="let element of service.colourList; let i=index">
-    <button [ngClass]="'colEl'+(i)" [ngStyle]="{'background-color' : element || 'white'}"
-    (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></button>
+    <div id="colHis" [ngClass]="'colEl'+(i)" [ngStyle]="{'background-color' : element || 'white'}"
+    (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></div>
   </span>
 </div>
 </div>
-<mat-slider thumbLabel
-step="0.1" min="0" max="1" [value]="value" (change)="changeOpacity($event)"></mat-slider>

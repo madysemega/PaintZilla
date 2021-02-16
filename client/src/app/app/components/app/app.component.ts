@@ -44,5 +44,7 @@ export class AppComponent {
             'line-without-joints',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/line-without-joints.svg'),
         );
+        this.iconRegistryService.addSvgIcon('history-24px', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/history-24px.svg'));
+        this.iconRegistryService.addSvgIcon('plus-sign', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/plus-sign.svg'));
     }
 }

@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
@@ -17,6 +18,7 @@ describe('SidebarComponent', () => {
     let keyboardShiftEvent: KeyboardEvent;
     let toolSelectorServiceStub: ToolSelectorService;
     let drawingStub: DrawingService;
+    let colourServiceStub: ColourToolService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
@@ -34,17 +36,18 @@ describe('SidebarComponent', () => {
     } as KeyboardEvent;
 
     class RectangleServiceStub extends RectangleService {
-        constructor(drawingService: DrawingService) {
-            super(drawingService);
+        constructor(drawingService: DrawingService, colourService: ColourToolService) {
+            super(drawingService, colourService);
         }
     }
 
     beforeEach(async(() => {
         drawingStub = new DrawingService();
-        pencilStoolStub = new PencilService(drawingStub);
+        colourServiceStub = new ColourToolService();
+        pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
-        ellipseToolStub = new EllipseService(drawingStub);
-        rectangleService = new RectangleServiceStub(drawingStub);
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
+        rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub);
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);

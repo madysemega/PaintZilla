@@ -1,5 +1,5 @@
 // source: https://malcoded.com/posts/angular-color-picker/
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 const NBCOL = 3;
@@ -10,7 +10,6 @@ const NBCOL = 3;
 })
 export class ColourSelectorComponent {
     show: boolean = false;
-    @ViewChild('colorHex') colorHex: ElementRef;
     @Input()
     value: number = 1;
     hue: string;
@@ -24,6 +23,7 @@ export class ColourSelectorComponent {
         const opacityString = this.colour.substring(INDEXTHIRDCOMMA + 1, this.colour.length - 1);
         this.opacity = parseInt(opacityString, 10);
         this.opacity = event.value as number;
+        this.service.opacity = this.opacity;
         this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + this.opacity.toString() + ')';
     }
     setOpacityOne(col: string): void {
@@ -32,21 +32,22 @@ export class ColourSelectorComponent {
         this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
     }
     addColEv(event: MouseEvent): void {
-        this.service.colour1 = (event.target as HTMLInputElement).style.backgroundColor;
+        console.log(event.target);
+        this.service.primaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
     addSecEv(event: MouseEvent): void {
-        this.service.colour2 = (event.target as HTMLInputElement).style.backgroundColor;
+        this.service.secondaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
     addFirstCol(isSelected: boolean): void {
-        this.service.colour1 = this.colour;
-        this.setOpacityOne(this.service.colour1);
+        this.service.primaryColour = this.colour;
+        this.setOpacityOne(this.service.primaryColour);
         if (isSelected) {
             this.rememberCol(this.colour);
         }
     }
     addSecCol(isSelected: boolean): void {
-        this.service.colour2 = this.colour;
-        this.setOpacityOne(this.service.colour2);
+        this.service.secondaryColour = this.colour;
+        this.setOpacityOne(this.service.secondaryColour);
         if (isSelected) {
             this.rememberCol(this.colour);
         }
@@ -59,6 +60,7 @@ export class ColourSelectorComponent {
             this.toHex(inputString);
             this.rememberCol(this.colour);
         }
+        event.stopPropagation();
     }
 
     toHex(col: string): void {
@@ -92,10 +94,9 @@ export class ColourSelectorComponent {
     }
 
     switchCol(): void {
-        console.log('switchcol called');
-        const temp = this.service.colour1;
-        this.service.colour1 = this.service.colour2;
-        this.service.colour2 = temp;
+        const temp = this.service.primaryColour;
+        this.service.primaryColour = this.service.secondaryColour;
+        this.service.secondaryColour = temp;
     }
 
     rememberCol(newCol: string): void {
