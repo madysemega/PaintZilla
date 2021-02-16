@@ -7,9 +7,10 @@
   </app-colour-slider>
 </div>
 <div class="input-wrapper">
-  <span class="text">{{colour}}</span>
-  <button (click)="switchCol()" class="switchButton" type = "button">
-  </button>
+  <label class="switch">
+    <input type="checkbox">
+    <span class="slider" (click)="switchCol()"></span>
+  </label>  
   <button (click)="addFirstCol(true)"
     class="color-div"
     [ngStyle]="{'background-color': service.colour1 || 'white'}">
