@@ -3,6 +3,11 @@ import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
 export class LineShapeRenderer extends ShapeRenderer<LineShape> {
+
+    constructor(shape: LineShape, properties: ShapeProperty[]) {
+        super(shape, properties);
+    }
+    
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
         this.shape.vertices.forEach((vertex) => {
@@ -11,7 +16,5 @@ export class LineShapeRenderer extends ShapeRenderer<LineShape> {
         ctx.stroke();
     }
 
-    constructor(shape: LineShape, properties: ShapeProperty[]) {
-        super(shape, properties);
-    }
+    
 }

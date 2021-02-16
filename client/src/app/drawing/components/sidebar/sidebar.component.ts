@@ -12,6 +12,14 @@ export class SidebarComponent implements OnInit {
     selectedToolName: string;
     toolNames: string[];
 
+    constructor(
+        private toolSelectorService: ToolSelectorService,
+        private drawingCreatorService: DrawingCreatorService,
+        public drawingService: DrawingService,
+    ) {
+        this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
+    }
+
     selectTool(toolName: string): void {
         this.toolSelectorService.selectTool(toolName);
     }
@@ -33,14 +41,6 @@ export class SidebarComponent implements OnInit {
     getIconName(toolName: string): string {
         const iconName = this.toolSelectorService.getIcon(toolName);
         return iconName === undefined ? 'unknown' : iconName;
-    }
-
-    constructor(
-        private toolSelectorService: ToolSelectorService,
-        private drawingCreatorService: DrawingCreatorService,
-        public drawingService: DrawingService,
-    ) {
-        this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 
     ngOnInit(): void {

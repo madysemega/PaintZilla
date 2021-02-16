@@ -12,6 +12,8 @@ export class ResizableToolConfigurationComponent {
     info: string = 'Épaisseur du trait';
     position: string = 'right';
 
+    constructor(public toolSelectorService: ToolSelectorService) {}
+
     get lineWidth(): number {
         return this.toolService.lineWidth;
     }
@@ -19,6 +21,4 @@ export class ResizableToolConfigurationComponent {
     changeWidth(width: number): void {
         this.toolService.lineWidth = width;
     }
-
-    constructor(public toolSelectorService: ToolSelectorService) {}
 }

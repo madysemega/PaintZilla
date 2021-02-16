@@ -17,7 +17,9 @@ export class ColourSelectorComponent {
     colour: string;
     colourInput: string;
     opacity: number = 1;
+
     constructor(public service: ColourToolService) {}
+    
     changeOpacity(event: MatSliderChange): void {
         // source: https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
         console.log(event);
