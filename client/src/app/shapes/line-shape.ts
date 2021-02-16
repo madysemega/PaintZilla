@@ -24,7 +24,16 @@ export class LineShape extends Shape {
         const circleQuarter: number = Math.PI / QUARTER_CIRCLE_FACTOR_INV;
         const ajustedTheta: number = Math.floor((realTheta + offset) / circleQuarter) * circleQuarter;
 
-        const vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
+        let vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
+
+        const isSegmentHorizontal = ajustedTheta % Math.PI === 0;
+        const isSegmentVertical = (ajustedTheta + Math.PI / 2) % Math.PI === 0;
+
+        if (isSegmentHorizontal) {
+            vecLength = Math.abs(delta.x);
+        } else if (isSegmentVertical) {
+            vecLength = Math.abs(delta.y);
+        }
 
         const ajustedVector: Vec2 = {
             x: lastVertex.x + Math.cos(ajustedTheta) * vecLength,
