@@ -28,24 +28,29 @@ export class ColourSelectorComponent {
         this.service.opacity = this.opacity;
         this.colour = this.colour.substring(0, INDEX_THIRD_COMMA + 1) + this.opacity.toString() + ')';
     }
+
     setOpacityOne(col: string): string {
         const INDEXTHIRDCOMMA = this.colour.split(',', NB_COL).join(',').length;
         this.opacity = 1;
         const COLOUR_ONE_OPACITY = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
         return COLOUR_ONE_OPACITY;
     }
+
     addColEv(event: MouseEvent): void {
         this.service.primaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
+
     addSecEv(event: MouseEvent): void {
         this.service.secondaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
+
     addFirstCol(isSelected: boolean): void {
         this.service.primaryColour = this.colour;
         if (isSelected) {
             this.rememberCol(this.setOpacityOne(this.service.primaryColour));
         }
     }
+
     addSecCol(isSelected: boolean): void {
         this.service.secondaryColour = this.colour;
         if (isSelected) {
@@ -55,8 +60,8 @@ export class ColourSelectorComponent {
 
     takeHexClr(event: KeyboardEvent): void {
         const INPUT_STRING: string = (event.target as HTMLInputElement).value;
-        const hexSize = 7;
-        if (INPUT_STRING.length === hexSize && INPUT_STRING[0] === '#') {
+        const HEX_SIZE = 7;
+        if (INPUT_STRING.length === HEX_SIZE && INPUT_STRING[0] === '#') {
             this.toHex(INPUT_STRING);
         }
         event.stopPropagation();
@@ -102,11 +107,11 @@ export class ColourSelectorComponent {
         if (this.service.colourList.indexOf(newCol) >= 0) {
             return;
         }
-        const LISTSIZE = 10;
+        const LIST_SIZE = 10;
         this.setOpacityOne(newCol);
-        if (this.service.colourList.length < LISTSIZE) {
+        if (this.service.colourList.length < LIST_SIZE) {
             this.service.colourList.push(newCol);
-        } else if (this.service.colourList.length === LISTSIZE) {
+        } else if (this.service.colourList.length === LIST_SIZE) {
             this.service.colourList.shift();
             this.service.colourList.push(newCol);
         }

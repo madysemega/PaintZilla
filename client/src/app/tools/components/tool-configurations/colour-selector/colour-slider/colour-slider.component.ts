@@ -2,14 +2,13 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
-const GRDSTEP1 = 0.17;
-const GRDSTEP2 = 0.34;
-const GRDSTEP3 = 0.51;
-const GRDSTEP4 = 0.68;
-const GRDSTEP5 = 0.85;
-
-const RECTHEIGHT = 10;
-const RECTWIDTH = 5;
+const GRD_STEP1 = 0.17;
+const GRD_STEP2 = 0.34;
+const GRD_STEP3 = 0.51;
+const GRD_STEP4 = 0.68;
+const GRD_STEP5 = 0.85;
+const RECT_HEIGHT = 10;
+const RECT_WIDTH = 5;
 @Component({
     selector: 'app-colour-slider',
     templateUrl: './colour-slider.component.html',
@@ -68,11 +67,11 @@ export class ColourSliderComponent implements AfterViewInit {
         this.ctx.clearRect(0, 0, this.width, this.height);
         const GRADIENT = this.ctx.createLinearGradient(0, 0, 0, this.height);
         GRADIENT.addColorStop(0, 'rgba(255, 0, 0, 1)');
-        GRADIENT.addColorStop(GRDSTEP1, 'rgba(255, 255, 0, 1)');
-        GRADIENT.addColorStop(GRDSTEP2, 'rgba(0, 255, 0, 1)');
-        GRADIENT.addColorStop(GRDSTEP3, 'rgba(0, 255, 255, 1)');
-        GRADIENT.addColorStop(GRDSTEP4, 'rgba(0, 0, 255, 1)');
-        GRADIENT.addColorStop(GRDSTEP5, 'rgba(255, 0, 255, 1)');
+        GRADIENT.addColorStop(GRD_STEP1, 'rgba(255, 255, 0, 1)');
+        GRADIENT.addColorStop(GRD_STEP2, 'rgba(0, 255, 0, 1)');
+        GRADIENT.addColorStop(GRD_STEP3, 'rgba(0, 255, 255, 1)');
+        GRADIENT.addColorStop(GRD_STEP4, 'rgba(0, 0, 255, 1)');
+        GRADIENT.addColorStop(GRD_STEP5, 'rgba(255, 0, 255, 1)');
         GRADIENT.addColorStop(1, 'rgba(255, 0, 0, 1)');
         this.ctx.beginPath();
         this.ctx.rect(0, 0, this.width, this.height);
@@ -82,15 +81,15 @@ export class ColourSliderComponent implements AfterViewInit {
         if (this.selectedHeight) {
             this.ctx.beginPath();
             this.ctx.strokeStyle = 'white';
-            this.ctx.lineWidth = RECTWIDTH;
-            this.ctx.rect(0, this.selectedHeight - RECTWIDTH, this.width, RECTHEIGHT);
+            this.ctx.lineWidth = RECT_WIDTH;
+            this.ctx.rect(0, this.selectedHeight - RECT_WIDTH, this.width, RECT_HEIGHT);
             this.ctx.stroke();
             this.ctx.closePath();
         }
     }
 
     getColourAtPosition(x: number, y: number): string {
-        const imageData = this.ctx.getImageData(x, y, 1, 1).data;
-        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + `,${this.service.opacity})`;
+        const IMAGE_DATA = this.ctx.getImageData(x, y, 1, 1).data;
+        return 'rgba(' + IMAGE_DATA[0] + ',' + IMAGE_DATA[1] + ',' + IMAGE_DATA[2] + `,${this.service.opacity})`;
     }
 }
