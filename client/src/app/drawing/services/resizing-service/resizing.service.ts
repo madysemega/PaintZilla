@@ -16,7 +16,7 @@ export class ResizingService {
 
     constructor(public drawingService: DrawingService) {}
 
-    isResizing(event: MouseEvent): boolean {
+    isResizing(): boolean {
         return this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled;
     }
 

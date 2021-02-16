@@ -16,7 +16,6 @@ export class PencilService extends ResizableTool implements ISelectableTool {
     constructor(drawingService: DrawingService, private colourService: ColourToolService) {
         super(drawingService);
         this.vertices = [];
-        this.name = 'Crayon';
         this.key = 'pencil';
     }
 

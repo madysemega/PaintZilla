@@ -6,6 +6,11 @@ import { ILineWidthChangeListener } from './line-width-change-listener';
 export abstract class ResizableTool extends Tool {
     private mlineWidth: number;
 
+    constructor(protected drawingService: DrawingService) {
+        super(drawingService);
+        this.lineWidth = StrokeWidthProperty.DEFAULT_STROKE_WIDTH;
+    }
+
     get lineWidth(): number {
         return this.mlineWidth;
     }
@@ -15,10 +20,5 @@ export abstract class ResizableTool extends Tool {
         if ('onLineWidthChanged' in this) {
             (this as ILineWidthChangeListener).onLineWidthChanged();
         }
-    }
-
-    constructor(protected drawingService: DrawingService) {
-        super(drawingService);
-        this.lineWidth = StrokeWidthProperty.DEFAULT_STROKE_WIDTH;
     }
 }

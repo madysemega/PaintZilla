@@ -28,6 +28,16 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
     private strokeWidthProperty: StrokeWidthProperty;
 
+    constructor(drawingService: DrawingService) {
+        super(drawingService);
+        this.lineShape = new LineShape([]);
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
+        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
+        this.isShiftDown = false;
+        this.lineType = LineType.WITHOUT_JOINTS;
+        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+    }
+
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
@@ -141,15 +151,5 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     onToolDeselect(): void {
         this.finalizeLine();
         this.renderFinalizedLine();
-    }
-
-    constructor(drawingService: DrawingService) {
-        super(drawingService);
-        this.lineShape = new LineShape([]);
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [(this.strokeWidthProperty = new StrokeWidthProperty())]);
-        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, []);
-        this.isShiftDown = false;
-        this.lineType = LineType.WITHOUT_JOINTS;
-        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 }

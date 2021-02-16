@@ -7,7 +7,6 @@ export abstract class Tool {
     mouseDownCoord: Vec2;
     mouseDown: boolean = false;
     mouseInCanvas: boolean;
-    name: string;
     key: string;
 
     constructor(protected drawingService: DrawingService) {}
