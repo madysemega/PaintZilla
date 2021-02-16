@@ -36,6 +36,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
         if (event.key === 'Shift') {
             this.shiftDown = true;
             this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
+        } else {
+            this.finalize();
         }
     }
 
@@ -56,6 +58,18 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseUp(event: MouseEvent): void {
+        this.finalize();
+    }
+
+    onMouseMove(event: MouseEvent): void {
+        if (this.mouseDown) {
+            const mousePosition = this.getPositionFromMouse(event);
+            this.lastMouseCoords = mousePosition;
+            this.draw(this.drawingService.previewCtx, mousePosition.x, mousePosition.y);
+        }
+    }
+
+    private finalize(): void {
         if (this.mouseDown) {
             this.drawRect(this.drawingService.baseCtx);
             this.startingPos.x = 0;
@@ -66,14 +80,6 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
         this.width = 0;
         this.height = 0;
         this.mouseDown = false;
-    }
-
-    onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.lastMouseCoords = mousePosition;
-            this.draw(this.drawingService.previewCtx, mousePosition.x, mousePosition.y);
-        }
     }
 
     private draw(ctx: CanvasRenderingContext2D, x: number, y: number): void {

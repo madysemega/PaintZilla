@@ -132,7 +132,7 @@ describe('RectangleService', () => {
         expect(drawRectSpy).not.toHaveBeenCalled();
     });
 
-    it(' onKeyDown should call drawRect if key == Shift', () => {
+    it(' onKeyDown should call drawRect when mouse clicked if key == Shift', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 
@@ -140,12 +140,12 @@ describe('RectangleService', () => {
         expect(drawRectSpy).toHaveBeenCalled();
     });
 
-    it(' onKeyDown should call drawRect if key != Shift', () => {
+    it(' onKeyDown should call drawRect when mouse clicked if key != Shift', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 
         service.onKeyDown(keyboardSpaceEvent);
-        expect(drawRectSpy).not.toHaveBeenCalled();
+        expect(drawRectSpy).toHaveBeenCalled();
     });
 
     it(' onKeyUp should call drawRect if key == Shift', () => {
