@@ -30,9 +30,9 @@ export class ColourSelectorComponent {
     }
 
     setOpacityOne(col: string): string {
-        const INDEXTHIRDCOMMA = this.colour.split(',', NB_COL).join(',').length;
+        const INDEX_THIRD_COMMA = this.colour.split(',', NB_COL).join(',').length;
         this.opacity = 1;
-        const COLOUR_ONE_OPACITY = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
+        const COLOUR_ONE_OPACITY = this.colour.substring(0, INDEX_THIRD_COMMA + 1) + '1)';
         return COLOUR_ONE_OPACITY;
     }
 
