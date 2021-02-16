@@ -4,6 +4,7 @@ import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { ColourToolService } from './colour-tool.service';
@@ -11,7 +12,7 @@ import { ColourToolService } from './colour-tool.service';
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService extends ShapeTool implements ISelectableTool {
+export class RectangleService extends ShapeTool implements ISelectableTool, IDeselectableTool {
     startingPos: Vec2;
     width: number;
     height: number;
@@ -32,12 +33,14 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    onToolDeselect(): void {
+        this.finalize();
+    }
+
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.shiftDown = true;
             this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
-        } else {
-            this.finalize();
         }
     }
 
@@ -75,6 +78,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
             this.startingPos.x = 0;
             this.startingPos.y = 0;
         }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.lastMouseCoords.x = 0;
         this.lastMouseCoords.y = 0;
         this.width = 0;
