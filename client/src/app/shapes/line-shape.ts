@@ -62,5 +62,4 @@ export class LineShape extends Shape {
     clear(): void {
         this.vertices = [];
     }
-
 }

@@ -12,6 +12,4 @@ export abstract class ShapeRenderer<ShapeType extends Shape> {
         this.draw(ctx);
         ctx.restore();
     }
-
-    
 }

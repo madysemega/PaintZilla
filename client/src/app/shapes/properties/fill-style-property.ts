@@ -1,7 +1,6 @@
 import { ShapeProperty } from './shape-property';
 
 export class FillStyleProperty extends ShapeProperty {
-
     constructor(private colour: string) {
         super();
     }
