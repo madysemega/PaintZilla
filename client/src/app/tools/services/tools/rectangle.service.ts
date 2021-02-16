@@ -6,6 +6,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +18,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
@@ -100,11 +101,12 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.colourService.secondaryColour;
+        ctx.strokeStyle = this.colourService.primaryColour;
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
             if (this.shapeType === ShapeType.ContouredAndFilled) {
-                ctx.strokeStyle = 'red';
                 ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
             }
         } else ctx.strokeRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
