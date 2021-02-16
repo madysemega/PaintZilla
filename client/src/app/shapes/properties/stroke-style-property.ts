@@ -5,7 +5,7 @@ export class StrokeStyleProperty extends ShapeProperty {
         ctx.strokeStyle = this.colour;
     }
 
-    constructor(private colour: string) {
+    constructor(public colour: string) {
         super();
     }
 }

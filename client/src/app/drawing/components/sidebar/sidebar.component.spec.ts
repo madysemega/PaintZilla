@@ -14,8 +14,6 @@ import { SidebarComponent } from './sidebar.component';
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
-    let keyboard1Event: KeyboardEvent;
-    let keyboardShiftEvent: KeyboardEvent;
     let toolSelectorServiceStub: ToolSelectorService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourToolService;
@@ -25,15 +23,6 @@ describe('SidebarComponent', () => {
     let pencilStoolStub: PencilService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
-    let onKeyDownSpy: jasmine.Spy<any>;
-
-    keyboard1Event = {
-        key: '1',
-    } as KeyboardEvent;
-
-    keyboardShiftEvent = {
-        key: 'Shift',
-    } as KeyboardEvent;
 
     class RectangleServiceStub extends RectangleService {
         constructor(drawingService: DrawingService, colourService: ColourToolService) {
@@ -49,7 +38,7 @@ describe('SidebarComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
-        lineServiceStub = new LineService(drawingStub);
+        lineServiceStub = new LineService(drawingStub, colourServiceStub);
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
@@ -59,8 +48,6 @@ describe('SidebarComponent', () => {
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
         }).compileComponents();
-
-        onKeyDownSpy = spyOn<any>(toolSelectorServiceStub.selectedTool.tool, 'onKeyDown').and.callThrough();
     }));
 
     beforeEach(() => {
@@ -82,23 +69,6 @@ describe('SidebarComponent', () => {
     it('should return <Outil inconnu>', () => {
         const toolName = 'rectangle';
         component.selectTool('rectangle');
-        expect(component.selectedToolName).toBe(toolName);
-    });
-
-    it('should call onKeyDown on selectedTool when pressing down a key', () => {
-        component.onKeyDown(keyboard1Event);
-        expect(onKeyDownSpy).toHaveBeenCalled();
-    });
-
-    it('should set selectedToolName to new toolName when pressing a key corresponding to a tool', () => {
-        const toolName = 'rectangle';
-        component.onKeyUp(keyboard1Event);
-        expect(component.selectedToolName).toEqual(toolName);
-    });
-
-    it('should not set selectedToolName to new toolName when pressing a key not corresponding to a tool', () => {
-        const toolName = component.selectedToolName;
-        component.onKeyUp(keyboardShiftEvent);
         expect(component.selectedToolName).toBe(toolName);
     });
 

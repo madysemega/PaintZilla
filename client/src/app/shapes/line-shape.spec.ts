@@ -61,39 +61,14 @@ describe('LineShape', () => {
     });
 
     it('getFinalMousePosition should return real mouse position if shift is not down', () => {
-        const realMousePositions: Vec2[] = [
+        const REAL_MOUSE_POSITION: Vec2[] = [
             { x: 0, y: 0 },
             { x: -36, y: 52 },
             { x: 128, y: 128 },
         ];
-        realMousePositions.forEach((mousePosition) => {
+        REAL_MOUSE_POSITION.forEach((mousePosition) => {
             expect(lineShape.getFinalMousePosition(mousePosition, false)).toEqual(mousePosition);
         });
-    });
-
-    it('getFinalMousePosition should return a point at the same distance from the last vertex that the given mouse position is', () => {
-        const mousePositions: Vec2[] = [
-            { x: 0, y: 0 },
-            { x: -36, y: 52 },
-            { x: 128, y: 128 },
-        ];
-        const verticesToAdd: Vec2[] = [
-            { x: 0, y: 0 },
-            { x: 128, y: 128 },
-            { x: -36, y: 52 },
-        ];
-
-        for (let i = 0; i < verticesToAdd.length; ++i) {
-            const latestVertex = verticesToAdd[i];
-            const latestMousePosition = mousePositions[i];
-            lineShape.vertices.push(latestVertex);
-
-            const expectedMagnitude = Math.sqrt((latestMousePosition.x - latestVertex.x) ** 2 + (latestMousePosition.y - latestVertex.y) ** 2);
-            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
-            const obtainedMagnitude = Math.sqrt((ajustedMousePosition.x - latestVertex.x) ** 2 + (ajustedMousePosition.y - latestVertex.y) ** 2);
-
-            expect(obtainedMagnitude).toEqual(expectedMagnitude);
-        }
     });
 
     it('getFinalMousePosition should make a segment with angle multiple of 45deg with last vertex in shape', () => {
@@ -119,6 +94,81 @@ describe('LineShape', () => {
             const ajustedAngle = Math.atan2(ajustedMousePosition.y - latestVertex.y, ajustedMousePosition.x - latestVertex.x);
 
             expect(Math.abs(ajustedAngle % (Math.PI * FOURTH))).toEqual(0);
+        }
+    });
+
+    it('getFinalMousePosition should return a point at the same distance from the last vertex that the given mouse position if theta ~= 45deg + n*(PI/2)', () => {
+        const MOUSE_POSITIONS: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: -36, y: 52 },
+            { x: 128, y: 128 },
+        ];
+        const VERTICES_TO_ADD: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 128, y: 128 },
+            { x: -36, y: 52 },
+        ];
+
+        for (let i = 0; i < VERTICES_TO_ADD.length; ++i) {
+            const latestVertex = VERTICES_TO_ADD[i];
+            const latestMousePosition = MOUSE_POSITIONS[i];
+            lineShape.vertices.push(latestVertex);
+
+            const expectedMagnitude = Math.sqrt((latestMousePosition.x - latestVertex.x) ** 2 + (latestMousePosition.y - latestVertex.y) ** 2);
+            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
+            const obtainedMagnitude = Math.sqrt((ajustedMousePosition.x - latestVertex.x) ** 2 + (ajustedMousePosition.y - latestVertex.y) ** 2);
+
+            expect(obtainedMagnitude).toEqual(expectedMagnitude);
+        }
+    });
+
+    it('getFinalMousePosition should return a point at the same distance from the last vertex that the given mouse position is in x if theta is ~= n*PI', () => {
+        const MOUSE_POSITIONS: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 432, y: 3 },
+            { x: -423, y: 0 },
+        ];
+        const VERTICES_TO_ADD: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: -6, y: 0 },
+            { x: 12, y: 0 },
+        ];
+
+        for (let i = 0; i < VERTICES_TO_ADD.length; ++i) {
+            const latestVertex = VERTICES_TO_ADD[i];
+            const latestMousePosition = MOUSE_POSITIONS[i];
+            lineShape.vertices.push(latestVertex);
+
+            const expectedMagnitude = Math.abs(latestMousePosition.x - latestVertex.x);
+            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
+            const obtainedMagnitude = Math.sqrt((ajustedMousePosition.x - latestVertex.x) ** 2 + (ajustedMousePosition.y - latestVertex.y) ** 2);
+
+            expect(obtainedMagnitude).toEqual(expectedMagnitude);
+        }
+    });
+
+    it('getFinalMousePosition should return a point at the same distance from the last vertex that the given mouse position is in y if theta is ~= (PI/2) + n*PI', () => {
+        const MOUSE_POSITIONS: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 3, y: 432 },
+            { x: 0, y: -423 },
+        ];
+        const VERTICES_TO_ADD: Vec2[] = [
+            { x: 0, y: 0 },
+            { x: 0, y: -6 },
+            { x: 0, y: 12 },
+        ];
+
+        for (let i = 0; i < VERTICES_TO_ADD.length; ++i) {
+            const latestVertex = VERTICES_TO_ADD[i];
+            const latestMousePosition = MOUSE_POSITIONS[i];
+            lineShape.vertices.push(latestVertex);
+
+            const expectedMagnitude = Math.abs(latestMousePosition.y - latestVertex.y);
+            const ajustedMousePosition = lineShape.getFinalMousePosition(latestMousePosition, true);
+            const obtainedMagnitude = Math.sqrt((ajustedMousePosition.x - latestVertex.x) ** 2 + (ajustedMousePosition.y - latestVertex.y) ** 2);
+
+            expect(obtainedMagnitude).toEqual(expectedMagnitude);
         }
     });
 });

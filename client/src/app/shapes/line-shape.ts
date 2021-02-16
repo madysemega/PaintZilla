@@ -4,6 +4,10 @@ import { Shape } from './shape';
 export class LineShape extends Shape {
     static readonly DEFAULT_JOINTS_DIAMETER: number = 5;
 
+    constructor(public vertices: Vec2[], public jointsDiameter: number = LineShape.DEFAULT_JOINTS_DIAMETER) {
+        super();
+    }
+
     getFinalMousePosition(realMousePosition: Vec2, isShiftDown: boolean): Vec2 {
         const HALF_ANGLE_OFFSET_FACTOR_INV = 8;
         const QUARTER_CIRCLE_FACTOR_INV = 4;
@@ -24,7 +28,16 @@ export class LineShape extends Shape {
         const circleQuarter: number = Math.PI / QUARTER_CIRCLE_FACTOR_INV;
         const ajustedTheta: number = Math.floor((realTheta + offset) / circleQuarter) * circleQuarter;
 
-        const vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
+        let vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
+
+        const isSegmentHorizontal = ajustedTheta % Math.PI === 0;
+        const isSegmentVertical = (ajustedTheta + Math.PI / 2) % Math.PI === 0;
+
+        if (isSegmentHorizontal) {
+            vecLength = Math.abs(delta.x);
+        } else if (isSegmentVertical) {
+            vecLength = Math.abs(delta.y);
+        }
 
         const ajustedVector: Vec2 = {
             x: lastVertex.x + Math.cos(ajustedTheta) * vecLength,
@@ -57,9 +70,5 @@ export class LineShape extends Shape {
 
     clear(): void {
         this.vertices = [];
-    }
-
-    constructor(public vertices: Vec2[], public jointsDiameter: number = LineShape.DEFAULT_JOINTS_DIAMETER) {
-        super();
     }
 }

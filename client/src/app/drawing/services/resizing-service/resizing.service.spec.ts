@@ -37,23 +37,19 @@ describe('ResizingService', () => {
         expect(service).toBeTruthy();
     });
     it('isResizing(): should return false if none of the resizing boolean are true', () => {
-        const mouseEvent = {} as MouseEvent;
-        expect(service.isResizing(mouseEvent)).toBeFalse();
+        expect(service.isResizing()).toBeFalse();
     });
     it('isResizing(): should return true if rightResizerEnabled is true', () => {
-        const mouseEvent = {} as MouseEvent;
         service.rightResizerEnabled = true;
-        expect(service.isResizing(mouseEvent)).toBeTruthy();
+        expect(service.isResizing()).toBeTruthy();
     });
     it('isResizing(): should return true if rightDownResizerEnabled is true', () => {
-        const mouseEvent = {} as MouseEvent;
         service.rightDownResizerEnabled = true;
-        expect(service.isResizing(mouseEvent)).toBeTruthy();
+        expect(service.isResizing()).toBeTruthy();
     });
     it('isResizing(): should return true if downResizerEnabled is true', () => {
-        const mouseEvent = {} as MouseEvent;
         service.downResizerEnabled = true;
-        expect(service.isResizing(mouseEvent)).toBeTruthy();
+        expect(service.isResizing()).toBeTruthy();
     });
     it('resizeCanvas(): should not change canvasResize.x if righResizerEnabled is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();

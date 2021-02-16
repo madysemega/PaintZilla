@@ -12,6 +12,8 @@ export class LineToolConfigurationComponent implements AfterContentInit {
     lineType: string;
     jointsDiameter: number;
 
+    constructor(public lineTool: LineService) {}
+
     onLineTypeChange(lineType: MatButtonToggleGroup): void {
         this.lineType = lineType.value;
         this.lineTool.lineType = this.lineType as LineType;
@@ -26,6 +28,4 @@ export class LineToolConfigurationComponent implements AfterContentInit {
         this.lineType = this.lineTool.lineType;
         this.jointsDiameter = this.lineTool.jointsDiameter;
     }
-
-    constructor(public lineTool: LineService) {}
 }

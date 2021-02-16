@@ -20,7 +20,6 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
     constructor(drawingService: DrawingService) {
         super(drawingService);
         this.vertices = [];
-        this.name = 'Efface';
         this.key = 'eraser';
     }
 

@@ -5,7 +5,7 @@ export class FillStyleProperty extends ShapeProperty {
         ctx.fillStyle = this.colour;
     }
 
-    constructor(private colour: string) {
+    constructor(public colour: string) {
         super();
     }
 }

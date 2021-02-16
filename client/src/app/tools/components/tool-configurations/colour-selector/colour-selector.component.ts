@@ -16,7 +16,9 @@ export class ColourSelectorComponent {
     colour: string;
     colourInput: string;
     opacity: number = 1;
+
     constructor(public service: ColourToolService) {}
+
     changeOpacity(event: MatSliderChange): void {
         // source: https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
         const INDEXTHIRDCOMMA = this.colour.split(',', NBCOL).join(',').length;
@@ -32,7 +34,6 @@ export class ColourSelectorComponent {
         this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + '1)';
     }
     addColEv(event: MouseEvent): void {
-        console.log(event.target);
         this.service.primaryColour = (event.target as HTMLInputElement).style.backgroundColor;
     }
     addSecEv(event: MouseEvent): void {

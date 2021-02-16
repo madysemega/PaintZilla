@@ -3,6 +3,10 @@ import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
 export class LineJointsRenderer extends ShapeRenderer<LineShape> {
+    constructor(shape: LineShape, properties: ShapeProperty[]) {
+        super(shape, properties);
+    }
+
     draw(ctx: CanvasRenderingContext2D): void {
         const FULL_CIRCLE_DEGREES = 360;
 
@@ -13,9 +17,5 @@ export class LineJointsRenderer extends ShapeRenderer<LineShape> {
             ctx.ellipse(vertex.x, vertex.y, radius, radius, 0, 0, FULL_CIRCLE_DEGREES);
             ctx.fill();
         });
-    }
-
-    constructor(shape: LineShape, properties: ShapeProperty[]) {
-        super(shape, properties);
     }
 }
