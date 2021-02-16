@@ -1,5 +1,5 @@
 // source: https://malcoded.com/posts/angular-color-picker/
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 const NBCOL = 3;
@@ -10,7 +10,6 @@ const NBCOL = 3;
 })
 export class ColourSelectorComponent {
     show: boolean = false;
-    @ViewChild('color-div') colordiv: ElementRef<HTMLButtonElement>;
     @Input()
     value: number = 1;
     hue: string;
@@ -26,6 +25,7 @@ export class ColourSelectorComponent {
         const opacityString = this.colour.substring(INDEXTHIRDCOMMA + 1, this.colour.length - 1);
         this.opacity = parseInt(opacityString, 10);
         this.opacity = event.value as number;
+        this.service.opacity = this.opacity;
         this.colour = this.colour.substring(0, INDEXTHIRDCOMMA + 1) + this.opacity.toString() + ')';
     }
     setOpacityOne(col: string): void {
@@ -57,7 +57,7 @@ export class ColourSelectorComponent {
     takeHexClr(event: KeyboardEvent): void {
         const inputString: string = (event.target as HTMLInputElement).value;
         const hexSize = 7;
-        if (inputString.length === hexSize && inputString[0] === '#' && this.isHex(inputString)) {
+        if (inputString.length === hexSize && inputString[0] === '#') {
             this.toHex(inputString);
             this.rememberCol(this.colour);
         }

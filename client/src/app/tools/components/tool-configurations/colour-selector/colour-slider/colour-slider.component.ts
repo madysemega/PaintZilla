@@ -1,5 +1,6 @@
 // source: https://malcoded.com/posts/angular-color-picker/
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
 const GRDSTEP1 = 0.17;
 const GRDSTEP2 = 0.34;
@@ -25,6 +26,8 @@ export class ColourSliderComponent implements AfterViewInit {
 
     @Output()
     colour: EventEmitter<string> = new EventEmitter();
+
+    constructor(public service: ColourToolService) {}
 
     onMouseDown(evt: MouseEvent): void {
         console.log('Appeler slider');
@@ -88,6 +91,6 @@ export class ColourSliderComponent implements AfterViewInit {
 
     getColourAtPosition(x: number, y: number): string {
         const imageData = this.ctx.getImageData(x, y, 1, 1).data;
-        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + `,${this.service.opacity})`;
     }
 }

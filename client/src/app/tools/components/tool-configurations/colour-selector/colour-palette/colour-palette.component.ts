@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
 @Component({
     selector: 'app-colour-palette',
@@ -22,7 +23,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
     ngAfterViewInit(): void {
         this.draw();
     }
-
+    constructor(public service: ColourToolService) {}
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.hue && !changes.hue.firstChange) {
             this.draw();
@@ -91,7 +92,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
 
     getColourAtPosition(x: number, y: number): string {
         const imageData = this.ctx.getImageData(x, y, 1, 1).data;
-        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+        return 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + `,${this.service.opacity})`;
     }
 
     emitColour(x: number, y: number): void {

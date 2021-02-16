@@ -4,6 +4,7 @@ import { EventEmitter, Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class ColourToolService {
+    opacity: number = 1;
     private readonly DEFAULT_PRIMARY_COLOUR: string = '#000000FF';
     private readonly DEFAULT_SECONDARY_COLOUR: string = '#AAAAAAFF';
 
