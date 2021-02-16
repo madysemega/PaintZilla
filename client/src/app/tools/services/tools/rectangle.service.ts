@@ -4,6 +4,7 @@ import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { ColourToolService } from './colour-tool.service';
@@ -11,14 +12,14 @@ import { ColourToolService } from './colour-tool.service';
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService extends ShapeTool implements ISelectableTool {
+export class RectangleService extends ShapeTool implements ISelectableTool, IDeselectableTool {
     startingPos: Vec2;
     width: number;
     height: number;
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, public colourService: ColourToolService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
@@ -30,6 +31,10 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
 
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
+    }
+
+    onToolDeselect(): void {
+        this.finalize();
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -56,16 +61,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown) {
-            this.drawRect(this.drawingService.baseCtx);
-            this.startingPos.x = 0;
-            this.startingPos.y = 0;
-        }
-        this.lastMouseCoords.x = 0;
-        this.lastMouseCoords.y = 0;
-        this.width = 0;
-        this.height = 0;
-        this.mouseDown = false;
+        this.finalize();
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -74,6 +70,20 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
             this.lastMouseCoords = mousePosition;
             this.draw(this.drawingService.previewCtx, mousePosition.x, mousePosition.y);
         }
+    }
+
+    private finalize(): void {
+        if (this.mouseDown) {
+            this.drawRect(this.drawingService.baseCtx);
+            this.startingPos.x = 0;
+            this.startingPos.y = 0;
+        }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.lastMouseCoords.x = 0;
+        this.lastMouseCoords.y = 0;
+        this.width = 0;
+        this.height = 0;
+        this.mouseDown = false;
     }
 
     private draw(ctx: CanvasRenderingContext2D, x: number, y: number): void {
@@ -101,8 +111,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.secondaryColour;
-        ctx.strokeStyle = this.colourService.primaryColour;
+        ctx.fillStyle = this.colourService.primaryColour;
+        ctx.strokeStyle = this.colourService.secondaryColour;
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);

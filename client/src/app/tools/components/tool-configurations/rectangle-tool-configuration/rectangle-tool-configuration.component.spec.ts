@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MaterialModule } from '@app/material.module';
+import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
@@ -18,7 +20,8 @@ describe('RectangleToolConfigurationComponent', () => {
         rectangleToolStub = new RectangleService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            declarations: [RectangleToolConfigurationComponent],
+            imports: [MaterialModule],
+            declarations: [RectangleToolConfigurationComponent, ShapeToolConfigurationComponent],
             providers: [{ provide: RectangleService, useValue: rectangleToolStub }],
         }).compileComponents();
     }));

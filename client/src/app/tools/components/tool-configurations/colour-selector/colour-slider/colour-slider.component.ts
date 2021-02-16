@@ -29,7 +29,6 @@ export class ColourSliderComponent implements AfterViewInit {
     constructor(public service: ColourToolService) {}
 
     onMouseDown(evt: MouseEvent): void {
-        console.log('Appeler slider');
         this.mousedown = true;
         this.selectedHeight = evt.offsetY;
         this.draw();

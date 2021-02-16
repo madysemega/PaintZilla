@@ -132,7 +132,7 @@ describe('RectangleService', () => {
         expect(drawRectSpy).not.toHaveBeenCalled();
     });
 
-    it(' onKeyDown should call drawRect if key == Shift', () => {
+    it(' onKeyDown should call drawRect when mouse clicked if key == Shift', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 
@@ -140,7 +140,7 @@ describe('RectangleService', () => {
         expect(drawRectSpy).toHaveBeenCalled();
     });
 
-    it(' onKeyDown should call drawRect if key != Shift', () => {
+    it(' onKeyDown should not call drawRect when mouse down if key != Shift', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 
@@ -162,6 +162,14 @@ describe('RectangleService', () => {
 
         service.onKeyUp(keyboardSpaceEvent);
         expect(drawRectSpy).not.toHaveBeenCalled();
+    });
+
+    it(' onDeselectTool should call drawRect if mouseDown', () => {
+        service.mouseDown = true;
+        service.mouseDownCoord = { x: 0, y: 0 };
+
+        service.onToolDeselect();
+        expect(drawRectSpy).toHaveBeenCalled();
     });
 
     it(' onMouseMove should call stroke on preview canvas if shape type is Contoured', () => {
@@ -320,9 +328,11 @@ describe('RectangleService', () => {
 
         // Premier pixel seulement
         const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        expect(imageData.data[0]).toEqual(0); // R
-        expect(imageData.data[1]).toEqual(0); // G
-        expect(imageData.data[2]).toEqual(0); // B
+        // un pixel du canvas étant initialisé à (0,0,0,0) par défaut.
+        // sachant également que notre couleur par défaut n'est pas noir
+        expect(imageData.data[0]).not.toEqual(0); // R
+        expect(imageData.data[1]).not.toEqual(0); // G
+        expect(imageData.data[2]).not.toEqual(0); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
     });

@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MaterialModule } from '@app/material.module';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { ColourSliderComponent } from './colour-slider.component';
 
 describe('ColourSliderComponent', () => {
@@ -9,7 +11,9 @@ describe('ColourSliderComponent', () => {
     let mouseEvent: MouseEvent;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MaterialModule],
             declarations: [ColourSliderComponent],
+            providers: [ColourToolService],
         }).compileComponents();
     }));
 

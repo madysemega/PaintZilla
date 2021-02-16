@@ -1,21 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 
-class NotSelectableTool extends Tool {}
-
-// tslint:disable:prefer-const
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
-    let toolStub: NotSelectableTool;
-    let drawingService: DrawingService;
 
     beforeEach(() => {
-        drawingService = new DrawingService();
-        toolStub = new NotSelectableTool(drawingService);
         service = TestBed.inject(ToolSelectorService);
     });
 
@@ -79,20 +71,6 @@ describe('ToolSelectorService', () => {
     it('should return undefined when calling getDisplayName with an invalid tool name', () => {
         const displayName = service.getDisplayName('invalid tool');
         expect(displayName).toBe(undefined);
-    });
-
-    it('should not call onToolSelect on the valid tool being selected if that tool does not implement ISelectableTool', () => {
-        let tools: Map<string, MetaWrappedTool>;
-        // tslint:disable:no-any
-        // pour accéder aux attributs privés
-        tools = (service as any).tools as Map<string, MetaWrappedTool>;
-        tools.set('toolStub', {
-            displayName: '',
-            icon: '',
-            keyboardShortcut: '',
-            tool: toolStub,
-        });
-        service.selectTool('toolStub');
     });
 
     it('should call onToolDeselect on current tool when changing to valid tool if current tool implements IDeselectableTool', () => {

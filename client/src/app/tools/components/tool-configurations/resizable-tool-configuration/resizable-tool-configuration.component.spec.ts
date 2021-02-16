@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from './resizable-tool-configuration.component';
 
 class ResizableToolStub extends ResizableTool {
@@ -22,6 +23,7 @@ describe('ResizableToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MaterialModule],
             declarations: [ResizableToolConfigurationComponent],
         }).compileComponents();
     }));
