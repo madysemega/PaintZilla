@@ -18,7 +18,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool {
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, public colourService: ColourToolService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
