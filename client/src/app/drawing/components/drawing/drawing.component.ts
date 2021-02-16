@@ -14,11 +14,16 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class DrawingComponent implements AfterViewInit {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
+
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-    wasResizing: boolean = false;
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {}
+
+    wasResizing: boolean;
+
+    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
+        this.wasResizing = false;
+    }
 
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -34,7 +39,7 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        if (this.resizingService.isResizing(event)) {
+        if (this.resizingService.isResizing()) {
             this.resizingService.resizeCanvas(event);
         } else {
             this.toolSelector.getSelectedTool().onMouseMove(event);
@@ -43,14 +48,14 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (!this.resizingService.isResizing(event)) {
+        if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
     }
 
     @HostListener('document: mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        if (this.resizingService.isResizing(event)) {
+        if (this.resizingService.isResizing()) {
             this.wasResizing = true;
             this.resizingService.disableResizer();
         } else {
