@@ -8,6 +8,9 @@ import { EllipseService } from './ellipse-service';
 // tslint:disable:no-any
 // tslint:disable:max-file-line-count
 describe('EllipseService', () => {
+    const ORIGIN_COORDINATES: Vec2 = { x: 0, y: 0 };
+    const NON_NULL_COORDINATES: Vec2 = { x: 3, y: 4 };
+
     let service: EllipseService;
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
@@ -510,5 +513,45 @@ describe('EllipseService', () => {
         expect(imageData.data[2]).not.toEqual(0); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
+    });
+
+    it('shift key down should preview ellipse if left mouse button is down', () => {
+        service.startPoint = ORIGIN_COORDINATES;
+        service.lastMousePosition = NON_NULL_COORDINATES;
+
+        service.mouseDown = true;
+
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(drawEllipseSpy).toHaveBeenCalled();
+    });
+
+    it('shift key down should not preview ellipse if left mouse button is up', () => {
+        service.startPoint = ORIGIN_COORDINATES;
+        service.lastMousePosition = NON_NULL_COORDINATES;
+
+        service.mouseDown = false;
+
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(drawEllipseSpy).not.toHaveBeenCalled();
+    });
+
+    it('shift key up should preview ellipse if left mouse button is down', () => {
+        service.startPoint = ORIGIN_COORDINATES;
+        service.lastMousePosition = NON_NULL_COORDINATES;
+
+        service.mouseDown = true;
+
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(drawEllipseSpy).toHaveBeenCalled();
+    });
+
+    it('shift key up should not preview ellipse if left mouse button is up', () => {
+        service.startPoint = ORIGIN_COORDINATES;
+        service.lastMousePosition = NON_NULL_COORDINATES;
+
+        service.mouseDown = false;
+
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(drawEllipseSpy).not.toHaveBeenCalled();
     });
 });
