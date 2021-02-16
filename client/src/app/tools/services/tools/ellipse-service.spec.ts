@@ -503,9 +503,11 @@ describe('EllipseService', () => {
 
         // Premier pixel seulement
         const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        expect(imageData.data[0]).toEqual(0); // R
-        expect(imageData.data[1]).toEqual(0); // G
-        expect(imageData.data[2]).toEqual(0); // B
+        // un pixel du canvas étant initialisé à (0,0,0,0) par défaut.
+        // sachant également que notre couleur par défaut n'est pas noir
+        expect(imageData.data[0]).not.toEqual(0); // R
+        expect(imageData.data[1]).not.toEqual(0); // G
+        expect(imageData.data[2]).not.toEqual(0); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
     });

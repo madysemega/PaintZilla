@@ -139,8 +139,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         ctx.save();
         ctx.beginPath();
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.secondaryColour;
-        ctx.strokeStyle = this.colourService.primaryColour;
+        ctx.fillStyle = this.colourService.primaryColour;
+        ctx.strokeStyle = this.colourService.secondaryColour;
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fill();
