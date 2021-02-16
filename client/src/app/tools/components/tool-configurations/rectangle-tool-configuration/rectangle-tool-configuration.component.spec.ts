@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
 
@@ -8,11 +9,13 @@ describe('RectangleToolConfigurationComponent', () => {
     let component: RectangleToolConfigurationComponent;
     let fixture: ComponentFixture<RectangleToolConfigurationComponent>;
     let drawingStub: DrawingService;
+    let colourServiceStub: ColourToolService;
     let rectangleToolStub: RectangleService;
 
     beforeEach(async(() => {
         drawingStub = new DrawingService();
-        rectangleToolStub = new RectangleService(drawingStub);
+        colourServiceStub = new ColourToolService();
+        rectangleToolStub = new RectangleService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
             declarations: [RectangleToolConfigurationComponent],

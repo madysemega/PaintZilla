@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { ShapeToolConfigurationComponent } from './shape-tool-configuration.component';
 
@@ -9,11 +10,13 @@ describe('ShapeToolConfigurationComponent', () => {
     let component: ShapeToolConfigurationComponent;
     let fixture: ComponentFixture<ShapeToolConfigurationComponent>;
     let drawingStub: DrawingService;
+    let colourServiceStub: ColourToolService;
     let ellipseToolStub: EllipseService;
 
     beforeEach(async(() => {
         drawingStub = new DrawingService();
-        ellipseToolStub = new EllipseService(drawingStub);
+        colourServiceStub = new ColourToolService();
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
             declarations: [ShapeToolConfigurationComponent],

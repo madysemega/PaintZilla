@@ -49,9 +49,9 @@ describe('ColourSelectorComponent', () => {
         expect(component.colour).toEqual(CLRTEST);
     });
     it('switchCol switches between the primary and secondary colours', () => {
-        component.service.colour1 = CLRTEST;
+        component.service.primaryColour = CLRTEST;
         component.switchCol();
-        expect(component.service.colour2).toEqual(CLRTEST);
+        expect(component.service.secondaryColour).toEqual(CLRTEST);
     });
     it('rememberCol does not remember the same colour twice', () => {
         component.service.colourList.push(CLRTEST);
@@ -121,14 +121,14 @@ describe('ColourSelectorComponent', () => {
         const EVENT = jasmine.createSpyObj('MouseEvent', {}, { target: input });
         input.style.backgroundColor = 'green';
         component.addColEv(EVENT);
-        expect(component.service.colour1).toEqual(input.style.backgroundColor);
+        expect(component.service.primaryColour).toEqual(input.style.backgroundColor);
     });
     it('addSecEv adds the target colour as primary colour', () => {
         const INPUT = document.createElement('input');
         const EVENT = jasmine.createSpyObj('MouseEvent', {}, { target: INPUT });
         INPUT.style.backgroundColor = 'green';
         component.addSecEv(EVENT);
-        expect(component.service.colour2).toEqual(INPUT.style.backgroundColor);
+        expect(component.service.secondaryColour).toEqual(INPUT.style.backgroundColor);
     });
     it('takeHexClr does not call rememberCol if no valid hex number is put', () => {
         const EVENT = jasmine.createSpyObj(
