@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MaterialModule } from '@app/material.module';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 
@@ -18,7 +20,8 @@ describe('PencilToolConfigurationComponent', () => {
         pencilServiceStub = new PencilService(drawingServiceStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            declarations: [PencilToolConfigurationComponent],
+            imports: [MaterialModule],
+            declarations: [PencilToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: PencilService, useValue: pencilServiceStub }],
         }).compileComponents();
     }));

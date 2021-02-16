@@ -1,10 +1,25 @@
+import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MaterialModule } from '@app/material.module';
 import { LineType } from '@app/shapes/types/line-type';
+import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { LineToolConfigurationComponent } from './line-tool-configuration.component';
 
 describe('LineToolConfigurationComponent', () => {
+    // tslint:disable: no-any
+    @Component({
+        selector: 'mat-icon',
+        template: '<span></span>',
+    })
+    class MockMatIconComponent {
+        @Input() svgIcon: any;
+        @Input() fontSet: any;
+        @Input() fontIcon: any;
+    }
+
     // tslint:disable-next-line: no-magic-numbers
     const SAMPLE_DIAMETERS = [5, 1, 52, 42];
     const LINE_TYPES = [LineType.WITH_JOINTS, LineType.WITHOUT_JOINTS];
@@ -17,9 +32,21 @@ describe('LineToolConfigurationComponent', () => {
         lineServiceStub = jasmine.createSpyObj('LineService', ['setLineType', 'setJointsDiameter']);
 
         TestBed.configureTestingModule({
-            declarations: [LineToolConfigurationComponent],
+            imports: [MaterialModule],
+            declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: LineService, useValue: lineServiceStub }],
-        }).compileComponents();
+        })
+            .overrideModule(MatIconModule, {
+                remove: {
+                    declarations: [MatIcon],
+                    exports: [MatIcon],
+                },
+                add: {
+                    declarations: [MockMatIconComponent],
+                    exports: [MockMatIconComponent],
+                },
+            })
+            .compileComponents();
     }));
 
     beforeEach(() => {
