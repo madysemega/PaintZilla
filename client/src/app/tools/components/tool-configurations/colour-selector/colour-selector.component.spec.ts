@@ -131,13 +131,44 @@ describe('ColourSelectorComponent', () => {
         expect(component.service.colour2).toEqual(INPUT.style.backgroundColor);
     });
     it('takeHexClr does not call rememberCol if no valid hex number is put', () => {
-        const EVENT = jasmine.createSpyObj('KeyboardEvent', {}, { target: input });
+        const EVENT = jasmine.createSpyObj(
+            'KeyboardEvent',
+            {
+                stopPropagation(): void {
+                    return;
+                },
+            },
+            { target: input },
+        );
         input.value = 'PAS UN HEX';
         component.takeHexClr(EVENT);
         expect(rmbClrStub).not.toHaveBeenCalled();
     });
+    it('takeHexClr calls stopPropagation', () => {
+        const EVENT = jasmine.createSpyObj(
+            'KeyboardEvent',
+            {
+                stopPropagation(): void {
+                    return;
+                },
+            },
+            { target: input },
+        );
+        input.value = 'PAS UN HEX';
+        component.takeHexClr(EVENT);
+        expect(EVENT.stopPropagation).toHaveBeenCalled();
+    });
     it('takeHexClr does call rememberCol if a hex number of 6 digits preceded by # is entered', () => {
-        const EVENT = jasmine.createSpyObj('KeyboardEvent', {}, { target: input });
+        const EVENT = jasmine.createSpyObj(
+            'KeyboardEvent',
+            {},
+            {
+                target: input,
+                stopPropagation(): void {
+                    return;
+                },
+            },
+        );
         input.value = '#FFFFFF';
         component.takeHexClr(EVENT);
         expect(rmbClrStub).toHaveBeenCalled();
