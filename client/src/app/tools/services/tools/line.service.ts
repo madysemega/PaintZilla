@@ -40,12 +40,12 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         this.strokeWidthProperty = new StrokeWidthProperty();
         this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
         this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
-        
+
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [this.strokeWidthProperty, this.strokeColourProperty]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
 
-        colourService.onPrimaryColourChanged.subscribe((colour: string) => this.strokeColourProperty.colour = colour);
-        colourService.onSecondaryColourChanged.subscribe((colour: string) => this.jointsColourProperty.colour = colour);
+        colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
+        colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
 
         this.isShiftDown = false;
 

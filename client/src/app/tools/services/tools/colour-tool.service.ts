@@ -27,7 +27,7 @@ export class ColourToolService {
         this.mSecondaryColour = colour;
         this.onSecondaryColourChanged.emit(colour);
     }
-    
+
     onPrimaryColourChanged: EventEmitter<string>;
     onSecondaryColourChanged: EventEmitter<string>;
 
