@@ -62,9 +62,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isShiftDown = true;
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
-            this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+
+            if (this.mouseDown) {
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+            }
         }
     }
 
@@ -72,9 +75,11 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         if (event.key === 'Shift') {
             this.isShiftDown = false;
 
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
-            this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+            if (this.mouseDown) {
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+            }
         }
     }
 
