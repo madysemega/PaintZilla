@@ -137,16 +137,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(endPoint.x - startPoint.x) / 2,
-            y: Math.abs(endPoint.y - startPoint.y) / 2,
+            x: Math.abs(endPoint.x - startPoint.x) / 2 - this.lineWidth / 2,
+            y: Math.abs(endPoint.y - startPoint.y) / 2 - this.lineWidth / 2,
         };
 
         ctx.save();
         ctx.beginPath();
-        ctx.lineWidth = this.lineWidth;
         ctx.fillStyle = this.colourService.primaryColour;
         ctx.strokeStyle = this.colourService.secondaryColour;
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+        ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fill();
         }
