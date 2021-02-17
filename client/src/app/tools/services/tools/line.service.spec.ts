@@ -282,6 +282,9 @@ describe('LineService', () => {
     it('onKeyUp() should preview joints if key is backspace and line type is WITH_JOINTS', () => {
         const keyboardEvent = { key: 'Backspace' } as KeyboardEvent;
 
+        lineShapeStub.vertices.push({ x: 0, y: 0 });
+        lineShapeStub.vertices.push({ x: 6, y: 8 });
+
         service['lineType'] = LineType.WITH_JOINTS;
         service.onKeyUp(keyboardEvent);
 
