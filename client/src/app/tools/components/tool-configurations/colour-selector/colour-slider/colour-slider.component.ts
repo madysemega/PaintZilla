@@ -9,6 +9,7 @@ const GRD_STEP4 = 0.68;
 const GRD_STEP5 = 0.85;
 const RECT_HEIGHT = 10;
 const RECT_WIDTH = 5;
+
 @Component({
     selector: 'app-colour-slider',
     templateUrl: './colour-slider.component.html',
@@ -27,6 +28,21 @@ export class ColourSliderComponent implements AfterViewInit {
     colour: EventEmitter<string> = new EventEmitter();
 
     constructor(public service: ColourToolService) {}
+
+    ngAfterViewInit(): void {
+        if (!this.ctx) {
+            this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        }
+        this.width = this.canvas.nativeElement.width;
+        this.height = this.canvas.nativeElement.height;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.draw();
+    }
+
+    @HostListener('window:mouseup', ['$event'])
+    onMouseUp(evt: MouseEvent): void {
+        this.mousedown = false;
+    }
 
     onMouseDown(evt: MouseEvent): void {
         this.mousedown = true;
@@ -48,22 +64,23 @@ export class ColourSliderComponent implements AfterViewInit {
         this.colour.emit(rgbaColour);
     }
 
-    @HostListener('window:mouseup', ['$event'])
-    onMouseUp(evt: MouseEvent): void {
-        this.mousedown = false;
-    }
-
-    ngAfterViewInit(): void {
-        this.draw();
-    }
-
     draw(): void {
-        if (!this.ctx) {
-            this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawGradient();
+        this.drawSelectorRect();
+    }
+
+    drawSelectorRect(): void{
+        if (this.selectedHeight) {
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = 'white';
+            this.ctx.lineWidth = RECT_WIDTH;
+            this.ctx.rect(0, this.selectedHeight - RECT_WIDTH, this.width, RECT_HEIGHT);
+            this.ctx.stroke();
+            this.ctx.closePath();
         }
-        this.width = this.canvas.nativeElement.width;
-        this.height = this.canvas.nativeElement.height;
-        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    drawGradient() : void{
         const GRADIENT = this.ctx.createLinearGradient(0, 0, 0, this.height);
         GRADIENT.addColorStop(0, 'rgba(255, 0, 0, 1)');
         GRADIENT.addColorStop(GRD_STEP1, 'rgba(255, 255, 0, 1)');
@@ -77,14 +94,6 @@ export class ColourSliderComponent implements AfterViewInit {
         this.ctx.fillStyle = GRADIENT;
         this.ctx.fill();
         this.ctx.closePath();
-        if (this.selectedHeight) {
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = 'white';
-            this.ctx.lineWidth = RECT_WIDTH;
-            this.ctx.rect(0, this.selectedHeight - RECT_WIDTH, this.width, RECT_HEIGHT);
-            this.ctx.stroke();
-            this.ctx.closePath();
-        }
     }
 
     getColourAtPosition(x: number, y: number): string {
