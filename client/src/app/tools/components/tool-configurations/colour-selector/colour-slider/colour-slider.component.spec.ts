@@ -35,9 +35,9 @@ describe('ColourSliderComponent', () => {
         expect(getColourStub).toHaveBeenCalled();
     });
     it('getColourAtPosition defaults to black when input is above 255', () => {
-        const VALUE1 = 0;
-        const VALUE2 = 256;
-        expect(component.getColourAtPosition(VALUE1, VALUE2)).toEqual('rgba(0,0,0,1)');
+        const VALUE_1 = 0;
+        const VALUE_2 = 256;
+        expect(component.getColourAtPosition(VALUE_1, VALUE_2)).toEqual('rgba(0,0,0,1)');
     });
     it('onMouseDown calls emitColour', () => {
         mouseEvent = { offsetX: 0, offsetY: 10, button: 0 } as MouseEvent;

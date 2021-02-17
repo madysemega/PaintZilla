@@ -497,24 +497,6 @@ describe('EllipseService', () => {
         expect(getSquareAjustedPerimeterSpy).not.toHaveBeenCalledWith(startPoint, endPoint);
     });
 
-    it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.mouseInCanvas = true;
-        service.onMouseDown(mouseEvent);
-        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseUp(mouseEvent);
-
-        // Premier pixel seulement
-        const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        // un pixel du canvas étant initialisé à (0,0,0,0) par défaut.
-        // sachant également que notre couleur par défaut n'est pas noir
-        expect(imageData.data[0]).not.toEqual(0); // R
-        expect(imageData.data[1]).not.toEqual(0); // G
-        expect(imageData.data[2]).not.toEqual(0); // B
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[3]).not.toEqual(0); // A
-    });
-
     it('shift key down should preview ellipse if left mouse button is down', () => {
         service.startPoint = ORIGIN_COORDINATES;
         service.lastMousePosition = NON_NULL_COORDINATES;

@@ -124,15 +124,17 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
                 this.drawingService.clearCanvas(this.drawingService.previewCtx);
                 break;
             case 'Backspace':
-                this.lineShape.vertices.pop();
+                if (this.lineShape.vertices.length > 1) {
+                    this.lineShape.vertices.pop();
 
-                this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                this.lineShape.vertices.push(this.lastMousePosition);
-                this.lineShapeRenderer.render(this.drawingService.previewCtx);
-                if (this.lineType === LineType.WITH_JOINTS) {
-                    this.lineJointsRenderer.render(this.drawingService.previewCtx);
+                    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                    this.lineShape.vertices.push(this.lastMousePosition);
+                    this.lineShapeRenderer.render(this.drawingService.previewCtx);
+                    if (this.lineType === LineType.WITH_JOINTS) {
+                        this.lineJointsRenderer.render(this.drawingService.previewCtx);
+                    }
+                    this.lineShape.vertices.pop();
                 }
-                this.lineShape.vertices.pop();
                 break;
         }
     }
