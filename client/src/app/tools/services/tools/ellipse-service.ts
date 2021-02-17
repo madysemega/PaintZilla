@@ -19,10 +19,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     isShiftDown: boolean = false;
 
+    private selectionCanvas : HTMLCanvasElement ;
+    private selectionCanvasCTX : CanvasRenderingContext2D;
+
     constructor(drawingService: DrawingService, private colourService: ColourToolService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
+        this.selectionCanvas = document.createElement('canvas');
+        this.selectionCanvasCTX= this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
+        
     }
 
     onToolSelect(): void {
@@ -127,6 +133,9 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        this.selectionCanvas.width = this.drawingService.canvas.width;
+        this.selectionCanvas.height = this.drawingService.canvas.height;
+
         if (this.isShiftDown) {
             endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
         }
@@ -140,19 +149,21 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             x: Math.abs(endPoint.x - startPoint.x) / 2 - this.lineWidth / 2,
             y: Math.abs(endPoint.y - startPoint.y) / 2 - this.lineWidth / 2,
         };
+        
+        if(ctx == this.drawingService.baseCtx){
+            this.selectionCanvasCTX.beginPath();
+            this.selectionCanvasCTX.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+            this.selectionCanvasCTX.clip();
+            this.selectionCanvasCTX.drawImage(this.drawingService.canvas, 0, 0);
+            ctx.drawImage(this.selectionCanvas, this.startPoint.x, this.startPoint.y, this.selectionCanvas.width, this.selectionCanvas.height,0,0 , this.selectionCanvas.width, this.selectionCanvas.height);
+            this.selectionCanvasCTX.clearRect(0,0,this.selectionCanvas.width, this.selectionCanvas.height);
+        }
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = this.colourService.primaryColour;
         ctx.strokeStyle = this.colourService.secondaryColour;
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-        ctx.lineWidth = this.lineWidth;
-        if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
-            ctx.fill();
-        }
-        if (this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled) {
-            ctx.stroke();
-        }
+        ctx.stroke();
         ctx.restore();
     }
 }
