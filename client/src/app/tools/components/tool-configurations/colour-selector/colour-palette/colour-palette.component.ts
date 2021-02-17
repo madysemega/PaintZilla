@@ -2,6 +2,11 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
+const BLACK_OPAQUE = 'rgba(0,0,0,1)';
+const BLACK_TRANSPARENT = 'rgba(0,0,0,0)';
+const WHITE_OPAQUE = 'rgba(255,255,255,1)';
+const WHITE_TRANSPARENT = 'rgba(255,255,255,0)';
+
 @Component({
     selector: 'app-colour-palette',
     templateUrl: './colour-palette.component.html',
@@ -67,24 +72,35 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
             const INDEX_THIRD_COMMA = this.hue.split(',', NB_COL).join(',').length;
             hueDrawn = this.hue.substring(0, INDEX_THIRD_COMMA + 1) + '1)';
         }
-        console.log('le hue est', this.hue);
         this.ctx.fillStyle = hueDrawn;
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        const WHITE_GRAD = this.ctx.createLinearGradient(0, 0, WIDTH, 0);
-        WHITE_GRAD.addColorStop(0, 'rgba(255,255,255,1)');
-        WHITE_GRAD.addColorStop(1, 'rgba(255,255,255,0)');
+        this.applyWhiteGradient(WIDTH, HEIGHT);
+        this.applyBlackGradient(WIDTH, HEIGHT);
 
-        this.ctx.fillStyle = WHITE_GRAD;
-        this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        this.drawCursor();
+    }
 
-        const BLACK_GRAD = this.ctx.createLinearGradient(0, 0, 0, HEIGHT);
-        BLACK_GRAD.addColorStop(0, 'rgba(0,0,0,0)');
-        BLACK_GRAD.addColorStop(1, 'rgba(0,0,0,1)');
+    applyWhiteGradient(width: number, height: number): void {
+        const WHITE_GRAD = this.ctx.createLinearGradient(0, 0, width, 0);
+        WHITE_GRAD.addColorStop(0, WHITE_TRANSPARENT);
+        WHITE_GRAD.addColorStop(1, WHITE_OPAQUE);
+        this.applyGradient(WHITE_GRAD, width, height);
+    }
 
-        this.ctx.fillStyle = BLACK_GRAD;
-        this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    applyBlackGradient(width: number, height: number): void {
+        const BLACK_GRAD = this.ctx.createLinearGradient(0, 0, 0, height);
+        BLACK_GRAD.addColorStop(0, BLACK_TRANSPARENT);
+        BLACK_GRAD.addColorStop(1, BLACK_OPAQUE);
+        this.applyGradient(BLACK_GRAD, width, height);
+    }
 
+    applyGradient(gradient: CanvasGradient, width: number, height: number): void {
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, width, height);
+    }
+
+    drawCursor(): void {
         if (this.selectedPosition) {
             const ARC_RADIUS = 10;
             const LINE_WIDTH = 5;
