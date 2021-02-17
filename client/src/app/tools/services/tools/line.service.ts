@@ -6,6 +6,8 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
+import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
+import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
@@ -41,7 +43,12 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
         this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
 
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [this.strokeWidthProperty, this.strokeColourProperty]);
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
+            this.strokeWidthProperty,
+            this.strokeColourProperty,
+            new LineCapProperty('round'),
+            new LineJoinProperty('round'),
+        ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
 
         colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
