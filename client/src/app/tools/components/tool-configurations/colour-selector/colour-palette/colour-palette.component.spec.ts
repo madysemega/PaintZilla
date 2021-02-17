@@ -16,8 +16,8 @@ describe('ColourPaletteComponent', () => {
     let emitCStub: jasmine.Spy<jasmine.Func>;
     // let drawStub: jasmine.Spy<jasmine.Func>;
     let componentSlider: ColourSliderComponent;
-    const mouseEvent = { offsetX: 0, offsetY: 0, button: 0 } as MouseEvent;
-    const mouseEvent2 = { offsetX: 5, offsetY: 5, button: 0 } as MouseEvent;
+    const MOUSE_EVENT = { offsetX: 0, offsetY: 0, button: 0 } as MouseEvent;
+    const MOUSE_EVENT2 = { offsetX: 5, offsetY: 5, button: 0 } as MouseEvent;
     let TEST: string;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -51,43 +51,43 @@ describe('ColourPaletteComponent', () => {
         expect(component).toBeTruthy();
     });
     it('ngOnChanges calls emit', () => {
-        component.onMouseDown(mouseEvent);
-        componentSlider.onMouseMove(mouseEvent2);
+        component.onMouseDown(MOUSE_EVENT);
+        componentSlider.onMouseMove(MOUSE_EVENT2);
         const CHANGES = { hue: new SimpleChange(TEST, 'rgba(10, 10, 10, 1)', false) } as SimpleChanges;
         component.ngOnChanges(CHANGES);
         expect(emitCStub).toHaveBeenCalled();
     });
     it('ngOnChanges does not call emit if pos is null', () => {
-        componentSlider.onMouseMove(mouseEvent2);
+        componentSlider.onMouseMove(MOUSE_EVENT2);
         const CHANGES = { hue: new SimpleChange(TEST, 'rgba(10, 10, 10, 1)', false) } as SimpleChanges;
         component.mousedown = false;
         component.ngOnChanges(CHANGES);
         expect(emitCStub).not.toHaveBeenCalled();
     });
     it('onMouseUp does not allow onMouseDown to call emitColour', () => {
-        component.onMouseUp(mouseEvent);
-        component.onMouseMove(mouseEvent);
+        component.onMouseUp(MOUSE_EVENT);
+        component.onMouseMove(MOUSE_EVENT);
         expect(emitStub).not.toHaveBeenCalled();
     });
     it('onMouseMove calls getColour', () => {
-        component.onMouseDown(mouseEvent);
-        component.onMouseMove(mouseEvent);
+        component.onMouseDown(MOUSE_EVENT);
+        component.onMouseMove(MOUSE_EVENT);
         expect(getColourStub).toHaveBeenCalledWith(component.selectedPosition.x, component.selectedPosition.y);
     });
     it('getColourAtPosition defaults to 0 when an argument is above 255', () => {
-        const VALUE1 = 256;
-        const VALUE2 = 256;
-        expect(component.getColourAtPosition(VALUE1, VALUE2)).toEqual('rgba(0,0,0,1)');
+        const VALUE_1 = 256;
+        const VALU_2 = 256;
+        expect(component.getColourAtPosition(VALUE_1, VALU_2)).toEqual('rgba(0,0,0,1)');
     });
     it('onMouseMove calls emitColour', () => {
-        component.onMouseDown(mouseEvent);
-        component.onMouseMove(mouseEvent);
+        component.onMouseDown(MOUSE_EVENT);
+        component.onMouseMove(MOUSE_EVENT);
         expect(emitStub).toHaveBeenCalledWith(component.selectedPosition.x, component.selectedPosition.y);
     });
     it('emitColour calls emit', () => {
-        component.onMouseDown(mouseEvent);
+        component.onMouseDown(MOUSE_EVENT);
         component.emitColour(component.selectedPosition.x, component.selectedPosition.y);
-        const SENTCOL = component.getColourAtPosition(component.selectedPosition.x, component.selectedPosition.y);
-        expect(emitCStub).toHaveBeenCalledWith(SENTCOL);
+        const SENT_COL = component.getColourAtPosition(component.selectedPosition.x, component.selectedPosition.y);
+        expect(emitCStub).toHaveBeenCalledWith(SENT_COL);
     });
 });

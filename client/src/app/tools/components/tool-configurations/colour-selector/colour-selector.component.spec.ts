@@ -9,7 +9,7 @@ import { ColourPaletteComponent } from './colour-palette/colour-palette.componen
 import { ColourSelectorComponent } from './colour-selector.component';
 import { ColourSliderComponent } from './colour-slider/colour-slider.component';
 
-const NOTONE = 0.7;
+const CLR_OPAC = 0.7;
 
 // tslint:disable: no-any
 describe('ColourSelectorComponent', () => {
@@ -26,7 +26,7 @@ describe('ColourSelectorComponent', () => {
     let component: ColourSelectorComponent;
     let fixture: ComponentFixture<ColourSelectorComponent>;
     let rmbClrStub: jasmine.Spy<jasmine.Func>;
-    const CLRTEST = 'rgba(255,255,255,1)';
+    const CLR_TEST = 'rgba(255,255,255,1)';
     let input: HTMLInputElement;
 
     beforeEach(async(() => {
@@ -63,35 +63,35 @@ describe('ColourSelectorComponent', () => {
     });
 
     it('changeOpacity is affected by a MatSliderChange event', () => {
-        const SLIDEREVENT = new MatSliderChange();
-        SLIDEREVENT.value = NOTONE;
-        component.changeOpacity(SLIDEREVENT);
-        expect(component.opacity).toEqual(SLIDEREVENT.value);
+        const SLIDER_EVENT = new MatSliderChange();
+        SLIDER_EVENT.value = CLR_OPAC;
+        component.changeOpacity(SLIDER_EVENT);
+        expect(component.opacity).toEqual(SLIDER_EVENT.value);
     });
     it('setOpacityOne sets opacity to 1', () => {
-        component.opacity = NOTONE;
+        component.opacity = CLR_OPAC;
         component.setOpacityOne(component.colour);
         expect(component.opacity).toEqual(1);
     });
     it('toHex transforms a Hex value to an rgba value and adds 1 as the opacity', () => {
-        const HEXVALUE = '#FFFFFF';
-        component.toHex(HEXVALUE);
-        expect(component.colour).toEqual(CLRTEST);
+        const HEX_VALUE = '#FFFFFF';
+        component.toHex(HEX_VALUE);
+        expect(component.colour).toEqual(CLR_TEST);
     });
     it('switchCol switches between the primary and secondary colours', () => {
-        component.service.primaryColour = CLRTEST;
+        component.service.primaryColour = CLR_TEST;
         component.switchCol();
-        expect(component.service.secondaryColour).toEqual(CLRTEST);
+        expect(component.service.secondaryColour).toEqual(CLR_TEST);
     });
     it('rememberCol does not remember the same colour twice', () => {
-        component.service.colourList.push(CLRTEST);
-        component.rememberCol(CLRTEST);
+        component.service.colourList.push(CLR_TEST);
+        component.rememberCol(CLR_TEST);
         expect(component.service.colourList.length).toEqual(1);
     });
     it('rememberCol adds colour to the list without shifting if the size is under 10', () => {
         component.service.colourList = [];
-        component.rememberCol(CLRTEST);
-        expect(component.service.colourList[0]).toEqual(CLRTEST);
+        component.rememberCol(CLR_TEST);
+        expect(component.service.colourList[0]).toEqual(CLR_TEST);
     });
     it('rememberCol shifts elements when listColour is pushed when its length is 10', () => {
         component.service.colourList = [
@@ -104,11 +104,11 @@ describe('ColourSelectorComponent', () => {
             'rgba(1,0,1,1)',
             'rgba(2,0,0,1)',
             'rgba(0,2,0,1)',
-            CLRTEST,
+            CLR_TEST,
         ];
         component.rememberCol('rgba(0,0,2,1)');
-        const NEWINDEX = 8;
-        expect(component.service.colourList.indexOf(CLRTEST)).toEqual(NEWINDEX);
+        const NEW_INDEX = 8;
+        expect(component.service.colourList.indexOf(CLR_TEST)).toEqual(NEW_INDEX);
     });
     it('rememberCol does not push to colourList when its length is above 10', () => {
         component.service.colourList = [
@@ -124,10 +124,10 @@ describe('ColourSelectorComponent', () => {
             'rgba(0,0,2,1)',
             'rgba(0,2,2,1)',
         ];
-        const PUSHSTUB = spyOn(component.service.colourList, 'push').and.stub();
-        PUSHSTUB.and.callThrough();
+        const PUSH_STUB = spyOn(component.service.colourList, 'push').and.stub();
+        PUSH_STUB.and.callThrough();
         component.rememberCol('rgba(2,2,2,1)');
-        expect(PUSHSTUB).not.toHaveBeenCalled();
+        expect(PUSH_STUB).not.toHaveBeenCalled();
     });
     it('addFirstCol does not call rememberCol if the argument is false', () => {
         component.addFirstCol(false);
@@ -217,14 +217,14 @@ describe('ColourSelectorComponent', () => {
     });
     it('showList shows the colours of the remembered list on toggle', () => {
         component.show = false;
-        component.rememberCol(CLRTEST);
+        component.rememberCol(CLR_TEST);
         component.showList();
         fixture.detectChanges();
         expect(fixture.debugElement.query(By.css('.colEl0'))).toBeTruthy();
     });
     it('showList hides the colours of the remembered list on toggle', () => {
         component.show = true;
-        component.rememberCol(CLRTEST);
+        component.rememberCol(CLR_TEST);
         component.showList();
         fixture.detectChanges();
         expect(fixture.debugElement.query(By.css('.colEl0'))).toBeNull();

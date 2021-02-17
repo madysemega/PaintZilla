@@ -67,7 +67,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnChanges {
             const INDEX_THIRD_COMMA = this.hue.split(',', NB_COL).join(',').length;
             hueDrawn = this.hue.substring(0, INDEX_THIRD_COMMA + 1) + '1)';
         }
-        console.log('le hue est', this.hue);
         this.ctx.fillStyle = hueDrawn;
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
