@@ -1,3 +1,6 @@
+// source: https://www.w3schools.com/howto/howto_css_switch.asp
+// source: https://malcoded.com/posts/angular-color-picker/
+
 :host {
     display: block;
     width: 316px;
@@ -37,11 +40,11 @@
     line-height: 32px;
   }
 
-  #truc1 {
+  #paletteBox {
     float: left;
   }
 
-  #truc2 {
+  #sliderBox {
     float: left;
   }
 
