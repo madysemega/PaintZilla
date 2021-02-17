@@ -30,9 +30,8 @@ export class ColourSliderComponent implements AfterViewInit {
     constructor(public service: ColourToolService) {}
 
     ngAfterViewInit(): void {
-        
         this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        
+
         this.width = this.canvas.nativeElement.width;
         this.height = this.canvas.nativeElement.height;
         this.ctx.clearRect(0, 0, this.width, this.height);
