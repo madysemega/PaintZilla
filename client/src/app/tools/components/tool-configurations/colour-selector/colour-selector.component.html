@@ -27,7 +27,7 @@ step="0.1" min="0" max="1" [value]="value" (change)="changeOpacity($event)"></ma
 <br>
 <mat-icon svgIcon="history-24px" (click)=showList()></mat-icon>
 <div *ngIf="show">
-  <span *ngFor="let element of service.colourList; let i=index">
+  <span *ngFor="let element of service.rememberedColours; let i=index">
     <div id="colHis" [ngClass]="'colEl'+(i)" [ngStyle]="{'background-color' : element || 'white'}"
     (click)="addColEv($event)" (contextmenu)="addSecEv($event)"></div>
   </span>
