@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { MaterialModule } from '@app/material.module';
+import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
@@ -20,8 +25,8 @@ describe('EllipseToolConfigurationComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
-            declarations: [EllipseToolConfigurationComponent, ShapeToolConfigurationComponent],
+            imports: [MatButtonToggleModule, MatIconModule, MatSliderModule, MatDividerModule, MatTooltipModule],
+            declarations: [EllipseToolConfigurationComponent, ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: EllipseService, useValue: ellipseToolStub }],
         }).compileComponents();
     }));
