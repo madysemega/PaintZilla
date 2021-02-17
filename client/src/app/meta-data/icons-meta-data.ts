@@ -57,6 +57,4 @@ export class IconsMetaData {
             },
         ];
     }
-
-    private constructor() {}
 }
