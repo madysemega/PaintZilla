@@ -106,16 +106,16 @@ export class ColourSelectorComponent {
     }
 
     rememberCol(newCol: string): void {
-        if (this.service.colourList.find((col) => col === newCol)) {
+        if (this.service.rememberedColours.find((col) => col === newCol)) {
             return;
         }
         const LIST_SIZE = 10;
         this.setOpacityOne(newCol);
-        if (this.service.colourList.length < LIST_SIZE) {
-            this.service.colourList.push(newCol);
-        } else if (this.service.colourList.length === LIST_SIZE) {
-            this.service.colourList.shift();
-            this.service.colourList.push(newCol);
+        if (this.service.rememberedColours.length < LIST_SIZE) {
+            this.service.rememberedColours.push(newCol);
+        } else if (this.service.rememberedColours.length === LIST_SIZE) {
+            this.service.rememberedColours.shift();
+            this.service.rememberedColours.push(newCol);
         }
     }
 
