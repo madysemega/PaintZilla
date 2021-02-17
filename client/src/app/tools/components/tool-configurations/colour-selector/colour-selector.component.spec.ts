@@ -84,17 +84,17 @@ describe('ColourSelectorComponent', () => {
         expect(component.service.secondaryColour).toEqual(CLR_TEST);
     });
     it('rememberCol does not remember the same colour twice', () => {
-        component.service.colourList.push(CLR_TEST);
+        component.service.rememberedColours.push(CLR_TEST);
         component.rememberCol(CLR_TEST);
-        expect(component.service.colourList.length).toEqual(1);
+        expect(component.service.rememberedColours.length).toEqual(1);
     });
     it('rememberCol adds colour to the list without shifting if the size is under 10', () => {
-        component.service.colourList = [];
+        component.service.rememberedColours = [];
         component.rememberCol(CLR_TEST);
-        expect(component.service.colourList[0]).toEqual(CLR_TEST);
+        expect(component.service.rememberedColours[0]).toEqual(CLR_TEST);
     });
     it('rememberCol shifts elements when listColour is pushed when its length is 10', () => {
-        component.service.colourList = [
+        component.service.rememberedColours = [
             'rgba(0,0,0,1)',
             'rgba(1,0,0,1)',
             'rgba(0,1,0,1)',
@@ -108,10 +108,10 @@ describe('ColourSelectorComponent', () => {
         ];
         component.rememberCol('rgba(0,0,2,1)');
         const NEW_INDEX = 8;
-        expect(component.service.colourList.indexOf(CLR_TEST)).toEqual(NEW_INDEX);
+        expect(component.service.rememberedColours.indexOf(CLR_TEST)).toEqual(NEW_INDEX);
     });
-    it('rememberCol does not push to colourList when its length is above 10', () => {
-        component.service.colourList = [
+    it('rememberCol does not push to rememberedColours when its length is above 10', () => {
+        component.service.rememberedColours = [
             'rgba(0,0,0,1)',
             'rgba(1,0,0,1)',
             'rgba(0,1,0,1)',
@@ -124,7 +124,7 @@ describe('ColourSelectorComponent', () => {
             'rgba(0,0,2,1)',
             'rgba(0,2,2,1)',
         ];
-        const PUSH_STUB = spyOn(component.service.colourList, 'push').and.stub();
+        const PUSH_STUB = spyOn(component.service.rememberedColours, 'push').and.stub();
         PUSH_STUB.and.callThrough();
         component.rememberCol('rgba(2,2,2,1)');
         expect(PUSH_STUB).not.toHaveBeenCalled();

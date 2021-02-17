@@ -32,7 +32,7 @@ export class ColourToolService {
     onPrimaryColourChanged: EventEmitter<string>;
     onSecondaryColourChanged: EventEmitter<string>;
 
-    colourList: string[] = [];
+    rememberedColours: string[] = [];
 
     constructor() {
         this.onPrimaryColourChanged = new EventEmitter();
