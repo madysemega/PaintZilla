@@ -4,13 +4,13 @@ import { FillStyleProperty } from './fill-style-property';
 describe('FillStyleProperty', () => {
     let fillStyleProperty: FillStyleProperty;
 
-    const fillStyle = '#424242';
+    const FILL_STYLE = '#424242';
 
     let canvasTestHelper: CanvasTestHelper;
     let ctxStub: CanvasRenderingContext2D;
 
     beforeEach(() => {
-        fillStyleProperty = new FillStyleProperty(fillStyle);
+        fillStyleProperty = new FillStyleProperty(FILL_STYLE);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -18,6 +18,6 @@ describe('FillStyleProperty', () => {
 
     it("when apply() is called, it should set the canvas rendering context's fillStyle property to the colour specified upon instantiation", () => {
         fillStyleProperty.apply(ctxStub);
-        expect(ctxStub.fillStyle).toBe(fillStyle);
+        expect(ctxStub.fillStyle).toEqual(FILL_STYLE);
     });
 });
