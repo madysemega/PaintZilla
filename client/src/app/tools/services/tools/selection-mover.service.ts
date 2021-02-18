@@ -8,6 +8,7 @@ import { SelectionService } from './selection.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SelectionMoverService extends Tool {
   private selectionCanvas: HTMLCanvasElement;
 
@@ -37,11 +38,17 @@ export class SelectionMoverService extends Tool {
       if(!this.isClickOnSelection(event)){
          this.selectionService.isSelectionBeingMoved = false;
          this.mouseDown = false;
+         this.drawingService.clearCanvas(this.drawingService.previewCtx);
+         this.drawingService.baseCtx.drawImage(
+          this.selectionCanvas, this.selectionAnchorPoint.x, this.selectionAnchorPoint.y,
+          this.selectionCanvas.width, this.selectionCanvas.height,
+          this.selectionTopLeft.x, this.selectionTopLeft.y,
+          this.selectionCanvas.width, this.selectionCanvas.height);
+
       }
         this.mouseLastPos.x = mousePosition.x;
         this.mouseLastPos.y = mousePosition.y;
     }
-
   }
 
   isClickOnSelection(event: MouseEvent): boolean {

@@ -134,11 +134,9 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             this.selectionCanvasCTX.drawImage(this.drawingService.canvas, 0, 0);
             this.endPoint = endPoint;
             //this.selectionCanvasCTX.clearRect(0,0,this.selectionCanvas.width, this.selectionCanvas.height);
-
         }
 
         this.selectionService.drawSelectionEllipse(center, radii);
-
 
         if(isFinalDrawing){
             this.selectionService.drawPostSelectionEllipse(center, radii);
