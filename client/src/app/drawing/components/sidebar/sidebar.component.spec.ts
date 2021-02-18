@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { MaterialModule } from '@app/material.module';
 import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
 import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { ColourSliderComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-slider/colour-slider.component';
@@ -66,7 +68,7 @@ describe('SidebarComponent', () => {
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,

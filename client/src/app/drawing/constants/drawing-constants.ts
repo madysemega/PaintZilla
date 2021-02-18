@@ -1,5 +1,5 @@
-export const DEFAULT_WIDTH = 945;
-export const DEFAULT_HEIGHT = 920;
+export const DEFAULT_WIDTH = 845;
+export const DEFAULT_HEIGHT = 925;
 export const BORDER_SIZE = 5;
 export const MINIMUM_SIZE = 250;
 export const MAX_WIDTH = 2365;
