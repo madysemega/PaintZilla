@@ -7,14 +7,18 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { ColourToolService } from './colour-tool.service';
+import { SelectionService } from '@app/tools/services/tools/selection.service'
+import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service'
 
 @Injectable({
     providedIn: 'root',
 })
+
 export class EllipseService extends ShapeTool implements ISelectableTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     startPoint: Vec2 = { x: 0, y: 0 };
+    endPoint : Vec2;
     lastMousePosition: Vec2;
 
     isShiftDown: boolean = false;
@@ -22,69 +26,135 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     private selectionCanvas : HTMLCanvasElement ;
     private selectionCanvasCTX : CanvasRenderingContext2D;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    /*private state : SelectionState;
+    private firstTime : boolean;
+    anchorPoint: Vec2 = { x: 0, y: 0 };
+    selectionPos: Vec2 = { x: 0, y: 0 };*/
+    
+    constructor(drawingService: DrawingService, private colourService: ColourToolService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
         this.selectionCanvas = document.createElement('canvas');
         this.selectionCanvasCTX= this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
-        
     }
 
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
+        this.selectionService.isSelectionBeingMoved = false;
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown) {
+        if( this.selectionService.isSelectionBeingMoved ){
+            this.selectionMoverService.onMouseDown(event);
+        }
+        else{
+            this.mouseDown = event.button === MouseButton.Left;
+        
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
         }
+
+        /*
+        if(this.mouseDown && this.state == SelectionState.Standby){
+            this.mouseDownCoord = this.getPositionFromMouse(event);
+            const xInSelection : boolean = this.mouseDownCoord.x > Math.min(this.startPoint.x, this.endPoint.x) 
+            && this.mouseDownCoord.x < Math.max(this.startPoint.x, this.endPoint.x);
+            const yInSelection : boolean = this.mouseDownCoord.y > Math.min(this.startPoint.y, this.endPoint.y) 
+            && this.mouseDownCoord.y < Math.max(this.startPoint.y, this.endPoint.y);
+            console.log(this.startPoint.x + " " + this.startPoint.y);
+            console.log(this.endPoint.x + " " + this.endPoint.y);
+            console.log(this.mouseDownCoord.x + " " + this.mouseDownCoord.y);
+            if(xInSelection && yInSelection){
+                
+            }
+        }*/
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.lastMousePosition = mousePosition;
-            this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
+        if(this.selectionService.isSelectionBeingMoved ){
+            this.selectionMoverService.onMouseUp(event);
         }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.mouseDown = false;
+        else{
+            if (this.mouseDown) {
+                const mousePosition = this.getPositionFromMouse(event);
+                this.lastMousePosition = mousePosition;
+                this.drawEllipse(true, this.startPoint, mousePosition);
+                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition)
+            }
+            //this.drawingService.clearCanvas(this.drawingService.previewCtx);
+            this.mouseDown = false;
+        }
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.lastMousePosition = mousePosition;
-
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.drawEllipse(this.drawingService.previewCtx, this.startPoint, mousePosition);
-            this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition);
+        if(this.selectionService.isSelectionBeingMoved ){
+            this.selectionMoverService.onMouseMove(event);
         }
+        else{
+            const mousePosition = this.getPositionFromMouse(event);
+            if (this.mouseDown) {
+                this.lastMousePosition = mousePosition;
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.drawEllipse(false, this.startPoint, mousePosition);
+                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition);
+            }
+        }
+        
+        /*else if(this.mouseDown && this.firstTime && this.state == SelectionState.Standby){
+            console.log("dddddddddd")
+            this.anchorPoint.x = mousePosition.x;
+            this.anchorPoint.y = mousePosition.y;
+            this.firstTime = false;
+        }
+
+        else if(this.mouseDown && this.state == SelectionState.Standby){
+            this.drawingService.clearCanvas(this.drawingService.previewCtx);
+            const movX = mousePosition.x - this.anchorPoint.x;
+            const movY = mousePosition.y - this.anchorPoint.y;
+
+            this.selectionPos.x = this.startPoint.x + movX;
+            this.selectionPos.y = this.startPoint.y + movY;
+
+            this.drawingService.previewCtx.drawImage(
+                this.selectionCanvas, this.startPoint.x, this.startPoint.y,
+                this.selectionCanvas.width, this.selectionCanvas.height,
+                this.selectionPos.x, this.selectionPos.y, 
+                this.selectionCanvas.width, this.selectionCanvas.height);
+        }*/
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Shift') {
-            this.isShiftDown = true;
+        if(this.selectionService.isSelectionBeingMoved ){
+            this.selectionMoverService.onKeyDown(event);
+        }
+        else{
+            if (event.key === 'Shift') {
+                this.isShiftDown = true;
 
-            if (this.mouseDown) {
-                this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
-                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                if (this.mouseDown) {
+                    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                    this.drawEllipse(false, this.startPoint, this.lastMousePosition);
+                    this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                }
             }
         }
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.key === 'Shift') {
-            this.isShiftDown = false;
+        if(this.selectionService.isSelectionBeingMoved ){
+            this.selectionMoverService.onKeyUp(event);
+        }
+        else{
+            if (event.key === 'Shift') {
+                this.isShiftDown = false;
 
-            if (this.mouseDown) {
-                this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                this.drawEllipse(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
-                this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                if (this.mouseDown) {
+                    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                    this.drawEllipse(false, this.startPoint, this.lastMousePosition);
+                    this.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                }
             }
         }
     }
@@ -132,9 +202,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         ctx.restore();
     }
 
-    drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+    drawEllipse(isFinalDrawing : boolean , startPoint: Vec2, endPoint: Vec2): void {
+        let ctx : CanvasRenderingContext2D = this.drawingService.previewCtx;
         this.selectionCanvas.width = this.drawingService.canvas.width;
         this.selectionCanvas.height = this.drawingService.canvas.height;
+
+        //console.log(startPoint.x +" "+ startPoint.y +"    "+ endPoint.x +" "+endPoint.y);
 
         if (this.isShiftDown) {
             endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
@@ -146,17 +219,17 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(endPoint.x - startPoint.x) / 2 - this.lineWidth / 2,
-            y: Math.abs(endPoint.y - startPoint.y) / 2 - this.lineWidth / 2,
+            x: Math.abs(endPoint.x - startPoint.x) / 2,
+            y: Math.abs(endPoint.y - startPoint.y) / 2,
         };
         
-        if(ctx == this.drawingService.baseCtx){
+        if(isFinalDrawing){
             this.selectionCanvasCTX.beginPath();
             this.selectionCanvasCTX.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
             this.selectionCanvasCTX.clip();
             this.selectionCanvasCTX.drawImage(this.drawingService.canvas, 0, 0);
-            ctx.drawImage(this.selectionCanvas, this.startPoint.x, this.startPoint.y, this.selectionCanvas.width, this.selectionCanvas.height,0,0 , this.selectionCanvas.width, this.selectionCanvas.height);
-            this.selectionCanvasCTX.clearRect(0,0,this.selectionCanvas.width, this.selectionCanvas.height);
+            this.endPoint = endPoint;
+            //this.selectionCanvasCTX.clearRect(0,0,this.selectionCanvas.width, this.selectionCanvas.height);
         }
 
         ctx.save();
@@ -165,5 +238,21 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
+
+        if(isFinalDrawing){
+            let topLeft : Vec2={x:startPoint.x, y:startPoint.y};
+            console.log(topLeft.x +" "+ topLeft.y);
+            if(startPoint.x > endPoint.x){
+                topLeft.x = endPoint.x; 
+                this.endPoint.x = startPoint.x;
+            }
+            if(startPoint.y > endPoint.y){
+                topLeft.y = endPoint.y;
+                this.endPoint.y = startPoint.y;
+            }
+            console.log(topLeft.x +" "+ topLeft.y);
+            this.selectionMoverService.setSelection(this.selectionCanvas, topLeft, this.endPoint);
+            this.selectionService.isSelectionBeingMoved = true;
+        }
     }
 }
