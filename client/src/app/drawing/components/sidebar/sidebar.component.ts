@@ -11,9 +11,9 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class SidebarComponent implements OnInit {
     selectedToolName: string;
     toolNames: string[];
-    iconName: string;
+
     constructor(
-        public toolSelectorService: ToolSelectorService,
+        private toolSelectorService: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
         public drawingService: DrawingService,
     ) {
