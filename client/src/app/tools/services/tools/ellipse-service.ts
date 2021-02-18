@@ -6,7 +6,6 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 import { SelectionService } from '@app/tools/services/tools/selection.service'
 import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service'
 
@@ -24,7 +23,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     private selectionCanvas : HTMLCanvasElement ;
     private selectionCanvasCTX : CanvasRenderingContext2D;
     
-    constructor(drawingService: DrawingService, private colourService: ColourToolService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService) {
+    constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
