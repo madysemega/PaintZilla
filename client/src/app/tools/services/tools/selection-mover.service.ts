@@ -13,8 +13,8 @@ export class SelectionMoverService extends Tool {
 
   private selectionAnchorPoint: Vec2;
 
-  private selectionPointA: Vec2;
-  private selectionPointB: Vec2;
+  private selectionTopLeft: Vec2;
+  private selectionBottomRight: Vec2;
 
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
 
@@ -26,8 +26,8 @@ export class SelectionMoverService extends Tool {
   setSelection(selectionCanvas: HTMLCanvasElement, selectionStartPoint: Vec2, selectionEndPoint: Vec2 ) {
     this.selectionCanvas = selectionCanvas;
     this.selectionAnchorPoint = {x: selectionStartPoint.x, y: selectionStartPoint.y};
-    this.selectionPointA =  {x: selectionStartPoint.x, y: selectionStartPoint.y};
-    this.selectionPointB =  {x: selectionEndPoint.x, y: selectionEndPoint.y};
+    this.selectionTopLeft =  {x: selectionStartPoint.x, y: selectionStartPoint.y};
+    this.selectionBottomRight =  {x: selectionEndPoint.x, y: selectionEndPoint.y};
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -35,8 +35,8 @@ export class SelectionMoverService extends Tool {
     const mousePosition = this.getPositionFromMouse(event);
     if (this.mouseDown) {
       if(!this.isClickOnSelection(event)){
-        console.log("ooooout");
          this.selectionService.isSelectionBeingMoved = false;
+         this.mouseDown = false;
       }
         this.mouseLastPos.x = mousePosition.x;
         this.mouseLastPos.y = mousePosition.y;
@@ -46,10 +46,10 @@ export class SelectionMoverService extends Tool {
 
   isClickOnSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
-    const xInSelection: boolean = mousePosition.x > Math.min(this.selectionPointA.x, this.selectionPointB.x)
-      && mousePosition.x < Math.max(this.selectionPointA.x, this.selectionPointB.x);
-    const yInSelection: boolean = mousePosition.y > Math.min(this.selectionPointA.y, this.selectionPointB.y)
-      && mousePosition.y < Math.max(this.selectionPointA.y, this.selectionPointB.y);
+    const xInSelection: boolean = mousePosition.x > Math.min(this.selectionTopLeft.x, this.selectionBottomRight.x)
+      && mousePosition.x < Math.max(this.selectionTopLeft.x, this.selectionBottomRight.x);
+    const yInSelection: boolean = mousePosition.y > Math.min(this.selectionTopLeft.y, this.selectionBottomRight.y)
+      && mousePosition.y < Math.max(this.selectionTopLeft.y, this.selectionBottomRight.y);
     return (xInSelection && yInSelection);
   }
 
@@ -67,18 +67,24 @@ export class SelectionMoverService extends Tool {
       this.mouseLastPos.x += mouseMovement.x;
       this.mouseLastPos.y += mouseMovement.y;
 
-      this.selectionPointA.x += mouseMovement.x;
-      this.selectionPointA.y += mouseMovement.y;
+      this.selectionTopLeft.x += mouseMovement.x;
+      this.selectionTopLeft.y += mouseMovement.y;
       
-      this.selectionPointB.x += mouseMovement.x;
-      this.selectionPointB.y += mouseMovement.y;
+      this.selectionBottomRight.x += mouseMovement.x;
+      this.selectionBottomRight.y += mouseMovement.y;
 
 
       this.drawingService.previewCtx.drawImage(
         this.selectionCanvas, this.selectionAnchorPoint.x, this.selectionAnchorPoint.y,
         this.selectionCanvas.width, this.selectionCanvas.height,
-        this.selectionPointA.x, this.selectionPointA.y,
+        this.selectionTopLeft.x, this.selectionTopLeft.y,
         this.selectionCanvas.width, this.selectionCanvas.height);
+
+      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
+      let center: Vec2={x:0, y:0};
+      let radii: Vec2={x:0, y:0};
+      this.selectionService.getEllipseParam(this.selectionTopLeft, this.selectionBottomRight, center, radii);
+      this.selectionService.drawSelectionEllipse(center, radii);
     }
 /*
     if (this.mouseDown && this.state == SelectionState.Selecting) {
