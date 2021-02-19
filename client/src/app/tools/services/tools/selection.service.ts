@@ -55,13 +55,6 @@ export class SelectionService {
     ctx.restore();
 }
 
-
-   /* //console.log(startPoint.x +" "+ startPoint.y +"    "+ endPoint.x +" "+endPoint.y);
-
-    if (this.isShiftDown) {
-      endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
-  }*/
-
 getEllipseParam(startPoint: Vec2, endPoint: Vec2, center: Vec2, radii: Vec2): void {
     center.x = (startPoint.x + endPoint.x) / 2;
     center.y = (startPoint.y + endPoint.y) / 2;
