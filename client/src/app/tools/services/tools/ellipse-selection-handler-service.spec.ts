@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EllipseSelectionRendererService } from './ellipse-selection-renderer.service';
+import { EllipseSelectionRendererService } from './ellipse-selection-handler-service';
 
 describe('SelectionRendererService', () => {
   let service: EllipseSelectionRendererService;

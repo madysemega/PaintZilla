@@ -3,7 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
-import { EllipseSelectionRendererService } from './ellipse-selection-renderer.service';
+import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { SelectionService } from './selection.service';
 
 @Injectable({
@@ -11,34 +11,18 @@ import { SelectionService } from './selection.service';
 })
 
 export class SelectionMoverService extends Tool {
-  private selectionCanvas: HTMLCanvasElement;
-  private selectionCanvasCtx: CanvasRenderingContext2D;
 
-  private selectionAnchorPoint: Vec2;
-
-  private selectionTopLeft: Vec2;
-  private selectionBottomRight: Vec2;
-
-  private targetTopLeft: Vec2;
-
-  private accumulatedMovement: Vec2;
-  private modificationCanvas: HTMLCanvasElement;
-  private modificationCanvasCtx: CanvasRenderingContext2D;
-
-  public initialPos : Vec2;
-  public canvasClone: HTMLCanvasElement;
-  public canvasCloneCtx: CanvasRenderingContext2D;
-
-
+  private topLeft: Vec2;
+  private bottomRight: Vec2;
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
 
-  constructor(drawingService: DrawingService, private selectionService: SelectionService, private ellipseSelectionRenderer: EllipseSelectionRendererService) {
+  constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
     this.key = 'selection-mover';
   }
 
-  setSelection(selectionCanvas: HTMLCanvasElement, selectionCanvasCtx: CanvasRenderingContext2D, selectionStartPoint: Vec2, selectionEndPoint: Vec2, targetTopLeft: Vec2) {
-    this.selectionCanvas = selectionCanvas;
+  setSelection(topLeft: Vec2,  bottomRight: Vec2) {
+   /* this.selectionCanvas = selectionCanvas;
     this.selectionCanvasCtx = selectionCanvasCtx;
     this.selectionAnchorPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
     this.selectionTopLeft = { x: selectionStartPoint.x, y: selectionStartPoint.y };
@@ -48,26 +32,20 @@ export class SelectionMoverService extends Tool {
     this.modificationCanvasCtx = this.modificationCanvas.getContext('2d') as CanvasRenderingContext2D;
     this.modificationCanvas.width = this.drawingService.canvas.width;
     this.modificationCanvas.height = this.drawingService.canvas.height;
-    this.targetTopLeft = targetTopLeft;
+    this.targetTopLeft = targetTopLeft;*/
+    this.topLeft = topLeft;
+    this.bottomRight = bottomRight;
   }
 
   onMouseDown(event: MouseEvent): void {
     this.mouseDown = event.button === MouseButton.Left;
     const mousePosition = this.getPositionFromMouse(event);
+
     if (this.mouseDown) {
       if (!this.isClickOnSelection(event)) {
         this.selectionService.isSelectionBeingMoved = false;
         this.mouseDown = false;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
-        this.ellipseSelectionRenderer.sourceTopLeft = { x: 0, y: 0 };
-        this.ellipseSelectionRenderer.targetTopLeft = { x: this.targetTopLeft.x, y: this.targetTopLeft.y };
-        this.ellipseSelectionRenderer.isFillWhiteBehindSelection = true;
-        this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
-        this.ellipseSelectionRenderer.ctx = this.drawingService.baseCtx;
-        this.ellipseSelectionRenderer.render();
-
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
       }
       this.mouseLastPos.x = mousePosition.x;
       this.mouseLastPos.y = mousePosition.y;
@@ -75,11 +53,12 @@ export class SelectionMoverService extends Tool {
   }
 
   isClickOnSelection(event: MouseEvent): boolean {
+    //console.log(this.topLeft.x +" "+ this.topLeft.y +" "+ this.bottomRight.x +" "+ this.bottomRight.y);
     const mousePosition = this.getPositionFromMouse(event);
-    const xInSelection: boolean = mousePosition.x > Math.min(this.selectionTopLeft.x, this.selectionBottomRight.x)
-      && mousePosition.x < Math.max(this.selectionTopLeft.x, this.selectionBottomRight.x);
-    const yInSelection: boolean = mousePosition.y > Math.min(this.selectionTopLeft.y, this.selectionBottomRight.y)
-      && mousePosition.y < Math.max(this.selectionTopLeft.y, this.selectionBottomRight.y);
+    const xInSelection: boolean = mousePosition.x > Math.min(this.topLeft.x, this.bottomRight.x)
+      && mousePosition.x < Math.max(this.topLeft.x, this.bottomRight.x);
+    const yInSelection: boolean = mousePosition.y > Math.min(this.topLeft.y, this.bottomRight.y)
+      && mousePosition.y < Math.max(this.topLeft.y, this.bottomRight.y);
     return (xInSelection && yInSelection);
   }
 
@@ -97,33 +76,22 @@ export class SelectionMoverService extends Tool {
       this.mouseLastPos.x += mouseMovement.x;
       this.mouseLastPos.y += mouseMovement.y;
 
-      this.selectionTopLeft.x += mouseMovement.x;
-      this.selectionTopLeft.y += mouseMovement.y;
+      this.topLeft.x +=mouseMovement.x;
+      this.topLeft.y +=mouseMovement.y;
 
-      this.selectionBottomRight.x += mouseMovement.x;
-      this.selectionBottomRight.y += mouseMovement.y;
+      this.bottomRight.x +=mouseMovement.x;
+      this.bottomRight.y +=mouseMovement.y;
 
-      this.targetTopLeft.x += mouseMovement.x;
-      this.targetTopLeft.y += mouseMovement.y;
-
-      this.ellipseSelectionRenderer.sourceTopLeft = { x: 0, y: 0 };
-      this.ellipseSelectionRenderer.targetTopLeft = { x: this.targetTopLeft.x, y: this.targetTopLeft.y };
-      this.ellipseSelectionRenderer.isFillWhiteBehindSelection = false;
-      this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
-      this.ellipseSelectionRenderer.ctx = this.drawingService.previewCtx;
-      this.ellipseSelectionRenderer.render();
-      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
-
-      //this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
-      //let center: Vec2 = { x: 0, y: 0 };
-      //let radii: Vec2 = { x: 0, y: 0 };
+      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
       //this.selectionService.getEllipseParam(this.selectionTopLeft, this.selectionBottomRight, center, radii);
       //this.selectionService.drawSelectionEllipse(center, radii);
+      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
   }
 
   onKeyDown(event: KeyboardEvent): void {
     if (event.key == 'z') {
+      /*
       console.log("d");
 
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
@@ -145,9 +113,6 @@ export class SelectionMoverService extends Tool {
       this.drawingService.baseCtx.beginPath();
       this.drawingService.baseCtx.drawImage(this.selectionCanvas, 0,0);
       this.drawingService.baseCtx.closePath();
-
-
-
 
       //this.drawingService.clearCanvas(this.selectionCanvasCtx);
       //this.modificationCanvasCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
