@@ -126,12 +126,13 @@ export class SelectionMoverService extends Tool {
     if (event.key == 'z') {
       console.log("d");
 
-      //this.drawingService.clearCanvas(this.drawingService.baseCtx);
+      this.drawingService.clearCanvas(this.drawingService.baseCtx);
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
       this.modificationCanvasCtx.beginPath();
       this.modificationCanvasCtx.translate(this.drawingService.canvas.width/2, this.drawingService.canvas.height/2);
-      this.modificationCanvasCtx.rotate((45*Math.PI)/180);
+      this.modificationCanvasCtx.transform(1.5,0,0,1,0,0);
+      //this.modificationCanvasCtx.rotate((45*Math.PI)/180);
       this.modificationCanvasCtx.translate(-this.drawingService.canvas.width/2, -this.drawingService.canvas.height/2);
       this.modificationCanvasCtx.drawImage(this.selectionCanvas, 0,0);
       this.modificationCanvasCtx.closePath();
