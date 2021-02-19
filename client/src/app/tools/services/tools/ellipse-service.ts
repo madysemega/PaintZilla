@@ -8,6 +8,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { SelectionService } from '@app/tools/services/tools/selection.service'
 import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service'
+import { EllipseSelectionRendererService } from '@app/tools/services/tools/ellipse-selection-renderer.service'
 
 @Injectable({
     providedIn: 'root',
@@ -17,18 +18,18 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     startPoint: Vec2 = { x: 0, y: 0 };
-    endPoint : Vec2;
+    finalEndPoint: Vec2;
     lastMousePosition: Vec2;
 
-    private selectionCanvas : HTMLCanvasElement ;
-    private selectionCanvasCTX : CanvasRenderingContext2D;
-    
-    constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService) {
+    private selectionCanvas: HTMLCanvasElement;
+    private selectionCanvasCtx: CanvasRenderingContext2D;
+
+    constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService, private ellipseSelectionRenderer: EllipseSelectionRendererService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
         this.selectionCanvas = document.createElement('canvas');
-        this.selectionCanvasCTX= this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
+        this.selectionCanvasCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
     }
 
     onToolSelect(): void {
@@ -37,22 +38,21 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if( this.selectionService.isSelectionBeingMoved ){
+        if (this.selectionService.isSelectionBeingMoved) {
             this.selectionMoverService.onMouseDown(event);
         }
-      
-            this.mouseDown = event.button === MouseButton.Left;
         
+            this.mouseDown = event.button === MouseButton.Left;
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
     }
 
     onMouseUp(event: MouseEvent): void {
-        if(this.selectionService.isSelectionBeingMoved ){
+        if (this.selectionService.isSelectionBeingMoved) {
             this.selectionMoverService.onMouseUp(event);
         }
-        else{
+        else {
             if (this.mouseDown) {
                 const mousePosition = this.getPositionFromMouse(event);
                 this.lastMousePosition = mousePosition;
@@ -64,10 +64,10 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if(this.selectionService.isSelectionBeingMoved ){
+        if (this.selectionService.isSelectionBeingMoved) {
             this.selectionMoverService.onMouseMove(event);
         }
-        else{
+        else {
             const mousePosition = this.getPositionFromMouse(event);
             if (this.mouseDown) {
                 this.lastMousePosition = mousePosition;
@@ -79,13 +79,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if(this.selectionService.isSelectionBeingMoved ){
+        if (this.selectionService.isSelectionBeingMoved) {
             this.selectionMoverService.onKeyDown(event);
         }
-        else{
-            if (event.key === 'Shift') {
-                this.selectionService.isShiftDown = true;
-
+        if (event.key === 'Shift') {
+            this.selectionService.isShiftDown = true;
+            if (!this.selectionService.isSelectionBeingMoved) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
                     this.drawEllipse(false, this.startPoint, this.lastMousePosition);
@@ -96,13 +95,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if(this.selectionService.isSelectionBeingMoved ){
+        if (this.selectionService.isSelectionBeingMoved) {
             this.selectionMoverService.onKeyUp(event);
         }
-        else{
-            if (event.key === 'Shift') {
-                this.selectionService.isShiftDown = false;
-
+        if (event.key === 'Shift') {
+            this.selectionService.isShiftDown = false;
+            if (!this.selectionService.isSelectionBeingMoved) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
                     this.drawEllipse(false, this.startPoint, this.lastMousePosition);
@@ -112,55 +110,64 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         }
     }
 
-    drawEllipse(isFinalDrawing : boolean , startPoint: Vec2, endPoint: Vec2): void {
+    drawEllipse(isFinalDrawing: boolean, startPoint: Vec2, endPoint: Vec2): void {
         this.selectionCanvas.width = this.drawingService.canvas.width;
         this.selectionCanvas.height = this.drawingService.canvas.height;
-
-        //console.log(startPoint.x +" "+ startPoint.y +"    "+ endPoint.x +" "+endPoint.y);
 
         if (this.selectionService.isShiftDown) {
             endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
         }
 
-        let center: Vec2={x:0, y:0};
-        let radii: Vec2={x:0, y:0};
+        let center: Vec2 = { x: 0, y: 0 };
+        let radii: Vec2 = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
 
-    
-        if(isFinalDrawing){
-            this.selectionCanvasCTX.beginPath();
-            this.selectionCanvasCTX.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-            this.selectionCanvasCTX.clip();
-            this.selectionCanvasCTX.drawImage(this.drawingService.canvas, 0, 0);
-            this.endPoint = endPoint;
-            //this.selectionCanvasCTX.clearRect(0,0,this.selectionCanvas.width, this.selectionCanvas.height);
+        if (isFinalDrawing) {
+            this.selectionCanvasCtx.beginPath();
+            this.selectionCanvasCtx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+            this.selectionCanvasCtx.clip();
+            this.selectionCanvasCtx.drawImage(this.drawingService.canvas, 0, 0);
+            this.finalEndPoint = endPoint;
         }
 
         this.selectionService.drawSelectionEllipse(center, radii);
 
-        if(isFinalDrawing){
-            this.selectionService.drawPostSelectionEllipse(center, radii);
+        if (isFinalDrawing) {
 
-            let topLeft : Vec2={x:startPoint.x, y:startPoint.y};
-            console.log(topLeft.x +" "+ topLeft.y);
-            if(startPoint.x > endPoint.x){
-                topLeft.x = endPoint.x; 
-                this.endPoint.x = startPoint.x;
+            let topLeft: Vec2 = { x: startPoint.x, y: startPoint.y };
+            if (startPoint.x > endPoint.x) {
+                topLeft.x = endPoint.x;
+                this.finalEndPoint.x = startPoint.x;
             }
-            if(startPoint.y > endPoint.y){
+            if (startPoint.y > endPoint.y) {
                 topLeft.y = endPoint.y;
-                this.endPoint.y = startPoint.y;
+                this.finalEndPoint.y = startPoint.y;
             }
-            
-            this.drawingService.previewCtx.drawImage(
-            this.selectionCanvas, topLeft.x, topLeft.y,
-            this.selectionCanvas.width, this.selectionCanvas.height,
-            topLeft.x, topLeft.y,
-            this.selectionCanvas.width, this.selectionCanvas.height);
+
+            this.ellipseSelectionRenderer.center = center;
+            this.ellipseSelectionRenderer.radii = radii;
+            this.ellipseSelectionRenderer.sourceTopLeft = topLeft;
+            this.ellipseSelectionRenderer.targetTopLeft = topLeft;
+            this.ellipseSelectionRenderer.isFillWhiteBehindSelection = true;
+            this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
+            this.ellipseSelectionRenderer.ctx = this.drawingService.previewCtx;
+            this.ellipseSelectionRenderer.render();
+
+            /*DO NOT DELETE
+            => push to stack, notice the difference in the ctx 
+            this.ellipseSelectionRenderer.center=center;
+            this.ellipseSelectionRenderer.radii =radii;
+            this.ellipseSelectionRenderer.sourceTopLeft = topLeft;
+            this.ellipseSelectionRenderer.targetTopLeft = topLeft;
+            this.ellipseSelectionRenderer.isFillWhiteBehindSelection = false;
+            this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
+            this.ellipseSelectionRenderer.ctx = this.drawingService.baseCtx;
+            ///////
+            this.ellipseSelectionRenderer.render();
+            */
 
             this.selectionService.isSelectionBeingMoved = true;
-            this.selectionService.isShiftDown = false;
-            this.selectionMoverService.setSelection(this.selectionCanvas, topLeft, this.endPoint);
+            this.selectionMoverService.setSelection(this.selectionCanvas, topLeft, this.finalEndPoint);
         }
 
     }

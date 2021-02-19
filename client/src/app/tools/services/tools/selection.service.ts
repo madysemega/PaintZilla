@@ -69,7 +69,6 @@ getEllipseParam(startPoint: Vec2, endPoint: Vec2, center: Vec2, radii: Vec2): vo
     radii.y= Math.abs(endPoint.y - startPoint.y) / 2;
   }
 
-
 drawSelectionEllipse(center: Vec2, radii: Vec2): void{
     let ctx : CanvasRenderingContext2D = this.drawingService.previewCtx;
     ctx.save();
@@ -91,7 +90,5 @@ drawPostSelectionEllipse(center: Vec2, radii: Vec2){
     ctx.fill();
     ctx.restore();
 }
-
-
 }
 
