@@ -12,11 +12,21 @@ import { SelectionService } from './selection.service';
 
 export class SelectionMoverService extends Tool {
   private selectionCanvas: HTMLCanvasElement;
+  private selectionCanvasCtx: CanvasRenderingContext2D;
 
   private selectionAnchorPoint: Vec2;
 
   private selectionTopLeft: Vec2;
   private selectionBottomRight: Vec2;
+
+  private targetTopLeft: Vec2;
+
+  private accumulatedMovement: Vec2;
+  private modificationCanvas: HTMLCanvasElement;
+  private modificationCanvasCtx: CanvasRenderingContext2D;
+
+  public initialPos : Vec2;
+  public canvasClone: HTMLCanvasElement;
 
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
 
@@ -25,11 +35,16 @@ export class SelectionMoverService extends Tool {
     this.key = 'selection-mover';
   }
 
-  setSelection(selectionCanvas: HTMLCanvasElement, selectionStartPoint: Vec2, selectionEndPoint: Vec2) {
+  setSelection(selectionCanvas: HTMLCanvasElement, selectionCanvasCtx: CanvasRenderingContext2D, selectionStartPoint: Vec2, selectionEndPoint: Vec2, targetTopLeft: Vec2) {
     this.selectionCanvas = selectionCanvas;
+    this.selectionCanvasCtx = selectionCanvasCtx;
     this.selectionAnchorPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
     this.selectionTopLeft = { x: selectionStartPoint.x, y: selectionStartPoint.y };
     this.selectionBottomRight = { x: selectionEndPoint.x, y: selectionEndPoint.y };
+    this.accumulatedMovement = { x: 0, y: 0 };
+    this.modificationCanvas = document.createElement('canvas');
+    this.modificationCanvasCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D;
+    this.targetTopLeft = targetTopLeft;
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -41,12 +56,14 @@ export class SelectionMoverService extends Tool {
         this.mouseDown = false;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-        this.ellipseSelectionRenderer.sourceTopLeft = this.selectionAnchorPoint;
-        this.ellipseSelectionRenderer.targetTopLeft = this.selectionTopLeft;
+        this.ellipseSelectionRenderer.sourceTopLeft = { x: 0, y: 0 };
+        this.ellipseSelectionRenderer.targetTopLeft = { x: this.targetTopLeft.x, y: this.targetTopLeft.y };
         this.ellipseSelectionRenderer.isFillWhiteBehindSelection = true;
         this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
         this.ellipseSelectionRenderer.ctx = this.drawingService.baseCtx;
         this.ellipseSelectionRenderer.render();
+
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
       }
       this.mouseLastPos.x = mousePosition.x;
       this.mouseLastPos.y = mousePosition.y;
@@ -82,22 +99,55 @@ export class SelectionMoverService extends Tool {
       this.selectionBottomRight.x += mouseMovement.x;
       this.selectionBottomRight.y += mouseMovement.y;
 
-      this.ellipseSelectionRenderer.sourceTopLeft = this.selectionAnchorPoint;
-      this.ellipseSelectionRenderer.targetTopLeft = this.selectionTopLeft;
+      this.targetTopLeft.x += mouseMovement.x;
+      this.targetTopLeft.y += mouseMovement.y;
+
+      this.ellipseSelectionRenderer.sourceTopLeft = { x: 0, y: 0 };
+      this.ellipseSelectionRenderer.targetTopLeft = { x: this.targetTopLeft.x, y: this.targetTopLeft.y };
       this.ellipseSelectionRenderer.isFillWhiteBehindSelection = false;
       this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
       this.ellipseSelectionRenderer.ctx = this.drawingService.previewCtx;
       this.ellipseSelectionRenderer.render();
-
       this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
-      let center: Vec2 = { x: 0, y: 0 };
-      let radii: Vec2 = { x: 0, y: 0 };
-      this.selectionService.getEllipseParam(this.selectionTopLeft, this.selectionBottomRight, center, radii);
-      this.selectionService.drawSelectionEllipse(center, radii);
+
+      //this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.selectionTopLeft, this.selectionBottomRight);
+      //let center: Vec2 = { x: 0, y: 0 };
+      //let radii: Vec2 = { x: 0, y: 0 };
+      //this.selectionService.getEllipseParam(this.selectionTopLeft, this.selectionBottomRight, center, radii);
+      //this.selectionService.drawSelectionEllipse(center, radii);
     }
   }
 
   onKeyDown(event: KeyboardEvent): void {
+    if (event.key == 'z') {
+      console.log("d");
+      //this.drawingService.clearCanvas(this.selectionCanvasCtx);
+
+
+      /*this.selectionCanvasCtx.beginPath();
+      this.selectionCanvasCtx.ellipse( this.selectionCanvas.width/2,  this.selectionCanvas.height/2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+      this.selectionCanvasCtx.clip();
+      this.selectionCanvasCtx.drawImage(this.canvasClone, this.initialPos.x , this.initialPos.y);
+      this.selectionCanvasCtx.closePath();*/
+
+      this.selectionCanvasCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
+      this.selectionCanvasCtx.transform(2, 0, 0, 1, 0, 0);
+      this.selectionCanvasCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
+      this.selectionCanvasCtx.drawImage(this.canvasClone, this.initialPos.x , this.initialPos.y);
+
+      //this.selectionCanvasCtx.drawImage(this.drawingService.canvas, this.selectionCanvas.width/2-radii.x- this.startPoint.x , this.selectionCanvas.height/2-radii.y- this.startPoint.y);
+      /*
+      this.modificationCanvas.width = this.drawingService.canvas.width;
+      this.modificationCanvas.height = this.drawingService.canvas.height;
+      this.drawingService.clearCanvas(this.modificationCanvasCtx);
+     /* this.modificationCanvasCtx.translate(this.drawingService.canvas.width / 2, this.drawingService.canvas.height / 2);
+      this.modificationCanvasCtx.rotate(45 * Math.PI / 180);
+      this.modificationCanvasCtx.translate(-this.drawingService.canvas.width / 2, -this.drawingService.canvas.height / 2);
+      this.modificationCanvasCtx.drawImage(this.selectionCanvas, 0, 0);
+      this.drawingService.clearCanvas(this.selectionCanvasCtx);
+      this.selectionCanvasCtx.drawImage(this.modificationCanvas, 0, 0);*/
+    }
+
   }
 
   onKeyUp(event: KeyboardEvent): void {

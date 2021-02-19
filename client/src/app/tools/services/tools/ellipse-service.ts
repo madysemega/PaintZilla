@@ -113,6 +113,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     drawEllipse(isFinalDrawing: boolean, startPoint: Vec2, endPoint: Vec2): void {
         this.selectionCanvas.width = this.drawingService.canvas.width;
         this.selectionCanvas.height = this.drawingService.canvas.height;
+        let canvasClone =document.createElement('canvas');
 
         if (this.selectionService.isShiftDown) {
             endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
@@ -123,21 +124,52 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
 
         if (isFinalDrawing) {
-            this.selectionCanvasCtx.translate(center.x, center.y);
+            canvasClone.width=this.drawingService.canvas.width;
+            canvasClone.height=this.drawingService.canvas.height;
+            (canvasClone.getContext('2d') as CanvasRenderingContext2D).drawImage(this.drawingService.canvas, 0,0);
+
+            /*this.selectionCanvasCtx.translate(this.selectionCanvas.width/2,this.selectionCanvas.height/2 );
             this.selectionCanvasCtx.transform(1,0,0,2,0,0);
-            this.selectionCanvasCtx.translate(-center.x, -center.y);
+            this.selectionCanvasCtx.transform(1,0,0,2,0,0);
+            this.selectionCanvasCtx.transform(1,0,0,3,0,0);
+            this.selectionCanvasCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2 );*/
+            
+            //this.selectionCanvasCtx.save();
             this.selectionCanvasCtx.beginPath();
-            this.selectionCanvasCtx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+            this.selectionCanvasCtx.ellipse( this.selectionCanvas.width/2,  this.selectionCanvas.height/2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
             this.selectionCanvasCtx.clip();
-            this.selectionCanvasCtx.drawImage(this.drawingService.canvas, 0, 0);
+           ////
             this.finalEndPoint = endPoint;
+
+           /* this.selectionCanvasCtx.translate(this.selectionCanvas.width/2,this.selectionCanvas.height/2 );
+            this.selectionCanvasCtx.transform(1,0,0,2,0,0);
+            this.selectionCanvasCtx.transform(1,0,0,2,0,0);
+            this.selectionCanvasCtx.transform(1,0,0,3,0,0);
+            this.selectionCanvasCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2 );*/
+
+            this.selectionCanvasCtx.drawImage(this.drawingService.canvas, this.selectionCanvas.width/2-radii.x- this.startPoint.x , this.selectionCanvas.height/2-radii.y- this.startPoint.y);
+            this.selectionCanvasCtx.closePath();
+            //this.selectionCanvasCtx.restore();
+
+       /*     this.selectionCanvasCtx.translate(this.selectionCanvas.width/2,this.selectionCanvas.height/2 );
+            this.selectionCanvasCtx.transform(1,0,0,2,0,0);
+            //this.selectionCanvasCtx.transform(1,0,0,2,0,0);
+            //this.selectionCanvasCtx.transform(1,0,0,3,0,0);
+            this.selectionCanvasCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2 );
+            //this.drawingService.clearCanvas(this.selectionCanvasCtx);
+            this.selectionCanvasCtx.drawImage(canvasClone, this.selectionCanvas.width/2-radii.x- this.startPoint.x , this.selectionCanvas.height/2-radii.y- this.startPoint.y);
+            */
+            /*canvasClone.width=this.drawingService.canvas.width;
+            canvasClone.width=this.drawingService.canvas.height;
+            (canvasClone.getContext('2d') as CanvasRenderingContext2D).drawImage(this.drawingService.canvas, 0,0);*/
         }
 
         this.selectionService.drawSelectionEllipse(center, radii);
 
         if (isFinalDrawing) {
 
-            let topLeft: Vec2 = { x: startPoint.x, y: startPoint.y };
+            let topLeft: Vec2 = this.startPoint;
+            console.log(topLeft.x + " "+ topLeft.y + " "+this.finalEndPoint.x +" "+ this.finalEndPoint.y );
             if (startPoint.x > endPoint.x) {
                 topLeft.x = endPoint.x;
                 this.finalEndPoint.x = startPoint.x;
@@ -147,10 +179,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
                 this.finalEndPoint.y = startPoint.y;
             }
 
+            
+
             this.ellipseSelectionRenderer.center = center;
             this.ellipseSelectionRenderer.radii = radii;
-            this.ellipseSelectionRenderer.sourceTopLeft = topLeft;
-            this.ellipseSelectionRenderer.targetTopLeft = topLeft;
+            this.ellipseSelectionRenderer.sourceTopLeft = {x:0, y:0};
+            this.ellipseSelectionRenderer.targetTopLeft = {x: this.startPoint.x-(this.selectionCanvas.width/2-radii.x), y: this.startPoint.y-(this.selectionCanvas.height/2-radii.y)};
             this.ellipseSelectionRenderer.isFillWhiteBehindSelection = true;
             this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
             this.ellipseSelectionRenderer.ctx = this.drawingService.previewCtx;
@@ -170,7 +204,10 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             */
 
             this.selectionService.isSelectionBeingMoved = true;
-            this.selectionMoverService.setSelection(this.selectionCanvas, topLeft, this.finalEndPoint);
+            this.selectionMoverService.setSelection(this.selectionCanvas, this.selectionCanvasCtx, topLeft, this.finalEndPoint, {x: this.startPoint.x-(this.selectionCanvas.width/2-radii.x), y: this.startPoint.y-(this.selectionCanvas.height/2-radii.y)});
+            this.selectionMoverService.initialPos = {x:  this.selectionCanvas.width/2-radii.x- this.startPoint.x , y: this.selectionCanvas.height/2-radii.y- this.startPoint.y};
+           
+            this.selectionMoverService.canvasClone = canvasClone;
         }
 
     }
