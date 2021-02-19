@@ -124,9 +124,9 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
 
         if (isFinalDrawing) {
-            canvasClone.width=this.drawingService.canvas.width;
+            canvasClone.width=this.drawingService.canvas.width; //resets the canvas!
             canvasClone.height=this.drawingService.canvas.height;
-            (canvasClone.getContext('2d') as CanvasRenderingContext2D).drawImage(this.drawingService.canvas, 0,0);
+            //(canvasClone.getContext('2d') as CanvasRenderingContext2D).drawImage(this.drawingService.canvas, 0,0);
 
             /*this.selectionCanvasCtx.translate(this.selectionCanvas.width/2,this.selectionCanvas.height/2 );
             this.selectionCanvasCtx.transform(1,0,0,2,0,0);
@@ -134,7 +134,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             this.selectionCanvasCtx.transform(1,0,0,3,0,0);
             this.selectionCanvasCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2 );*/
             
-            //this.selectionCanvasCtx.save();
+            this.selectionCanvasCtx.save();
             this.selectionCanvasCtx.beginPath();
             this.selectionCanvasCtx.ellipse( this.selectionCanvas.width/2,  this.selectionCanvas.height/2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
             this.selectionCanvasCtx.clip();
@@ -149,7 +149,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
             this.selectionCanvasCtx.drawImage(this.drawingService.canvas, this.selectionCanvas.width/2-radii.x- this.startPoint.x , this.selectionCanvas.height/2-radii.y- this.startPoint.y);
             this.selectionCanvasCtx.closePath();
-            //this.selectionCanvasCtx.restore();
+            this.selectionCanvasCtx.restore();
 
        /*     this.selectionCanvasCtx.translate(this.selectionCanvas.width/2,this.selectionCanvas.height/2 );
             this.selectionCanvasCtx.transform(1,0,0,2,0,0);
@@ -208,6 +208,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             this.selectionMoverService.initialPos = {x:  this.selectionCanvas.width/2-radii.x- this.startPoint.x , y: this.selectionCanvas.height/2-radii.y- this.startPoint.y};
            
             this.selectionMoverService.canvasClone = canvasClone;
+            this.selectionMoverService.canvasCloneCtx = canvasClone.getContext('2d') as CanvasRenderingContext2D;
         }
 
     }

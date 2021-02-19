@@ -33,9 +33,9 @@ export class EllipseSelectionRendererService {
 
   pasteSelectionOnBaseCanvas():void{
       this.ctx.drawImage(
-      this.selectionCanvas, this.sourceTopLeft.x, this.sourceTopLeft.y,
+      this.selectionCanvas,0, 0,
       this.selectionCanvas.width, this.selectionCanvas.height,
-      this.targetTopLeft.x, this.targetTopLeft.y,
+     0, 0,
       this.selectionCanvas.width, this.selectionCanvas.height);
   }
 
