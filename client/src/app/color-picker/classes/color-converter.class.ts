@@ -1,4 +1,3 @@
-import Validators from '@app/color-picker/classes/input-validators.class';
 import * as Constants from '@app/color-picker/constants/color-converter.constants';
 
 export class ColorConverter {
@@ -16,27 +15,27 @@ export class ColorConverter {
         return convertedNum.length === 1 ? '0' + convertedNum : convertedNum;
     }
 
-     static getColorFromRGB(red: number, green: number, blue: number): ColorConverter {
-         const newColor = new ColorConverter();
-         newColor.red = red;
-         newColor.green = green;
-         newColor.blue = blue;
-         return newColor;
-     }
+    static getColorFromRGB(red: number, green: number, blue: number): ColorConverter {
+        const newColor = new ColorConverter();
+        newColor.red = red;
+        newColor.green = green;
+        newColor.blue = blue;
+        return newColor;
+    }
 
-     static getColorFromHSV(hue: number, saturation: number, value: number): ColorConverter {
-         hue = ColorConverter.Clamp(hue, Constants.HUE_MIN, Constants.HUE_MAX);
-         saturation = ColorConverter.Clamp(saturation, Constants.MIN_SATURATION, Constants.MAX_SATURATION);
-         value = ColorConverter.Clamp(value, Constants.MIN_VALUE, Constants.MAX_VALUE);
+    static getColorFromHSV(hue: number, saturation: number, value: number): ColorConverter {
+        hue = ColorConverter.Clamp(hue, Constants.HUE_MIN, Constants.HUE_MAX);
+        saturation = ColorConverter.Clamp(saturation, Constants.MIN_SATURATION, Constants.MAX_SATURATION);
+        value = ColorConverter.Clamp(value, Constants.MIN_VALUE, Constants.MAX_VALUE);
 
-         hue /=  Constants.HUE_SECTION_ANGLE;
+        hue /= Constants.HUE_SECTION_ANGLE;
 
-         const chroma = value * saturation;
-         const x = chroma * (1 - Math.abs((hue % 2) - 1));
-         const m = value - chroma;
+        const chroma = value * saturation;
+        const x = chroma * (1 - Math.abs((hue % 2) - 1));
+        const m = value - chroma;
 
-         let newColor: ColorConverter;
-         if (hue <= 1) {
+        let newColor: ColorConverter;
+        if (hue <= 1) {
             newColor = ColorConverter.getColorFromRGB(chroma + m, x + m, m);
         } else if (hue <= 2) {
             newColor = ColorConverter.getColorFromRGB(x + m, chroma + m, m);
@@ -54,5 +53,36 @@ export class ColorConverter {
         newColor.blue *= Constants.RGB_MAX;
 
         return newColor;
-     }
+    }
+
+    getHSV(): [number, number, number] {
+        const redPrime = this.red / Constants.RGB_MAX;
+        const greenPrime = this.green / Constants.RGB_MAX;
+        const bluePrime = this.blue / Constants.RGB_MAX;
+        const cMax = Math.max(redPrime, greenPrime, bluePrime);
+        const cMin = Math.min(redPrime, greenPrime, bluePrime);
+        const deltaC = cMax - cMin;
+        let hue: number;
+        if (deltaC === 0) {
+            hue = 0;
+        } else if (cMax === redPrime) {
+            hue = Constants.HUE_SECTION_ANGLE * (((greenPrime - bluePrime) / deltaC) % 6);
+        } else if (cMax === greenPrime) {
+            hue = Constants.HUE_SECTION_ANGLE * ((bluePrime - redPrime) / deltaC + 2);
+        } else {
+            hue = Constants.HUE_SECTION_ANGLE * ((redPrime - greenPrime) / deltaC + 4);
+        }
+        const saturation: number = cMax === 0 ? 0 : deltaC / cMax;
+        const value = cMax;
+        return [hue, saturation, value];
+    }
+
+    getHex(): string {
+        return (
+            '' +
+            ColorConverter.convertNumberToHex(this.red) +
+            ColorConverter.convertNumberToHex(this.green) +
+            ColorConverter.convertNumberToHex(this.blue)
+        );
+    }
 }
