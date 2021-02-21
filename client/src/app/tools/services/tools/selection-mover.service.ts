@@ -6,6 +6,15 @@ import { Tool } from '@app/tools/classes/tool';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { SelectionService } from './selection.service';
 
+
+export enum ResizingMode{
+  off = 0,
+  towardsRight = 1,
+  towardsLeft = 2,
+  towardsTop = 3,
+  towardsBottom = 4,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +23,7 @@ export class SelectionMoverService extends Tool {
 
   public topLeft: Vec2;
   public bottomRight: Vec2;
-  public isResizingMode: boolean = false;
+  public resizingMode: ResizingMode = ResizingMode.off;
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
 
   constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
@@ -38,8 +47,8 @@ export class SelectionMoverService extends Tool {
         this.resizingMode = false;
       }
       else{*/
-      
-      if (this.isClickOutsideSelection(event)){
+
+      if (this.isClickOutsideSelection(event)) {
         console.log("outside");
         this.selectionService.isSelectionBeingMoved = false;
         this.mouseDown = false;
@@ -68,7 +77,7 @@ export class SelectionMoverService extends Tool {
     const mousePosition = this.getPositionFromMouse(event);
     const xOutsideSelection: boolean = mousePosition.x < Math.min(this.topLeft.x - 40, this.bottomRight.x - 40)
       || mousePosition.x > Math.max(this.topLeft.x + 40, this.bottomRight.x + 40);
-    console.log(mousePosition.x +" "+ this.bottomRight.x);
+    console.log(mousePosition.x + " " + this.bottomRight.x);
     const yOutsideSelection: boolean = mousePosition.y < Math.min(this.topLeft.y - 40, this.bottomRight.y - 40)
       || mousePosition.y > Math.max(this.topLeft.y + 40, this.bottomRight.y + 40);
     return (xOutsideSelection || yOutsideSelection);
@@ -82,47 +91,66 @@ export class SelectionMoverService extends Tool {
     const mousePosition = this.getPositionFromMouse(event);
 
     if (this.mouseDown) {
-      if(this.isResizingMode){
-          this.resize(event);
+      if (this.resizingMode != ResizingMode.off) {
+        this.resize(mousePosition, this.resizingMode);
       }
       else if (this.isClickInsideSelection(event)) {
-      
-      this.drawingService.clearCanvas(this.drawingService.previewCtx);
-      const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseLastPos.x, y: mousePosition.y - this.mouseLastPos.y }
 
-      this.mouseLastPos.x += mouseMovement.x;
-      this.mouseLastPos.y += mouseMovement.y;
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseLastPos.x, y: mousePosition.y - this.mouseLastPos.y }
 
-      this.topLeft.x += mouseMovement.x;
-      this.topLeft.y += mouseMovement.y;
+        this.mouseLastPos.x += mouseMovement.x;
+        this.mouseLastPos.y += mouseMovement.y;
 
-      this.bottomRight.x += mouseMovement.x;
-      this.bottomRight.y += mouseMovement.y;
+        this.topLeft.x += mouseMovement.x;
+        this.topLeft.y += mouseMovement.y;
 
-      let center: Vec2 = { x: 0, y: 0 };
-      let radii: Vec2 = { x: 0, y: 0 };
+        this.bottomRight.x += mouseMovement.x;
+        this.bottomRight.y += mouseMovement.y;
 
-      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
-      this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-      this.selectionService.drawSelectionEllipse(center, radii);
-      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
+        let center: Vec2 = { x: 0, y: 0 };
+        let radii: Vec2 = { x: 0, y: 0 };
+
+        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+        this.selectionService.drawSelectionEllipse(center, radii);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
       }
     }
   }
 
-  resize(event : MouseEvent):void{
-    const mousePosition = this.getPositionFromMouse(event);
-    if(this.isResizingMode){
-      this.bottomRight.x = mousePosition.x;
-      let center: Vec2 = { x: 0, y: 0 };
-      let radii: Vec2 = { x: 0, y: 0 };
-      this.drawingService.clearCanvas(this.drawingService.previewCtx);
-      this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-      this.selectionService.drawSelectionEllipse(center, radii);
-      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
-      this.selectionHandler.resizeSelectionHorizontally(this.topLeft, mousePosition, true);
-      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+  resize(newPos: Vec2, direction: ResizingMode): void {
+
+    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+    switch(direction){
+      case ResizingMode.towardsBottom:
+        this.bottomRight.y = newPos.y;
+        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
+        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        break;
+      case ResizingMode.towardsTop:
+        this.topLeft.y = newPos.y;
+        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
+        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        break;
+      case ResizingMode.towardsRight:
+        this.bottomRight.x = newPos.x;
+        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
+        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        break;
+      case ResizingMode.towardsLeft:
+        this.topLeft.x = newPos.x;
+        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
+        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        break;
     }
+
+    let center: Vec2 = { x: 0, y: 0 };
+    let radii: Vec2 = { x: 0, y: 0 };
+    
+    this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+    this.selectionService.drawSelectionEllipse(center, radii);
+    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
   }
 
   onKeyDown(event: KeyboardEvent): void {

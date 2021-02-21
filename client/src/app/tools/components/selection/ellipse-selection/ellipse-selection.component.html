@@ -6,7 +6,7 @@
         [style.top.px]="(this.selectionMover.bottomRight.y+this.selectionMover.topLeft.y)/2"
         [style.left.px]="this.selectionMover.bottomRight.x"
         [ngStyle]="{ cursor: 'ew-resize' }"
-        (mousedown)="setResize(true)"
-        (mouseup)="setResize(false)"
+        (mousedown)="setResizingMode(resizingMode.towardsRight)"
+        (mouseup)="setResizingMode(resizingMode.off)"
     ></div>
     

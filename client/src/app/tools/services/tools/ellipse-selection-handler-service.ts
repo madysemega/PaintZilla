@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,8 +25,8 @@ export class EllipseSelectionHandlerService {
 
   public topLeft: Vec2 ={x: 0, y: 0};
   public offset: Vec2 ={x: 0, y: 0};
-  public width : number;
-  public height: number;
+  public originalWidth : number;
+  public originalHeight: number;
 
   constructor(private drawingService: DrawingService) {
     this.selectionCanvas = document.createElement('canvas');
@@ -48,10 +49,14 @@ export class EllipseSelectionHandlerService {
     this.selectionCtx.closePath();
     this.selectionCtx.restore();
 
+    this.modificationCtx.beginPath();
+    this.modificationCtx.drawImage(this.selectionCanvas, 0,0);
+    this.modificationCtx.closePath();
+
     this.topLeft.x = this.selectionCanvas.width / 2 -radii.x;
     this.topLeft.y = this.selectionCanvas.height / 2 -radii.y;
-    this.width = radii.x*2;
-    this.height = radii.y*2;
+    this.originalWidth = radii.x*2;
+    this.originalHeight = radii.y*2;
     this.offset = {x:0 ,y:0};
   }
 
@@ -64,29 +69,22 @@ export class EllipseSelectionHandlerService {
 
   resizeSelectionHorizontally(topLeft : Vec2, topRight: Vec2, isTowardsRight: boolean): void{
     let newWidth = Math.abs(topRight.x - topLeft.x);
-    let increaseRatio = newWidth/this.width;
-
-    this.modificationCtx.beginPath();
-    this.modificationCtx.translate(this.selectionCanvas.width/2, this.selectionCanvas.height/2);
-    this.modificationCtx.transform(increaseRatio,0,0,1,0,0);
-    this.modificationCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2);
-    this.modificationCtx.drawImage(this.selectionCanvas, 0,0);
-    this.modificationCtx.closePath();
-    this.modificationCtx.resetTransform();
+    let increaseRatio = newWidth/this.originalWidth;
 
     this.drawingService.clearCanvas(this.selectionCtx);
     this.selectionCtx.beginPath();
+    this.selectionCtx.translate(this.selectionCanvas.width/2, this.selectionCanvas.height/2);
+    this.selectionCtx.transform(increaseRatio,0,0,1,0,0);
+    this.selectionCtx.translate(-this.selectionCanvas.width/2, -this.selectionCanvas.height/2);
     this.selectionCtx.drawImage(this.modificationCanvas, 0,0);
     this.selectionCtx.closePath();
-    this.drawingService.clearCanvas(this.modificationCtx);
+    this.selectionCtx.resetTransform();
 
     if(isTowardsRight){
-      this.offset.x += (newWidth-this.width)/2;
+      this.offset.x = (newWidth-this.originalWidth)/2;
     }
     else{
-      this.offset.x -= (newWidth-this.width)/2
+      this.offset.x = (newWidth-this.originalWidth)/2
     }
-    //this.topLeft.x -=  (newWidth-this.width)/2;
-    this.width = newWidth;
   }
 }

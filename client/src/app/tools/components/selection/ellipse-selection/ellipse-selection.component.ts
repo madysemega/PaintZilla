@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service';
+import { ResizingMode, SelectionMoverService } from '@app/tools/services/tools/selection-mover.service';
 import { SelectionService } from '@app/tools/services/tools/selection.service';
+
 
 @Component({
   selector: 'app-ellipse-selection',
@@ -9,14 +10,13 @@ import { SelectionService } from '@app/tools/services/tools/selection.service';
 })
 export class EllipseSelectionComponent implements OnInit {
  
+  public resizingMode : typeof ResizingMode = ResizingMode;
+
   constructor(public selectionMover: SelectionMoverService, public selectionService: SelectionService) { 
   }
 
-  setResize(isResizingMode : boolean){
-    this.selectionMover.isResizingMode = isResizingMode;
-  }
-  resize(event : MouseEvent):void{
-    this.selectionMover.resize(event);
+  setResizingMode(resizingMode : ResizingMode){
+    this.selectionMover.resizingMode = resizingMode;
   }
 
   ngOnInit(): void {
