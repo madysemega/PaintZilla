@@ -96,6 +96,14 @@ export class ColorConverter {
     }
 
     equals(color: ColorConverter): boolean {
-        return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha ===  color.alpha;
+        return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha;
+    }
+
+    toRgbString(): string {
+        return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+    }
+
+    toRgbaString(): string {
+        return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
 }
