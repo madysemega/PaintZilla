@@ -138,26 +138,5 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             this.selectionMoverService.setSelection(topLeft, this.finalEndPoint);
 
         }
-            /*this.ellipseSelectionRenderer.center = center;
-            this.ellipseSelectionRenderer.radii = radii;
-            this.ellipseSelectionRenderer.sourceTopLeft = {x:0, y:0};
-            this.ellipseSelectionRenderer.targetTopLeft = {x: this.startPoint.x-(this.selectionCanvas.width/2-radii.x), y: this.startPoint.y-(this.selectionCanvas.height/2-radii.y)};
-            this.ellipseSelectionRenderer.isFillWhiteBehindSelection = true;
-            this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
-            this.ellipseSelectionRenderer.ctx = this.drawingService.previewCtx;
-            this.ellipseSelectionRenderer.render();*/
-
-            /*DO NOT DELETE
-            => push to stack, notice the difference in the ctx 
-            this.ellipseSelectionRenderer.center=center;
-            this.ellipseSelectionRenderer.radii =radii;
-            this.ellipseSelectionRenderer.sourceTopLeft = topLeft;
-            this.ellipseSelectionRenderer.targetTopLeft = topLeft;
-            this.ellipseSelectionRenderer.isFillWhiteBehindSelection = false;
-            this.ellipseSelectionRenderer.selectionCanvas = this.selectionCanvas;
-            this.ellipseSelectionRenderer.ctx = this.drawingService.baseCtx;
-            ///////
-            this.ellipseSelectionRenderer.render();
-            */
         }
     }

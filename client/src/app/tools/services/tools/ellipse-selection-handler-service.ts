@@ -88,44 +88,5 @@ export class EllipseSelectionHandlerService {
     }
     //this.topLeft.x -=  (newWidth-this.width)/2;
     this.width = newWidth;
-
-    //this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    //this.drawingService.clearCanvas(this.drawingService.baseCtx);
-    //this.drawingService.clearCanvas(this.selectionCtx);
-    //this.drawingService.baseCtx.beginPath();
-    //this.drawingService.baseCtx.drawImage(this.selectionCanvas, 0,0);
-    //this.drawingService.baseCtx.closePath();
-    //this.drawingService.clearCanvas(this.modificationCtx);
   }
-
-
-/*render(): void {
-    if (this.isFillWhiteBehindSelection) {
-      this.fillWhiteBehindSelection();
-    }
-    this.pasteSelectionOnBaseCanvas();
-  }
-
-  pasteSelectionOnBaseCanvas(): void {
-    this.ctx.drawImage(
-      this.selectionCanvas, 0, 0,
-      this.selectionCanvas.width, this.selectionCanvas.height,
-      0, 0,
-      this.selectionCanvas.width, this.selectionCanvas.height);
-  }
-
-  fillWhiteBehindSelection() {
-    let ctx: CanvasRenderingContext2D = this.drawingService.baseCtx;
-    ctx.save();
-    ctx.beginPath();
-
-    this.radii.x = this.radii.x >= 1 ? this.radii.x - 1 : 0;
-    this.radii.y = this.radii.y >= 1 ? this.radii.y - 1 : 0;
-    ctx.ellipse(this.center.x, this.center.y, this.radii.x, this.radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-    ctx.clip();
-    ctx.fillStyle = "white";
-    ctx.fill();
-    ctx.restore();
-  }*/
-
 }
