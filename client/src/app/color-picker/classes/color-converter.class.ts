@@ -85,4 +85,8 @@ export class ColorConverter {
             ColorConverter.convertNumberToHex(this.blue)
         );
     }
+
+    equals(color: ColorConverter): boolean {
+        return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha ===  color.alpha;
+    }
 }
