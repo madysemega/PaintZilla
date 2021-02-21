@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { BehaviorSubject } from 'rxjs';
 import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
@@ -9,15 +10,18 @@ import { ColourToolService } from './colour-tool.service';
 export class SelectionService {
   private readonly CIRCLE_MAX_ANGLE: number = 360;
   public isShiftDown: boolean;
-  public isSelectionBeingMoved: boolean;
-  constructor(private drawingService : DrawingService, private colourService: ColourToolService) { }
+  public isSelectionBeingMoved: BehaviorSubject<boolean>; 
+  
+  constructor(private drawingService : DrawingService, private colourService: ColourToolService) { 
+    this.isSelectionBeingMoved =  new BehaviorSubject<boolean>(false);
+  }
 
   getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
     const endPointWithRespectToStartPoint: Vec2 = {
       x: endPoint.x - startPoint.x,
       y: endPoint.y - startPoint.y,
-    };
-
+      };
+    
     const endPointShortestComponent = Math.min(Math.abs(endPointWithRespectToStartPoint.x), Math.abs(endPointWithRespectToStartPoint.y));
 
     const isXComponentPositive: boolean = startPoint.x < endPoint.x;

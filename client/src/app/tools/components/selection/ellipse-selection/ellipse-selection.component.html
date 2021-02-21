@@ -1,6 +1,8 @@
+
+
 <div    
-        *ngIf="selectionService.isSelectionBeingMoved"
-        id="right2"
+        *ngIf="showControlPoint"
+        id="right2xxxxxxxxx"
         class="resizingButton"
         draggable="false"
         [style.top.px]="(this.selectionMover.bottomRight.y+this.selectionMover.topLeft.y)/2"
@@ -8,5 +10,6 @@
         [ngStyle]="{ cursor: 'ew-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsRight)"
         (mouseup)="setResizingMode(resizingMode.off)"
-    ></div>
+    >
+</div>
     

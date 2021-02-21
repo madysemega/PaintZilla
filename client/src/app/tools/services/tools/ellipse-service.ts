@@ -6,20 +6,21 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { SelectionService } from '@app/tools/services/tools/selection.service'
 import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service'
 import { EllipseSelectionHandlerService } from '@app/tools/services/tools/ellipse-selection-handler-service'
+import { SelectionService } from './selection.service';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
 
-export class EllipseService extends ShapeTool implements ISelectableTool {
+export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool {
     private startPoint: Vec2 = { x: 0, y: 0 };
     private finalEndPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(drawingService: DrawingService, private selectionService: SelectionService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService) {
+    constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -27,25 +28,36 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
-        this.selectionService.isSelectionBeingMoved = false;
+    }
+
+    onToolDeselect():void{
+        this.selectionService.isSelectionBeingMoved.next(false);
+    }
+
+    isSelectionBeingManipulated(): boolean{
+        return this.selectionService.isSelectionBeingMoved.getValue();
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved) {
+        if (this.selectionService.isSelectionBeingMoved.getValue()) {
             this.selectionMoverService.onMouseDown(event);
         }
+        else{
             this.mouseDown = event.button === MouseButton.Left;
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
+        }
     }
 
-    onMouseUp(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved) {
+     onMouseUp(event: MouseEvent): void {
+        if (this.selectionService.isSelectionBeingMoved.getValue()) {
             this.selectionMoverService.onMouseUp(event);
+            console.log("stillInMover");
         }
         else {
             if (this.mouseDown) {
+                console.log("notInMoverAnymore");
                 const mousePosition = this.getPositionFromMouse(event);
                 this.lastMousePosition = mousePosition;
                 this.select(this.startPoint, mousePosition, true);
@@ -56,7 +68,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved) {
+        if (this.selectionService.isSelectionBeingMoved.getValue()) {
             this.selectionMoverService.onMouseMove(event);
         }
         else {
@@ -71,12 +83,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingMoved) {
+        if (this.selectionService.isSelectionBeingMoved.getValue()) {
             this.selectionMoverService.onKeyDown(event);
         }
         if (event.key === 'Shift') {
             this.selectionService.isShiftDown = true;
-            if (!this.selectionService.isSelectionBeingMoved) {
+            if (!this.selectionService.isSelectionBeingMoved.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
                     this.select(this.startPoint, this.lastMousePosition,false);
@@ -87,12 +99,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingMoved) {
+        if (this.selectionService.isSelectionBeingMoved.getValue()) {
             this.selectionMoverService.onKeyUp(event);
         }
         if (event.key === 'Shift') {
             this.selectionService.isShiftDown = false;
-            if (!this.selectionService.isSelectionBeingMoved) {
+            if (!this.selectionService.isSelectionBeingMoved.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
                     this.select(this.startPoint, this.lastMousePosition, false);
@@ -134,9 +146,9 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             this.selectionHandler.selectArea(this.startPoint, radii);
             this.selectionService.drawPostSelectionEllipse(center, radii);
             this.selectionHandler.drawSelection(this.startPoint, this.drawingService.previewCtx);
-            this.selectionService.isSelectionBeingMoved = true;
+            console.log("setting to true");
+            this.selectionService.isSelectionBeingMoved.next(true);
             this.selectionMoverService.setSelection(topLeft, this.finalEndPoint);
-
         }
         }
     }

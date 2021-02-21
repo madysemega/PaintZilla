@@ -58,9 +58,7 @@ export class DrawingComponent implements AfterViewInit {
         if (this.resizingService.isResizing()) {
             this.wasResizing = true;
             this.resizingService.disableResizer();
-        } else {
-            this.toolSelector.getSelectedTool().onMouseUp(event);
-        }
+        } 
     }
 
     @HostListener('click', ['$event'])

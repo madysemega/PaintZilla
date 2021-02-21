@@ -10,16 +10,19 @@ import { SelectionService } from '@app/tools/services/tools/selection.service';
 })
 export class EllipseSelectionComponent implements OnInit {
  
-  public resizingMode : typeof ResizingMode = ResizingMode;
+  public resizingMode: typeof ResizingMode = ResizingMode;
+  public showControlPoint: boolean
 
   constructor(public selectionMover: SelectionMoverService, public selectionService: SelectionService) { 
   }
 
-  setResizingMode(resizingMode : ResizingMode){
+  setResizingMode(resizingMode : ResizingMode): void{
     this.selectionMover.resizingMode = resizingMode;
   }
 
   ngOnInit(): void {
+    console.log(this.selectionService.isShiftDown);
+    this.selectionService.isSelectionBeingMoved.subscribe(isActivated => ( this.showControlPoint = isActivated));
   }
 
 }

@@ -45,7 +45,6 @@ import { EllipseSelectionComponent } from '@app/tools/components/selection/ellip
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
 
-    providers: [],
     bootstrap: [AppComponent],
     entryComponents: [DiscardChangesDialogComponent],
 })
