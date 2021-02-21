@@ -117,7 +117,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
             let topLeft: Vec2 = this.startPoint;
             this.finalEndPoint = endPoint;
-            console.log(topLeft.x + " "+ topLeft.y + " "+this.finalEndPoint.x +" "+ this.finalEndPoint.y );
+            //console.log(topLeft.x + " "+ topLeft.y + " "+this.finalEndPoint.x +" "+ this.finalEndPoint.y );
             if (startPoint.x > endPoint.x) {
                 topLeft.x = endPoint.x;
                 this.finalEndPoint.x = startPoint.x;
@@ -126,15 +126,17 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
                 topLeft.y = endPoint.y;
                 this.finalEndPoint.y = startPoint.y;
             }
-            this.selectionHandler.selectionCanvas.width = this.drawingService.canvas.width;
+            this.selectionHandler.selectionCanvas.width = this.drawingService.canvas.width;////////////change to 2000?
             this.selectionHandler.selectionCanvas.height = this.drawingService.canvas.height;
             this.selectionHandler.modificationCanvas.width = this.drawingService.canvas.width;
             this.selectionHandler.modificationCanvas.height = this.drawingService.canvas.height;
-            
+
             this.selectionHandler.selectArea(this.startPoint, radii);
+            this.selectionService.drawPostSelectionEllipse(center, radii);
+            this.selectionHandler.drawSelection(this.startPoint, this.drawingService.previewCtx);
             this.selectionService.isSelectionBeingMoved = true;
             this.selectionMoverService.setSelection(topLeft, this.finalEndPoint);
-    
+
         }
             /*this.ellipseSelectionRenderer.center = center;
             this.ellipseSelectionRenderer.radii = radii;
@@ -157,6 +159,5 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             ///////
             this.ellipseSelectionRenderer.render();
             */
-        
         }
     }

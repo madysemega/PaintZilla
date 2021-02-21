@@ -77,6 +77,8 @@ drawPostSelectionEllipse(center: Vec2, radii: Vec2){
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.colourService.secondaryColour;
+    radii.x += radii.x>=1 ? -1: 0;
+    radii.y += radii.y>=1 ? -1: 0;
     ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
     ctx.clip();
     ctx.fillStyle="white";
