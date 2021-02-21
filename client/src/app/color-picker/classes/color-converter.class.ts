@@ -86,6 +86,15 @@ export class ColorConverter {
         );
     }
 
+    clone(): ColorConverter {
+        const newColor = new ColorConverter();
+        newColor.red = this.red;
+        newColor.green = this.green;
+        newColor.blue = this.blue;
+        newColor.alpha = this.alpha;
+        return newColor;
+    }
+
     equals(color: ColorConverter): boolean {
         return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha ===  color.alpha;
     }
