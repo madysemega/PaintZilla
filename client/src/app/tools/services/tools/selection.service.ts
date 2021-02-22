@@ -10,10 +10,10 @@ import { ColourToolService } from './colour-tool.service';
 export class SelectionService {
   private readonly CIRCLE_MAX_ANGLE: number = 360;
   public isShiftDown: boolean;
-  public isSelectionBeingMoved: BehaviorSubject<boolean>; 
-  
+  public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
+
   constructor(private drawingService : DrawingService, private colourService: ColourToolService) { 
-    this.isSelectionBeingMoved =  new BehaviorSubject<boolean>(false);
+    this.isSelectionBeingManipulated =  new BehaviorSubject<boolean>(false);
   }
 
   getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
@@ -78,12 +78,13 @@ drawSelectionEllipse(center: Vec2, radii: Vec2): void{
 
 drawPostSelectionEllipse(center: Vec2, radii: Vec2){
     let ctx : CanvasRenderingContext2D = this.drawingService.baseCtx;
+    let radiiCopy = {x:radii.x, y:radii.y};
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.colourService.secondaryColour;
-    radii.x += radii.x>=1 ? -1: 0;
-    radii.y += radii.y>=1 ? -1: 0;
-    ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+    radiiCopy.x += radiiCopy.x>=1 ? -1: 0;
+    radiiCopy.y += radiiCopy.y>=1 ? -1: 0;
+    ctx.ellipse(center.x, center.y, radiiCopy.x, radiiCopy.y, 0, 0, this.CIRCLE_MAX_ANGLE);
     ctx.clip();
     ctx.fillStyle="white";
     ctx.fill();

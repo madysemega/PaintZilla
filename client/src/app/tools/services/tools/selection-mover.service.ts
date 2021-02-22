@@ -25,9 +25,6 @@ export class SelectionMoverService extends Tool {
   public bottomRight: Vec2;
   public resizingMode: ResizingMode = ResizingMode.off;
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
-  
-  //private isBeingMoved: boolean = false;
-  //private toBeFalse : boolean = false;
 
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
@@ -44,23 +41,13 @@ export class SelectionMoverService extends Tool {
     const mousePosition = this.getPositionFromMouse(event);
 
     if (this.mouseDown) {
-      /*if (this.resizingMode) {
-        let newTopRight: Vec2 = {x: mousePosition.x, y: this.topLeft.y};
-        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newTopRight, true );
-        this.resizingMode = false;
-      }
-      else{*/
       if (this.isClickOutsideSelection(event)) {
-        //console.log("outside");
-        //console.log("outside");
-        //this.toBeFalse = true;
-        this.selectionService.isSelectionBeingMoved.next(false);
+        this.selectionService.isSelectionBeingManipulated.next(false);
         this.mouseDown = false;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.selectionHandler.drawSelection(this.topLeft, this.drawingService.baseCtx);
       }
       else if(this.isClickInsideSelection(event)){
-        //this.isBeingMoved = true;
       }
       this.mouseLastPos.x = mousePosition.x;
       this.mouseLastPos.y = mousePosition.y;
@@ -69,8 +56,6 @@ export class SelectionMoverService extends Tool {
 
   //change logic bc we know topLeft is left and bottomRight is right
   isClickInsideSelection(event: MouseEvent): boolean {
-    
-    //console.log(this.topLeft.x +" "+ this.topLeft.y +" "+ this.bottomRight.x +" "+ this.bottomRight.y);
     const mousePosition = this.getPositionFromMouse(event);
     const xInSelection: boolean = mousePosition.x > Math.min(this.topLeft.x + 20, this.bottomRight.x + 20)
       && mousePosition.x < Math.max(this.topLeft.x - 20, this.bottomRight.x - 20);
@@ -80,12 +65,9 @@ export class SelectionMoverService extends Tool {
   }
 
   isClickOutsideSelection(event: MouseEvent): boolean {
-    
-    //console.log(this.topLeft.x +" "+ this.topLeft.y +" "+ this.bottomRight.x +" "+ this.bottomRight.y);
     const mousePosition = this.getPositionFromMouse(event);
     const xOutsideSelection: boolean = mousePosition.x < Math.min(this.topLeft.x - 20, this.bottomRight.x - 20)
       || mousePosition.x > Math.max(this.topLeft.x + 20, this.bottomRight.x + 20);
-    //console.log(mousePosition.x + " " + this.bottomRight.x);
     const yOutsideSelection: boolean = mousePosition.y < Math.min(this.topLeft.y - 20, this.bottomRight.y - 20)
       || mousePosition.y > Math.max(this.topLeft.y + 20, this.bottomRight.y + 20);
     return (xOutsideSelection || yOutsideSelection);
@@ -94,11 +76,6 @@ export class SelectionMoverService extends Tool {
   onMouseUp(event: MouseEvent): void {
     this.mouseDown = false;
     this.resizingMode = ResizingMode.off;
-    //this.isBeingMoved = false;
-   /* if(this.toBeFalse){
-      this.selectionService.isSelectionBeingMoved.next(false);
-      this.toBeFalse = false;
-    }*/
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -114,7 +91,7 @@ export class SelectionMoverService extends Tool {
 
         this.mouseLastPos.x += mouseMovement.x;
         this.mouseLastPos.y += mouseMovement.y;
-
+        
         this.topLeft.x += mouseMovement.x;
         this.topLeft.y += mouseMovement.y;
 

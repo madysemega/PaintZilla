@@ -22,7 +22,7 @@ export class EllipseSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.selectionService.isShiftDown);
-    this.selectionService.isSelectionBeingMoved.subscribe(isActivated => ( this.showControlPoint = isActivated));
+    this.selectionService.isSelectionBeingManipulated.subscribe(isActivated => ( this.showControlPoint = isActivated));
   }
 
 }

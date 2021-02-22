@@ -17,7 +17,6 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 
 export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool {
     private startPoint: Vec2 = { x: 0, y: 0 };
-    private finalEndPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
 
     constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
@@ -30,68 +29,59 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
-    onToolDeselect():void{
-        this.selectionService.isSelectionBeingMoved.next(false);
-    }
-
-    isSelectionBeingManipulated(): boolean{
-        return this.selectionService.isSelectionBeingMoved.getValue();
+    onToolDeselect(): void {
+        this.setIsSelectionBeingManipulated(false);
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved.getValue()) {
+        if (this.isSelectionBeingManipulated()) {
             this.selectionMoverService.onMouseDown(event);
         }
-        else{
-            this.mouseDown = event.button === MouseButton.Left;
-            this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.lastMousePosition = this.mouseDownCoord;
-            this.startPoint = this.mouseDownCoord;
-        }
+        this.registerMousePosition(event);
+        
     }
 
-     onMouseUp(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved.getValue()) {
-            this.selectionMoverService.onMouseUp(event);
-            console.log("stillInMover");
+    onMouseMove(event: MouseEvent): void {
+        const mousePosition = this.getPositionFromMouse(event);
+        if (this.isSelectionBeingManipulated()) {
+            this.selectionMoverService.onMouseMove(event);
         }
         else {
             if (this.mouseDown) {
-                console.log("notInMoverAnymore");
-                const mousePosition = this.getPositionFromMouse(event);
                 this.lastMousePosition = mousePosition;
-                this.select(this.startPoint, mousePosition, true);
-                this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition)
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.drawSelectionOutline(mousePosition);
+            }
+        }
+    }
+
+    onMouseUp(event: MouseEvent): void {
+        const mousePosition = this.getPositionFromMouse(event);
+        if (this.isSelectionBeingManipulated()) {
+            this.selectionMoverService.onMouseUp(event);
+        }
+        else {
+            if (this.mouseDown) {
+                if(this.startPointIsFarEnoughFrom(mousePosition)){
+                    this.lastMousePosition = mousePosition;
+                    this.select(this.startPoint, mousePosition);
+                    this.drawSelectionOutline(mousePosition);
+                }
             }
             this.mouseDown = false;
         }
     }
 
-    onMouseMove(event: MouseEvent): void {
-        if (this.selectionService.isSelectionBeingMoved.getValue()) {
-            this.selectionMoverService.onMouseMove(event);
-        }
-        else {
-            const mousePosition = this.getPositionFromMouse(event);
-            if (this.mouseDown) {
-                this.lastMousePosition = mousePosition;
-                this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                this.select(this.startPoint, this.lastMousePosition, false);
-                this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, mousePosition);
-            }
-        }
-    }
-
     onKeyDown(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingMoved.getValue()) {
+        if (this.selectionService.isSelectionBeingManipulated.getValue()) {
             this.selectionMoverService.onKeyDown(event);
         }
         if (event.key === 'Shift') {
             this.selectionService.isShiftDown = true;
-            if (!this.selectionService.isSelectionBeingMoved.getValue()) {
+            if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                    this.select(this.startPoint, this.lastMousePosition,false);
+                    this.select(this.startPoint, this.lastMousePosition);
                     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
                 }
             }
@@ -99,56 +89,77 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingMoved.getValue()) {
+        if (this.selectionService.isSelectionBeingManipulated.getValue()) {
             this.selectionMoverService.onKeyUp(event);
         }
         if (event.key === 'Shift') {
             this.selectionService.isShiftDown = false;
-            if (!this.selectionService.isSelectionBeingMoved.getValue()) {
+            if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                    this.select(this.startPoint, this.lastMousePosition, false);
+                    this.select(this.startPoint, this.lastMousePosition);
                     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
                 }
             }
         }
     }
 
-    select(startPoint: Vec2, endPoint: Vec2, isFinalDrawing: boolean): void {
-        
-        if (this.selectionService.isShiftDown) {
-            endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
-        }
-
+    drawSelectionOutline(endPoint: Vec2) {
         let center: Vec2 = { x: 0, y: 0 };
         let radii: Vec2 = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
         this.selectionService.drawSelectionEllipse(center, radii);
-
-        if (isFinalDrawing) {
-
-            let topLeft: Vec2 = this.startPoint;
-            this.finalEndPoint = endPoint;
-            //console.log(topLeft.x + " "+ topLeft.y + " "+this.finalEndPoint.x +" "+ this.finalEndPoint.y );
-            if (startPoint.x > endPoint.x) {
-                topLeft.x = endPoint.x;
-                this.finalEndPoint.x = startPoint.x;
-            }
-            if (startPoint.y > endPoint.y) {
-                topLeft.y = endPoint.y;
-                this.finalEndPoint.y = startPoint.y;
-            }
-            this.selectionHandler.selectionCanvas.width = this.drawingService.canvas.width;////////////change to 2000?
-            this.selectionHandler.selectionCanvas.height = this.drawingService.canvas.height;
-            this.selectionHandler.modificationCanvas.width = this.drawingService.canvas.width;
-            this.selectionHandler.modificationCanvas.height = this.drawingService.canvas.height;
-
-            this.selectionHandler.selectArea(this.startPoint, radii);
-            this.selectionService.drawPostSelectionEllipse(center, radii);
-            this.selectionHandler.drawSelection(this.startPoint, this.drawingService.previewCtx);
-            console.log("setting to true");
-            this.selectionService.isSelectionBeingMoved.next(true);
-            this.selectionMoverService.setSelection(topLeft, this.finalEndPoint);
-        }
-        }
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
+
+    select(startPoint: Vec2, endPoint: Vec2): void {
+
+        if (this.selectionService.isShiftDown) {
+            endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
+        }
+
+        let startPointCopy: Vec2 = {x: this.startPoint.x, y: this.startPoint.y};
+    
+        if (startPoint.x > endPoint.x) {
+            startPoint.x = endPoint.x;
+            endPoint.x = startPointCopy.x;
+        }
+        if (startPoint.y > endPoint.y) {
+            startPoint.y = endPoint.y;
+            endPoint.y = startPointCopy.y;
+        }
+
+        this.selectionHandler.selectionCanvas.width = this.drawingService.canvas.width;////////////change to 2000?
+        this.selectionHandler.selectionCanvas.height = this.drawingService.canvas.height;
+        this.selectionHandler.modificationCanvas.width = this.drawingService.canvas.width;
+        this.selectionHandler.modificationCanvas.height = this.drawingService.canvas.height;
+
+        let center: Vec2 = { x: 0, y: 0 };
+        let radii: Vec2 = { x: 0, y: 0 };
+        this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
+    
+        this.selectionHandler.selectArea(startPoint, center, radii);
+        this.drawSelectionOutline(endPoint);
+        this.selectionService.isSelectionBeingManipulated.next(true);
+        this.selectionMoverService.setSelection(startPoint, endPoint);
+    }
+
+    startPointIsFarEnoughFrom(mousePos : Vec2): boolean{
+        return Math.sqrt(Math.pow(this.startPoint.x -mousePos.x,2 )  +  Math.pow(this.startPoint.y - mousePos.y,2)) >5;
+    }
+
+    setIsSelectionBeingManipulated(isItBeingManipulated: boolean){
+        this.selectionService.isSelectionBeingManipulated.next(isItBeingManipulated);
+    }
+
+    isSelectionBeingManipulated(): boolean {
+        return this.selectionService.isSelectionBeingManipulated.getValue();
+    }
+
+    registerMousePosition(event: MouseEvent): void {
+        this.mouseDown = event.button === MouseButton.Left;
+        this.mouseDownCoord = this.getPositionFromMouse(event);
+        this.lastMousePosition = this.mouseDownCoord;
+        this.startPoint = this.mouseDownCoord;
+    }
+}

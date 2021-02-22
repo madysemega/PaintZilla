@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { SelectionService } from './selection.service';
 
 
 @Injectable({
@@ -28,7 +29,14 @@ export class EllipseSelectionHandlerService {
   public originalWidth : number;
   public originalHeight: number;
 
-  constructor(private drawingService: DrawingService) {
+  private hasBeenResized: boolean;
+  private hasBeenMoved : boolean;
+
+  private selectionOriginalStartPoint : Vec2;
+  private selectionOriginalCenter : Vec2;
+  private selectionOriginalRadii : Vec2;
+
+  constructor(private drawingService: DrawingService, private selectionService: SelectionService) {
     this.selectionCanvas = document.createElement('canvas');
     //this.selectionCanvas.width = 1000;
     //this.selectionCanvas.height = 1000;
@@ -40,16 +48,18 @@ export class EllipseSelectionHandlerService {
     this.modificationCtx = this.modificationCanvas.getContext('2d') as CanvasRenderingContext2D
    }
 
-  selectArea(selectionStartPoint: Vec2, radii: Vec2): void {
+  selectArea(selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
     this.selectionCtx.ellipse(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
     this.selectionCtx.clip();
+    this.selectionCtx.imageSmoothingEnabled = false;
     this.selectionCtx.drawImage(this.drawingService.canvas, this.selectionCanvas.width/2-radii.x- selectionStartPoint.x , this.selectionCanvas.height/2-radii.y- selectionStartPoint.y);
     this.selectionCtx.closePath();
     this.selectionCtx.restore();
 
     this.modificationCtx.beginPath();
+    this.modificationCtx.imageSmoothingEnabled = false;
     this.modificationCtx.drawImage(this.selectionCanvas, 0,0);
     this.modificationCtx.closePath();
 
@@ -58,13 +68,23 @@ export class EllipseSelectionHandlerService {
     this.originalWidth = radii.x*2;
     this.originalHeight = radii.y*2;
     this.offset = {x:0 ,y:0};
+
+    this.selectionOriginalStartPoint = {x: selectionStartPoint.x, y: selectionStartPoint.y};
+    this.selectionOriginalCenter = center;
+    this.selectionOriginalRadii = radii;
+    this.hasBeenResized = false;
+    this.hasBeenMoved = false;
   }
 
   drawSelection(position : Vec2, ctx : CanvasRenderingContext2D): void{
-    ctx.beginPath();
-    ctx.drawImage(this.selectionCanvas, position.x-this.topLeft.x+this.offset.x, position.y-this.topLeft.y+this.offset.y);
-    //ctx.drawImage(this.selectionCanvas, position.x-this.topLeft.x, position.y-this.topLeft.y);
-    ctx.closePath();
+    if(this.hasSelectionBeenMoved(position)){
+      console.log("drawing");
+      ctx.imageSmoothingEnabled = false;
+      this.selectionService.drawPostSelectionEllipse(this.selectionOriginalCenter, this.selectionOriginalRadii);
+      ctx.beginPath();
+      ctx.drawImage(this.selectionCanvas, position.x-this.topLeft.x+this.offset.x, position.y-this.topLeft.y+this.offset.y);
+      ctx.closePath();
+    }
   }
 
   resizeSelectionHorizontally(topLeft : Vec2, topRight: Vec2, isTowardsRight: boolean): void{
@@ -86,5 +106,14 @@ export class EllipseSelectionHandlerService {
     else{
       this.offset.x = (newWidth-this.originalWidth)/2
     }
+
+    this.hasBeenResized = true;
+  }
+
+  hasSelectionBeenMoved(newStartPos: Vec2) : boolean{
+    if(this.hasBeenMoved){
+        return true;
+    }
+     return this.hasBeenMoved = (this.hasBeenResized || this.selectionOriginalStartPoint.x!= newStartPos.x || this.selectionOriginalStartPoint.y!= newStartPos.y);
   }
 }
