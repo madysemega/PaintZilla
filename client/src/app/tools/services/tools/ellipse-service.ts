@@ -14,15 +14,15 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 @Injectable({
     providedIn: 'root',
 })
-
 export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool {
+    private readonly MINIMUM_SELECTION_WIDTH : number = 5;
     private startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
 
     constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
-        this.key = 'ellipse';
+        this.key = 'ellipse'; //selection-creator
     }
 
     onToolSelect(): void {
@@ -38,7 +38,6 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             this.selectionMoverService.onMouseDown(event);
         }
         this.registerMousePosition(event);
-        
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -61,12 +60,10 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             this.selectionMoverService.onMouseUp(event);
         }
         else {
-            if (this.mouseDown) {
-                if(this.startPointIsFarEnoughFrom(mousePosition)){
-                    this.lastMousePosition = mousePosition;
-                    this.select(this.startPoint, mousePosition);
-                    this.drawSelectionOutline(mousePosition);
-                }
+            if (this.mouseDown && this.startPointIsFarEnoughFrom(mousePosition)) {
+                this.lastMousePosition = mousePosition;
+                this.select(this.startPoint, mousePosition);
+                this.drawSelectionOutline(mousePosition);
             }
             this.mouseDown = false;
         }
@@ -105,21 +102,29 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     drawSelectionOutline(endPoint: Vec2) {
-        let center: Vec2 = { x: 0, y: 0 };
-        let radii: Vec2 = { x: 0, y: 0 };
+        let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
         this.selectionService.drawSelectionEllipse(center, radii);
         this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
 
     select(startPoint: Vec2, endPoint: Vec2): void {
-
         if (this.selectionService.isShiftDown) {
             endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
         }
 
-        let startPointCopy: Vec2 = {x: this.startPoint.x, y: this.startPoint.y};
-    
+        this.setTopLeftBottomRight(startPoint, endPoint);
+
+        let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
+        this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
+        this.selectionHandler.selectArea(startPoint, center, radii);
+        this.drawSelectionOutline(endPoint);
+        this.setIsSelectionBeingManipulated(true);
+        this.selectionMoverService.setSelection(startPoint, endPoint);
+    }
+
+    setTopLeftBottomRight(startPoint: Vec2, endPoint: Vec2) {
+        let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
         if (startPoint.x > endPoint.x) {
             startPoint.x = endPoint.x;
             endPoint.x = startPointCopy.x;
@@ -128,27 +133,13 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             startPoint.y = endPoint.y;
             endPoint.y = startPointCopy.y;
         }
-
-        this.selectionHandler.selectionCanvas.width = this.drawingService.canvas.width;////////////change to 2000?
-        this.selectionHandler.selectionCanvas.height = this.drawingService.canvas.height;
-        this.selectionHandler.modificationCanvas.width = this.drawingService.canvas.width;
-        this.selectionHandler.modificationCanvas.height = this.drawingService.canvas.height;
-
-        let center: Vec2 = { x: 0, y: 0 };
-        let radii: Vec2 = { x: 0, y: 0 };
-        this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
-    
-        this.selectionHandler.selectArea(startPoint, center, radii);
-        this.drawSelectionOutline(endPoint);
-        this.selectionService.isSelectionBeingManipulated.next(true);
-        this.selectionMoverService.setSelection(startPoint, endPoint);
     }
 
-    startPointIsFarEnoughFrom(mousePos : Vec2): boolean{
-        return Math.sqrt(Math.pow(this.startPoint.x -mousePos.x,2 )  +  Math.pow(this.startPoint.y - mousePos.y,2)) >5;
+    startPointIsFarEnoughFrom(mousePos: Vec2): boolean {
+        return Math.sqrt(Math.pow(this.startPoint.x - mousePos.x, 2) + Math.pow(this.startPoint.y - mousePos.y, 2)) > this.MINIMUM_SELECTION_WIDTH;
     }
 
-    setIsSelectionBeingManipulated(isItBeingManipulated: boolean){
+    setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
         this.selectionService.isSelectionBeingManipulated.next(isItBeingManipulated);
     }
 

@@ -1,14 +1,51 @@
-
-
 <div    
         *ngIf="showControlPoint"
-        id="right2xxxxxxxxx"
+        id="rightMiddle"
         class="resizingButton"
         draggable="false"
         [style.top.px]="(this.selectionMover.bottomRight.y+this.selectionMover.topLeft.y)/2"
         [style.left.px]="this.selectionMover.bottomRight.x"
         [ngStyle]="{ cursor: 'ew-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsRight)"
+        (mouseup)="setResizingMode(resizingMode.off)"
+    >
+</div>
+
+<div    
+        *ngIf="showControlPoint"
+        id="leftMiddle"
+        class="resizingButton"
+        draggable="false"
+        [style.top.px]="(this.selectionMover.bottomRight.y+this.selectionMover.topLeft.y)/2"
+        [style.left.px]="this.selectionMover.topLeft.x"
+        [ngStyle]="{ cursor: 'ew-resize' }"
+        (mousedown)="setResizingMode(resizingMode.towardsLeft)"
+        (mouseup)="setResizingMode(resizingMode.off)"
+    >
+</div>
+    
+<div    
+        *ngIf="showControlPoint"
+        id="topMiddle"
+        class="resizingButton"
+        draggable="false"
+        [style.top.px]="this.selectionMover.topLeft.y"
+        [style.left.px]="(this.selectionMover.bottomRight.x+this.selectionMover.topLeft.x)/2"
+        [ngStyle]="{ cursor: 'ns-resize' }"
+        (mousedown)="setResizingMode(resizingMode.towardsTop)"
+        (mouseup)="setResizingMode(resizingMode.off)"
+    >
+</div>
+
+<div    
+        *ngIf="showControlPoint"
+        id="bottomMiddle"
+        class="resizingButton"
+        draggable="false"
+        [style.top.px]="this.selectionMover.bottomRight.y"
+        [style.left.px]="(this.selectionMover.bottomRight.x+this.selectionMover.topLeft.x)/2"
+        [ngStyle]="{ cursor: 'ns-resize' }"
+        (mousedown)="setResizingMode(resizingMode.towardsBottom)"
         (mouseup)="setResizingMode(resizingMode.off)"
     >
 </div>

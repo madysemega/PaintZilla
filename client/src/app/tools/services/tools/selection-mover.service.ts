@@ -6,8 +6,7 @@ import { Tool } from '@app/tools/classes/tool';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { SelectionService } from './selection.service';
 
-
-export enum ResizingMode{
+export enum ResizingMode {
   off = 0,
   towardsRight = 1,
   towardsLeft = 2,
@@ -18,9 +17,8 @@ export enum ResizingMode{
 @Injectable({
   providedIn: 'root'
 })
-
 export class SelectionMoverService extends Tool {
-
+  public readonly OUTSIDE_DETECTION_OFFSET: number = 5;
   public topLeft: Vec2;
   public bottomRight: Vec2;
   public resizingMode: ResizingMode = ResizingMode.off;
@@ -28,7 +26,7 @@ export class SelectionMoverService extends Tool {
 
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
-    this.key = 'selection-mover';
+    this.key = 'selection-manipulator';
   }
 
   setSelection(topLeft: Vec2, bottomRight: Vec2) {
@@ -47,29 +45,24 @@ export class SelectionMoverService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.selectionHandler.drawSelection(this.topLeft, this.drawingService.baseCtx);
       }
-      else if(this.isClickInsideSelection(event)){
-      }
       this.mouseLastPos.x = mousePosition.x;
       this.mouseLastPos.y = mousePosition.y;
     }
   }
 
-  //change logic bc we know topLeft is left and bottomRight is right
   isClickInsideSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
-    const xInSelection: boolean = mousePosition.x > Math.min(this.topLeft.x + 20, this.bottomRight.x + 20)
-      && mousePosition.x < Math.max(this.topLeft.x - 20, this.bottomRight.x - 20);
-    const yInSelection: boolean = mousePosition.y > Math.min(this.topLeft.y + 20, this.bottomRight.y + 20)
-      && mousePosition.y < Math.max(this.topLeft.y - 20, this.bottomRight.y - 20);
+    const xInSelection: boolean = (mousePosition.x > this.topLeft.x) && (mousePosition.x < this.bottomRight.x);
+    const yInSelection: boolean = (mousePosition.y > this.topLeft.y) && (mousePosition.y < this.bottomRight.y);
     return (xInSelection && yInSelection);
   }
 
   isClickOutsideSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
-    const xOutsideSelection: boolean = mousePosition.x < Math.min(this.topLeft.x - 20, this.bottomRight.x - 20)
-      || mousePosition.x > Math.max(this.topLeft.x + 20, this.bottomRight.x + 20);
-    const yOutsideSelection: boolean = mousePosition.y < Math.min(this.topLeft.y - 20, this.bottomRight.y - 20)
-      || mousePosition.y > Math.max(this.topLeft.y + 20, this.bottomRight.y + 20);
+    const xOutsideSelection: boolean = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
+      || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
+    const yOutsideSelection: boolean = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
+      || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
     return (xOutsideSelection || yOutsideSelection);
   }
 
@@ -85,18 +78,11 @@ export class SelectionMoverService extends Tool {
       if (this.resizingMode != ResizingMode.off) {
         this.resize(mousePosition, this.resizingMode);
       }
-      else{
+      else {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseLastPos.x, y: mousePosition.y - this.mouseLastPos.y }
 
-        this.mouseLastPos.x += mouseMovement.x;
-        this.mouseLastPos.y += mouseMovement.y;
-        
-        this.topLeft.x += mouseMovement.x;
-        this.topLeft.y += mouseMovement.y;
-
-        this.bottomRight.x += mouseMovement.x;
-        this.bottomRight.y += mouseMovement.y;
+        this.updatePositions(mouseMovement);
 
         let center: Vec2 = { x: 0, y: 0 };
         let radii: Vec2 = { x: 0, y: 0 };
@@ -109,35 +95,43 @@ export class SelectionMoverService extends Tool {
     }
   }
 
-  resize(newPos: Vec2, direction: ResizingMode): void {
+  updatePositions(mouseMovement: Vec2) {
+    this.mouseLastPos.x += mouseMovement.x;
+    this.mouseLastPos.y += mouseMovement.y;
 
+    this.topLeft.x += mouseMovement.x;
+    this.topLeft.y += mouseMovement.y;
+
+    this.bottomRight.x += mouseMovement.x;
+    this.bottomRight.y += mouseMovement.y;
+  }
+
+  resize(newPos: Vec2, direction: ResizingMode): void {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    switch(direction){
+    switch (direction) {
       case ResizingMode.towardsBottom:
         this.bottomRight.y = newPos.y;
-        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
-        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
         break;
       case ResizingMode.towardsTop:
         this.topLeft.y = newPos.y;
-        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
-        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
         break;
       case ResizingMode.towardsRight:
         this.bottomRight.x = newPos.x;
-        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
-        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
         break;
       case ResizingMode.towardsLeft:
         this.topLeft.x = newPos.x;
-        this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos, true);
-        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+        this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
         break;
     }
 
+    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+    this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+
     let center: Vec2 = { x: 0, y: 0 };
     let radii: Vec2 = { x: 0, y: 0 };
-    
     this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
     this.selectionService.drawSelectionEllipse(center, radii);
     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
