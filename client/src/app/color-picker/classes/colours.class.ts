@@ -8,7 +8,7 @@ export const BLUE_SHIFT_VALUE = 4;
 export const MAX_HUE = 360;
 export const DEGREE_NORMALIZER = 60;
 
-export class Color {
+export class Colour {
     private red: number;
     private green: number;
     private blue: number;
@@ -43,7 +43,7 @@ export class Color {
         return [hue, saturation, lightness];
     }
 
-    hslToRgb(hue: number, saturation: number, lightness: number): void {
+    hslToRgb(hue: number, saturation: number, lightness: number): Colour {
         // reference : https://css-tricks.com/converting-color-spaces-in-javascript/#hsl-to-rgb
         let chroma = (1 - Math.abs(2 * lightness - 1)) * saturation,
         secondLargestComponent = chroma * (1 - Math.abs((hue / 60) % GREEN_SHIFT_VALUE - 1)),
@@ -51,7 +51,35 @@ export class Color {
         if (hue >= MIN_HSL && hue < DEGREE_NORMALIZER){
             red = chroma;
             green = secondLargestComponent;
-            blue = 
-        }
+            blue = 0;
+        } else if (hue >= DEGREE_NORMALIZER && hue < DEGREE_NORMALIZER * 2) {
+            red = secondLargestComponent;
+            green = chroma;
+            blue = 0;
+        } else if (hue >= DEGREE_NORMALIZER * 2 && hue < DEGREE_NORMALIZER * 3) {
+            red = 0;
+            green = chroma;
+            blue = secondLargestComponent;
+        } else if (hue >= DEGREE_NORMALIZER * 3 && hue < DEGREE_NORMALIZER * 4) {
+            red = 0;
+            green = secondLargestComponent;
+            blue = chroma;
+        } else if (hue >= DEGREE_NORMALIZER * 4 && hue < DEGREE_NORMALIZER * 5) {
+            red = secondLargestComponent;
+            green = 0;
+            blue = chroma;
+        } else if (hue >= DEGREE_NORMALIZER * 5 && hue < DEGREE_NORMALIZER * 6) {
+            red = chroma;
+            green = 0;
+            blue = secondLargestComponent;
+        } 
+        red = Math.round((red + lightnessMatchingValue) * MAX_RGB);
+        green = Math.round((green + lightnessMatchingValue) * MAX_RGB);
+        blue = Math.round((blue + lightnessMatchingValue) * MAX_RGB);
+        let result: Colour;
+        result.red = red;
+        result.green = green;
+        result.blue = blue;
+        return result;
     }
 }
