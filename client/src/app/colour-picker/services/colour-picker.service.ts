@@ -6,9 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-
 export class ColourPickerService {
-    private currentColour = new Colour();
+    private currentColour: Colour = new Colour();
     private alphaSubject: BehaviorSubject<number>;
     private hueSubject: BehaviorSubject<number>;
     private saturationSubject: BehaviorSubject<number>;
@@ -44,6 +43,12 @@ export class ColourPickerService {
 
     getAlpha(): number {
         return this.alphaSubject.value;
+    }
+
+    set hue(hue: number) {
+        this.currentColour = Colour.hslToRgb(hue, this.saturationSubject.value, this.lightnessSubject.value);
+        this.currentColour.setAlpha(this.alphaSubject.value);
+        this.hueSubject.next(hue);
     }
 
     set alpha(alpha: number) {
