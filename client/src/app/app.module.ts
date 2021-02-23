@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
@@ -20,7 +21,6 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -40,6 +40,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         ColourSelectorComponent,
         ColourSliderComponent,
         LineToolConfigurationComponent,
+        OpacitySliderComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
 
