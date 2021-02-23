@@ -26,10 +26,16 @@ export class RgbFormComponent implements OnInit, OnDestroy {
             this.colourPickerService.valueObservable,
             this.colourPickerService.alphaObservable,
         ]).subscribe(() => {
-            this.rgbFormService.updateFormControl(this.colourPickerService.getCurrentColor().toStringHex());
+            this.rgbFormService.updateRgbForm(this.colourPickerService.getCurrentColor().toStringHex());
         });
 
-        this.rgbFormSubscription
+        this.rgbFormSubscription = this.rgbFormService.rgbFormControl.valueChanges.subscribe(() => {
+            this.rgbFormService.updateColourComponents();
+        });
     }
-    ngOnDestroy(): void {}
+
+    ngOnDestroy(): void {
+        this.colourSubscription.unsubscribe();
+        this.rgbFormSubscription.unsubscribe();
+    }
 }
