@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Vec2 } from '@app/app/classes/vec2';
+import * as PaletteConstants from '@app/colour-picker/constants/colour-palette.component.constants';
 import * as ColourSliderConstants from '@app/colour-picker/constants/colour-slider.component.constants';
 import * as OpacitySliderConstants from '@app/colour-picker/constants/opacity-slider.component.constants';
 import { Colour } from '../classes/colours.class';
@@ -8,14 +10,15 @@ import { ColourPickerService } from './colour-picker.service';
     providedIn: 'root',
 })
 export class SliderService {
-    // Opacity-Slider
     opacityCtx: CanvasRenderingContext2D;
-    opacityCanvas: HTMLCanvasElement;
-    opacitySliderPosition: number = 0;
-    // Color-Slider
     colorCtx: CanvasRenderingContext2D;
+    paletteCtx: CanvasRenderingContext2D;
+    opacityCanvas: HTMLCanvasElement;
     colorCanvas: HTMLCanvasElement;
+    paletteCanvas: HTMLCanvasElement;
+    opacitySliderPosition: number = 0;
     colorSliderPosition: number = 0;
+    paletteSliderPosition: Vec2 = { x: 0, y: PaletteConstants.SLIDER_HEIGHT };
 
     constructor(private colourPickerService: ColourPickerService) {}
 

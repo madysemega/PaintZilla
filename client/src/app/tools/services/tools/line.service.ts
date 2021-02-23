@@ -16,7 +16,6 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -35,13 +34,13 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService, colourService: ColourToolService) {
+    constructor(drawingService: DrawingService) {
         super(drawingService);
         this.lineShape = new LineShape([]);
 
         this.strokeWidthProperty = new StrokeWidthProperty();
-        this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
-        this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
+        this.strokeColourProperty = new StrokeStyleProperty('black');
+        this.jointsColourProperty = new FillStyleProperty('black');
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,
@@ -50,9 +49,6 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             new LineJoinProperty('round'),
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
-
-        colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
-        colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
 
         this.isShiftDown = false;
 

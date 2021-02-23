@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { ColourPaletteComponent } from '@app/colour-picker/components/colour-palette/colour-palette.component';
 import { ColourSliderComponent } from '@app/colour-picker/components/colour-slider/colour-slider.component';
 import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
@@ -12,8 +13,6 @@ import { DrawingComponent } from '@app/drawing/components/drawing/drawing.compon
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { MaterialModule } from '@app/material.module';
-import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
-import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -37,7 +36,6 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
         ColourPaletteComponent,
-        ColourSelectorComponent,
         LineToolConfigurationComponent,
         OpacitySliderComponent,
         ColourSliderComponent,

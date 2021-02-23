@@ -14,7 +14,7 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('colourSlider') sliderCanvas: ElementRef<HTMLCanvasElement>;
     private isHovering: boolean = false;
     private isAdjustingColour: boolean = false;
-    private colorChangedSubscription: Subscription;
+    private hueSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private sliderService: SliderService) {}
 
     ngAfterViewInit(): void {
@@ -22,14 +22,14 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
         this.sliderService.colorCanvas.width = Constants.SLIDER_WIDTH;
         this.sliderService.colorCanvas.height = Constants.SLIDER_HEIGHT;
         this.sliderService.colorCtx = this.sliderCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.colorChangedSubscription = this.colourPickerService.hueObservable.subscribe((hue: number) => {
+        this.hueSubscription = this.colourPickerService.hueObservable.subscribe((hue: number) => {
             this.sliderService.colorSliderPosition = (hue / Constants.MAX_HUE) * Constants.SLIDER_HEIGHT;
             this.sliderService.drawColorContext();
         });
     }
 
     ngOnDestroy(): void {
-        this.colorChangedSubscription.unsubscribe();
+        this.hueSubscription.unsubscribe();
     }
 
     @HostListener('mouseenter', ['$event'])
@@ -47,6 +47,7 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
         if (this.isHovering) {
             this.isAdjustingColour = true;
             this.sliderService.updateColor(event);
+            console.log('HUE: ' + this.colourPickerService.getHue());
         }
     }
 
@@ -54,6 +55,7 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
     onMouseMove(event: MouseEvent): void {
         if (this.isAdjustingColour) {
             this.sliderService.updateColor(event);
+            console.log('HUE: ' + this.colourPickerService.getHue());
         }
     }
 
@@ -61,6 +63,7 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
     onMouseUp(): void {
         if (this.isAdjustingColour) {
             this.isAdjustingColour = false;
+            console.log('HUE: ' + this.colourPickerService.getHue());
         }
     }
 }

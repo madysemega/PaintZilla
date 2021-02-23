@@ -6,7 +6,6 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +18,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -143,8 +142,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = 'black';
+        ctx.strokeStyle = 'black';
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {

@@ -11,7 +11,7 @@ import { combineLatest, Subscription } from 'rxjs';
 })
 export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('opacitySlider') opacityCanvas: ElementRef<HTMLCanvasElement>;
-    private colourSubscription: Subscription;
+    private hslAlphaSubscription: Subscription;
     private isHovering: boolean = false;
     isAdjustingOpacity: boolean = false;
     constructor(private colourPickerService: ColourPickerService, private sliderService: SliderService) {}
@@ -21,7 +21,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
         this.opacityCanvas.nativeElement.width = Constants.SLIDER_WIDTH;
         this.opacityCanvas.nativeElement.height = Constants.SLIDER_HEIGHT;
         this.sliderService.opacityCtx = this.opacityCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.colourSubscription = combineLatest([
+        this.hslAlphaSubscription = combineLatest([
             this.colourPickerService.alphaObservable,
             this.colourPickerService.hueObservable,
             this.colourPickerService.saturationObservable,
@@ -32,7 +32,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
         });
     }
     ngOnDestroy(): void {
-        this.colourSubscription.unsubscribe();
+        this.hslAlphaSubscription.unsubscribe();
     }
 
     @HostListener('mouseenter', ['$event'])
@@ -50,6 +50,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
         if (this.isHovering) {
             this.isAdjustingOpacity = true;
             this.sliderService.updateOpacity(event);
+            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 
@@ -57,6 +58,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
     onMouseMove(event: MouseEvent): void {
         if (this.isAdjustingOpacity) {
             this.sliderService.updateOpacity(event);
+            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 
@@ -64,6 +66,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
     onMouseUp(): void {
         if (this.isAdjustingOpacity) {
             this.isAdjustingOpacity = false;
+            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 }
