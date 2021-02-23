@@ -51,6 +51,18 @@ export class ColourPickerService {
         this.hueSubject.next(hue);
     }
 
+    set saturation(saturation: number) {
+        this.currentColour = Colour.hslToRgb(this.hueSubject.value, saturation, this.lightnessSubject.value);
+        this.currentColour.setAlpha(this.alphaSubject.value);
+        this.saturationSubject.next(saturation);
+    }
+
+    set lightness(lightness: number) {
+        this.currentColour = Colour.hslToRgb(this.hueSubject.value, this.saturationSubject.value, lightness);
+        this.currentColour.setAlpha(this.alphaSubject.value);
+        this.lightnessSubject.next(lightness);
+    }
+
     set alpha(alpha: number) {
         this.currentColour.setAlpha(alpha);
         this.alphaSubject.next(alpha);

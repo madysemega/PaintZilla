@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import * as Constants from '@app/colour-picker/constants/colour-palette.component.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker.service';
 import { SliderService } from '@app/colour-picker/services/slider.service';
 import { Subscription } from 'rxjs';
 @Component({
-    selector: 'app-color-palette',
+    selector: 'app-colour-palette',
     templateUrl: './colour-palette.component.html',
     styleUrls: ['./colour-palette.component.scss'],
 })
@@ -14,7 +14,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
     private isAdjusting: boolean = false;
     private hueSubscription: Subscription;
     private saturationSubscription: Subscription;
-    private valueSubscription: Subscription;
+    private lightnessSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private sliderService: SliderService) {}
     ngAfterViewInit(): void {
         this.sliderService.paletteCanvas = this.paletteCanvas.nativeElement;
@@ -23,7 +23,57 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
         this.sliderService.paletteCtx = this.paletteCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.hueSubscription = this.colourPickerService.hueObservable.subscribe((hue: number) => {
             this.sliderService.drawPaletteContext();
-        })
+        });
+        this.saturationSubscription = this.colourPickerService.saturationObservable.subscribe((saturation: number) => {
+            this.sliderService.paletteSliderPosition.x = saturation * Constants.SLIDER_WIDTH;
+            this.sliderService.drawPaletteContext();
+        });
+        this.lightnessSubscription = this.colourPickerService.lightnessObservable.subscribe((lightness: number) => {
+            this.sliderService.paletteSliderPosition.y = lightness * Constants.SLIDER_HEIGHT;
+            this.sliderService.drawPaletteContext();
+        });
     }
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.hueSubscription.unsubscribe();
+        this.saturationSubscription.unsubscribe();
+        this.lightnessSubscription.unsubscribe();
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onMouseEnter(): void {
+        this.isHovering = true;
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    onMouseLeave(): void {
+        this.isHovering = false;
+    }
+
+    @HostListener('document:mousedown', ['$event'])
+    onMouseDown(event: MouseEvent): void {
+        if (this.isHovering) {
+            this.isAdjusting = true;
+            this.sliderService.updatePalette(event);
+            console.log('saturation: ' + this.colourPickerService.getSaturation());
+            console.log('lightness: ' + this.colourPickerService.getLightness());
+        }
+    }
+
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        if (this.isAdjusting) {
+            this.sliderService.updatePalette(event);
+            console.log('saturation: ' + this.colourPickerService.getSaturation());
+            console.log('lightness: ' + this.colourPickerService.getLightness());
+        }
+    }
+
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(): void {
+        if (this.isAdjusting) {
+            this.isAdjusting = false;
+            console.log('saturation: ' + this.colourPickerService.getSaturation());
+            console.log('lightness: ' + this.colourPickerService.getLightness());
+        }
+    }
 }

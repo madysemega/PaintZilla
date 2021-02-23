@@ -88,5 +88,10 @@ export class SliderService {
 
     drawPaletteCursor(): void {}
 
-    updatePalette(event: MouseEvent): void {}
+    updatePalette(event: MouseEvent): void {
+        const xPosition = event.clientX - this.paletteCanvas.getBoundingClientRect().x;
+        const yPosition = event.clientY - this.paletteCanvas.getBoundingClientRect().y;
+        this.colourPickerService.saturation = Math.min(PaletteConstants.SLIDER_WIDTH, Math.max(0, xPosition)) / PaletteConstants.SLIDER_WIDTH;
+        this.colourPickerService.lightness = Math.min(PaletteConstants.SLIDER_HEIGHT, Math.max(0, yPosition)) / PaletteConstants.SLIDER_HEIGHT;
+    }
 }
