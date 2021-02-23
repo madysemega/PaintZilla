@@ -11,22 +11,22 @@ export class ColourPickerService {
     private alphaSubject: BehaviorSubject<number>;
     private hueSubject: BehaviorSubject<number>;
     private saturationSubject: BehaviorSubject<number>;
-    private lightnessSubject: BehaviorSubject<number>;
+    private valueSubject: BehaviorSubject<number>;
     alphaObservable: Observable<number>;
     hueObservable: Observable<number>;
     saturationObservable: Observable<number>;
-    lightnessObservable: Observable<number>;
+    valueObservable: Observable<number>;
 
     constructor() {
-        const currentHslColor = this.currentColour.rgbToHsl();
+        const currentHslColor = this.currentColour.rgbToHsv();
         this.alphaSubject = new BehaviorSubject<number>(this.currentColour.getAlpha());
         this.hueSubject = new BehaviorSubject<number>(currentHslColor[Constants.HUE_INDEX]);
         this.saturationSubject = new BehaviorSubject<number>(currentHslColor[Constants.SATURATION_INDEX]);
-        this.lightnessSubject = new BehaviorSubject<number>(currentHslColor[Constants.LIGHTNESS_INDEX]);
+        this.valueSubject = new BehaviorSubject<number>(currentHslColor[Constants.VALUE_INDEX]);
         this.alphaObservable = this.alphaSubject.asObservable();
         this.hueObservable = this.hueSubject.asObservable();
         this.saturationObservable = this.saturationSubject.asObservable();
-        this.lightnessObservable = this.lightnessSubject.asObservable();
+        this.valueObservable = this.valueSubject.asObservable();
     }
 
     getHue(): number {
@@ -37,8 +37,8 @@ export class ColourPickerService {
         return this.saturationSubject.value;
     }
 
-    getLightness(): number {
-        return this.lightnessSubject.value;
+    getValue(): number {
+        return this.valueSubject.value;
     }
 
     getAlpha(): number {
@@ -46,21 +46,21 @@ export class ColourPickerService {
     }
 
     set hue(hue: number) {
-        this.currentColour = Colour.hslToRgb(hue, this.saturationSubject.value, this.lightnessSubject.value);
+        this.currentColour = Colour.hsvToRgb(hue, this.saturationSubject.value, this.valueSubject.value);
         this.currentColour.setAlpha(this.alphaSubject.value);
         this.hueSubject.next(hue);
     }
 
     set saturation(saturation: number) {
-        this.currentColour = Colour.hslToRgb(this.hueSubject.value, saturation, this.lightnessSubject.value);
+        this.currentColour = Colour.hsvToRgb(this.hueSubject.value, saturation, this.valueSubject.value);
         this.currentColour.setAlpha(this.alphaSubject.value);
         this.saturationSubject.next(saturation);
     }
 
-    set lightness(lightness: number) {
-        this.currentColour = Colour.hslToRgb(this.hueSubject.value, this.saturationSubject.value, lightness);
+    set value(value: number) {
+        this.currentColour = Colour.hsvToRgb(this.hueSubject.value, this.saturationSubject.value, value);
         this.currentColour.setAlpha(this.alphaSubject.value);
-        this.lightnessSubject.next(lightness);
+        this.valueSubject.next(value);
     }
 
     set alpha(alpha: number) {
@@ -78,10 +78,10 @@ export class ColourPickerService {
     }
 
     emitChanges(colour: Colour): void {
-        const colourToHsl = colour.rgbToHsl();
+        const colourToHsv = colour.rgbToHsv();
         this.alphaSubject.next(colour.getAlpha());
-        this.hueSubject.next(colourToHsl[Constants.HUE_INDEX]);
-        this.saturationSubject.next(colourToHsl[Constants.SATURATION_INDEX]);
-        this.lightnessSubject.next(colourToHsl[Constants.LIGHTNESS_INDEX]);
+        this.hueSubject.next(colourToHsv[Constants.HUE_INDEX]);
+        this.saturationSubject.next(colourToHsv[Constants.SATURATION_INDEX]);
+        this.valueSubject.next(colourToHsv[Constants.VALUE_INDEX]);
     }
 }

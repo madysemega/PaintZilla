@@ -8,3 +8,4 @@ export const MAX_HUE = 360;
 export const DEGREE_NORMALIZER = 60;
 export const MIN_ALPHA = 0;
 export const MAX_ALPHA = 1;
+export const TO_PERCENTAGE = 100;

@@ -6,47 +6,56 @@ export class Colour {
     private blue: number = Constants.MIN_RGB;
     private alpha: number = Constants.MAX_ALPHA;
 
-    static hslToRgb(hue: number, saturation: number, lightness: number): Colour {
-        // reference : https://css-tricks.com/converting-color-spaces-in-javascript/#hsl-to-rgb
-        const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
-        const secondLargestComponent = chroma * (1 - Math.abs(((hue / 60) % Constants.GREEN_SHIFT_VALUE) - 1));
-        const lightnessMatchingValue = lightness - chroma / 2;
-        let red = 0;
-        let green = 0;
-        let blue = 0;
-        const result: Colour = new Colour();
-        if (hue >= Constants.MIN_HSL && hue < Constants.DEGREE_NORMALIZER) {
-            red = chroma;
-            green = secondLargestComponent;
-            blue = 0;
-        } else if (hue >= Constants.DEGREE_NORMALIZER && hue < Constants.DEGREE_NORMALIZER * 2) {
-            red = secondLargestComponent;
-            green = chroma;
-            blue = 0;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 2 && hue < Constants.DEGREE_NORMALIZER * 3) {
-            red = 0;
-            green = chroma;
-            blue = secondLargestComponent;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 3 && hue < Constants.DEGREE_NORMALIZER * 4) {
-            red = 0;
-            green = secondLargestComponent;
-            blue = chroma;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 4 && hue < Constants.DEGREE_NORMALIZER * 5) {
-            red = secondLargestComponent;
-            green = 0;
-            blue = chroma;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 5 && hue < Constants.DEGREE_NORMALIZER * 6) {
-            red = chroma;
-            green = 0;
-            blue = secondLargestComponent;
+    static fromRgb(red: number, green: number, blue: number): Colour {
+        const newColor = new Colour();
+        newColor.red = red;
+        newColor.green = green;
+        newColor.blue = blue;
+        return newColor;
+    }
+
+    static fromRgba(red: number, green: number, blue: number, alpha: number): Colour {
+        const newColor = this.fromRgb(red, green, blue);
+        newColor.alpha = alpha;
+        return newColor;
+    }
+    static hsvToRgb(hue: number, saturation: number, value: number): Colour {
+        // reference : https://gist.github.com/mjackson/5311256
+        const minHue = 0;
+        const minSaturation = 0;
+        const maxSaturation = 1;
+        const minValue = 0;
+        const maxValue = 1;
+
+        hue = Math.min(Math.max(minHue, hue), Constants.MAX_HUE);
+        saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
+        value = Math.min(Math.max(minValue, value), maxValue);
+
+        const sectionSize = 60;
+        hue /= sectionSize;
+
+        const chroma = value * saturation;
+        const x = chroma * (1 - Math.abs((hue % 2) - 1));
+        const m = value - chroma;
+
+        let newColor: Colour;
+        if (hue <= 1) {
+            newColor = Colour.fromRgb(chroma + m, x + m, m);
+        } else if (hue <= 2) {
+            newColor = Colour.fromRgb(x + m, chroma + m, m);
+        } else if (hue <= 3) {
+            newColor = Colour.fromRgb(m, chroma + m, x + m);
+        } else if (hue <= 4) {
+            newColor = Colour.fromRgb(m, x + m, chroma + m);
+        } else if (hue <= 5) {
+            newColor = Colour.fromRgb(x + m, m, chroma + m);
+        } else {
+            newColor = Colour.fromRgb(chroma + m, m, x + m);
         }
-        red = Math.round((red + lightnessMatchingValue) * Constants.MAX_RGB);
-        green = Math.round((green + lightnessMatchingValue) * Constants.MAX_RGB);
-        blue = Math.round((blue + lightnessMatchingValue) * Constants.MAX_RGB);
-        result.red = red;
-        result.green = green;
-        result.blue = blue;
-        return result;
+        newColor.red *= Constants.MAX_RGB;
+        newColor.green *= Constants.MAX_RGB;
+        newColor.blue *= Constants.MAX_RGB;
+        return newColor;
     }
 
     getRed(): number {
@@ -107,34 +116,34 @@ export class Colour {
         return newColor;
     }
 
-    rgbToHsl(): [number, number, number] {
-        // references -> color-conversion ref: https://css-tricks.com/converting-color-spaces-in-javascript/#rgb-to-hsl,
+    rgbToHsv(): [number, number, number] {
+        // references -> color-conversion ref: https://gist.github.com/mjackson/5311256,
         // hsl explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
-        let hue = Constants.MIN_HSL;
-        let saturation = Constants.MIN_HSL;
-        let lightness = Constants.MIN_HSL;
-        const red = this.red / Constants.MAX_RGB;
-        const green = this.green / Constants.MAX_RGB;
-        const blue = this.blue / Constants.MAX_RGB;
-        const maxChannelValue = Math.max(red, green, blue);
-        const minChannelValue = Math.min(red, green, blue);
-        const deltaChannelValue = maxChannelValue - minChannelValue;
-        if (deltaChannelValue) {
-            if (maxChannelValue === red) {
-                hue = ((green - blue) / deltaChannelValue) % Constants.HEXAGON_CIRCUMFERENCE;
-            } else if (maxChannelValue === green) {
-                hue = (blue - red) / deltaChannelValue + Constants.GREEN_SHIFT_VALUE;
-            } else {
-                hue = (red - green) / deltaChannelValue + Constants.BLUE_SHIFT_VALUE;
-            }
-        }
-        hue = Math.round(hue * Constants.DEGREE_NORMALIZER);
-        if (hue < Constants.MIN_HSL) {
-            hue += Constants.MAX_HUE;
-        }
-        lightness = (maxChannelValue + minChannelValue) / 2;
-        saturation = deltaChannelValue === 0 ? 0 : deltaChannelValue / (1 - Math.abs(2 * lightness - 1));
+        const redPrime = this.red / Constants.MAX_RGB;
+        const greenPrime = this.green / Constants.MAX_RGB;
+        const bluePrime = this.blue / Constants.MAX_RGB;
 
-        return [hue, saturation, lightness];
+        const cMax = Math.max(redPrime, greenPrime, bluePrime);
+        const cMin = Math.min(redPrime, greenPrime, bluePrime);
+        const deltaC = cMax - cMin;
+
+        const angleValue = 60;
+
+        let hue: number;
+        if (deltaC === 0) {
+            hue = 0;
+        } else if (cMax === redPrime) {
+            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
+        } else if (cMax === greenPrime) {
+            hue = angleValue * ((bluePrime - redPrime) / deltaC + 2);
+        } else {
+            hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
+        }
+
+        const saturation: number = cMax === 0 ? 0 : deltaC / cMax;
+
+        const value = cMax;
+
+        return [hue, saturation, value];
     }
 }

@@ -25,7 +25,7 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
             this.colourPickerService.alphaObservable,
             this.colourPickerService.hueObservable,
             this.colourPickerService.saturationObservable,
-            this.colourPickerService.lightnessObservable,
+            this.colourPickerService.valueObservable,
         ]).subscribe(() => {
             this.sliderService.opacitySliderPosition = this.colourPickerService.getAlpha() * Constants.SLIDER_WIDTH;
             this.sliderService.drawOpacityContext();

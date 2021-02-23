@@ -14,7 +14,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
     private isAdjusting: boolean = false;
     private hueSubscription: Subscription;
     private saturationSubscription: Subscription;
-    private lightnessSubscription: Subscription;
+    private valueSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private sliderService: SliderService) {}
     ngAfterViewInit(): void {
         this.sliderService.paletteCanvas = this.paletteCanvas.nativeElement;
@@ -28,15 +28,15 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
             this.sliderService.paletteSliderPosition.x = saturation * Constants.SLIDER_WIDTH;
             this.sliderService.drawPaletteContext();
         });
-        this.lightnessSubscription = this.colourPickerService.lightnessObservable.subscribe((lightness: number) => {
-            this.sliderService.paletteSliderPosition.y = (1 - lightness) * Constants.SLIDER_HEIGHT;
+        this.valueSubscription = this.colourPickerService.valueObservable.subscribe((value: number) => {
+            this.sliderService.paletteSliderPosition.y = (1 - value) * Constants.SLIDER_HEIGHT;
             this.sliderService.drawPaletteContext();
         });
     }
     ngOnDestroy(): void {
         this.hueSubscription.unsubscribe();
         this.saturationSubscription.unsubscribe();
-        this.lightnessSubscription.unsubscribe();
+        this.valueSubscription.unsubscribe();
     }
 
     @HostListener('mouseenter', ['$event'])
@@ -55,7 +55,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
             this.isAdjusting = true;
             this.sliderService.updatePalette(event);
             console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('lightness: ' + this.colourPickerService.getLightness());
+            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 
@@ -64,7 +64,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
         if (this.isAdjusting) {
             this.sliderService.updatePalette(event);
             console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('lightness: ' + this.colourPickerService.getLightness());
+            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 
@@ -73,7 +73,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
         if (this.isAdjusting) {
             this.isAdjusting = false;
             console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('lightness: ' + this.colourPickerService.getLightness());
+            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 }

@@ -65,10 +65,10 @@ export class SliderService {
         const cursorRadius = ColourSliderConstants.CURSOR_RADIUS;
         const cursor = new Path2D();
         cursor.arc(ColourSliderConstants.SLIDER_WIDTH / 2, this.colorSliderPosition, cursorRadius, 0, 2 * Math.PI);
-        this.colorCtx.fillStyle = Colour.hslToRgb(
+        this.colorCtx.fillStyle = Colour.hsvToRgb(
             this.colourPickerService.getHue(),
             ColourSliderConstants.MAX_SATURATION,
-            ColourSliderConstants.HALF_LIGHTNESS,
+            ColourSliderConstants.MAX_VALUE,
         ).toStringRBG();
         this.colorCtx.fill(cursor);
         this.colorCtx.lineWidth = ColourSliderConstants.CURSOR_LINEWIDTH;
@@ -85,10 +85,10 @@ export class SliderService {
     }
 
     drawPaletteContext(): void {
-        this.paletteCtx.fillStyle = Colour.hslToRgb(
+        this.paletteCtx.fillStyle = Colour.hsvToRgb(
             this.colourPickerService.getHue(),
             PaletteConstants.MAX_SATURATION,
-            PaletteConstants.HALF_LIGHTNESS,
+            PaletteConstants.MAX_VALUE,
         ).toStringRBG();
         this.paletteCtx.fillRect(0, 0, PaletteConstants.SLIDER_WIDTH, PaletteConstants.SLIDER_HEIGHT);
         const xGradient = this.paletteCtx.createLinearGradient(0, 0, PaletteConstants.SLIDER_WIDTH, 0);
@@ -119,6 +119,6 @@ export class SliderService {
         const xPosition = event.clientX - this.paletteCanvas.getBoundingClientRect().x;
         const yPosition = event.clientY - this.paletteCanvas.getBoundingClientRect().y;
         this.colourPickerService.saturation = Math.min(PaletteConstants.SLIDER_WIDTH, Math.max(0, xPosition)) / PaletteConstants.SLIDER_WIDTH;
-        this.colourPickerService.lightness = 1.0 - Math.min(PaletteConstants.SLIDER_HEIGHT, Math.max(0, yPosition)) / PaletteConstants.SLIDER_HEIGHT;
+        this.colourPickerService.value = 1.0 - Math.min(PaletteConstants.SLIDER_HEIGHT, Math.max(0, yPosition)) / PaletteConstants.SLIDER_HEIGHT;
     }
 }
