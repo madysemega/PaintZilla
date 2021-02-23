@@ -7,6 +7,8 @@ export const GREEN_SHIFT_VALUE = 2;
 export const BLUE_SHIFT_VALUE = 4;
 export const MAX_HUE = 360;
 export const DEGREE_NORMALIZER = 60;
+export const MIN_ALPHA = 0;
+export const MAX_ALPHA = 1;
 
 export class Colour {
     private red: number;
@@ -26,23 +28,31 @@ export class Colour {
         return this.blue;
     }
 
+    getAlpha(): number {
+        return this.alpha;
+    }
+
     setRed(red: number): void {
-        this.red = this.setColor(red);
+        this.red = this.setColor(red, MIN_RGB, MAX_RGB);
     }
 
     setGreen(green: number): void {
-        this.green = this.setColor(green);
+        this.green = this.setColor(green, MIN_RGB, MAX_RGB);
     }
 
     setBlue(blue: number): void {
-        this.blue = this.setColor(blue);
+        this.blue = this.setColor(blue, MIN_RGB, MAX_RGB);
     }
 
-    setColor(color: number): number {
-        if (color < MIN_RGB) {
-            return MIN_RGB;
-        } else if (color > MAX_RGB) {
-            return MAX_RGB;
+    setAlpha(alpha: number): void {
+        this.alpha = this.setColor(alpha, MIN_ALPHA, MAX_ALPHA);
+    }
+
+    setColor(color: number, minValue: number, maxValue: number): number {
+        if (color < minValue) {
+            return minValue;
+        } else if (color > maxValue) {
+            return maxValue;
         }
         return color;
     }
@@ -114,5 +124,9 @@ export class Colour {
         result.green = green;
         result.blue = blue;
         return result;
+    }
+
+    isEqualTo(colour: Colour): boolean {
+        return this.red === colour.red && this.green === colour.green && this.blue === colour.blue && this.alpha === colour.alpha;
     }
 }
