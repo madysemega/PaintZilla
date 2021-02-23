@@ -1,10 +1,10 @@
 import * as Constants from '@app/colour-picker/constants/colours.class.constants';
 
 export class Colour {
-    private red: number;
-    private green: number;
-    private blue: number;
-    private alpha: number;
+    private red: number = Constants.MIN_RGB;
+    private green: number = Constants.MIN_RGB;
+    private blue: number = Constants.MIN_RGB;
+    private alpha: number = Constants.MAX_ALPHA;
 
     getRed(): number {
         return this.red;
@@ -45,6 +45,23 @@ export class Colour {
             return maxValue;
         }
         return color;
+    }
+
+    toStringRBG(): string {
+        return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+    }
+
+    toStringRBGA(): string {
+        return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
+    }
+
+    clone(): Colour {
+        const newColor = new Colour();
+        newColor.red = this.red;
+        newColor.green = this.green;
+        newColor.blue = this.blue;
+        newColor.alpha = this.alpha;
+        return newColor;
     }
 
     rgbToHsl(): [number, number, number] {

@@ -43,6 +43,11 @@ export class ColourPickerService {
         return this.alphaSubject.value;
     }
 
+    set alpha(alpha: number) {
+        this.currentColour.setAlpha(alpha);
+        this.alphaSubject.next(alpha);
+    }
+
     getCurrentColor(): Colour {
         return this.currentColour;
     }
