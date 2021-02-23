@@ -88,7 +88,6 @@ export class EllipseSelectionHandlerService {
 
   drawSelection(position: Vec2, ctx: CanvasRenderingContext2D): void {
     if (this.hasSelectionBeenMoved(position)) {
-      console.log("drawing");
       ctx.imageSmoothingEnabled = false;
       this.selectionService.drawPostSelectionEllipse(this.selectionOriginalCenter, this.selectionOriginalRadii);
       ctx.beginPath();

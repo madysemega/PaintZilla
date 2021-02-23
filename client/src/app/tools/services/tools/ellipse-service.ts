@@ -72,10 +72,10 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingManipulated.getValue()) {
+        if (this.isSelectionBeingManipulated()) {
             this.selectionMoverService.onKeyDown(event);
         }
-        if (event.key === 'Shift') {
+        else if (event.key === 'Shift') {
             this.isShiftDown = true;
             if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {
@@ -89,10 +89,10 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (this.selectionService.isSelectionBeingManipulated.getValue()) {
+        if (this.isSelectionBeingManipulated()) {
             this.selectionMoverService.onKeyUp(event);
         }
-        if (event.key === 'Shift') {
+        else if (event.key === 'Shift') {
             this.isShiftDown = false;
             if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {

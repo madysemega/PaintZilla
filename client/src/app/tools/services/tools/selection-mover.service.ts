@@ -27,6 +27,11 @@ export class SelectionMoverService extends Tool {
   public bottomRight: Vec2;
   public resizingMode: ResizingMode = ResizingMode.off;
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
+  private mouseDownLastPos: Vec2 = { x: 0, y: 0 };
+  private isShiftDown: boolean;
+
+  private slope: number;
+  private yIntercept: number;
 
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
@@ -36,6 +41,7 @@ export class SelectionMoverService extends Tool {
   setSelection(topLeft: Vec2, bottomRight: Vec2) {
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;
+    this.computeDiagonalLine();
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -49,6 +55,11 @@ export class SelectionMoverService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.selectionHandler.drawSelection(this.topLeft, this.drawingService.baseCtx);
       }
+      else {
+        this.computeDiagonalLine();
+      }
+      this.mouseDownLastPos.x = mousePosition.x;
+      this.mouseDownLastPos.y = mousePosition.y;
       this.mouseLastPos.x = mousePosition.x;
       this.mouseLastPos.y = mousePosition.y;
     }
@@ -76,15 +87,21 @@ export class SelectionMoverService extends Tool {
   }
 
   onMouseMove(event: MouseEvent): void {
-    const mousePosition = this.getPositionFromMouse(event);
+    let mousePosition = this.getPositionFromMouse(event);
 
     if (this.mouseDown) {
+      this.mouseLastPos.x = mousePosition.x;
+      this.mouseLastPos.y = mousePosition.y;
       if (this.resizingMode != ResizingMode.off) {
+        if (this.isShiftDown) {
+          mousePosition = this.adjustMousePosition(mousePosition);
+        }
         this.resize(mousePosition, this.resizingMode);
       }
       else {
+        
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseLastPos.x, y: mousePosition.y - this.mouseLastPos.y }
+        const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseDownLastPos.x, y: mousePosition.y - this.mouseDownLastPos.y }
 
         this.updatePositions(mouseMovement);
 
@@ -100,8 +117,8 @@ export class SelectionMoverService extends Tool {
   }
 
   updatePositions(mouseMovement: Vec2) {
-    this.mouseLastPos.x += mouseMovement.x;
-    this.mouseLastPos.y += mouseMovement.y;
+    this.mouseDownLastPos.x += mouseMovement.x;
+    this.mouseDownLastPos.y += mouseMovement.y;
 
     this.topLeft.x += mouseMovement.x;
     this.topLeft.y += mouseMovement.y;
@@ -111,10 +128,9 @@ export class SelectionMoverService extends Tool {
   }
 
   resize(newPos: Vec2, direction: ResizingMode): void {
-    console.log(direction);
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-    if (direction === ResizingMode.towardsBottom  || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
+    if (direction === ResizingMode.towardsBottom || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
       this.bottomRight.y = newPos.y;
       this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
     }
@@ -161,14 +177,37 @@ export class SelectionMoverService extends Tool {
     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
   }
 
+  computeDiagonalLine() {
+    this.slope = (this.topLeft.y - this.bottomRight.y) / (this.bottomRight.x - this.topLeft.x);
+    if (this.resizingMode === ResizingMode.towardsBottomRight || this.resizingMode === ResizingMode.towardsTopLeft) {
+      this.slope *= -1;
+      this.yIntercept = this.topLeft.y - this.topLeft.x * this.slope;
+      return;
+    }
+    this.yIntercept = this.bottomRight.y - this.topLeft.x * this.slope;
+  }
+
+  adjustMousePosition(mousePos: Vec2): Vec2 {
+    return { x: mousePos.x, y: mousePos.x * this.slope + this.yIntercept };
+  }
+
   onKeyDown(event: KeyboardEvent): void {
-    if (event.key == 'shift') {
-      //this.resizingMode = true;
+    if (event.key === 'Shift') {
+      this.isShiftDown = true;
+      if (this.resizingMode != ResizingMode.off) {
+        let adjustedMousePos: Vec2 = this.adjustMousePosition(this.mouseLastPos);
+        this.resize(adjustedMousePos, this.resizingMode);
+      }
     }
   }
 
   onKeyUp(event: KeyboardEvent): void {
-
+    if (event.key === 'Shift') {
+      this.isShiftDown = false;
+      if (this.resizingMode != ResizingMode.off) {
+        this.resize(this.mouseLastPos, this.resizingMode);
+      }
+    }
   }
 
 }
