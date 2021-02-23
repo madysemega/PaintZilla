@@ -73,5 +73,9 @@ export class SliderService {
         this.colorCtx.stroke(cursor);
     }
 
-    updateColor(event: MouseEvent): void {}
+    updateColor(event: MouseEvent): void {
+        const position = event.clientY  - this.colorCanvas.getBoundingClientRect().y;
+        const hue = (Math.min(ColourSliderConstants.SLIDER_HEIGHT, Math.max(0, position)) / ColourSliderConstants.SLIDER_WIDTH);
+        this.colourPickerService.hue = hue;
+    }
 }
