@@ -3,7 +3,10 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as Constants from '@app/colour-picker/constants/colour-picker.service.constants';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
+
 export class ColourPickerService {
     private currentColour = new Colour();
     private alphaSubject: BehaviorSubject<number>;

@@ -35,12 +35,12 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
         this.colourSubscription.unsubscribe();
     }
 
-    @HostListener('document:mouseenter', ['$event'])
+    @HostListener('mouseenter', ['$event'])
     onMouseEnter(): void {
         this.isHovering = true;
     }
 
-    @HostListener('document:mouseleave', ['$event'])
+    @HostListener('mouseleave', ['$event'])
     onMouseLeave(): void {
         this.isHovering = false;
     }

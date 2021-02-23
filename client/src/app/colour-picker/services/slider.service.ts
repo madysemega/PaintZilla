@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import * as OpacitySliderConstants from '@app/colour-picker/constants/opacity-slider.component.constants';
 import { ColourPickerService } from './colour-picker.service';
-@Injectable()
+
+@Injectable({
+    providedIn: 'root',
+})
 export class SliderService {
     opacityCtx: CanvasRenderingContext2D;
     opacityCanvas: HTMLCanvasElement;
     opacitySliderPosition: number = 0;
+    colorCtx: CanvasRenderingContext2D;
+    colorCanvas: HTMLCanvasElement;
+    colorSliderPosition: number = 0;
+
     constructor(private colourPickerService: ColourPickerService) {}
 
     drawOpacityContext(): void {
@@ -21,12 +28,12 @@ export class SliderService {
     }
 
     drawOpacityCursor(): void {
-        const radius = 8;
+        const cursorRadius = OpacitySliderConstants.CURSOR_RADIUS;
         const cursor = new Path2D();
-        cursor.arc(this.opacitySliderPosition, OpacitySliderConstants.SLIDER_HEIGHT / 2, radius, 0, 2 * Math.PI);
-        const lineWidth = 2;
+        cursor.arc(this.opacitySliderPosition, OpacitySliderConstants.SLIDER_HEIGHT / 2, cursorRadius, 0, 2 * Math.PI);
+        const lineWidth = OpacitySliderConstants.CURSOR_LINEWIDTH;
         this.opacityCtx.lineWidth = lineWidth;
-        this.opacityCtx.strokeStyle = 'black';
+        this.opacityCtx.strokeStyle = OpacitySliderConstants.CURSOR_STYLE;
         this.opacityCtx.stroke(cursor);
     }
 
