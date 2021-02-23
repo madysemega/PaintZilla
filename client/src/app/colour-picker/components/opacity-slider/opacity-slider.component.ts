@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import * as Constants from '@app/colour-picker/constants/opacity-slider.component.constants';
-import { ColourPickerService } from '@app/colour-picker/services/colour-picker.service';
-import { SliderService } from '@app/colour-picker/services/slider.service';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { SliderService } from '@app/colour-picker/services/slider/slider.service';
 import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
@@ -50,7 +50,6 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
         if (this.isHovering) {
             this.isAdjustingOpacity = true;
             this.sliderService.updateOpacity(event);
-            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 
@@ -58,7 +57,6 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
     onMouseMove(event: MouseEvent): void {
         if (this.isAdjustingOpacity) {
             this.sliderService.updateOpacity(event);
-            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 
@@ -66,7 +64,6 @@ export class OpacitySliderComponent implements AfterViewInit, OnDestroy {
     onMouseUp(): void {
         if (this.isAdjustingOpacity) {
             this.isAdjustingOpacity = false;
-            console.log('Alpha: ' + this.colourPickerService.getAlpha());
         }
     }
 }

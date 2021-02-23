@@ -6,7 +6,7 @@ export class Colour {
     private blue: number = Constants.MIN_RGB;
     private alpha: number = Constants.MAX_ALPHA;
 
-    static fromRgb(red: number, green: number, blue: number): Colour {
+    static cloneRGB(red: number, green: number, blue: number): Colour {
         const newColor = new Colour();
         newColor.red = red;
         newColor.green = green;
@@ -14,8 +14,8 @@ export class Colour {
         return newColor;
     }
 
-    static fromRgba(red: number, green: number, blue: number, alpha: number): Colour {
-        const newColor = this.fromRgb(red, green, blue);
+    static cloneRGBA(red: number, green: number, blue: number, alpha: number): Colour {
+        const newColor = this.cloneRGB(red, green, blue);
         newColor.alpha = alpha;
         return newColor;
     }
@@ -39,18 +39,18 @@ export class Colour {
         const m = value - chroma;
 
         let newColor: Colour;
-        if (hue <= 1) {
-            newColor = Colour.fromRgb(chroma + m, x + m, m);
-        } else if (hue <= 2) {
-            newColor = Colour.fromRgb(x + m, chroma + m, m);
-        } else if (hue <= 3) {
-            newColor = Colour.fromRgb(m, chroma + m, x + m);
-        } else if (hue <= 4) {
-            newColor = Colour.fromRgb(m, x + m, chroma + m);
-        } else if (hue <= 5) {
-            newColor = Colour.fromRgb(x + m, m, chroma + m);
+        if (hue <= Constants.FIRST_CIRCUMFERENCE) {
+            newColor = Colour.cloneRGB(chroma + m, x + m, m);
+        } else if (hue <= Constants.SECOND_CIRCUMFERENCE) {
+            newColor = Colour.cloneRGB(x + m, chroma + m, m);
+        } else if (hue <= Constants.THIRD_CIRCUMFERENCE) {
+            newColor = Colour.cloneRGB(m, chroma + m, x + m);
+        } else if (hue <= Constants.FOURTH_CIRCUMFERENCE) {
+            newColor = Colour.cloneRGB(m, x + m, chroma + m);
+        } else if (hue <= Constants.FIFTH_CIRCUMFERENCE) {
+            newColor = Colour.cloneRGB(x + m, m, chroma + m);
         } else {
-            newColor = Colour.fromRgb(chroma + m, m, x + m);
+            newColor = Colour.cloneRGB(chroma + m, m, x + m);
         }
         newColor.red *= Constants.MAX_RGB;
         newColor.green *= Constants.MAX_RGB;
@@ -118,7 +118,7 @@ export class Colour {
 
     rgbToHsv(): [number, number, number] {
         // references -> color-conversion ref: https://gist.github.com/mjackson/5311256,
-        // hsl explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
+        // hsv explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
         const redPrime = this.red / Constants.MAX_RGB;
         const greenPrime = this.green / Constants.MAX_RGB;
         const bluePrime = this.blue / Constants.MAX_RGB;
@@ -126,18 +126,16 @@ export class Colour {
         const cMax = Math.max(redPrime, greenPrime, bluePrime);
         const cMin = Math.min(redPrime, greenPrime, bluePrime);
         const deltaC = cMax - cMin;
-
-        const angleValue = 60;
-
+        const angleValue = Constants.DEGREE_NORMALIZER;
         let hue: number;
         if (deltaC === 0) {
             hue = 0;
         } else if (cMax === redPrime) {
-            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
+            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % Constants.HEXAGON_CIRCUMFERENCE);
         } else if (cMax === greenPrime) {
-            hue = angleValue * ((bluePrime - redPrime) / deltaC + 2);
+            hue = angleValue * ((bluePrime - redPrime) / deltaC + Constants.GREEN_SHIFT_VALUE);
         } else {
-            hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
+            hue = angleValue * ((redPrime - greenPrime) / deltaC + Constants.BLUE_SHIFT_VALUE);
         }
 
         const saturation: number = cMax === 0 ? 0 : deltaC / cMax;

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as PaletteConstants from '@app/colour-picker/constants/colour-palette.component.constants';
 import * as ColourSliderConstants from '@app/colour-picker/constants/colour-slider.component.constants';
 import * as OpacitySliderConstants from '@app/colour-picker/constants/opacity-slider.component.constants';
-import { Colour } from '../classes/colours.class';
-import { ColourPickerService } from './colour-picker.service';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 
 @Injectable({
     providedIn: 'root',

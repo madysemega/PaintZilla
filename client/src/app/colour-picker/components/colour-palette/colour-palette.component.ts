@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import * as Constants from '@app/colour-picker/constants/colour-palette.component.constants';
-import { ColourPickerService } from '@app/colour-picker/services/colour-picker.service';
-import { SliderService } from '@app/colour-picker/services/slider.service';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { SliderService } from '@app/colour-picker/services/slider/slider.service';
 import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-colour-palette',
@@ -54,8 +54,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
         if (this.isHovering) {
             this.isAdjusting = true;
             this.sliderService.updatePalette(event);
-            console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 
@@ -63,8 +61,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
     onMouseMove(event: MouseEvent): void {
         if (this.isAdjusting) {
             this.sliderService.updatePalette(event);
-            console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 
@@ -72,8 +68,6 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
     onMouseUp(): void {
         if (this.isAdjusting) {
             this.isAdjusting = false;
-            console.log('saturation: ' + this.colourPickerService.getSaturation());
-            console.log('value: ' + this.colourPickerService.getValue());
         }
     }
 }
