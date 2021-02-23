@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ResizingMode, SelectionMoverService } from '@app/tools/services/tools/selection-mover.service';
 import { SelectionService } from '@app/tools/services/tools/selection.service';
 
@@ -9,20 +9,34 @@ import { SelectionService } from '@app/tools/services/tools/selection.service';
   styleUrls: ['./ellipse-selection.component.scss']
 })
 export class EllipseSelectionComponent implements OnInit {
- 
+
   public resizingMode: typeof ResizingMode = ResizingMode;
   public showControlPoint: boolean
+  public isShiftDown: boolean;
 
-  constructor(public selectionMover: SelectionMoverService, public selectionService: SelectionService) { 
+  constructor(public selectionMover: SelectionMoverService, public selectionService: SelectionService) {
   }
 
-  setResizingMode(resizingMode : ResizingMode): void{
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftDown = true;
+    }
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftDown = false;
+    }
+  }
+
+  setResizingMode(resizingMode: ResizingMode): void {
     this.selectionMover.resizingMode = resizingMode;
   }
 
   ngOnInit(): void {
-    console.log(this.selectionService.isShiftDown);
-    this.selectionService.isSelectionBeingManipulated.subscribe(isActivated => ( this.showControlPoint = isActivated));
+    this.selectionService.isSelectionBeingManipulated.subscribe(isActivated => (this.showControlPoint = isActivated));
   }
 
 }

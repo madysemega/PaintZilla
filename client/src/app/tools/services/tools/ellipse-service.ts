@@ -18,6 +18,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     private readonly MINIMUM_SELECTION_WIDTH : number = 5;
     private startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
+    private isShiftDown : boolean;
+
 
     constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
         super(drawingService);
@@ -74,12 +76,13 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             this.selectionMoverService.onKeyDown(event);
         }
         if (event.key === 'Shift') {
-            this.selectionService.isShiftDown = true;
+            this.isShiftDown = true;
             if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                    this.select(this.startPoint, this.lastMousePosition);
-                    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                    //this.select(this.startPoint, this.lastMousePosition);
+                    //this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition, this.isShiftDown);
+                    this.drawSelectionOutline(this.lastMousePosition);
                 }
             }
         }
@@ -90,12 +93,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             this.selectionMoverService.onKeyUp(event);
         }
         if (event.key === 'Shift') {
-            this.selectionService.isShiftDown = false;
+            this.isShiftDown = false;
             if (!this.selectionService.isSelectionBeingManipulated.getValue()) {
                 if (this.mouseDown) {
                     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                    this.select(this.startPoint, this.lastMousePosition);
-                    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
+                    //this.select(this.startPoint, this.lastMousePosition);
+                    this.drawSelectionOutline(this.lastMousePosition);
                 }
             }
         }
@@ -103,13 +106,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     drawSelectionOutline(endPoint: Vec2) {
         let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
+        if(this.isShiftDown){
+            endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
+        }
         this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
         this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown );
     }
 
     select(startPoint: Vec2, endPoint: Vec2): void {
-        if (this.selectionService.isShiftDown) {
+        if (this.isShiftDown) {
             endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
         }
 

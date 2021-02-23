@@ -9,7 +9,6 @@ import { ColourToolService } from './colour-tool.service';
 })
 export class SelectionService {
   private readonly CIRCLE_MAX_ANGLE: number = 360;
-  public isShiftDown: boolean;
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
   constructor(private drawingService : DrawingService, private colourService: ColourToolService) { 
@@ -33,12 +32,13 @@ export class SelectionService {
     };
   }
 
-  drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+  drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2, isShiftDown: boolean): void {
     const DASH_NUMBER = 8;
 
-    if (this.isShiftDown) {
+   /* if (isShiftDown) {
+        console.log(isShiftDown);
         endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
-    }
+    }*/
 
     const topLeft: Vec2 = {
         x: Math.min(startPoint.x, endPoint.x),

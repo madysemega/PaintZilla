@@ -12,13 +12,17 @@ export enum ResizingMode {
   towardsLeft = 2,
   towardsTop = 3,
   towardsBottom = 4,
+  towardsTopRight = 5,
+  towardsBottomRight = 6,
+  towardsTopLeft = 7,
+  towardsBottomLeft = 8,
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SelectionMoverService extends Tool {
-  public readonly OUTSIDE_DETECTION_OFFSET: number = 5;
+  public readonly OUTSIDE_DETECTION_OFFSET: number = 15;
   public topLeft: Vec2;
   public bottomRight: Vec2;
   public resizingMode: ResizingMode = ResizingMode.off;
@@ -90,7 +94,7 @@ export class SelectionMoverService extends Tool {
         this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
         this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
         this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
       }
     }
   }
@@ -107,25 +111,45 @@ export class SelectionMoverService extends Tool {
   }
 
   resize(newPos: Vec2, direction: ResizingMode): void {
+    console.log(direction);
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    switch (direction) {
+
+    if (direction === ResizingMode.towardsBottom  || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
+      this.bottomRight.y = newPos.y;
+      this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
+    }
+    if (direction === ResizingMode.towardsTop || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsTopLeft) {
+      this.topLeft.y = newPos.y;
+      this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
+    }
+    if (direction === ResizingMode.towardsRight || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsBottomRight) {
+      this.bottomRight.x = newPos.x;
+      this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
+    }
+    if (direction === ResizingMode.towardsLeft || direction == ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
+      this.topLeft.x = newPos.x;
+      this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
+    }
+
+    /*switch (direction) {
       case ResizingMode.towardsBottom:
         this.bottomRight.y = newPos.y;
         this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
         break;
       case ResizingMode.towardsTop:
+
         this.topLeft.y = newPos.y;
         this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
         break;
       case ResizingMode.towardsRight:
+      case ResizingMode.towardsRightTop:
         this.bottomRight.x = newPos.x;
         this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
         break;
       case ResizingMode.towardsLeft:
         this.topLeft.x = newPos.x;
         this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
-        break;
-    }
+        break;*/
 
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
     this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
@@ -134,16 +158,17 @@ export class SelectionMoverService extends Tool {
     let radii: Vec2 = { x: 0, y: 0 };
     this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
     this.selectionService.drawSelectionEllipse(center, radii);
-    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
+    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if (event.key == 'z') {
+    if (event.key == 'shift') {
       //this.resizingMode = true;
     }
   }
 
   onKeyUp(event: KeyboardEvent): void {
+
   }
 
 }
