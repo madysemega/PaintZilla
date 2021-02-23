@@ -20,7 +20,13 @@ export class ColourSliderComponent implements AfterViewInit, OnDestroy {
         this.sliderService.colorCanvas.width = Constants.SLIDER_WIDTH;
         this.sliderService.colorCanvas.height = Constants.SLIDER_HEIGHT;
         this.sliderService.colorCtx = this.sliderCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.colorChangedSubscription = this.colourPickerService.hueObservable.subscribe((hue: number) => {
+            this.sliderService.colorSliderPosition = (hue / Constants.MAX_HUE) * Constants.SLIDER_HEIGHT;
+            this.sliderService.drawColorContext();
+        });
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.colorChangedSubscription.unsubscribe();
+    }
 }
