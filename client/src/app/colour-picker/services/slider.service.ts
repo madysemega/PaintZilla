@@ -6,9 +6,11 @@ import { ColourPickerService } from './colour-picker.service';
     providedIn: 'root',
 })
 export class SliderService {
+    // Opacity-Slider
     opacityCtx: CanvasRenderingContext2D;
     opacityCanvas: HTMLCanvasElement;
     opacitySliderPosition: number = 0;
+    // Color-Slider
     colorCtx: CanvasRenderingContext2D;
     colorCanvas: HTMLCanvasElement;
     colorSliderPosition: number = 0;
@@ -42,4 +44,10 @@ export class SliderService {
         const opacity = Math.min(OpacitySliderConstants.SLIDER_WIDTH, Math.max(0, position)) / OpacitySliderConstants.SLIDER_WIDTH;
         this.colourPickerService.alpha = opacity;
     }
+
+    drawColorContext(): void {}
+
+    drawColorCursor(): void {}
+
+    updateColor(event: MouseEvent): void {}
 }
