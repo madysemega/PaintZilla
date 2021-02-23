@@ -12,7 +12,49 @@ export class Colour {
     private red: number;
     private green: number;
     private blue: number;
+    private alpha: number;
 
+    getRed(): number{
+        return this.red;
+    }
+
+    getGreen(): number {
+        return this.green;
+    }
+
+    getBlue(): number {
+        return this.blue;
+    }
+
+    setRed(red: number): void {
+        if (red < MIN_RGB) {
+            this.red = MIN_RGB;
+        } else if(red > MAX_RGB) {
+            this.red = MAX_RGB;
+        } else {
+            this.red = red;
+        }
+    }
+
+    setGreen(green: number): void {
+        if (green < MIN_RGB) {
+            this.green = MIN_RGB;
+        } else if (green > MAX_RGB) {
+            this.green = MAX_RGB;
+        } else {
+            this.green = green;
+        }
+    }
+
+    setBlue(blue: number): void {
+        if (blue < 0) {
+            this.blue = 0;
+        } else if (blue > MAX_RGB) {
+            this.blue = MAX_RGB;
+        } else {
+            this.blue = blue;
+        }
+    }
 
     rgbToHsl(): [number, number, number] {
         // references -> color-conversion ref: https://css-tricks.com/converting-color-spaces-in-javascript/#rgb-to-hsl, 
@@ -45,6 +87,7 @@ export class Colour {
 
     hslToRgb(hue: number, saturation: number, lightness: number): Colour {
         // reference : https://css-tricks.com/converting-color-spaces-in-javascript/#hsl-to-rgb
+        let result: Colour;
         let chroma = (1 - Math.abs(2 * lightness - 1)) * saturation,
         secondLargestComponent = chroma * (1 - Math.abs((hue / 60) % GREEN_SHIFT_VALUE - 1)),
         lightnessMatchingValue = lightness - chroma / 2, red = 0, green = 0, blue = 0;
@@ -76,7 +119,6 @@ export class Colour {
         red = Math.round((red + lightnessMatchingValue) * MAX_RGB);
         green = Math.round((green + lightnessMatchingValue) * MAX_RGB);
         blue = Math.round((blue + lightnessMatchingValue) * MAX_RGB);
-        let result: Colour;
         result.red = red;
         result.green = green;
         result.blue = blue;
