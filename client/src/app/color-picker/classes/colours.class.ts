@@ -27,33 +27,24 @@ export class Colour {
     }
 
     setRed(red: number): void {
-        if (red < MIN_RGB) {
-            this.red = MIN_RGB;
-        } else if(red > MAX_RGB) {
-            this.red = MAX_RGB;
-        } else {
-            this.red = red;
-        }
+        this.red = this.setColor(red);
     }
 
     setGreen(green: number): void {
-        if (green < MIN_RGB) {
-            this.green = MIN_RGB;
-        } else if (green > MAX_RGB) {
-            this.green = MAX_RGB;
-        } else {
-            this.green = green;
-        }
+        this.green = this.setColor(green);
     }
 
     setBlue(blue: number): void {
-        if (blue < 0) {
-            this.blue = 0;
-        } else if (blue > MAX_RGB) {
-            this.blue = MAX_RGB;
-        } else {
-            this.blue = blue;
+        this.blue = this.setColor(blue);
+    }
+
+    setColor(color: number): number {
+        if (color < MIN_RGB) {
+            return MIN_RGB;
+        } else if (color > MAX_RGB) {
+            return MAX_RGB;
         }
+        return color;
     }
 
     rgbToHsl(): [number, number, number] {
