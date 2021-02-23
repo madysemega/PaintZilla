@@ -83,4 +83,10 @@ export class SliderService {
             ColourSliderConstants.MAX_HUE;
         this.colourPickerService.hue = hue;
     }
+
+    drawPaletteContext(): void {}
+
+    drawPaletteCursor(): void {}
+
+    updatePalette(event: MouseEvent): void {}
 }

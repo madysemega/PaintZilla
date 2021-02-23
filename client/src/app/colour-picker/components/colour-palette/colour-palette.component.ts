@@ -20,6 +20,10 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
         this.sliderService.paletteCanvas = this.paletteCanvas.nativeElement;
         this.sliderService.paletteCanvas.width = Constants.SLIDER_WIDTH;
         this.sliderService.paletteCanvas.height = Constants.SLIDER_HEIGHT;
+        this.sliderService.paletteCtx = this.paletteCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.hueSubscription = this.colourPickerService.hueObservable.subscribe((hue: number) => {
+            this.sliderService.drawPaletteContext();
+        })
     }
     ngOnDestroy(): void {}
 }
