@@ -1,4 +1,4 @@
-<form class="container" autocomplete="off">
+<form class="container" [formGroup]="formGroup" autocomplete="off">
     <mat-form-field class="rgbFormItem">
         <mat-label>#HEX</mat-label>
         <input [formControl]="rgbForm" matInput formControlName="rgbHexFormat" />

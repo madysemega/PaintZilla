@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as Constants from '@app/colour-picker/constants/rgb-form.constants';
 import { ColourPickerService } from '../colour-picker/colour-picker.service';
@@ -7,16 +7,16 @@ import { ColourPickerService } from '../colour-picker/colour-picker.service';
     providedIn: 'root',
 })
 export class RgbFormService {
-    rgbFormControl: FormControl;
+    rgbFormGroup: FormGroup;
     constructor(private colourPickerService: ColourPickerService) {}
 
     updateRgbForm(hexColor: string): void {
-        this.rgbFormControl.setValue(hexColor, { emitEvent: false });
+        this.rgbFormGroup.controls.rgbForm.setValue(hexColor, { emitEvent: false });
     }
 
     updateColourComponents(): void {
-        if (this.rgbFormControl.valid) {
-            const colour = this.hexToRgb(this.rgbFormControl.value);
+        if (this.rgbFormGroup.controls.rgbForm.valid) {
+            const colour = this.hexToRgb(this.rgbFormGroup.controls.rgbForm.value);
             colour.setAlpha(this.colourPickerService.getAlpha());
             this.colourPickerService.setCurrentColour(colour);
         }
