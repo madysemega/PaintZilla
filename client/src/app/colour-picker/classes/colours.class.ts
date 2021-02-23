@@ -65,6 +65,15 @@ export class Colour {
         return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
 
+    toStringHex(): string {
+        return '' + this.toHex(this.red) + this.toHex(this.green) + this.toHex(this.blue);
+    }
+
+    private toHex(color: number): string {
+        const hex = Math.round(color).toString(Constants.BASE_HEX);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
     clone(): Colour {
         const newColor = new Colour();
         newColor.red = this.red;

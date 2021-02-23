@@ -6,8 +6,10 @@ import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
 import { ColourPaletteComponent } from '@app/colour-picker/components/colour-palette/colour-palette.component';
+import { ColourPickerComponent } from '@app/colour-picker/components/colour-picker/colour-picker.component';
 import { ColourSliderComponent } from '@app/colour-picker/components/colour-slider/colour-slider.component';
 import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
+import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
@@ -20,7 +22,6 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
-import { ColourPickerComponent } from '@app/colour-picker/components/colour-picker/colour-picker.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -41,6 +42,7 @@ import { ColourPickerComponent } from '@app/colour-picker/components/colour-pick
         OpacitySliderComponent,
         ColourSliderComponent,
         ColourPickerComponent,
+        RgbFormComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
 
