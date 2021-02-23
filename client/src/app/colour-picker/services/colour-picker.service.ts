@@ -39,6 +39,10 @@ export class ColourPickerService {
         return this.lightnessSubject.value;
     }
 
+    getAlpha(): number {
+        return this.alphaSubject.value;
+    }
+
     getCurrentColor(): Colour {
         return this.currentColour;
     }
