@@ -20,6 +20,7 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { ColourPickerComponent } from '@app/colour-picker/components/colour-picker/colour-picker.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -39,6 +40,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         LineToolConfigurationComponent,
         OpacitySliderComponent,
         ColourSliderComponent,
+        ColourPickerComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule],
 

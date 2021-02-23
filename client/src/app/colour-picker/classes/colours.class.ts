@@ -1,61 +1,19 @@
 import * as Constants from '@app/colour-picker/constants/colours.class.constants';
-
+import * as Converter from 'color-convert';
 export class Colour {
     private red: number = Constants.MIN_RGB;
     private green: number = Constants.MIN_RGB;
     private blue: number = Constants.MIN_RGB;
     private alpha: number = Constants.MAX_ALPHA;
-
-    static cloneRGB(red: number, green: number, blue: number): Colour {
-        const newColor = new Colour();
-        newColor.red = red;
-        newColor.green = green;
-        newColor.blue = blue;
-        return newColor;
-    }
-
-    static cloneRGBA(red: number, green: number, blue: number, alpha: number): Colour {
-        const newColor = this.cloneRGB(red, green, blue);
-        newColor.alpha = alpha;
-        return newColor;
-    }
     static hsvToRgb(hue: number, saturation: number, value: number): Colour {
-        // reference : https://gist.github.com/mjackson/5311256
-        const minHue = 0;
-        const minSaturation = 0;
-        const maxSaturation = 1;
-        const minValue = 0;
-        const maxValue = 1;
-
-        hue = Math.min(Math.max(minHue, hue), Constants.MAX_HUE);
-        saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
-        value = Math.min(Math.max(minValue, value), maxValue);
-
-        const sectionSize = 60;
-        hue /= sectionSize;
-
-        const chroma = value * saturation;
-        const x = chroma * (1 - Math.abs((hue % 2) - 1));
-        const m = value - chroma;
-
-        let newColor: Colour;
-        if (hue <= Constants.FIRST_CIRCUMFERENCE) {
-            newColor = Colour.cloneRGB(chroma + m, x + m, m);
-        } else if (hue <= Constants.SECOND_CIRCUMFERENCE) {
-            newColor = Colour.cloneRGB(x + m, chroma + m, m);
-        } else if (hue <= Constants.THIRD_CIRCUMFERENCE) {
-            newColor = Colour.cloneRGB(m, chroma + m, x + m);
-        } else if (hue <= Constants.FOURTH_CIRCUMFERENCE) {
-            newColor = Colour.cloneRGB(m, x + m, chroma + m);
-        } else if (hue <= Constants.FIFTH_CIRCUMFERENCE) {
-            newColor = Colour.cloneRGB(x + m, m, chroma + m);
-        } else {
-            newColor = Colour.cloneRGB(chroma + m, m, x + m);
-        }
-        newColor.red *= Constants.MAX_RGB;
-        newColor.green *= Constants.MAX_RGB;
-        newColor.blue *= Constants.MAX_RGB;
-        return newColor;
+        // references -> color-conversion ref: https://github.com/Qix-/color-convert, library: https://www.npmjs.com/package/color-convert
+        // hsv explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
+        const convertedToRgb = Converter.hsv.rgb([hue, saturation * Constants.TO_PERCENTAGE, value * Constants.TO_PERCENTAGE]);
+        const result = new Colour();
+        result.red = convertedToRgb[Constants.FIRST_INDEX];
+        result.green = convertedToRgb[Constants.SECOND_INDEX];
+        result.blue = convertedToRgb[Constants.THIRD_INDEX];
+        return result;
     }
 
     getRed(): number {
@@ -117,31 +75,8 @@ export class Colour {
     }
 
     rgbToHsv(): [number, number, number] {
-        // references -> color-conversion ref: https://gist.github.com/mjackson/5311256,
+        // references -> color-conversion ref: https://github.com/Qix-/color-convert, library: https://www.npmjs.com/package/color-convert
         // hsv explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
-        const redPrime = this.red / Constants.MAX_RGB;
-        const greenPrime = this.green / Constants.MAX_RGB;
-        const bluePrime = this.blue / Constants.MAX_RGB;
-
-        const cMax = Math.max(redPrime, greenPrime, bluePrime);
-        const cMin = Math.min(redPrime, greenPrime, bluePrime);
-        const deltaC = cMax - cMin;
-        const angleValue = Constants.DEGREE_NORMALIZER;
-        let hue: number;
-        if (deltaC === 0) {
-            hue = 0;
-        } else if (cMax === redPrime) {
-            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % Constants.HEXAGON_CIRCUMFERENCE);
-        } else if (cMax === greenPrime) {
-            hue = angleValue * ((bluePrime - redPrime) / deltaC + Constants.GREEN_SHIFT_VALUE);
-        } else {
-            hue = angleValue * ((redPrime - greenPrime) / deltaC + Constants.BLUE_SHIFT_VALUE);
-        }
-
-        const saturation: number = cMax === 0 ? 0 : deltaC / cMax;
-
-        const value = cMax;
-
-        return [hue, saturation, value];
+        return Converter.rgb.hsv(this.red, this.green, this.blue);
     }
 }

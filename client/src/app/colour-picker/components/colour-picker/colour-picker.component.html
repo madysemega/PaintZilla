@@ -1,0 +1,13 @@
+<div class="container">
+    <app-colour-palette> </app-colour-palette>
+    <app-colour-slider></app-colour-slider>
+    <app-opacity-slider></app-opacity-slider>
+    <div matRipple class="color-preview-checker-pattern mat-elevation-z2" (click)="onColorPreviewClick()">
+        <div
+            class="color-preview"
+            [style.background-color]="color.toStringRBGA()"
+            [matTooltip]="colorPreviewToolTip"
+            [matTooltipDisabled]="colorPreviewToolTip.length === 0"
+        ></div>
+    </div>
+</div>
