@@ -10,15 +10,17 @@ import { combineLatest, Subscription } from 'rxjs';
     styleUrls: ['./rgb-form.component.scss'],
 })
 export class RgbFormComponent implements OnInit, OnDestroy {
-    rgbForm: FormControl = new FormControl(this.colourPickerService.getCurrentColor().toStringHex(), [
-        Validators.required,
-        Validators.pattern(RegularExpressions.RGB_FORM_REGEX),
-    ]);
+    rgbForm: FormControl;
     private colourSubscription: Subscription;
     private rgbFormSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private rgbFormService: RgbFormService) {}
 
     ngOnInit(): void {
+        this.rgbForm = new FormControl(this.colourPickerService.getCurrentColor().toStringHex(), [
+            Validators.required,
+            Validators.pattern(RegularExpressions.RGB_FORM_REGEX),
+        ]);
+        console.log(this.colourPickerService.getCurrentColor().toStringHex());
         this.rgbFormService.rgbFormControl = this.rgbForm;
         this.colourSubscription = combineLatest([
             this.colourPickerService.hueObservable,
