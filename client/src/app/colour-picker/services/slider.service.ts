@@ -84,14 +84,41 @@ export class SliderService {
         this.colourPickerService.hue = hue;
     }
 
-    drawPaletteContext(): void {}
+    drawPaletteContext(): void {
+        this.paletteCtx.fillStyle = Colour.hslToRgb(
+            this.colourPickerService.getHue(),
+            PaletteConstants.MAX_SATURATION,
+            PaletteConstants.HALF_LIGHTNESS,
+        ).toStringRBG();
+        this.paletteCtx.fillRect(0, 0, PaletteConstants.SLIDER_WIDTH, PaletteConstants.SLIDER_HEIGHT);
+        const xGradient = this.paletteCtx.createLinearGradient(0, 0, PaletteConstants.SLIDER_WIDTH, 0);
+        xGradient.addColorStop(0, PaletteConstants.WHITE_OPAQUE);
+        xGradient.addColorStop(1, PaletteConstants.WHITE_TRANSPARENT);
+        this.paletteCtx.fillStyle = xGradient;
+        this.paletteCtx.fillRect(0, 0, PaletteConstants.SLIDER_WIDTH, PaletteConstants.SLIDER_HEIGHT);
+        const yGradient = this.paletteCtx.createLinearGradient(0, 0, 0, PaletteConstants.SLIDER_HEIGHT);
+        yGradient.addColorStop(0, PaletteConstants.BLACK_TRANSPARENT);
+        yGradient.addColorStop(1, PaletteConstants.BLACK_OPAQUE);
+        this.paletteCtx.fillStyle = yGradient;
+        this.paletteCtx.fillRect(0, 0, PaletteConstants.SLIDER_WIDTH, PaletteConstants.SLIDER_HEIGHT);
+        this.drawPaletteCursor();
+    }
 
-    drawPaletteCursor(): void {}
+    drawPaletteCursor(): void {
+        const cursorRadius = PaletteConstants.CURSOR_RADIUS;
+        const paletteCursor = new Path2D();
+        paletteCursor.arc(this.paletteSliderPosition.x, this.paletteSliderPosition.y, cursorRadius, 0, 2 * Math.PI);
+        this.paletteCtx.fillStyle = this.colourPickerService.getCurrentColor().toStringRBG();
+        this.paletteCtx.fill(paletteCursor);
+        this.paletteCtx.lineWidth = PaletteConstants.CURSOR_LINEWIDTH;
+        this.paletteCtx.strokeStyle = PaletteConstants.CURSOR_STYLE;
+        this.paletteCtx.stroke(paletteCursor);
+    }
 
     updatePalette(event: MouseEvent): void {
         const xPosition = event.clientX - this.paletteCanvas.getBoundingClientRect().x;
         const yPosition = event.clientY - this.paletteCanvas.getBoundingClientRect().y;
         this.colourPickerService.saturation = Math.min(PaletteConstants.SLIDER_WIDTH, Math.max(0, xPosition)) / PaletteConstants.SLIDER_WIDTH;
-        this.colourPickerService.lightness = Math.min(PaletteConstants.SLIDER_HEIGHT, Math.max(0, yPosition)) / PaletteConstants.SLIDER_HEIGHT;
+        this.colourPickerService.lightness = 1.0 - Math.min(PaletteConstants.SLIDER_HEIGHT, Math.max(0, yPosition)) / PaletteConstants.SLIDER_HEIGHT;
     }
 }

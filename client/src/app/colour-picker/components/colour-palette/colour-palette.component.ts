@@ -29,7 +29,7 @@ export class ColourPaletteComponent implements AfterViewInit, OnDestroy {
             this.sliderService.drawPaletteContext();
         });
         this.lightnessSubscription = this.colourPickerService.lightnessObservable.subscribe((lightness: number) => {
-            this.sliderService.paletteSliderPosition.y = lightness * Constants.SLIDER_HEIGHT;
+            this.sliderService.paletteSliderPosition.y = (1 - lightness) * Constants.SLIDER_HEIGHT;
             this.sliderService.drawPaletteContext();
         });
     }
