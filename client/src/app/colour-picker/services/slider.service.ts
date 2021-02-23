@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import * as ColourSliderConstants from '@app/colour-picker/constants/colour-slider.component.constants';
 import * as OpacitySliderConstants from '@app/colour-picker/constants/opacity-slider.component.constants';
+import { Colour } from '../classes/colours.class';
 import { ColourPickerService } from './colour-picker.service';
 
 @Injectable({
@@ -33,8 +35,7 @@ export class SliderService {
         const cursorRadius = OpacitySliderConstants.CURSOR_RADIUS;
         const cursor = new Path2D();
         cursor.arc(this.opacitySliderPosition, OpacitySliderConstants.SLIDER_HEIGHT / 2, cursorRadius, 0, 2 * Math.PI);
-        const lineWidth = OpacitySliderConstants.CURSOR_LINEWIDTH;
-        this.opacityCtx.lineWidth = lineWidth;
+        this.opacityCtx.lineWidth = OpacitySliderConstants.CURSOR_LINEWIDTH;
         this.opacityCtx.strokeStyle = OpacitySliderConstants.CURSOR_STYLE;
         this.opacityCtx.stroke(cursor);
     }
@@ -45,9 +46,32 @@ export class SliderService {
         this.colourPickerService.alpha = opacity;
     }
 
-    drawColorContext(): void {}
+    drawColorContext(): void {
+        const gradient = this.colorCtx.createLinearGradient(0, 0, 0, ColourSliderConstants.SLIDER_HEIGHT);
+        const numberOfStops = ColourSliderConstants.GRADIENTS.length;
+        for (let i = 0; i < numberOfStops; i++) {
+            gradient.addColorStop(i / numberOfStops, ColourSliderConstants.GRADIENTS[i]);
+        }
+        gradient.addColorStop(1, ColourSliderConstants.GRADIENTS[0]);
+        this.colorCtx.fillStyle = gradient;
+        this.colorCtx.fillRect(0, 0, ColourSliderConstants.SLIDER_WIDTH, ColourSliderConstants.SLIDER_HEIGHT);
+        this.drawColorCursor();
+    }
 
-    drawColorCursor(): void {}
+    drawColorCursor(): void {
+        const cursorRadius = ColourSliderConstants.CURSOR_RADIUS;
+        const cursor = new Path2D();
+        cursor.arc(ColourSliderConstants.SLIDER_WIDTH / 2, this.colorSliderPosition, cursorRadius, 0, 2 * Math.PI);
+        this.colorCtx.fillStyle = Colour.hslToRgb(
+            this.colourPickerService.getHue(),
+            ColourSliderConstants.MAX_SATURATION,
+            ColourSliderConstants.HALF_LIGHTNESS,
+        ).toStringRBG();
+        this.colorCtx.fill(cursor);
+        this.colorCtx.lineWidth = ColourSliderConstants.CURSOR_LINEWIDTH;
+        this.colorCtx.strokeStyle = ColourSliderConstants.CURSOR_STYLE;
+        this.colorCtx.stroke(cursor);
+    }
 
     updateColor(event: MouseEvent): void {}
 }

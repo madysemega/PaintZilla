@@ -6,6 +6,49 @@ export class Colour {
     private blue: number = Constants.MIN_RGB;
     private alpha: number = Constants.MAX_ALPHA;
 
+    static hslToRgb(hue: number, saturation: number, lightness: number): Colour {
+        // reference : https://css-tricks.com/converting-color-spaces-in-javascript/#hsl-to-rgb
+        const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
+        const secondLargestComponent = chroma * (1 - Math.abs(((hue / 60) % Constants.GREEN_SHIFT_VALUE) - 1));
+        const lightnessMatchingValue = lightness - chroma / 2;
+        let red = 0;
+        let green = 0;
+        let blue = 0;
+        const result: Colour = new Colour();
+        if (hue >= Constants.MIN_HSL && hue < Constants.DEGREE_NORMALIZER) {
+            red = chroma;
+            green = secondLargestComponent;
+            blue = 0;
+        } else if (hue >= Constants.DEGREE_NORMALIZER && hue < Constants.DEGREE_NORMALIZER * 2) {
+            red = secondLargestComponent;
+            green = chroma;
+            blue = 0;
+        } else if (hue >= Constants.DEGREE_NORMALIZER * 2 && hue < Constants.DEGREE_NORMALIZER * 3) {
+            red = 0;
+            green = chroma;
+            blue = secondLargestComponent;
+        } else if (hue >= Constants.DEGREE_NORMALIZER * 3 && hue < Constants.DEGREE_NORMALIZER * 4) {
+            red = 0;
+            green = secondLargestComponent;
+            blue = chroma;
+        } else if (hue >= Constants.DEGREE_NORMALIZER * 4 && hue < Constants.DEGREE_NORMALIZER * 5) {
+            red = secondLargestComponent;
+            green = 0;
+            blue = chroma;
+        } else if (hue >= Constants.DEGREE_NORMALIZER * 5 && hue < Constants.DEGREE_NORMALIZER * 6) {
+            red = chroma;
+            green = 0;
+            blue = secondLargestComponent;
+        }
+        red = Math.round((red + lightnessMatchingValue) * Constants.MAX_RGB);
+        green = Math.round((green + lightnessMatchingValue) * Constants.MAX_RGB);
+        blue = Math.round((blue + lightnessMatchingValue) * Constants.MAX_RGB);
+        result.red = red;
+        result.green = green;
+        result.blue = blue;
+        return result;
+    }
+
     getRed(): number {
         return this.red;
     }
@@ -93,48 +136,5 @@ export class Colour {
         saturation = deltaChannelValue === 0 ? 0 : deltaChannelValue / (1 - Math.abs(2 * lightness - 1));
 
         return [hue, saturation, lightness];
-    }
-
-    hslToRgb(hue: number, saturation: number, lightness: number): Colour {
-        // reference : https://css-tricks.com/converting-color-spaces-in-javascript/#hsl-to-rgb
-        const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
-        const secondLargestComponent = chroma * (1 - Math.abs(((hue / 60) % Constants.GREEN_SHIFT_VALUE) - 1));
-        const lightnessMatchingValue = lightness - chroma / 2;
-        let red = 0;
-        let green = 0;
-        let blue = 0;
-        const result: Colour = new Colour();
-        if (hue >= Constants.MIN_HSL && hue < Constants.DEGREE_NORMALIZER) {
-            red = chroma;
-            green = secondLargestComponent;
-            blue = 0;
-        } else if (hue >= Constants.DEGREE_NORMALIZER && hue < Constants.DEGREE_NORMALIZER * 2) {
-            red = secondLargestComponent;
-            green = chroma;
-            blue = 0;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 2 && hue < Constants.DEGREE_NORMALIZER * 3) {
-            red = 0;
-            green = chroma;
-            blue = secondLargestComponent;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 3 && hue < Constants.DEGREE_NORMALIZER * 4) {
-            red = 0;
-            green = secondLargestComponent;
-            blue = chroma;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 4 && hue < Constants.DEGREE_NORMALIZER * 5) {
-            red = secondLargestComponent;
-            green = 0;
-            blue = chroma;
-        } else if (hue >= Constants.DEGREE_NORMALIZER * 5 && hue < Constants.DEGREE_NORMALIZER * 6) {
-            red = chroma;
-            green = 0;
-            blue = secondLargestComponent;
-        }
-        red = Math.round((red + lightnessMatchingValue) * Constants.MAX_RGB);
-        green = Math.round((green + lightnessMatchingValue) * Constants.MAX_RGB);
-        blue = Math.round((blue + lightnessMatchingValue) * Constants.MAX_RGB);
-        result.red = red;
-        result.green = green;
-        result.blue = blue;
-        return result;
     }
 }
