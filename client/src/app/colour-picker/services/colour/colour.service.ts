@@ -11,6 +11,7 @@ export class ColourService {
     private secondaryColour: Colour;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
+    onColourPicker: boolean;
     showColourPickerChange: EventEmitter<Boolean>;
     colour: Colour;
 

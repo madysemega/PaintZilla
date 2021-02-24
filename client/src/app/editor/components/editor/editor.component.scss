@@ -19,3 +19,9 @@ app-sidebar {
     outline: none;
 }
 
+app-colour-picker {
+    position: absolute;
+    z-index: 3;
+    left: 235px;
+    top: 500px;
+}

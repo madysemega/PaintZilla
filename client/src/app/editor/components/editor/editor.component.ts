@@ -16,7 +16,10 @@ export class EditorComponent implements AfterViewInit {
         private drawingCreatorService: DrawingCreatorService,
         private colourService: ColourService,
     ) {
-        this.colourService.showColourPickerChange.subscribe((flag: boolean) => (this.showColourPicker = flag));
+        this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
+            this.showColourPicker = flag;
+            console.log('ShowColourPicker: ' + this.showColourPicker);
+        });
     }
 
     ngAfterViewInit(): void {
@@ -27,6 +30,15 @@ export class EditorComponent implements AfterViewInit {
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelector.getSelectedTool().onKeyDown(event);
         this.drawingCreatorService.onKeyDown(event);
+    }
+
+    @HostListener('document:mousedown', ['$event'])
+    onMouseDown(event: MouseEvent): void {
+        console.log('on colour picker : ' + this.colourService.onColourPicker);
+        if (this.colourService.showColourPicker && !this.colourService.onColourPicker) {
+            this.colourService.onColourPicker = false;
+            this.showColourPicker = false;
+        }
     }
 
     @HostListener('document:keyup', ['$event'])

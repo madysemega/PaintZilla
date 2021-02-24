@@ -1,7 +1,7 @@
+<app-colour-picker class="colourPicker" *ngIf="showColourPicker" (colorPreview)="updateColour()"></app-colour-picker>
 <div class="container">
     <app-sidebar></app-sidebar>
     <div class="drawing-container">
         <app-drawing id="drawingComponent" class="drawing" tabindex="0"></app-drawing>
     </div>
 </div>
-<app-colour-picker class="colourPicker" *ngIf="showColourPicker" (colorPreview)="updateColour()"></app-colour-picker>

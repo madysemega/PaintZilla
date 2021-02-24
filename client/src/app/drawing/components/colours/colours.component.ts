@@ -10,12 +10,11 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 })
 export class ColoursComponent {
     colour: Colour = Colour.hexToRgb(Constants.INITIAL_COLOR);
-    private isHovering: boolean = false;
     primaryColourSelected: boolean = true;
     showColourPicker: boolean = false;
+    isHovering: boolean = false;
     constructor(private colourService: ColourService) {
         this.colourService.primaryColourSelected = this.primaryColourSelected;
-        this.colourService.showColourPickerChange.subscribe((flag: boolean) => (this.showColourPicker = flag));
         this.colourService.colour = this.colour;
     }
 
