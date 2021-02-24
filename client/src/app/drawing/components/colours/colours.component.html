@@ -1,0 +1,14 @@
+<div class="colours-container">
+    <div
+        matRipple
+        class="primary-color-item"
+        [matToolTip]="'Couleur primaire'"
+        matToolTipPosition="above"
+        [sytle.background-color]="primaryColor.toStringRBG()"
+        [class.mat-elevation-z12]="primaryColorSelected && showColorPicker"
+        [class.mat-elevation-z2]="!primaryColorSelected || !showColorPicker"
+        (click)="selectPrimaryColor()"
+    ></div>
+</div>
+
+<app-color-picker *ngIf="showColorPicker" [(colourModel)]="colour" (colorPreview)="updateColour()"></app-color-picker>

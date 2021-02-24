@@ -10,8 +10,8 @@ import { combineLatest, Subscription } from 'rxjs';
 })
 export class ColourPickerComponent implements OnInit, OnDestroy {
     @Input()
-    set colorModel(color: Colour) {
-        this.colourPickerService.setCurrentColour(color);
+    set colourModel(colour: Colour) {
+        this.colourPickerService.setCurrentColour(colour);
     }
     @Output() colorModelChange = new EventEmitter<Colour>();
     @Output() colorPreview = new EventEmitter<void>();
