@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
@@ -10,9 +11,14 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
     showColourPicker: boolean;
-    constructor(public toolSelector: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {}
+    constructor(
+        public toolSelector: ToolSelectorService,
+        private drawingCreatorService: DrawingCreatorService,
+        private colourService: ColourService,
+    ) {
+        this.colourService.showColourPickerChange.subscribe((flag: boolean) => (this.showColourPicker = flag));
+    }
 
-    updateColour(): void {}
     ngAfterViewInit(): void {
         this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
     }
@@ -38,5 +44,9 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('window:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseUp(event);
+    }
+
+    updateColour(): void {
+        this.colourService.updateColour();
     }
 }

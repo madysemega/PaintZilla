@@ -15,7 +15,7 @@ export class ColoursComponent {
     showColourPicker: boolean = false;
     constructor(private colourService: ColourService) {
         this.colourService.primaryColourSelected = this.primaryColourSelected;
-        this.colourService.showColourPicker = this.showColourPicker;
+        this.colourService.showColourPickerChange.subscribe((flag: boolean) => (this.showColourPicker = flag));
         this.colourService.colour = this.colour;
     }
 

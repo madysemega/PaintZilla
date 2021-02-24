@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as Constants from '@app/colour-picker/constants/colour.service.constants';
 import { ColourPickerService } from '../colour-picker/colour-picker.service';
@@ -11,12 +11,14 @@ export class ColourService {
     private secondaryColour: Colour;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
+    showColourPickerChange: EventEmitter<Boolean>;
     colour: Colour;
 
     constructor(private colourPickerService: ColourPickerService) {
         this.primaryColour = Constants.DEFAULT_PRIMARY;
         this.secondaryColour = Constants.DEFAULT_SECONDARY;
         this.previousColours = Constants.INITIAL_COLORS;
+        this.showColourPickerChange = new EventEmitter<boolean>(this.showColourPicker);
     }
 
     getPrimaryColour(): Colour {
@@ -52,17 +54,20 @@ export class ColourService {
     updateColour(): void {
         this.primaryColourSelected ? this.updatePrimaryColour() : this.updateSecondaryColour();
         this.showColourPicker = false;
+        this.showColourPickerChange.emit(this.showColourPicker);
     }
 
     selectPrimaryColour(): void {
         this.primaryColourSelected = true;
         this.showColourPicker = true;
+        this.showColourPickerChange.emit(this.showColourPicker);
         this.colour = this.getPrimaryColour();
     }
 
     selectSecondaryColour(): void {
         this.primaryColourSelected = false;
         this.showColourPicker = true;
+        this.showColourPickerChange.emit(this.showColourPicker);
         this.colour = this.getSecondaryColour();
     }
 
@@ -73,7 +78,6 @@ export class ColourService {
 
     private updatePreviousColours(colour: Colour): void {
         const colorToMatch = (color: Colour) => color.toStringHex() === colour.toStringHex();
-        console.log('From updatePreviousColours: ' + colour.toStringHex());
         const index = this.previousColours.findIndex(colorToMatch);
         if (index === Constants.NOT_FOUND) {
             this.previousColours.pop();
