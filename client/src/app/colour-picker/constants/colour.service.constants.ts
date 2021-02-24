@@ -15,3 +15,4 @@ export const INITIAL_COLORS = [
     Colour.hexToRgb('9aab1e'),
 ];
 export const NOT_FOUND = -1;
+export const INITIAL_COLOR = 'rgb(255, 255, 255)';
