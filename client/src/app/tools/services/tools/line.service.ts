@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -49,7 +50,10 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             new LineJoinProperty('round'),
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
-
+        this.colourService.primaryColourChanged.subscribe((colour: Colour) => {
+            this.strokeColourProperty.colour = colour.toStringRBGA();
+        });
+        this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour.toStringRBGA()));
         this.isShiftDown = false;
 
         this.lineType = LineType.WITHOUT_JOINTS;
