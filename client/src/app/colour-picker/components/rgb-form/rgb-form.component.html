@@ -2,6 +2,6 @@
     <mat-form-field class="rgbFormItem">
         <mat-label>#RGB</mat-label>
         <input [formControl]="rgbForm" matInput />
-        <mat-error *ngIf="rgbForm.invalid">Entrée RGB invalide (taille = 6, format[A-F, 0-9])</mat-error>
+        <mat-error *ngIf="rgbForm.invalid">Entrée RGB invalide</mat-error>
     </mat-form-field>
 </form>

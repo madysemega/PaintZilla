@@ -12,6 +12,7 @@ import { ColourSliderComponent } from '@app/colour-picker/components/colour-slid
 import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
+import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
@@ -23,6 +24,7 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -44,6 +46,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         ColourSliderComponent,
         ColourPickerComponent,
         RgbFormComponent,
+        ColoursComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 

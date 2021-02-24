@@ -1,5 +1,9 @@
 .container {
     justify-content: center;
+    padding: 25px;
+    background-color: lightgrey;
+    border: 2px solid black;
+    border-radius: 8px;
 }
 
 app-colour-slider {

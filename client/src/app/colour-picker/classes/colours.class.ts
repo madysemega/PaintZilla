@@ -17,9 +17,6 @@ export class Colour {
     }
 
     static hexToRgb(hexColor: string): Colour {
-        // let hex1 = parseInt(hexColor.substring(Constants.FIRST_HEX_INDEX, Constants.SECOND_HEX_INDEX), Constants.BASE_HEX);
-        // let hex2 = parseInt(hexColor.substring(Constants.SECOND_HEX_INDEX, Constants.THIRD_HEX_INDEX), Constants.BASE_HEX);
-        // let hex3 = parseInt(hexColor.substring(Constants.THIRD_HEX_INDEX, Constants.FOURTH_HEX_INDEX), Constants.BASE_HEX);
         const rgb = Converter.hex.rgb(hexColor);
         const result = new Colour();
         result.red = rgb[Constants.FIRST_INDEX];
@@ -29,9 +26,6 @@ export class Colour {
     }
 
     static hexToRgbSTring(hexColor: string): string {
-        // let hex1 = parseInt(hexColor.substring(Constants.FIRST_HEX_INDEX, Constants.SECOND_HEX_INDEX), Constants.BASE_HEX);
-        // let hex2 = parseInt(hexColor.substring(Constants.SECOND_HEX_INDEX, Constants.THIRD_HEX_INDEX), Constants.BASE_HEX);
-        // let hex3 = parseInt(hexColor.substring(Constants.THIRD_HEX_INDEX, Constants.FOURTH_HEX_INDEX), Constants.BASE_HEX);
         const rgb = Converter.hex.rgb(hexColor);
         return '' + this.toHex(rgb[Constants.FIRST_INDEX]) + this.toHex(rgb[Constants.SECOND_INDEX]) + this.toHex(rgb[Constants.THIRD_INDEX]);
     }
