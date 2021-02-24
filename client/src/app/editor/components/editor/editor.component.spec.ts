@@ -7,12 +7,9 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
-import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
-import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
@@ -56,20 +53,12 @@ describe('EditorComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [
-                DrawingComponent,
-                SidebarComponent,
-                EllipseToolConfigurationComponent,
-                LineToolConfigurationComponent,
-                ColourSelectorComponent,
-                ColourPaletteComponent,
-            ],
+            declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
                 { provide: ToolSelectorService },
-                { provide: ColourToolService },
                 { provide: EllipseService },
                 { provide: EraserService },
                 { provide: LineService },
