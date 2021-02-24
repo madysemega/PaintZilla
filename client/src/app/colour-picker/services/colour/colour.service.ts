@@ -19,12 +19,37 @@ export class ColourService {
         this.secondaryColourObservable = this.secondaryColourSubject.asObservable();
     }
 
-    getPrimaryColour(): string {
-        return this.primaryColourSubject.value.toStringHex();
+    getPrimaryColour(): Colour {
+        return this.primaryColourSubject.value;
     }
 
-    getSecondaryColour(): string {
-        return this.secondaryColourSubject.value.toStringHex();
+    getSecondaryColour(): Colour {
+        return this.secondaryColourSubject.value;
+    }
+
+    setPrimaryColour(colour: Colour): void {
+        this.updatePreviousColours(colour);
+        this.primaryColourSubject.next(colour);
+    }
+
+    setSecondaryColour(colour: Colour): void {
+        this.updatePreviousColours(colour);
+        this.secondaryColourSubject.next(colour);
+    }
+
+    getPreviousColours(): Colour[] {
+        return this.previousColours;
+    }
+
+    private updatePreviousColours(colour: Colour): void {
+        const alreadyInPreviousColours = (color: Colour) => color.toStringHex() === colour.toStringHex();
+        const index = this.previousColours.findIndex(alreadyInPreviousColours);
+        if (index === Constants.NOT_FOUND) {
+            this.previousColours.pop();
+            this.previousColours.unshift(colour);
+        } else {
+            this.previousColours[index] = colour;
+        }
     }
 
     swapColours(): void {
