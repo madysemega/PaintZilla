@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import * as Constants from '@app/colour-picker/constants/colour.service.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
@@ -19,7 +18,6 @@ describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
     // tslint:disable-next-line: no-magic-numbers
     const SAMPLE_DIAMETERS = [5, 0, 52, 42];
-    const SAMPLE_COLOURS = Constants.INITIAL_COLORS;
 
     let service: LineService;
     let lineShapeStub: LineShape;
@@ -408,20 +406,6 @@ describe('LineService', () => {
         SAMPLE_DIAMETERS.forEach((diameter) => {
             service.jointsDiameter = diameter;
             expect(service.jointsDiameter).toEqual(diameter);
-        });
-    });
-
-    it('when primary colour changes, it should be reflected in the stroke colour property', () => {
-        SAMPLE_COLOURS.forEach((colour) => {
-            colourService.setPrimaryColour(colour);
-            expect(service['strokeColourProperty'].colour).toEqual(colour.toStringRBGA());
-        });
-    });
-
-    it('when secondary colour changes, it should be reflected in the joints colour property', () => {
-        SAMPLE_COLOURS.forEach((colour) => {
-            colourService.setSecondaryColour(colour);
-            expect(service['jointsColourProperty'].colour).toEqual(colour.toStringRBGA());
         });
     });
 });
