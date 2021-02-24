@@ -10,14 +10,12 @@ export class RgbFormService {
     constructor(private colourPickerService: ColourPickerService) {}
 
     updateRgbForm(hexColor: string): void {
-        console.log('From updateRgbForm: ' + hexColor);
         this.rgbForm.setValue(hexColor, { emitEvent: false });
     }
 
     updateColourComponents(): void {
         if (this.rgbForm.valid) {
             const colour = Colour.hexToRgb(this.rgbForm.value);
-            console.log('From updateColour: ' + Colour.hexToRgbSTring(this.rgbForm.value));
             colour.setAlpha(this.colourPickerService.getAlpha());
             this.colourPickerService.setCurrentColour(colour);
         }

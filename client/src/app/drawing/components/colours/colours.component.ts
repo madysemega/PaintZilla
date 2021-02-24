@@ -9,26 +9,21 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
     styleUrls: ['./colours.component.scss'],
 })
 export class ColoursComponent {
-    colour: Colour;
-    private isHovering: boolean;
-    primaryColourSelected: boolean;
-    showColorPicker: boolean;
-    constructor(private colourService: ColourService) {
-        this.colour = Colour.hexToRgb(Constants.INITIAL_COLOR);
-        this.primaryColourSelected = true;
-        this.isHovering = false;
-        this.showColorPicker = false;
-    }
+    colour: Colour = Colour.hexToRgb(Constants.INITIAL_COLOR);
+    private isHovering: boolean = false;
+    primaryColourSelected: boolean = true;
+    showColourPicker: boolean = false;
+    constructor(private colourService: ColourService) {}
 
-    selectPrimaryColor(): void {
+    selectPrimaryColour(): void {
         this.primaryColourSelected = true;
-        this.showColorPicker = true;
+        this.showColourPicker = true;
         this.colour = this.colourService.getPrimaryColour();
     }
 
-    selectSecondaryColor(): void {
+    selectSecondaryColour(): void {
         this.primaryColourSelected = false;
-        this.showColorPicker = true;
+        this.showColourPicker = true;
         this.colour = this.colourService.getSecondaryColour();
     }
 
@@ -42,12 +37,7 @@ export class ColoursComponent {
             event.button === MouseButton.Left ? this.colourService.setPrimaryColour(colour) : this.colourService.setSecondaryColour(colour);
         }
         this.colour = colour;
-        this.showColorPicker = false;
-    }
-
-    updateColour(): void {
-        this.primaryColourSelected ? this.colourService.setPrimaryColour(this.colour) : this.colourService.setSecondaryColour(this.colour);
-        this.showColorPicker = false;
+        this.showColourPicker = false;
     }
 
     @HostListener('mouseenter')
@@ -62,9 +52,14 @@ export class ColoursComponent {
 
     @HostListener('document:mousedown')
     onMouseDown(): void {
-        if (!this.isHovering && this.showColorPicker) {
+        if (!this.isHovering && this.showColourPicker) {
             this.updateColour();
         }
+    }
+
+    updateColour(): void {
+        this.primaryColourSelected ? this.colourService.updatePrimaryColour() : this.colourService.updateSecondaryColour();
+        this.showColourPicker = false;
     }
 
     get primaryColour(): Colour {

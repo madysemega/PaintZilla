@@ -1,14 +1,39 @@
 <div class="colours-container">
     <div
         matRipple
-        class="primary-color-item"
-        [matToolTip]="'Couleur primaire'"
-        matToolTipPosition="above"
-        [sytle.background-color]="primaryColor.toStringRBG()"
-        [class.mat-elevation-z12]="primaryColorSelected && showColorPicker"
-        [class.mat-elevation-z2]="!primaryColorSelected || !showColorPicker"
-        (click)="selectPrimaryColor()"
+        class="primary-colour-item"
+        [matTooltip]="'Couleur primaire'"
+        matTooltipPosition="above"
+        [style.background-color]="primaryColour.toStringRBGA()"
+        [class.mat-elevation-z12]="primaryColourSelected && showColourPicker"
+        [class.mat-elevation-z2]="!primaryColourSelected || !showColourPicker"
+        (click)="selectPrimaryColour()"
+    ></div>
+    <button class="inverserButton" mat-icon-button (click)="swapColours()" matTooltip="Inverser les couleurs" matTooltipPosition="above">
+        <mat-icon>swap_verti</mat-icon>
+    </button>
+    <div
+        matRipple
+        class="secondary-colour-item"
+        [matTooltip]="'Couleur secondaire'"
+        matTooltipPosition="above"
+        [style.background-color]="secondaryColour.toStringRBGA()"
+        [class.mat-elevation-z12]="!primaryColourSelected && showColourPicker"
+        [class.mat-elevation-z2]="primaryColourSelected || !showColourPicker"
+        (click)="selectSecondaryColour()"
     ></div>
 </div>
 
-<app-color-picker *ngIf="showColorPicker" [(colourModel)]="colour" (colorPreview)="updateColour()"></app-color-picker>
+<div class="previous-colours-container">
+    <div
+        class="previous-colour mat-elevation-z2"
+        *ngFor="let color of previousColours"
+        [matTooltip]="'#' + color.toStringHex()"
+        matRipple
+        [style.background-color]="color.toStringRBG()"
+        (click)="onPreviousColourClick($event, color)"
+        (contextmenu)="onPreviousColourClick($event, color)"
+    ></div>
+</div>
+
+<app-colour-picker *ngIf="showColourPicker" (colorPreview)="updateColour()"></app-colour-picker>

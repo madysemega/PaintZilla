@@ -1,0 +1,40 @@
+.colors-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+}
+
+.primary-colour-item,
+.inverserButton,
+.secondary-colour-item {
+    position: relative;
+    width: 200px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.inverserButton {
+    left: 4px;
+}
+.previous-colours-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.previous-colours-container-margin {
+    margin-bottom: 20px;
+}
+
+.previous-colour {
+    margin-top: 25px;
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    cursor: pointer;
+}
