@@ -9,12 +9,11 @@ app-opacity-slider {
     display: block;
 }
 
-.color-preview-checker-pattern {
+.color-preview-display {
     grid-area: preview;
     justify-self: right;
-    width: 35px;
+    width: 200px;
     height: 35px;
-    border-radius: px;
     background-size: 22.5px 22.5px;
     background-position: 0 0, 0 11.25px, 11.25px -11.25px, -11.25px 0;
 }
@@ -27,7 +26,12 @@ app-opacity-slider {
 }
 
 .formAndPreviewContainer {
-    display: flex;
-    flex-wrap: wrap;
-    left: 15px;
+    padding: 2px;
+}
+
+.rgb-form {
+    width: 50%;
+    float: left;
+    padding: 20px;
+    border: 2px solid black;
 }

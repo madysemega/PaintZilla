@@ -13,9 +13,8 @@ export class ColourPickerComponent implements OnInit, OnDestroy {
     set colorModel(color: Colour) {
         this.colourPickerService.setCurrentColour(color);
     }
-    @Input() colorPreviewToolTip = '';
     @Output() colorModelChange = new EventEmitter<Colour>();
-    @Output() colorPreviewClicked = new EventEmitter<void>();
+    @Output() colorPreview = new EventEmitter<void>();
     private colourSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService) {}
     ngOnInit(): void {
@@ -33,8 +32,8 @@ export class ColourPickerComponent implements OnInit, OnDestroy {
         this.colourSubscription.unsubscribe();
     }
 
-    onColorPreviewClick(): void {
-        this.colorPreviewClicked.emit();
+    confirmColor(): void {
+        this.colorPreview.emit();
     }
 
     get color(): Colour {
