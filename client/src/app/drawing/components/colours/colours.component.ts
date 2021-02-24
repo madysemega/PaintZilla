@@ -13,23 +13,22 @@ export class ColoursComponent {
     private isHovering: boolean = false;
     primaryColourSelected: boolean = true;
     showColourPicker: boolean = false;
-    constructor(private colourService: ColourService) {}
+    constructor(private colourService: ColourService) {
+        this.colourService.primaryColourSelected = this.primaryColourSelected;
+        this.colourService.showColourPicker = this.showColourPicker;
+        this.colourService.colour = this.colour;
+    }
 
     selectPrimaryColour(): void {
-        this.primaryColourSelected = true;
-        this.showColourPicker = true;
-        this.colour = this.colourService.getPrimaryColour();
+        this.colourService.selectPrimaryColour();
     }
 
     selectSecondaryColour(): void {
-        this.primaryColourSelected = false;
-        this.showColourPicker = true;
-        this.colour = this.colourService.getSecondaryColour();
+        this.colourService.selectSecondaryColour();
     }
 
     swapColours(): void {
-        this.colourService.swapColours();
-        this.colour = this.primaryColourSelected ? this.colourService.getPrimaryColour() : this.colourService.getSecondaryColour();
+        this.colourService.swapComponentColours();
     }
 
     onPreviousColourClick(event: MouseEvent, colour: Colour): void {
@@ -58,8 +57,7 @@ export class ColoursComponent {
     }
 
     updateColour(): void {
-        this.primaryColourSelected ? this.colourService.updatePrimaryColour() : this.colourService.updateSecondaryColour();
-        this.showColourPicker = false;
+        this.colourService.updateColour();
     }
 
     get primaryColour(): Colour {

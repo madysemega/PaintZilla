@@ -9,6 +9,10 @@ export class ColourService {
     private previousColours: Colour[];
     private primaryColour: Colour;
     private secondaryColour: Colour;
+    primaryColourSelected: boolean;
+    showColourPicker: boolean;
+    colour: Colour;
+
     constructor(private colourPickerService: ColourPickerService) {
         this.primaryColour = Constants.DEFAULT_PRIMARY;
         this.secondaryColour = Constants.DEFAULT_SECONDARY;
@@ -24,12 +28,12 @@ export class ColourService {
     }
 
     updatePrimaryColour(): void {
-        this.primaryColour = this.colourPickerService.getCurrentColor();
+        this.primaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.primaryColour);
     }
 
     updateSecondaryColour(): void {
-        this.secondaryColour = this.colourPickerService.getCurrentColor();
+        this.secondaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.secondaryColour);
     }
 
@@ -43,6 +47,28 @@ export class ColourService {
 
     getPreviousColours(): Colour[] {
         return this.previousColours;
+    }
+
+    updateColour(): void {
+        this.primaryColourSelected ? this.updatePrimaryColour() : this.updateSecondaryColour();
+        this.showColourPicker = false;
+    }
+
+    selectPrimaryColour(): void {
+        this.primaryColourSelected = true;
+        this.showColourPicker = true;
+        this.colour = this.getPrimaryColour();
+    }
+
+    selectSecondaryColour(): void {
+        this.primaryColourSelected = false;
+        this.showColourPicker = true;
+        this.colour = this.getSecondaryColour();
+    }
+
+    swapComponentColours(): void {
+        this.swapColours();
+        this.colour = this.primaryColourSelected ? this.getPrimaryColour() : this.getSecondaryColour();
     }
 
     private updatePreviousColours(colour: Colour): void {

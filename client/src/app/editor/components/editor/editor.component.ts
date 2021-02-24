@@ -9,9 +9,10 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 })
 export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
-
+    showColourPicker: boolean;
     constructor(public toolSelector: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {}
 
+    updateColour(): void {}
     ngAfterViewInit(): void {
         this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
     }

@@ -3,4 +3,7 @@
     <div class="drawing-container">
         <app-drawing id="drawingComponent" class="drawing" tabindex="0"></app-drawing>
     </div>
+    <div class="color-picker-container">
+        <app-colour-picker *ngIf="showColourPicker" (colorPreview)="updateColour()"></app-colour-picker>
+    </div>
 </div>
