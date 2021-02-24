@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
@@ -16,7 +17,6 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -34,13 +34,13 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.lineShape = new LineShape([]);
 
         this.strokeWidthProperty = new StrokeWidthProperty();
-        this.strokeColourProperty = new StrokeStyleProperty('black');
-        this.jointsColourProperty = new FillStyleProperty('black');
+        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,

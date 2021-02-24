@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-
 @Injectable({
     providedIn: 'root',
 })
 export class PencilService extends ResizableTool implements ISelectableTool {
     private vertices: Vec2[];
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.vertices = [];
         this.key = 'pencil';
@@ -56,7 +56,7 @@ export class PencilService extends ResizableTool implements ISelectableTool {
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = this.colourService.getPrimaryColour().toStringRBGA();
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 

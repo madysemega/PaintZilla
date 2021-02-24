@@ -13,6 +13,8 @@ export class ColourService {
     showColourPicker: boolean;
     onColourPicker: boolean;
     showColourPickerChange: EventEmitter<Boolean>;
+    primaryColourChanged: EventEmitter<Colour>;
+    secondaryColourChanged: EventEmitter<Colour>;
     colour: Colour;
 
     constructor(private colourPickerService: ColourPickerService) {
@@ -20,6 +22,8 @@ export class ColourService {
         this.secondaryColour = Constants.DEFAULT_SECONDARY;
         this.previousColours = Constants.INITIAL_COLORS;
         this.showColourPickerChange = new EventEmitter<boolean>(this.showColourPicker);
+        this.primaryColourChanged = new EventEmitter<Colour>(true);
+        this.secondaryColourChanged = new EventEmitter<Colour>(true);
     }
 
     getPrimaryColour(): Colour {
@@ -33,19 +37,23 @@ export class ColourService {
     updatePrimaryColour(): void {
         this.primaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.primaryColour);
+        this.primaryColourChanged.emit(this.primaryColour);
     }
 
     updateSecondaryColour(): void {
         this.secondaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.secondaryColour);
+        this.secondaryColourChanged.emit(this.secondaryColour);
     }
 
     setPrimaryColour(colour: Colour): void {
         this.primaryColour = colour.clone();
+        this.primaryColourChanged.emit(this.primaryColour);
     }
 
     setSecondaryColour(colour: Colour): void {
         this.secondaryColour = colour.clone();
+        this.secondaryColourChanged.emit(this.secondaryColour);
     }
 
     getPreviousColours(): Colour[] {
@@ -55,6 +63,8 @@ export class ColourService {
     updateColour(): void {
         this.primaryColourSelected ? this.updatePrimaryColour() : this.updateSecondaryColour();
         this.showColourPicker = false;
+        this.primaryColourChanged.emit(this.primaryColour);
+        this.secondaryColourChanged.emit(this.secondaryColour);
         this.showColourPickerChange.emit(this.showColourPicker);
     }
 
@@ -92,5 +102,7 @@ export class ColourService {
         const oldPrime = this.primaryColour;
         this.primaryColour = this.secondaryColour;
         this.secondaryColour = oldPrime;
+        this.primaryColourChanged.emit(this.primaryColour);
+        this.secondaryColourChanged.emit(this.secondaryColour);
     }
 }

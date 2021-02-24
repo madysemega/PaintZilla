@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
@@ -18,7 +19,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -142,8 +143,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = 'black';
-        ctx.strokeStyle = 'black';
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRBGA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRBGA();
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
