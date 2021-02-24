@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
@@ -18,7 +19,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
@@ -110,8 +111,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = 'black';
-        ctx.strokeStyle = 'black';
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRBGA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRBGA();
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
