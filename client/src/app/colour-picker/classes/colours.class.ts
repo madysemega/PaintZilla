@@ -16,6 +16,31 @@ export class Colour {
         return result;
     }
 
+    static hexToRgb(hexColor: string): Colour {
+        // let hex1 = parseInt(hexColor.substring(Constants.FIRST_HEX_INDEX, Constants.SECOND_HEX_INDEX), Constants.BASE_HEX);
+        // let hex2 = parseInt(hexColor.substring(Constants.SECOND_HEX_INDEX, Constants.THIRD_HEX_INDEX), Constants.BASE_HEX);
+        // let hex3 = parseInt(hexColor.substring(Constants.THIRD_HEX_INDEX, Constants.FOURTH_HEX_INDEX), Constants.BASE_HEX);
+        const rgb = Converter.hex.rgb(hexColor);
+        const result = new Colour();
+        result.red = rgb[Constants.FIRST_INDEX];
+        result.green = rgb[Constants.SECOND_INDEX];
+        result.blue = rgb[Constants.THIRD_INDEX];
+        return result;
+    }
+
+    static hexToRgbSTring(hexColor: string): string {
+        // let hex1 = parseInt(hexColor.substring(Constants.FIRST_HEX_INDEX, Constants.SECOND_HEX_INDEX), Constants.BASE_HEX);
+        // let hex2 = parseInt(hexColor.substring(Constants.SECOND_HEX_INDEX, Constants.THIRD_HEX_INDEX), Constants.BASE_HEX);
+        // let hex3 = parseInt(hexColor.substring(Constants.THIRD_HEX_INDEX, Constants.FOURTH_HEX_INDEX), Constants.BASE_HEX);
+        const rgb = Converter.hex.rgb(hexColor);
+        return '' + this.toHex(rgb[Constants.FIRST_INDEX]) + this.toHex(rgb[Constants.SECOND_INDEX]) + this.toHex(rgb[Constants.THIRD_INDEX]);
+    }
+
+    static toHex(color: number): string {
+        const hex = Math.round(color).toString(Constants.BASE_HEX);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
     getRed(): number {
         return this.red;
     }
@@ -66,12 +91,7 @@ export class Colour {
     }
 
     toStringHex(): string {
-        return '' + this.toHex(this.red) + this.toHex(this.green) + this.toHex(this.blue);
-    }
-
-    private toHex(color: number): string {
-        const hex = Math.round(color).toString(Constants.BASE_HEX);
-        return hex.length === 1 ? '0' + hex : hex;
+        return '' + Colour.toHex(this.red) + Colour.toHex(this.green) + Colour.toHex(this.blue);
     }
 
     clone(): Colour {

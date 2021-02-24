@@ -1,7 +1,7 @@
-<form class="container" [formGroup]="formGroup" autocomplete="off">
+<form class="container" autocomplete="off">
     <mat-form-field class="rgbFormItem">
         <mat-label>#HEX</mat-label>
-        <input [formControl]="rgbFormGroup.controls.rgbForm" matInput formControlName="rgbHexFormat" />
-        <mat-error *ngIf="rgbFormGroup.controls.rgbForm.invalid">Entrée RGB invalide (taille = 6, format[A-F, 0-9])</mat-error>
+        <input [formControl]="rgbForm" matInput />
+        <mat-error *ngIf="rgbForm.invalid">Entrée RGB invalide (taille = 6, format[A-F, 0-9])</mat-error>
     </mat-form-field>
 </form>
