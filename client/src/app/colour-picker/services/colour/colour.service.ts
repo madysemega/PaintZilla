@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as Constants from '@app/colour-picker/constants/colour.service.constants';
-import { ColourPickerService } from '../colour-picker/colour-picker.service';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -12,7 +12,7 @@ export class ColourService {
     primaryColourSelected: boolean;
     showColourPicker: boolean;
     onColourPicker: boolean;
-    showColourPickerChange: EventEmitter<Boolean>;
+    showColourPickerChange: EventEmitter<boolean>;
     primaryColourChanged: EventEmitter<Colour>;
     secondaryColourChanged: EventEmitter<Colour>;
     colour: Colour;

@@ -9,7 +9,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
     styleUrls: ['./colour-picker.component.scss'],
 })
 export class ColourPickerComponent {
-    @Output() colorPreview = new EventEmitter<void>();
+    @Output() colorPreview: EventEmitter<void> = new EventEmitter<void>();
     constructor(private colourPickerService: ColourPickerService, private colourService: ColourService) {}
 
     confirmColor(): void {

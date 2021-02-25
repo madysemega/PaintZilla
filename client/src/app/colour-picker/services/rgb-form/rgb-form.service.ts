@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
-import { ColourPickerService } from '../colour-picker/colour-picker.service';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 @Injectable({
     providedIn: 'root',
 })

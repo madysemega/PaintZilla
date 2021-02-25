@@ -4,11 +4,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
-import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
 
