@@ -119,7 +119,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
         }
 
-        this.setTopLeftBottomRight(startPoint, endPoint);
+        this.convertToTopLeftAndBottomRight(startPoint, endPoint);
 
         let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
@@ -129,7 +129,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.selectionMoverService.setSelection(startPoint, endPoint);
     }
 
-    setTopLeftBottomRight(startPoint: Vec2, endPoint: Vec2) {
+    convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2) {
         let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
         if (startPoint.x > endPoint.x) {
             startPoint.x = endPoint.x;

@@ -43,7 +43,7 @@ export class SelectionMoverService extends Tool {
   setSelection(topLeft: Vec2, bottomRight: Vec2) {
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;
-    this.computeDiagonalLine();
+    this.computeDiagonalEquation();
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -58,7 +58,7 @@ export class SelectionMoverService extends Tool {
         this.selectionHandler.drawSelection(this.topLeft, this.drawingService.baseCtx);
       }
       else {
-        this.computeDiagonalLine();
+        this.computeDiagonalEquation();
       }
       this.mouseDownLastPos.x = mousePosition.x;
       this.mouseDownLastPos.y = mousePosition.y;
@@ -86,6 +86,7 @@ export class SelectionMoverService extends Tool {
   onMouseUp(event: MouseEvent): void {
     this.mouseDown = false;
     this.resizingMode = ResizingMode.off;
+    
     if(this.isReversedX && this.isReversedY){
       console.log("reversed X,Y");
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -125,6 +126,7 @@ export class SelectionMoverService extends Tool {
       //this.selec
       //this.selectionHandler.adjust();
     }
+
     if(this.isReversedY){
       console.log("reversedY");
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -140,6 +142,7 @@ export class SelectionMoverService extends Tool {
       this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
       this.selectionService.drawSelectionEllipse(center, radii);
     }
+    
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -257,7 +260,7 @@ export class SelectionMoverService extends Tool {
     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
   }
 
-  computeDiagonalLine() {
+  computeDiagonalEquation() {
     this.slope = (this.topLeft.y - this.bottomRight.y) / (this.bottomRight.x - this.topLeft.x);
     if (this.resizingMode === ResizingMode.towardsBottomRight || this.resizingMode === ResizingMode.towardsTopLeft) {
       this.slope *= -1;

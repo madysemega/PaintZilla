@@ -46,6 +46,7 @@ export class EllipseSelectionHandlerService {
     this.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
     this.verticalModificationCanvas = document.createElement('canvas');
     this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
+    
   }
 
   selectArea(selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
@@ -90,7 +91,6 @@ export class EllipseSelectionHandlerService {
   }
 
   selectArea2(selectionStartPoint: Vec2, center: Vec2, radii: Vec2, canvas: HTMLCanvasElement): void {
-
     
     this.clearAndResetCanvas();
     this.selectionCtx.save();
@@ -126,7 +126,7 @@ export class EllipseSelectionHandlerService {
     this.selectionOriginalStartPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
     this.selectionOriginalCenter = center;
     this.selectionOriginalRadii = radii;
-    this.hasBeenResized = false;
+    this.hasBeenResized = true;
     this.hasBeenMoved = false;
     this.needWiteEllipse = false;
   }
@@ -141,6 +141,7 @@ export class EllipseSelectionHandlerService {
       ctx.drawImage(this.selectionCanvas, position.x - this.topLeft.x + this.offset.x, position.y - this.topLeft.y + this.offset.y);
       ctx.closePath();
     }
+  
   }
 
 
@@ -179,6 +180,7 @@ export class EllipseSelectionHandlerService {
   resizeSelectionHorizontally(topLeft: Vec2, bottomRight: Vec2): void {
     this.newWidth = (bottomRight.x - topLeft.x);
     let increaseRatio = this.newWidth / this.originalWidth;
+    console.log(increaseRatio);
 
     this.drawingService.clearCanvas(this.selectionCtx);
     this.selectionCtx.beginPath();
