@@ -4,6 +4,8 @@ import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { LineShape } from '@app/shapes/line-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
@@ -35,21 +37,10 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService, colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourToolService, private historyService: HistoryService) {
         super(drawingService);
-        this.lineShape = new LineShape([]);
 
-        this.strokeWidthProperty = new StrokeWidthProperty();
-        this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
-        this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
-
-        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
-            this.strokeWidthProperty,
-            this.strokeColourProperty,
-            new LineCapProperty('round'),
-            new LineJoinProperty('round'),
-        ]);
-        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
+        this.resetShape();
 
         colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
         colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
@@ -58,6 +49,22 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.lineType = LineType.WITHOUT_JOINTS;
         this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+    }
+
+    private resetShape(): void {
+        this.lineShape = new LineShape([]);
+
+        this.strokeWidthProperty = new StrokeWidthProperty();
+        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.primaryColour);
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.secondaryColour);
+
+        this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
+            this.strokeWidthProperty,
+            this.strokeColourProperty,
+            new LineCapProperty('round'),
+            new LineJoinProperty('round'),
+        ]);
+        this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
     }
 
     onToolSelect(): void {
@@ -136,6 +143,16 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
                     this.lineShape.vertices.pop();
                 }
                 break;
+            case 'z':
+            case 'Z':
+                if (event.ctrlKey) {
+                    if (event.shiftKey) {
+                        this.historyService.redo();
+                    } else {
+                        this.historyService.undo();
+                    }
+                }
+                break;
         }
     }
 
@@ -150,12 +167,14 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     renderFinalizedLine(): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-        this.lineShapeRenderer.render(this.drawingService.baseCtx);
-        if (this.lineType === LineType.WITH_JOINTS) {
-            this.lineJointsRenderer.render(this.drawingService.baseCtx);
-        }
+        this.historyService.do(
+            new UserActionRenderShape(
+                this.lineType === LineType.WITH_JOINTS ? [this.lineShapeRenderer, this.lineJointsRenderer] : [this.lineShapeRenderer],
+                this.drawingService.baseCtx,
+            ),
+        );
 
-        this.lineShape.clear();
+        this.resetShape();
     }
 
     previewLine(mousePosition: Vec2): void {
