@@ -20,7 +20,6 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     private isShiftDown : boolean;
 
-
     constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;

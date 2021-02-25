@@ -21,15 +21,19 @@ export class EllipseSelectionHandlerService {
   public horizontalModificationCanvas: HTMLCanvasElement;
   public verticalModificationCanvas: HTMLCanvasElement;
   public originalCanvasCopy: HTMLCanvasElement;
+
   public selectionCtx: CanvasRenderingContext2D;
   public horizontalModificationCtx: CanvasRenderingContext2D;
   public verticalModificationCtx: CanvasRenderingContext2D;
   public originalCanvasCopyCtx: CanvasRenderingContext2D;
+
   public topLeft: Vec2 = { x: 0, y: 0 };
   public offset: Vec2 = { x: 0, y: 0 };
+
   public originalWidth: number;
   public originalHeight: number;
   private newWidth: number;
+
   private hasBeenResized: boolean;
   private hasBeenMoved: boolean;
   private needWiteEllipse: boolean;
@@ -47,6 +51,13 @@ export class EllipseSelectionHandlerService {
     this.verticalModificationCanvas = document.createElement('canvas');
     this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
     
+  }
+
+  draw(source: HTMLCanvasElement, target : CanvasRenderingContext2D,  positionOnTarget: Vec2){
+    target.beginPath();
+    target.imageSmoothingEnabled = false;
+    target.drawImage(source, positionOnTarget.x, positionOnTarget.y);
+    target.closePath();
   }
 
   selectArea(selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
@@ -242,27 +253,7 @@ export class EllipseSelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
-  adjust() {
-    /*this.offset.x +=Math.abs(this.newWidth);
-    this.drawingService.clearCanvas(this.horizontalModificationCtx);
-    this.horizontalModificationCtx.beginPath();
-    this.horizontalModificationCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.horizontalModificationCtx.closePath();
 
-    this.drawingService.clearCanvas(this.selectionCtx);
-    this.selectionCtx.beginPath();
-    this.selectionCtx.drawImage(this.originalCanvasCopy,0,0);
-    this.selectionCtx.closePath();
-
-    this.originalCanvasCopyCtx.beginPath();
-    this.originalCanvasCopyCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.originalCanvasCopyCtx.transform(-1, 0, 0, 1, 0, 0);
-    this.originalCanvasCopyCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.originalCanvasCopyCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.originalCanvasCopyCtx.closePath();
-    this.originalCanvasCopyCtx.resetTransform();*/
-
-  }
 
   clearAndResetCanvas() {
     this.selectionCanvas.width = this.drawingService.canvas.width;

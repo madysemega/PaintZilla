@@ -35,11 +35,6 @@ export class SelectionService {
   drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2, isShiftDown: boolean): void {
     const DASH_NUMBER = 8;
 
-   /* if (isShiftDown) {
-        console.log(isShiftDown);
-        endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
-    }*/
-
     const topLeft: Vec2 = {
         x: Math.min(startPoint.x, endPoint.x),
         y: Math.min(startPoint.y, endPoint.y),
