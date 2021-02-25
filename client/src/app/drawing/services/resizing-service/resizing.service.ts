@@ -3,6 +3,8 @@ import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
 
 @Injectable({
     providedIn: 'root',
@@ -14,25 +16,25 @@ export class ResizingService {
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
     image: ImageData;
 
-    constructor(public drawingService: DrawingService) {}
+    constructor(public drawingService: DrawingService, private historyService: HistoryService) {
+        this.historyService.onUndo(() => this.resetCanvasDimensions());
+    }
 
     isResizing(): boolean {
         return this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled;
     }
 
     resizeCanvas(event: MouseEvent): void {
-        if (this.rightResizerEnabled && this.canBeResizedHorizontally(event)) {
+        let resizeHorizontally = this.canBeResizedHorizontally(event) && (this.rightResizerEnabled || this.rightDownResizerEnabled);
+        let resizeVertically   = this.canBeResizedVertically(event)   && (this.downResizerEnabled  || this.rightDownResizerEnabled);
+
+        if(resizeHorizontally) {
             this.canvasResize.x = event.offsetX;
-        } else if (this.downResizerEnabled && this.canBeResizedVertically(event)) {
-            this.canvasResize.y = event.offsetY;
-        } else if (this.rightDownResizerEnabled) {
-            if (this.canBeResizedHorizontally(event)) {
-                this.canvasResize.x = event.offsetX;
-            }
-            if (this.canBeResizedVertically(event)) {
-                this.canvasResize.y = event.offsetY;
-            }
         }
+        if(resizeVertically) {
+            this.canvasResize.y = event.offsetY;
+        }
+
         this.drawingService.updateCanvasStyle();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
@@ -68,6 +70,20 @@ export class ResizingService {
         this.drawingService.restoreCanvasStyle();
         this.restoreBaseImageData();
         this.updateCanvasSize();
+    }
+
+    finalizeResizingEvent(): void {
+        this.historyService.do(
+            new UserActionResizeDrawingSurface(
+                this.canvasResize.x,
+                this.canvasResize.y,
+                (width: number, height: number) => {
+                    this.activateResizer(ResizingType.RIGHTDOWN);
+                    this.resizeCanvas({ offsetX: width, offsetY: height } as MouseEvent);
+                    this.disableResizer();
+                }
+            )
+        );
     }
 
     updateCanvasSize(): void {
