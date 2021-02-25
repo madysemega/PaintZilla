@@ -45,12 +45,12 @@ export class DrawingService {
     updateCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
         this.canvas.style.background = Constants.PREVIEW_CTX_COLOR;
-        this.previewCanvas.style.background = Constants.CTX_COLOR;
+        this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y);
     }
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
         this.canvas.style.background = Constants.CTX_COLOR;
-        this.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
+        this.canvas.style.background = Constants.CTX_COLOR;
     }
 }

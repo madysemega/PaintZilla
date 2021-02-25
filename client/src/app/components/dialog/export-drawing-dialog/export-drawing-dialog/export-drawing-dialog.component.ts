@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 
 @Component({
     selector: 'app-export-drawing-dialog',
@@ -20,13 +21,18 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     imageName: string;
     imageFormat: string;
 
-    constructor(public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>, public drawingService: DrawingService) {}
+    constructor(
+        public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>,
+        public drawingService: DrawingService,
+        public resizingService: ResizingService,
+    ) {}
 
     ngAfterViewInit(): void {
         this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas.nativeElement.width = this.drawingService.canvasSize.x;
         this.canvas.nativeElement.height = this.drawingService.canvasSize.y;
         this.ctx.drawImage(this.drawingService.canvas, 0, 0);
+
         this.previewCanvas.nativeElement.width = this.canvas.nativeElement.width / 2;
         this.previewCanvas.nativeElement.height = this.canvas.nativeElement.height / 2;
         this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -34,8 +40,8 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
             this.drawingService.canvas,
             0,
             0,
-            this.canvas.nativeElement.width,
-            this.canvas.nativeElement.height,
+            this.resizingService.canvasResize.x,
+            this.resizingService.canvasResize.y,
             0,
             0,
             this.previewCanvas.nativeElement.width,
@@ -46,18 +52,20 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     updatePreviewImage(event: MatSelectChange): void {
         this.ctx.filter = event.value;
         this.ctx.drawImage(this.drawingService.canvas, 0, 0);
+
         this.previewCtx.filter = event.value;
         this.previewCtx.drawImage(
             this.drawingService.canvas,
             0,
             0,
-            this.canvas.nativeElement.width,
-            this.canvas.nativeElement.height,
+            this.resizingService.canvasResize.x,
+            this.resizingService.canvasResize.y,
             0,
             0,
             this.previewCanvas.nativeElement.width,
             this.previewCanvas.nativeElement.height,
         );
+        this.previewCtx.filter = event.value;
     }
 
     updateImageFormat(event: MatSelectChange): void {
