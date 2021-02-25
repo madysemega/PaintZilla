@@ -32,7 +32,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     onToolDeselect(): void {
-        this.setIsSelectionBeingManipulated(false);
+        this.selectionService.setIsSelectionBeingManipulated(false);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -125,7 +125,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
         this.selectionHandler.selectArea(startPoint, center, radii);
         this.drawSelectionOutline(endPoint);
-        this.setIsSelectionBeingManipulated(true);
+        this.selectionService.setIsSelectionBeingManipulated(true);
         this.selectionMoverService.setSelection(startPoint, endPoint);
     }
 
@@ -145,9 +145,6 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         return Math.sqrt(Math.pow(this.startPoint.x - mousePos.x, 2) + Math.pow(this.startPoint.y - mousePos.y, 2)) > this.MINIMUM_SELECTION_WIDTH;
     }
 
-    setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
-        this.selectionService.isSelectionBeingManipulated.next(isItBeingManipulated);
-    }
 
     isSelectionBeingManipulated(): boolean {
         return this.selectionService.isSelectionBeingManipulated.getValue();

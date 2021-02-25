@@ -90,5 +90,9 @@ drawPostSelectionEllipse(center: Vec2, radii: Vec2){
     ctx.fill();
     ctx.restore();
 }
+
+setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
+  this.isSelectionBeingManipulated.next(isItBeingManipulated);
+}
 }
 
