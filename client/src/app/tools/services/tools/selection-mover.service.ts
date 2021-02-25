@@ -29,6 +29,8 @@ export class SelectionMoverService extends Tool {
   private mouseLastPos: Vec2 = { x: 0, y: 0 };
   private mouseDownLastPos: Vec2 = { x: 0, y: 0 };
   private isShiftDown: boolean;
+  private isReversedX: boolean;
+  private isReversedY: boolean;
 
   private slope: number;
   private yIntercept: number;
@@ -84,6 +86,60 @@ export class SelectionMoverService extends Tool {
   onMouseUp(event: MouseEvent): void {
     this.mouseDown = false;
     this.resizingMode = ResizingMode.off;
+    if(this.isReversedX && this.isReversedY){
+      console.log("reversed X,Y");
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
+      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+      let tempX = this.topLeft.x;
+      this.topLeft.x = this.bottomRight.x;
+      this.bottomRight.x = tempX;
+      let tempY = this.topLeft.y;
+      this.topLeft.y = this.bottomRight.y;
+      this.bottomRight.y = tempY;
+
+      this.isReversedX = false;
+      this.isReversedY = false;
+
+      let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
+      this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+      this.selectionHandler.selectArea2(this.topLeft, center, radii, this.drawingService.previewCanvas);
+      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
+      this.selectionService.drawSelectionEllipse(center, radii);
+      return;
+    }
+
+    if (this.isReversedX) {
+      console.log("reversedX");
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
+      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+      let tempX = this.topLeft.x;
+      this.topLeft.x = this.bottomRight.x;
+      this.bottomRight.x = tempX;
+      this.isReversedX = false;
+
+      let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
+      this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+      this.selectionHandler.selectArea2(this.topLeft, center, radii, this.drawingService.previewCanvas);
+      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
+      this.selectionService.drawSelectionEllipse(center, radii);
+      //this.selec
+      //this.selectionHandler.adjust();
+    }
+    if(this.isReversedY){
+      console.log("reversedY");
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
+      this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+      let tempY = this.topLeft.y;
+      this.topLeft.y = this.bottomRight.y;
+      this.bottomRight.y = tempY;
+      this.isReversedY = false;
+
+      let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
+      this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+      this.selectionHandler.selectArea2(this.topLeft, center, radii, this.drawingService.previewCanvas);
+      this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
+      this.selectionService.drawSelectionEllipse(center, radii);
+    }
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -99,7 +155,7 @@ export class SelectionMoverService extends Tool {
         this.resize(mousePosition, this.resizingMode);
       }
       else {
-        
+
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         const mouseMovement: Vec2 = { x: mousePosition.x - this.mouseDownLastPos.x, y: mousePosition.y - this.mouseDownLastPos.y }
 
@@ -132,18 +188,42 @@ export class SelectionMoverService extends Tool {
 
     if (direction === ResizingMode.towardsBottom || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
       this.bottomRight.y = newPos.y;
+      if (newPos.y < this.topLeft.y) {
+        this.isReversedY = true;
+      }
+      else {
+        this.isReversedY = false;
+      }
       this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
     }
     if (direction === ResizingMode.towardsTop || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsTopLeft) {
       this.topLeft.y = newPos.y;
+      if (newPos.y > this.bottomRight.y) {
+        this.isReversedY = true;
+      }
+      else {
+        this.isReversedY = false;
+      }
       this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
     }
     if (direction === ResizingMode.towardsRight || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsBottomRight) {
       this.bottomRight.x = newPos.x;
+      if (newPos.x < this.topLeft.x) {
+        this.isReversedX = true;
+      }
+      else {
+        this.isReversedX = false;
+      }
       this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
     }
     if (direction === ResizingMode.towardsLeft || direction == ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
       this.topLeft.x = newPos.x;
+      if (newPos.x > this.bottomRight.x) {
+        this.isReversedX = true;
+      }
+      else {
+        this.isReversedX = false;
+      }
       this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
     }
 
