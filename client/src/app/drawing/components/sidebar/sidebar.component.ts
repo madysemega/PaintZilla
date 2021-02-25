@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ExportDrawingDialogComponent } from '@app/components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -11,11 +14,14 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class SidebarComponent implements OnInit {
     selectedToolName: string;
     toolNames: string[];
+    dialogRef: MatDialogRef<ExportDrawingDialogComponent>;
 
     constructor(
         private toolSelectorService: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
+        public exportDrawingService: ExportDrawingService,
         public drawingService: DrawingService,
+        public dialog: MatDialog,
     ) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
@@ -49,5 +55,9 @@ export class SidebarComponent implements OnInit {
 
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
+    }
+
+    exportDrawing(): void {
+        this.exportDrawingService.openExportDrawingDialog();
     }
 }
