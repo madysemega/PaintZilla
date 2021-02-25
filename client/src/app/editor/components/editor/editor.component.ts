@@ -18,7 +18,6 @@ export class EditorComponent implements AfterViewInit {
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
-            console.log('ShowColourPicker: ' + this.showColourPicker);
         });
     }
 
@@ -34,7 +33,6 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        console.log('on colour picker : ' + this.colourService.onColourPicker);
         if (this.colourService.showColourPicker && !this.colourService.onColourPicker) {
             this.colourService.onColourPicker = false;
             this.showColourPicker = false;

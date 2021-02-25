@@ -23,6 +23,7 @@ export class RgbFormComponent implements OnInit, OnDestroy {
             this.colourPickerService.valueObservable,
             this.colourPickerService.alphaObservable,
         ]).subscribe(() => {
+            // console.log('From for colour subscription change, current colour =  ' + this.colourPickerService.getCurrentColor().toStringRBG());
             this.rgbFormService.updateRgbForm(this.colourPickerService.getCurrentColor().toStringHex());
         });
 

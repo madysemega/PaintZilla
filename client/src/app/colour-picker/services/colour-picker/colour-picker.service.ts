@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import * as Constants from '@app/colour-picker/constants/colour-picker.service.constants';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ColourPickerService {
-    private currentColour: Colour = new Colour();
+    private currentColour: Colour = Colour.hsvToRgb(0, 0, 0);
     private alphaSubject: BehaviorSubject<number>;
     private hueSubject: BehaviorSubject<number>;
     private saturationSubject: BehaviorSubject<number>;
@@ -16,7 +16,7 @@ export class ColourPickerService {
     hueObservable: Observable<number>;
     saturationObservable: Observable<number>;
     valueObservable: Observable<number>;
-
+    colourChangedSubscription: Subscription;
     constructor() {
         const currentHslColor = this.currentColour.rgbToHsv();
         this.alphaSubject = new BehaviorSubject<number>(this.currentColour.getAlpha());
@@ -27,6 +27,15 @@ export class ColourPickerService {
         this.hueObservable = this.hueSubject.asObservable();
         this.saturationObservable = this.saturationSubject.asObservable();
         this.valueObservable = this.valueSubject.asObservable();
+        this.colourChangedSubscription = combineLatest([
+            this.alphaObservable,
+            this.hueObservable,
+            this.saturationObservable,
+            this.valueObservable,
+        ]).subscribe(() => {
+            this.currentColour = Colour.hsvToRgb(this.hueSubject.value, this.saturationSubject.value, this.valueSubject.value);
+            this.currentColour.setAlpha(this.alphaSubject.value);
+        });
     }
 
     getHue(): number {
@@ -73,15 +82,6 @@ export class ColourPickerService {
     }
 
     setCurrentColour(colour: Colour): void {
-        this.currentColour = colour;
-        this.emitChanges(colour);
-    }
-
-    emitChanges(colour: Colour): void {
-        const colourToHsv = colour.rgbToHsv();
-        this.alphaSubject.next(colour.getAlpha());
-        this.hueSubject.next(colourToHsv[Constants.HUE_INDEX]);
-        this.saturationSubject.next(colourToHsv[Constants.SATURATION_INDEX]);
-        this.valueSubject.next(colourToHsv[Constants.VALUE_INDEX]);
+        this.currentColour = colour.clone();
     }
 }
