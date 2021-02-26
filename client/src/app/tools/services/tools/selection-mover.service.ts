@@ -77,10 +77,29 @@ export class SelectionMoverService extends Tool {
 
   isClickOutsideSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
-    const xOutsideSelection: boolean = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
-      || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
-    const yOutsideSelection: boolean = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
-      || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
+    let xOutsideSelection: boolean;
+    let yOutsideSelection: boolean
+
+    if (this.isReversedX) {
+      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET);
+    }
+
+    else {
+      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
+    }
+
+    if (this.isReversedY) {
+      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET);
+    }
+
+    else {
+      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
+    }
+
     return (xOutsideSelection || yOutsideSelection);
   }
 
@@ -89,7 +108,7 @@ export class SelectionMoverService extends Tool {
     this.resizingMode = ResizingMode.off;
 
     if (this.isReversedX || this.isReversedY) {
-      this.reselect(this.isReversedX, this.isReversedY);
+      //this.reselect(this.isReversedX, this.isReversedY);
     }
   }
 
@@ -116,20 +135,21 @@ export class SelectionMoverService extends Tool {
 
   addMovementToPositions(mouseMovement: Vec2) {
 
-    let futureTopLeft = {x: this.topLeft.x + mouseMovement.x, y: this.topLeft.y + mouseMovement.y};
-    let futureBottomRight = {x: this.bottomRight.x + mouseMovement.x, y: this.bottomRight.y + mouseMovement.y};
-
     this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
-
+    //console.log(this.topLeft.x +" "+ this.topLeft.y);
+    //console.log(this.bottomRight.x +" "+ this.bottomRight.y);
     this.mouseDownLastPos.x += mouseMovement.x;
     this.mouseDownLastPos.y += mouseMovement.y;
-    this.adjustIfOutsideCanvas(this.mouseDownLastPos);
+    //this.adjustIfOutsideCanvas(this.mouseDownLastPos);
     this.topLeft.x += mouseMovement.x;
     this.topLeft.y += mouseMovement.y;
-    this.adjustIfOutsideCanvas(this.topLeft);
+    //this.adjustIfOutsideCanvas(this.topLeft);
     this.bottomRight.x += mouseMovement.x;
     this.bottomRight.y += mouseMovement.y;
-    this.adjustIfOutsideCanvas(this.bottomRight);
+    //console.log(this.topLeft.x +" "+ this.topLeft.y);
+    //console.log(this.bottomRight.x +" "+ this.bottomRight.y);
+    console.log("-------------------");
+    //this.adjustIfOutsideCanvas(this.bottomRight);
   }
 
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
@@ -281,21 +301,45 @@ export class SelectionMoverService extends Tool {
   }
 
   adjustIfWillBeOutside(topLeft: Vec2, bottomRight: Vec2, movement: Vec2): void {
-    let futureTopLeft = {x: topLeft.x + movement.x, y: topLeft.y + movement.y};
-    let futureBottomRight = {x: bottomRight.x + movement.x, y: bottomRight.y + movement.y};
+    let copy: number;
+    let topLeftCopy: Vec2  ={x: topLeft.x, y: topLeft.y};
+    let bottomRightCopy: Vec2 = {x: bottomRight.x, y: bottomRight.y};
+
     
+    if(this.isReversedX){
+      console.log("x");
+      console.log(bottomRightCopy.x);
+      copy = topLeftCopy.x;
+      topLeftCopy.x = bottomRightCopy.x;
+      bottomRightCopy.x = copy;
+      console.log(bottomRightCopy.x);
+    }
+
+    if(this.isReversedY){
+      console.log("y");
+      copy = topLeftCopy.y;
+      topLeftCopy.y = bottomRightCopy.y;
+      bottomRightCopy.y = copy;
+    }
+
+    let futureTopLeft = { x: topLeftCopy.x + movement.x, y: topLeftCopy.y + movement.y };
+    let futureBottomRight = { x: bottomRightCopy.x + movement.x, y: bottomRightCopy.y + movement.y };
+
     let canvasSize: Vec2 = this.drawingService.canvasSize;
+    console.log(bottomRightCopy.x);
+    //console.log(canvasSize.x);
+    //console.log(bottomRightCopy.x);
     if (futureTopLeft.x <= 0) {
-      movement.x = 0 - topLeft.x;
+      movement.x = 0 - topLeftCopy.x;
     }
     if (futureBottomRight.x >= canvasSize.x) {
-      movement.x = canvasSize.x - bottomRight.x;
+      movement.x = canvasSize.x - bottomRightCopy.x;
     }
     if (futureTopLeft.y <= 0) {
-      movement.y =  0 - topLeft.y;
+      movement.y = 0 - topLeftCopy.y;
     }
     if (futureBottomRight.y >= canvasSize.y) {
-      movement.y = canvasSize.y - bottomRight.y;
+      movement.y = canvasSize.y - bottomRightCopy.y;
     }
   }
 
