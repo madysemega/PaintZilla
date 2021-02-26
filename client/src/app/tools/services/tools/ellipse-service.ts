@@ -122,7 +122,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
         let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
-        this.selectionHandler.selectArea(startPoint, center, radii);
+        this.selectionHandler.selectArea(this.drawingService.canvas,startPoint, center, radii);
         this.drawSelectionOutline(endPoint);
         this.selectionService.setIsSelectionBeingManipulated(true);
         this.selectionMoverService.setSelection(startPoint, endPoint);

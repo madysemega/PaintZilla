@@ -89,7 +89,7 @@ export class SelectionMoverService extends Tool {
     this.resizingMode = ResizingMode.off;
 
     if (this.isReversedX || this.isReversedY) {
-      this.reselectCurentSelection(this.isReversedX, this.isReversedY);
+      this.reselect(this.isReversedX, this.isReversedY);
     }
   }
 
@@ -144,22 +144,26 @@ export class SelectionMoverService extends Tool {
     if (direction === ResizingMode.towardsBottom || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
       this.bottomRight.y = newPos.y;
       this.isReversedY = newPos.y < this.topLeft.y;
-      this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
+      //this.selectionHandler.resizeSelectionVertically(this.topLeft, newPos);
+      this.selectionHandler.resizeSelection(this.topLeft, newPos, false);
     }
     if (direction === ResizingMode.towardsTop || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsTopLeft) {
       this.topLeft.y = newPos.y;
       this.isReversedY = newPos.y > this.bottomRight.y;
-      this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
+      //this.selectionHandler.resizeSelectionVertically(newPos, this.bottomRight);
+      this.selectionHandler.resizeSelection(newPos, this.bottomRight, false);
     }
     if (direction === ResizingMode.towardsRight || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsBottomRight) {
       this.bottomRight.x = newPos.x;
       this.isReversedX = newPos.x < this.topLeft.x;
-      this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
+      //this.selectionHandler.resizeSelectionHorizontally(this.topLeft, newPos);
+      this.selectionHandler.resizeSelection(this.topLeft, newPos, true);
     }
     if (direction === ResizingMode.towardsLeft || direction == ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
       this.topLeft.x = newPos.x;
       this.isReversedX = newPos.x > this.bottomRight.x;
-      this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
+      //this.selectionHandler.resizeSelectionHorizontally(newPos, this.bottomRight);
+      this.selectionHandler.resizeSelection(newPos, this.bottomRight, true);
     }
 
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -181,13 +185,6 @@ export class SelectionMoverService extends Tool {
 
   mousePositionOnDiagonal(mousePos: Vec2): Vec2 {
     return { x: mousePos.x, y: mousePos.x * this.diagonalSlope + this.diagonalYIntercept };
-  }
-
-  reselect(): void {
-    let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
-    this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-    this.selectionHandler.selectArea2(this.topLeft, center, radii, this.drawingService.previewCanvas);
-    this.drawSelectionOutline();
   }
 
   drawSelectionOutline(): void {
@@ -217,11 +214,18 @@ export class SelectionMoverService extends Tool {
     }
   }
 
-  reselectCurentSelection(swapX: boolean, swapY: boolean) {
+  reselect(swapX: boolean, swapY: boolean) {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
     this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
     this.swapTopLeftAndBottomRight(swapX, swapY);
-    this.reselect();
+    this.reselectSelection();
+  }
+
+  reselectSelection(): void {
+    let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
+    this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+    this.selectionHandler.reselectArea(this.topLeft, center, radii);
+    this.drawSelectionOutline();
   }
 
   swapTopLeftAndBottomRight(swapX: boolean, swapY: boolean): void {

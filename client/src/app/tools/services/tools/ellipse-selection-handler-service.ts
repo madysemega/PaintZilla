@@ -14,6 +14,7 @@ export enum ResizingMode {
 @Injectable({
   providedIn: 'root'
 })
+
 export class EllipseSelectionHandlerService {
   private readonly CIRCLE_MAX_ANGLE: number = 360;
 
@@ -32,10 +33,9 @@ export class EllipseSelectionHandlerService {
 
   public originalWidth: number;
   public originalHeight: number;
-  private newWidth: number;
+  private newWidth: number;///////////////////////
 
-  private hasBeenResized: boolean;
-  private hasBeenMoved: boolean;
+  private hasBeenManipulated: boolean;
   private needWiteEllipse: boolean;
   private selectionOriginalStartPoint: Vec2;
   private selectionOriginalCenter: Vec2;
@@ -50,199 +50,124 @@ export class EllipseSelectionHandlerService {
     this.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
     this.verticalModificationCanvas = document.createElement('canvas');
     this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
-    
+
   }
 
-  draw(source: HTMLCanvasElement, target : CanvasRenderingContext2D,  positionOnTarget: Vec2){
-    target.beginPath();
-    target.imageSmoothingEnabled = false;
-    target.drawImage(source, positionOnTarget.x, positionOnTarget.y);
-    target.closePath();
+  selectArea(sourceCanvas: HTMLCanvasElement, selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
+    this.clearAndResetAllCanvas();
+    this.drawRegion(sourceCanvas, selectionStartPoint, radii);
+    this.drawCanvas(this.selectionCanvas, this.horizontalModificationCtx);
+    this.drawCanvas(this.selectionCanvas, this.verticalModificationCtx);
+    this.drawCanvas(this.selectionCanvas, this.originalCanvasCopyCtx);
+    this.initProperties(selectionStartPoint, center, radii);
   }
 
-  selectArea(selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
-
-    this.clearAndResetCanvas();
-    this.selectionCtx.save();
-    this.selectionCtx.beginPath();
-    this.selectionCtx.ellipse(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-    this.selectionCtx.clip();
-    this.selectionCtx.imageSmoothingEnabled = false;
-    this.selectionCtx.drawImage(this.drawingService.canvas, this.selectionCanvas.width / 2 - radii.x - selectionStartPoint.x, this.selectionCanvas.height / 2 - radii.y - selectionStartPoint.y);
-    this.selectionCtx.closePath();
-    this.selectionCtx.restore();
-
-    this.horizontalModificationCtx.beginPath();
-    this.horizontalModificationCtx.imageSmoothingEnabled = false;
-    this.horizontalModificationCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.horizontalModificationCtx.closePath();
-
-    this.verticalModificationCtx.beginPath();
-    this.verticalModificationCtx.imageSmoothingEnabled = false;
-    this.verticalModificationCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.verticalModificationCtx.closePath();
-
-    this.originalCanvasCopyCtx.beginPath();
-    this.originalCanvasCopyCtx.imageSmoothingEnabled = false;
-    this.originalCanvasCopyCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.originalCanvasCopyCtx.closePath();
-
-    this.topLeft.x = this.selectionCanvas.width / 2 - radii.x;
-    this.topLeft.y = this.selectionCanvas.height / 2 - radii.y;
-    this.originalWidth = radii.x * 2;
-    this.originalHeight = radii.y * 2;
-    this.offset = { x: 0, y: 0 };
-
-    this.selectionOriginalStartPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
-    this.selectionOriginalCenter = center;
-    this.selectionOriginalRadii = radii;
-    this.hasBeenResized = false;
-    this.hasBeenMoved = false;
-    this.needWiteEllipse = true;
-  }
-
-  selectArea2(selectionStartPoint: Vec2, center: Vec2, radii: Vec2, canvas: HTMLCanvasElement): void {
-    
-    this.clearAndResetCanvas();
-    this.selectionCtx.save();
-    this.selectionCtx.beginPath();
-    this.selectionCtx.ellipse(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-    this.selectionCtx.clip();
-    this.selectionCtx.imageSmoothingEnabled = false;
-    this.selectionCtx.drawImage(canvas, this.selectionCanvas.width / 2 - radii.x - selectionStartPoint.x, this.selectionCanvas.height / 2 - radii.y - selectionStartPoint.y);
-    this.selectionCtx.closePath();
-    this.selectionCtx.restore();
-
-    this.horizontalModificationCtx.beginPath();
-    this.horizontalModificationCtx.imageSmoothingEnabled = false;
-    this.horizontalModificationCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.horizontalModificationCtx.closePath();
-
-    this.verticalModificationCtx.beginPath();
-    this.verticalModificationCtx.imageSmoothingEnabled = false;
-    this.verticalModificationCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.verticalModificationCtx.closePath();
-
-    this.originalCanvasCopyCtx.beginPath();
-    this.originalCanvasCopyCtx.imageSmoothingEnabled = false;
-    this.originalCanvasCopyCtx.drawImage(this.selectionCanvas, 0, 0);
-    this.originalCanvasCopyCtx.closePath();
-
-    this.topLeft.x = this.selectionCanvas.width / 2 - radii.x;
-    this.topLeft.y = this.selectionCanvas.height / 2 - radii.y;
-    this.originalWidth = radii.x * 2;
-    this.originalHeight = radii.y * 2;
-    this.offset = { x: 0, y: 0 };
-
-    this.selectionOriginalStartPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
-    this.selectionOriginalCenter = center;
-    this.selectionOriginalRadii = radii;
-    this.hasBeenResized = true;
-    this.hasBeenMoved = false;
+  reselectArea(selectionStartPoint: Vec2, center: Vec2, radii: Vec2): void {
+    this.selectArea(this.drawingService.previewCanvas, selectionStartPoint, center, radii);
+    this.hasBeenManipulated = true;
     this.needWiteEllipse = false;
   }
 
-  drawSelection(position: Vec2, ctx: CanvasRenderingContext2D): void {
-    if (this.hasSelectionBeenMoved(position)) {
-      ctx.imageSmoothingEnabled = false;
+  drawSelection(position: Vec2, target: CanvasRenderingContext2D): void {
+    if (this.hasSelectionBeenManipulated(position)) {
+      target.imageSmoothingEnabled = false;
       if (this.needWiteEllipse) {
         this.selectionService.drawPostSelectionEllipse(this.selectionOriginalCenter, this.selectionOriginalRadii);
       }
-      ctx.beginPath();
-      ctx.drawImage(this.selectionCanvas, position.x - this.topLeft.x + this.offset.x, position.y - this.topLeft.y + this.offset.y);
-      ctx.closePath();
+      this.drawCanvas(this.selectionCanvas, target, { x: position.x - this.topLeft.x + this.offset.x, y: position.y - this.topLeft.y + this.offset.y });
     }
-  
   }
 
+  resizeSelection(topLeft: Vec2, bottomRight: Vec2, isHorizontal: boolean): void {
+    let scaling;
+    let newlength;
+    this.hasBeenManipulated = true;
 
- /* resizeSelectionHorizontally2(topLeft: Vec2, bottomRight: Vec2, isReversed: boolean): void {
-    let newWidth = Math.abs(bottomRight.x - topLeft.x);
-    this.newWidth = newWidth;
-    let increaseRatio = newWidth / this.originalWidth;
-    if (isReversed) {
-      increaseRatio *= -1;
-      newWidth *= -1;
+    if (isHorizontal) {
+      newlength = (bottomRight.x - topLeft.x);
+      scaling = newlength / this.originalWidth;
+      this.drawResized(this.horizontalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
+      this.drawResized(this.originalCanvasCopy, this.verticalModificationCtx, scaling, isHorizontal);
+      this.updateHorizontalOffset(newlength);
+      return;
     }
 
-    this.drawingService.clearCanvas(this.selectionCtx);
-    this.selectionCtx.beginPath();
-    this.selectionCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.selectionCtx.transform(increaseRatio, 0, 0, 1, 0, 0);
-    this.selectionCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.selectionCtx.drawImage(this.horizontalModificationCanvas, 0, 0);
-    this.selectionCtx.closePath();
-    this.selectionCtx.resetTransform();
-
-    this.drawingService.clearCanvas(this.verticalModificationCtx);
-    this.verticalModificationCtx.beginPath();
-    this.verticalModificationCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.verticalModificationCtx.transform(Math.abs(increaseRatio), 0, 0, 1, 0, 0);
-    this.verticalModificationCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.verticalModificationCtx.drawImage(this.originalCanvasCopy, 0, 0);
-    this.verticalModificationCtx.closePath();
-    this.verticalModificationCtx.resetTransform();
-
-    this.hasBeenResized = true;
-    this.updateHorizontalOffset(newWidth);
-  }*/
-
+    newlength = (bottomRight.y - topLeft.y);
+    scaling = newlength / this.originalHeight;
+    this.drawResized(this.verticalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
+    this.drawResized(this.originalCanvasCopy, this.horizontalModificationCtx, scaling, isHorizontal);
+    this.updateVerticalOffset(newlength);
+  }
 
   resizeSelectionHorizontally(topLeft: Vec2, bottomRight: Vec2): void {
     this.newWidth = (bottomRight.x - topLeft.x);
-    let increaseRatio = this.newWidth / this.originalWidth;
-    console.log(increaseRatio);
+    let horizontalScaling = this.newWidth / this.originalWidth;
 
-    this.drawingService.clearCanvas(this.selectionCtx);
-    this.selectionCtx.beginPath();
-    this.selectionCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.selectionCtx.transform(increaseRatio, 0, 0, 1, 0, 0);
-    this.selectionCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.selectionCtx.imageSmoothingEnabled = false;///////
-    this.selectionCtx.drawImage(this.horizontalModificationCanvas, 0, 0);
-    this.selectionCtx.closePath();
-    this.selectionCtx.resetTransform();
+    this.drawResized(this.horizontalModificationCanvas, this.selectionCtx, horizontalScaling, true);
+    this.drawResized(this.originalCanvasCopy, this.verticalModificationCtx, horizontalScaling, true);
 
-    this.drawingService.clearCanvas(this.verticalModificationCtx);
-    this.verticalModificationCtx.beginPath();
-    this.verticalModificationCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.verticalModificationCtx.transform(increaseRatio, 0, 0, 1, 0, 0);
-    this.verticalModificationCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);/////////////
-    this.verticalModificationCtx.imageSmoothingEnabled = false;/////////
-    this.verticalModificationCtx.drawImage(this.originalCanvasCopy, 0, 0);
-    this.verticalModificationCtx.closePath();
-    this.verticalModificationCtx.resetTransform();
-
-    this.hasBeenResized = true;
+    this.hasBeenManipulated = true;
     this.updateHorizontalOffset(this.newWidth);
   }
 
   resizeSelectionVertically(topLeft: Vec2, bottomRight: Vec2): void {
     let newHeight = (bottomRight.y - topLeft.y);
-    let increaseRatio = newHeight / this.originalHeight;
+    let verticalScaling = newHeight / this.originalHeight;
 
-    this.drawingService.clearCanvas(this.selectionCtx);
-    this.selectionCtx.beginPath();
-    this.selectionCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.selectionCtx.transform(1, 0, 0, increaseRatio, 0, 0);
-    this.selectionCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.selectionCtx.imageSmoothingEnabled = false;//////////////
-    this.selectionCtx.drawImage(this.verticalModificationCanvas, 0, 0);
-    this.selectionCtx.closePath();
-    this.selectionCtx.resetTransform();
+    this.drawResized(this.verticalModificationCanvas, this.selectionCtx, verticalScaling, false);
+    this.drawResized(this.originalCanvasCopy, this.horizontalModificationCtx, verticalScaling, false);
 
-    this.drawingService.clearCanvas(this.horizontalModificationCtx);
-    this.horizontalModificationCtx.beginPath();
-    this.horizontalModificationCtx.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-    this.horizontalModificationCtx.transform(1, 0, 0, increaseRatio, 0, 0);
-    this.horizontalModificationCtx.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
-    this.horizontalModificationCtx.imageSmoothingEnabled = false;//////////
-    this.horizontalModificationCtx.drawImage(this.originalCanvasCopy, 0, 0);
-    this.horizontalModificationCtx.closePath();
-    this.horizontalModificationCtx.resetTransform();
-
-    this.hasBeenResized = true;
+    this.hasBeenManipulated = true;
     this.updateVerticalOffset(newHeight);
+  }
+
+
+
+
+  transform(target: CanvasRenderingContext2D, scaling: number, isHorizontal: boolean) {
+    target.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
+    if (isHorizontal) {
+      target.transform(scaling, 0, 0, 1, 0, 0);
+    }
+    else {
+      target.transform(1, 0, 0, scaling, 0, 0);
+    }
+    target.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
+  }
+
+  drawCanvas(source: HTMLCanvasElement, target: CanvasRenderingContext2D, position?: Vec2) {
+    let definedPosition: Vec2;
+    if (position == undefined) {
+      definedPosition = { x: 0, y: 0 };
+    }
+    else {
+      definedPosition = { x: position.x, y: position.y };
+    }
+    target.beginPath();
+    target.imageSmoothingEnabled = false;
+    target.drawImage(source, definedPosition.x, definedPosition.y);
+    target.closePath();
+  }
+
+  drawRegion(sourceCanvas: HTMLCanvasElement, selectionStartPoint: Vec2, radii: Vec2) {
+    this.selectionCtx.save();
+    this.selectionCtx.beginPath();
+    this.selectionCtx.ellipse(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+    this.selectionCtx.clip();
+    this.selectionCtx.imageSmoothingEnabled = false;
+    this.selectionCtx.drawImage(sourceCanvas, this.selectionCanvas.width / 2 - radii.x - selectionStartPoint.x, this.selectionCanvas.height / 2 - radii.y - selectionStartPoint.y);
+    this.selectionCtx.closePath();
+    this.selectionCtx.restore();
+  }
+
+  drawResized(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontal: boolean) {
+    this.drawingService.clearCanvas(target);
+    target.beginPath();
+    this.transform(target, scaling, isHorizontal);
+    target.imageSmoothingEnabled = false;//////////////
+    target.drawImage(source, 0, 0);
+    target.closePath();
+    target.resetTransform();
   }
 
   updateHorizontalOffset(newWidth: number): void {
@@ -253,9 +178,21 @@ export class EllipseSelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
+  initProperties(selectionStartPoint: Vec2, center: Vec2, radii: Vec2) {
+    this.topLeft.x = this.selectionCanvas.width / 2 - radii.x;
+    this.topLeft.y = this.selectionCanvas.height / 2 - radii.y;
+    this.originalWidth = radii.x * 2;
+    this.originalHeight = radii.y * 2;
+    this.offset = { x: 0, y: 0 };
 
+    this.selectionOriginalStartPoint = { x: selectionStartPoint.x, y: selectionStartPoint.y };
+    this.selectionOriginalCenter = center;
+    this.selectionOriginalRadii = radii;
+    this.hasBeenManipulated = false;
+    this.needWiteEllipse = true;
+  }
 
-  clearAndResetCanvas() {
+  clearAndResetAllCanvas() {
     this.selectionCanvas.width = this.drawingService.canvas.width;
     this.selectionCanvas.height = this.drawingService.canvas.height;
     this.originalCanvasCopy.width = this.drawingService.canvas.width;
@@ -266,10 +203,10 @@ export class EllipseSelectionHandlerService {
     this.verticalModificationCanvas.height = this.drawingService.canvas.height;
   }
 
-  hasSelectionBeenMoved(newStartPos: Vec2): boolean {
-    if (this.hasBeenMoved) {
+  hasSelectionBeenManipulated(newStartPos: Vec2): boolean {
+    if (this.hasBeenManipulated) {
       return true;
     }
-    return this.hasBeenMoved = (this.hasBeenResized || this.selectionOriginalStartPoint.x != newStartPos.x || this.selectionOriginalStartPoint.y != newStartPos.y);
+    return this.hasBeenManipulated = (this.selectionOriginalStartPoint.x != newStartPos.x || this.selectionOriginalStartPoint.y != newStartPos.y);
   }
 }
