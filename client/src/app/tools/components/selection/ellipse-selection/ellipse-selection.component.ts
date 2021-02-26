@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ResizingMode, SelectionMoverService } from '@app/tools/services/tools/selection-mover.service';
 import { SelectionService } from '@app/tools/services/tools/selection.service';
 

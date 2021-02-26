@@ -50,19 +50,17 @@ export class SelectionMoverService extends Tool {
 
     console.log("down");
 
-    if (this.mouseDown) {
-      if (this.isClickOutsideSelection(event)) {
-        this.selectionService.setIsSelectionBeingManipulated(false);
-        this.mouseDown = false;
-
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
-      }
-      else {
-        this.computeDiagonalEquation();
-      }
-      this.registerMousePos(mousePos, true);
+    if (!this.mouseDown) {
+      return;
     }
+
+    if (this.isClickOutsideSelection(event)) {
+      this.stopManipulation();
+      return;
+    }
+
+    this.computeDiagonalEquation();
+    this.registerMousePos(mousePos, true);
   }
 
   onMouseUp(event: MouseEvent): void {
@@ -72,42 +70,47 @@ export class SelectionMoverService extends Tool {
 
   onMouseMove(event: MouseEvent): void {
     const mousePosition = this.getPositionFromMouse(event);
-    if (this.mouseDown) {
-      this.registerMousePos(mousePosition, false);
 
-      if (this.resizingMode != ResizingMode.off) {
-        this.resize(mousePosition, this.resizingMode);
-        return;
-      }
-
-      this.moveSelection(mousePosition);
+    if (!this.mouseDown) {
+      return;
     }
+
+    this.registerMousePos(mousePosition, false);
+
+    if (this.resizingMode != ResizingMode.off) {
+      this.resizeSelection(mousePosition, this.resizingMode);
+      return;
+    }
+
+    this.moveSelection(mousePosition);
+
   }
 
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = true;
-      if (this.isSelectionBeingResizedDiagonally()) {
-        let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
-        this.resize(adjustedMousePos, this.resizingMode);
-      }
+    }
+
+    if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
+      let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
+      this.resizeSelection(adjustedMousePos, this.resizingMode);
     }
   }
 
   onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = false;
-      if (this.isSelectionBeingResizedDiagonally()) {
-        this.resize(this.mouseLastPos, this.resizingMode);
-      }
+    }
+
+    if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
+      this.resizeSelection(this.mouseLastPos, this.resizingMode);
     }
   }
 
-  setSelection(topLeft: Vec2, bottomRight: Vec2) {
+  initialize(topLeft: Vec2, bottomRight: Vec2) {
+    this.resetProperties();
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;
-    this.isReversedX = false;
-    this.isReversedY = false;
     this.computeDiagonalEquation();
   }
 
@@ -121,34 +124,8 @@ export class SelectionMoverService extends Tool {
     this.drawSelectionOutline();
   }
 
-  addMovementToPositions(mouseMovement: Vec2) {
-
-    //this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
- 
-    this.mouseDownLastPos.x += mouseMovement.x;
-    this.mouseDownLastPos.y += mouseMovement.y;
-   
-    this.topLeft.x += mouseMovement.x;
-    this.topLeft.y += mouseMovement.y;
-  
-    this.bottomRight.x += mouseMovement.x;
-    this.bottomRight.y += mouseMovement.y;
-  }
-
-  registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
-    this.mouseLastPos.x = mousePos.x;
-    this.mouseLastPos.y = mousePos.y;
-
-    if (isMouseDownLastPos) {
-      this.mouseDownLastPos.x = mousePos.x;
-      this.mouseDownLastPos.y = mousePos.y;
-    }
-  }
-
-  resize(newPos: Vec2, direction: ResizingMode): void {
-
-    //this.adjustIfOutsideCanvas(newPos)
-
+  resizeSelection(newPos: Vec2, direction: ResizingMode): void {
+    ////this.adjustIfOutsideCanvas(newPos)
     if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
       newPos = this.getMousePosOnDiagonal(newPos);
     }
@@ -176,9 +153,40 @@ export class SelectionMoverService extends Tool {
       this.selectionHandler.resizeSelection(newPos, this.bottomRight, true);
     }
 
-    this.drawingService.clearCanvas(this.drawingService.previewCtx);
     this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
+  }
+
+  stopManipulation() {
+    this.selectionService.setIsSelectionBeingManipulated(false);
+
+    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+    this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
+
+    this.resetProperties();
+  }
+
+  addMovementToPositions(mouseMovement: Vec2) {
+
+    ////this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
+    this.mouseDownLastPos.x += mouseMovement.x;
+    this.mouseDownLastPos.y += mouseMovement.y;
+
+    this.topLeft.x += mouseMovement.x;
+    this.topLeft.y += mouseMovement.y;
+
+    this.bottomRight.x += mouseMovement.x;
+    this.bottomRight.y += mouseMovement.y;
+  }
+
+  registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
+    this.mouseLastPos.x = mousePos.x;
+    this.mouseLastPos.y = mousePos.y;
+
+    if (isMouseDownLastPos) {
+      this.mouseDownLastPos.x = mousePos.x;
+      this.mouseDownLastPos.y = mousePos.y;
+    }
   }
 
   computeDiagonalEquation() {
@@ -256,16 +264,16 @@ export class SelectionMoverService extends Tool {
 
   adjustIfWillBeOutside(topLeft: Vec2, bottomRight: Vec2, movement: Vec2): void {
     let copy: number;
-    let topLeftCopy: Vec2  ={x: topLeft.x, y: topLeft.y};
-    let bottomRightCopy: Vec2 = {x: bottomRight.x, y: bottomRight.y};
-    
-    if(this.isReversedX){
+    let topLeftCopy: Vec2 = { x: topLeft.x, y: topLeft.y };
+    let bottomRightCopy: Vec2 = { x: bottomRight.x, y: bottomRight.y };
+
+    if (this.isReversedX) {
       copy = topLeftCopy.x;
       topLeftCopy.x = bottomRightCopy.x;
       bottomRightCopy.x = copy;
     }
 
-    if(this.isReversedY){
+    if (this.isReversedY) {
       copy = topLeftCopy.y;
       topLeftCopy.y = bottomRightCopy.y;
       bottomRightCopy.y = copy;
@@ -287,5 +295,19 @@ export class SelectionMoverService extends Tool {
     if (futureBottomRight.y >= canvasSize.y) {
       movement.y = canvasSize.y - bottomRightCopy.y;
     }
+  }
+
+  resetProperties() {
+    this.diagonalSlope = 0;
+    this.diagonalYIntercept = 0;
+    this.topLeft = { x: 0, y: 0 };
+    this.bottomRight = { x: 0, y: 0 };
+    this.mouseLastPos = { x: 0, y: 0 };
+    this.mouseDownLastPos = { x: 0, y: 0 };
+    this.resizingMode = ResizingMode.off;
+    this.mouseDown = false;
+    this.isShiftDown = false;
+    this.isReversedY = false;
+    this.isReversedX = false;
   }
 }
