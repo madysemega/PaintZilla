@@ -60,11 +60,11 @@ export class EllipseSelectionHandlerService {
     this.initProperties(topLeftOnSource, center, radii);
   }
 
-  reselectArea(topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
+  /*reselectArea(topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
     this.selectArea(this.drawingService.previewCanvas, topLeftOnSource, center, radii);
     this.hasBeenManipulated = true;
     this.needWhiteEllipsePostDrawing = false;
-  }
+  }*/
 
   drawSelection(target: CanvasRenderingContext2D, positionOnTarget: Vec2): void {
     if (this.hasSelectionBeenManipulated(positionOnTarget)) {
@@ -137,7 +137,7 @@ export class EllipseSelectionHandlerService {
     this.drawingService.clearCanvas(target);
     target.beginPath();
     this.transform(target, scaling, isHorizontalResizing);
-    target.imageSmoothingEnabled = false;//////////////
+    target.imageSmoothingEnabled = false;
     target.drawImage(source, 0, 0);
     target.closePath();
     target.resetTransform();
@@ -174,6 +174,14 @@ export class EllipseSelectionHandlerService {
     this.horizontalModificationCanvas.height = this.drawingService.canvas.height;
     this.verticalModificationCanvas.width = this.drawingService.canvas.width;
     this.verticalModificationCanvas.height = this.drawingService.canvas.height;
+    /*this.selectionCanvas.width = 2000;
+    this.selectionCanvas.height = 2000;
+    this.originalCanvasCopy.width = 2000;
+    this.originalCanvasCopy.height = 2000;
+    this.horizontalModificationCanvas.width = 2000;
+    this.horizontalModificationCanvas.height = 2000;
+    this.verticalModificationCanvas.width = 2000;
+    this.verticalModificationCanvas.height =2000;*/
   }
 
   hasSelectionBeenManipulated(topLeftOnTarget: Vec2): boolean {

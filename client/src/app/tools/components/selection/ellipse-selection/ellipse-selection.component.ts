@@ -12,12 +12,12 @@ export class EllipseSelectionComponent implements OnInit {
 
   public resizingMode: typeof ResizingMode = ResizingMode;
   public showControlPoint: boolean
-  public isShiftDown: boolean;
+  //public isShiftDown: boolean;
 
   constructor(public selectionMover: SelectionMoverService, public selectionService: SelectionService) {
   }
 
-  @HostListener('document:keydown', ['$event'])
+ /* @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = true;
@@ -29,7 +29,7 @@ export class EllipseSelectionComponent implements OnInit {
     if (event.key === 'Shift') {
       this.isShiftDown = false;
     }
-  }
+  }*/
 
   setResizingMode(resizingMode: ResizingMode): void {
     this.selectionMover.resizingMode = resizingMode;

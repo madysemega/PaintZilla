@@ -26,14 +26,6 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.key = 'ellipse'; //selection-creator
     }
 
-    onToolSelect(): void {
-        this.drawingService.setCursorType(CursorType.CROSSHAIR);
-    }
-
-    onToolDeselect(): void {
-        this.selectionService.setIsSelectionBeingManipulated(false);
-    }
-
     onMouseDown(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.mouseDown = event.button === MouseButton.Left;
@@ -57,12 +49,11 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
                 this.drawSelectionOutline(mousePosition);
             }
         }
-
     }
-
 
     onMouseUp(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
+        this.adjustPositionToStayInCanvas(mousePosition);
         if (this.isSelectionBeingManipulated()) {
             this.selectionMoverService.onMouseUp(event);
         }
@@ -103,14 +94,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         }
     }
 
-    drawSelectionOutline(endPoint: Vec2) {
-        let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
-        if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
-        }
-        this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
-        this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
+    onToolSelect(): void {
+        this.drawingService.setCursorType(CursorType.CROSSHAIR);
+    }
+
+    onToolDeselect(): void {///////////////// resize canvas
+        this.selectionService.setIsSelectionBeingManipulated(false);
     }
 
     select(startPoint: Vec2, endPoint: Vec2): void {
@@ -128,6 +117,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.selectionMoverService.setSelection(startPoint, endPoint);
     }
 
+    drawSelectionOutline(endPoint: Vec2) {
+        let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
+        if (this.isShiftDown) {
+            endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
+        }
+        this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
+        this.selectionService.drawSelectionEllipse(center, radii);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
+    }
+
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2) {
         let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
         if (startPoint.x > endPoint.x) {
@@ -137,6 +136,15 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         if (startPoint.y > endPoint.y) {
             startPoint.y = endPoint.y;
             endPoint.y = startPointCopy.y;
+        }
+    }
+
+    registerMousePosition(mousePos: Vec2, isStartPoint: boolean): void {
+        this.lastMousePosition = mousePos
+
+        if (isStartPoint) {
+            this.mouseDownCoord = mousePos;
+            this.startPoint = mousePos;
         }
     }
 
@@ -150,32 +158,17 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     adjustPositionToStayInCanvas(mousePos: Vec2): void {
         let canvasSize: Vec2 = this.drawingService.canvasSize;
-        let hasBeenAdjusted: boolean = false;
         if (mousePos.x < 0) {
             mousePos.x = 0;
-            hasBeenAdjusted = true;
         }
-
         if (mousePos.x > canvasSize.x) {
             mousePos.x = canvasSize.x;
-            hasBeenAdjusted = true;
         }
         if (mousePos.y > canvasSize.y) {
             mousePos.y = canvasSize.y;
-            hasBeenAdjusted = true;
         }
         if (mousePos.y < 0) {
             mousePos.y = 0;
-            hasBeenAdjusted = true;
-        }
-    }
-
-    registerMousePosition(mousePos: Vec2, isStartPoint: boolean): void {
-        this.lastMousePosition = mousePos
-
-        if (isStartPoint) {
-            this.mouseDownCoord = mousePos;
-            this.startPoint = mousePos;
         }
     }
 }

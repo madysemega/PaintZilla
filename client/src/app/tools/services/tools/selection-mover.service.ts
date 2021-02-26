@@ -44,20 +44,17 @@ export class SelectionMoverService extends Tool {
     this.key = 'selection-manipulator';
   }
 
-  setSelection(topLeft: Vec2, bottomRight: Vec2) {
-    this.topLeft = topLeft;
-    this.bottomRight = bottomRight;
-    this.computeDiagonalEquation();
-  }
-
   onMouseDown(event: MouseEvent): void {
     this.mouseDown = event.button === MouseButton.Left;
     let mousePos = this.getPositionFromMouse(event);
+
+    console.log("down");
 
     if (this.mouseDown) {
       if (this.isClickOutsideSelection(event)) {
         this.selectionService.setIsSelectionBeingManipulated(false);
         this.mouseDown = false;
+
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
       }
@@ -68,93 +65,80 @@ export class SelectionMoverService extends Tool {
     }
   }
 
-  isClickInsideSelection(event: MouseEvent): boolean {
-    const mousePosition = this.getPositionFromMouse(event);
-    const xInSelection: boolean = (mousePosition.x > this.topLeft.x) && (mousePosition.x < this.bottomRight.x);
-    const yInSelection: boolean = (mousePosition.y > this.topLeft.y) && (mousePosition.y < this.bottomRight.y);
-    return (xInSelection && yInSelection);
-  }
-
-  isClickOutsideSelection(event: MouseEvent): boolean {
-    const mousePosition = this.getPositionFromMouse(event);
-    let xOutsideSelection: boolean;
-    let yOutsideSelection: boolean
-
-    if (this.isReversedX) {
-      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET);
-    }
-
-    else {
-      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
-    }
-
-    if (this.isReversedY) {
-      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET);
-    }
-
-    else {
-      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
-    }
-
-    return (xOutsideSelection || yOutsideSelection);
-  }
-
   onMouseUp(event: MouseEvent): void {
     this.mouseDown = false;
     this.resizingMode = ResizingMode.off;
-
-    if (this.isReversedX || this.isReversedY) {
-      //this.reselect(this.isReversedX, this.isReversedY);
-    }
   }
 
   onMouseMove(event: MouseEvent): void {
     const mousePosition = this.getPositionFromMouse(event);
     if (this.mouseDown) {
       this.registerMousePos(mousePosition, false);
+
       if (this.resizingMode != ResizingMode.off) {
         this.resize(mousePosition, this.resizingMode);
         return;
       }
+
       this.moveSelection(mousePosition);
     }
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftDown = true;
+      if (this.isSelectionBeingResizedDiagonally()) {
+        let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
+        this.resize(adjustedMousePos, this.resizingMode);
+      }
+    }
+  }
+
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftDown = false;
+      if (this.isSelectionBeingResizedDiagonally()) {
+        this.resize(this.mouseLastPos, this.resizingMode);
+      }
+    }
+  }
+
+  setSelection(topLeft: Vec2, bottomRight: Vec2) {
+    this.topLeft = topLeft;
+    this.bottomRight = bottomRight;
+    this.isReversedX = false;
+    this.isReversedY = false;
+    this.computeDiagonalEquation();
+  }
+
   moveSelection(mousePos: Vec2): void {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
 
+    const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
     this.addMovementToPositions(mouseMovement);
+
     this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
   }
 
   addMovementToPositions(mouseMovement: Vec2) {
 
-    this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
-    //console.log(this.topLeft.x +" "+ this.topLeft.y);
-    //console.log(this.bottomRight.x +" "+ this.bottomRight.y);
+    //this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
+ 
     this.mouseDownLastPos.x += mouseMovement.x;
     this.mouseDownLastPos.y += mouseMovement.y;
-    //this.adjustIfOutsideCanvas(this.mouseDownLastPos);
+   
     this.topLeft.x += mouseMovement.x;
     this.topLeft.y += mouseMovement.y;
-    //this.adjustIfOutsideCanvas(this.topLeft);
+  
     this.bottomRight.x += mouseMovement.x;
     this.bottomRight.y += mouseMovement.y;
-    //console.log(this.topLeft.x +" "+ this.topLeft.y);
-    //console.log(this.bottomRight.x +" "+ this.bottomRight.y);
-    console.log("-------------------");
-    //this.adjustIfOutsideCanvas(this.bottomRight);
   }
 
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
     this.mouseLastPos.x = mousePos.x;
     this.mouseLastPos.y = mousePos.y;
+
     if (isMouseDownLastPos) {
       this.mouseDownLastPos.x = mousePos.x;
       this.mouseDownLastPos.y = mousePos.y;
@@ -162,10 +146,13 @@ export class SelectionMoverService extends Tool {
   }
 
   resize(newPos: Vec2, direction: ResizingMode): void {
-    this.adjustIfOutsideCanvas(newPos)
+
+    //this.adjustIfOutsideCanvas(newPos)
+
     if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
-      newPos = this.mousePositionOnDiagonal(newPos);
+      newPos = this.getMousePosOnDiagonal(newPos);
     }
+
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
     if (direction === ResizingMode.towardsBottom || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
@@ -192,7 +179,6 @@ export class SelectionMoverService extends Tool {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
     this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
-
   }
 
   computeDiagonalEquation() {
@@ -207,7 +193,7 @@ export class SelectionMoverService extends Tool {
     this.diagonalYIntercept = this.bottomRight.y - this.topLeft.x * this.diagonalSlope;
   }
 
-  mousePositionOnDiagonal(mousePos: Vec2): Vec2 {
+  getMousePosOnDiagonal(mousePos: Vec2): Vec2 {
     return { x: mousePos.x, y: mousePos.x * this.diagonalSlope + this.diagonalYIntercept };
   }
 
@@ -219,25 +205,6 @@ export class SelectionMoverService extends Tool {
     this.selectionService.drawSelectionEllipse(center, radii);
   }
 
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Shift') {
-      this.isShiftDown = true;
-      if (this.isSelectionBeingResizedDiagonally()) {
-        let adjustedMousePos: Vec2 = this.mousePositionOnDiagonal(this.mouseLastPos);
-        this.resize(adjustedMousePos, this.resizingMode);
-      }
-    }
-  }
-
-  onKeyUp(event: KeyboardEvent): void {
-    if (event.key === 'Shift') {
-      this.isShiftDown = false;
-      if (this.isSelectionBeingResizedDiagonally()) {
-        this.resize(this.mouseLastPos, this.resizingMode);
-      }
-    }
-  }
-
   isSelectionBeingResizedDiagonally() {
     return this.resizingMode === ResizingMode.towardsBottomLeft
       || this.resizingMode === ResizingMode.towardsBottomRight
@@ -245,41 +212,29 @@ export class SelectionMoverService extends Tool {
       || this.resizingMode === ResizingMode.towardsTopRight;
   }
 
-  reselect(swapX: boolean, swapY: boolean) {
-    this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
-    this.swapTopLeftAndBottomRight(swapX, swapY);
-    this.reselectSelection();
-  }
+  isClickOutsideSelection(event: MouseEvent): boolean {
+    const mousePosition = this.getPositionFromMouse(event);
+    let xOutsideSelection: boolean;
+    let yOutsideSelection: boolean
 
-  reselectSelection(): void {
-    let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
-    this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-    this.selectionHandler.reselectArea(this.topLeft, center, radii);
-    this.drawSelectionOutline();
-  }
-
-  swapTopLeftAndBottomRight(swapX: boolean, swapY: boolean): void {
-    if (swapX) {
-      let tempX = this.topLeft.x;
-      this.topLeft.x = this.bottomRight.x;
-      this.bottomRight.x = tempX;
-      this.isReversedX = false;
+    if (this.isReversedX) {
+      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET);
     }
-    if (swapY) {
-      let tempY = this.topLeft.y;
-      this.topLeft.y = this.bottomRight.y;
-      this.bottomRight.y = tempY;
-      this.isReversedY = false;
+    else {
+      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
     }
-  }
 
-  isSelectionOutsideCanvas(): boolean {
-    let canvasSize: Vec2 = this.drawingService.canvasSize;
-    const xOutsideSelection: boolean = (this.topLeft.x < 0)
-      || (this.bottomRight.x > canvasSize.x);
-    const yOutsideSelection: boolean = (this.topLeft.y < 0)
-      || (this.bottomRight.y > canvasSize.y);
+    if (this.isReversedY) {
+      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET);
+    }
+    else {
+      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
+        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
+    }
+
     return (xOutsideSelection || yOutsideSelection);
   }
 
@@ -288,7 +243,6 @@ export class SelectionMoverService extends Tool {
     if (pos.x < 0) {
       pos.x = 0;
     }
-
     if (pos.x > canvasSize.x) {
       pos.x = canvasSize.x;
     }
@@ -304,19 +258,14 @@ export class SelectionMoverService extends Tool {
     let copy: number;
     let topLeftCopy: Vec2  ={x: topLeft.x, y: topLeft.y};
     let bottomRightCopy: Vec2 = {x: bottomRight.x, y: bottomRight.y};
-
     
     if(this.isReversedX){
-      console.log("x");
-      console.log(bottomRightCopy.x);
       copy = topLeftCopy.x;
       topLeftCopy.x = bottomRightCopy.x;
       bottomRightCopy.x = copy;
-      console.log(bottomRightCopy.x);
     }
 
     if(this.isReversedY){
-      console.log("y");
       copy = topLeftCopy.y;
       topLeftCopy.y = bottomRightCopy.y;
       bottomRightCopy.y = copy;
@@ -326,9 +275,6 @@ export class SelectionMoverService extends Tool {
     let futureBottomRight = { x: bottomRightCopy.x + movement.x, y: bottomRightCopy.y + movement.y };
 
     let canvasSize: Vec2 = this.drawingService.canvasSize;
-    console.log(bottomRightCopy.x);
-    //console.log(canvasSize.x);
-    //console.log(bottomRightCopy.x);
     if (futureTopLeft.x <= 0) {
       movement.x = 0 - topLeftCopy.x;
     }
@@ -341,15 +287,5 @@ export class SelectionMoverService extends Tool {
     if (futureBottomRight.y >= canvasSize.y) {
       movement.y = canvasSize.y - bottomRightCopy.y;
     }
-  }
-
-  isOutsideCanvasX(pos: Vec2): boolean {
-    let canvasSize: Vec2 = this.drawingService.canvasSize;
-    return pos.x < 0 || pos.x > canvasSize.x;
-  }
-
-  isOutsideCanvasY(pos: Vec2): boolean {
-    let canvasSize: Vec2 = this.drawingService.canvasSize;
-    return pos.y > canvasSize.y || pos.y < 0;
   }
 }
