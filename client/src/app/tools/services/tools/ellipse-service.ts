@@ -45,6 +45,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
+        this.adjustPositionToStayInCanvas(mousePosition);
+
         if (this.isSelectionBeingManipulated()) {
             this.selectionMoverService.onMouseMove(event);
         }
@@ -55,7 +57,9 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
                 this.drawSelectionOutline(mousePosition);
             }
         }
+
     }
+
 
     onMouseUp(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
@@ -142,6 +146,28 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     isSelectionBeingManipulated(): boolean {
         return this.selectionService.isSelectionBeingManipulated.getValue();
+    }
+
+    adjustPositionToStayInCanvas(mousePos: Vec2): void {
+        let canvasSize: Vec2 = this.drawingService.canvasSize;
+        let hasBeenAdjusted: boolean = false;
+        if (mousePos.x < 0) {
+            mousePos.x = 0;
+            hasBeenAdjusted = true;
+        }
+
+        if (mousePos.x > canvasSize.x) {
+            mousePos.x = canvasSize.x;
+            hasBeenAdjusted = true;
+        }
+        if (mousePos.y > canvasSize.y) {
+            mousePos.y = canvasSize.y;
+            hasBeenAdjusted = true;
+        }
+        if (mousePos.y < 0) {
+            mousePos.y = 0;
+            hasBeenAdjusted = true;
+        }
     }
 
     registerMousePosition(mousePos: Vec2, isStartPoint: boolean): void {
