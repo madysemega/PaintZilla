@@ -59,7 +59,7 @@ export class SelectionMoverService extends Tool {
         this.selectionService.setIsSelectionBeingManipulated(false);
         this.mouseDown = false;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.selectionHandler.drawSelection(this.topLeft, this.drawingService.baseCtx);
+        this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
       }
       else {
         this.computeDiagonalEquation();
@@ -113,7 +113,7 @@ export class SelectionMoverService extends Tool {
     const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
 
     this.addMovementToPositions(mouseMovement);
-    this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+    this.selectionHandler.drawSelection( this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
   }
 
@@ -136,7 +136,7 @@ export class SelectionMoverService extends Tool {
   }
 
   resize(newPos: Vec2, direction: ResizingMode): void {
-    if (this.isShiftDown) {
+    if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
       newPos = this.mousePositionOnDiagonal(newPos);
     }
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -167,7 +167,7 @@ export class SelectionMoverService extends Tool {
     }
 
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+    this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
   }
 
@@ -198,7 +198,7 @@ export class SelectionMoverService extends Tool {
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = true;
-      if (this.resizingMode != ResizingMode.off) {
+      if (this.isSelectionBeingResizedDiagonally() ) {
         let adjustedMousePos: Vec2 = this.mousePositionOnDiagonal(this.mouseLastPos);
         this.resize(adjustedMousePos, this.resizingMode);
       }
@@ -208,15 +208,22 @@ export class SelectionMoverService extends Tool {
   onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = false;
-      if (this.resizingMode != ResizingMode.off) {
+      if (this.isSelectionBeingResizedDiagonally()) {
         this.resize(this.mouseLastPos, this.resizingMode);
       }
     }
   }
 
+  isSelectionBeingResizedDiagonally(){
+    return this.resizingMode === ResizingMode.towardsBottomLeft 
+    || this.resizingMode === ResizingMode.towardsBottomRight 
+    || this.resizingMode === ResizingMode.towardsTopLeft 
+    || this.resizingMode === ResizingMode.towardsTopRight;
+  }
+
   reselect(swapX: boolean, swapY: boolean) {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    this.selectionHandler.drawSelection(this.topLeft, this.drawingService.previewCtx);
+    this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.swapTopLeftAndBottomRight(swapX, swapY);
     this.reselectSelection();
   }
