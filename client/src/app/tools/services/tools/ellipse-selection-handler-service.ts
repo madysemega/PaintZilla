@@ -51,13 +51,14 @@ export class EllipseSelectionHandlerService {
     this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
   }
 
-  selectArea(sourceCanvas: HTMLCanvasElement, topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
+  select(sourceCanvas: HTMLCanvasElement, topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
     this.clearAndResetAllCanvas();
+    this.initAllProperties(topLeftOnSource, center, radii);
+
     this.drawEllipseRegion(sourceCanvas, topLeftOnSource, radii);
     this.drawCanvas(this.selectionCanvas, this.horizontalModificationCtx);
     this.drawCanvas(this.selectionCanvas, this.verticalModificationCtx);
     this.drawCanvas(this.selectionCanvas, this.originalCanvasCopyCtx);
-    this.initProperties(topLeftOnSource, center, radii);
   }
 
   /*reselectArea(topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
@@ -151,7 +152,7 @@ export class EllipseSelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
-  initProperties(topLeftOnSource: Vec2, center: Vec2, radii: Vec2) {
+  initAllProperties(topLeftOnSource: Vec2, center: Vec2, radii: Vec2) {
     this.topLeft.x = this.selectionCanvas.width / 2 - radii.x;
     this.topLeft.y = this.selectionCanvas.height / 2 - radii.y;
     this.originalWidth = radii.x * 2;
