@@ -11,7 +11,6 @@ import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { LineService } from './line.service';
-
 // tslint:disable:no-any
 // tslint:disable:max-file-line-count
 describe('LineService', () => {
