@@ -50,8 +50,4 @@ export class SidebarComponent implements OnInit {
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
     }
-
-    get height(): number {
-        return window.innerHeight;
-    }
 }

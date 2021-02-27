@@ -59,4 +59,8 @@ export class EditorComponent implements AfterViewInit {
     updateColour(): void {
         this.colourService.updateColour();
     }
+
+    get height(): number {
+        return window.innerHeight;
+    }
 }
