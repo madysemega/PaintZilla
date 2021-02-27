@@ -5,7 +5,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 @Injectable({
     providedIn: 'root',
 })
-export class RgbFormService {
+export class RgbaFormService {
     rgbForm: FormControl;
     constructor(private colourPickerService: ColourPickerService) {}
 

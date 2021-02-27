@@ -26,7 +26,7 @@ app-colour-picker {
     position: absolute;
     z-index: 3;
     left: 235px;
-    top: 215px;
+    top: 225px;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -48,5 +48,5 @@ app-colour-picker {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: lightgrey;
+    background: grey;
 }
