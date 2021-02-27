@@ -72,14 +72,14 @@ export class ColourService {
         this.primaryColourSelected = true;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colour = this.getPrimaryColour();
+        this.colourPickerService.setCurrentColour(this.getPrimaryColour());
     }
 
     selectSecondaryColour(): void {
         this.primaryColourSelected = false;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colour = this.getSecondaryColour();
+        this.colourPickerService.setCurrentColour(this.getSecondaryColour());
     }
 
     swapComponentColours(): void {

@@ -19,11 +19,11 @@ export class ColourPickerService {
     currentColourObservable: Observable<Colour>;
     colourChangedSubscription: Subscription;
     constructor() {
-        const currentHslColor = this.currentColour.rgbToHsv();
+        const currentHsvColour = this.currentColour.rgbToHsv();
         this.alphaSubject = new BehaviorSubject<number>(this.currentColour.getAlpha());
-        this.hueSubject = new BehaviorSubject<number>(currentHslColor[Constants.HUE_INDEX]);
-        this.saturationSubject = new BehaviorSubject<number>(currentHslColor[Constants.SATURATION_INDEX]);
-        this.valueSubject = new BehaviorSubject<number>(currentHslColor[Constants.VALUE_INDEX]);
+        this.hueSubject = new BehaviorSubject<number>(currentHsvColour[Constants.HUE_INDEX]);
+        this.saturationSubject = new BehaviorSubject<number>(currentHsvColour[Constants.SATURATION_INDEX]);
+        this.valueSubject = new BehaviorSubject<number>(currentHsvColour[Constants.VALUE_INDEX]);
         this.alphaObservable = this.alphaSubject.asObservable();
         this.hueObservable = this.hueSubject.asObservable();
         this.saturationObservable = this.saturationSubject.asObservable();

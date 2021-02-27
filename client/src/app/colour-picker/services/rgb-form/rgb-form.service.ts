@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import * as Constants from '@app/colour-picker/constants/rgb-form.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 @Injectable({
     providedIn: 'root',
@@ -16,7 +17,7 @@ export class RgbaFormService {
         this.rgbaFormGroup.controls.greenForm.markAsTouched();
         this.rgbaFormGroup.controls.blueForm.setValue(Colour.toHex(parseInt(colour.getBlue().toString())), { eventEmit: false });
         this.rgbaFormGroup.controls.blueForm.markAsTouched();
-        this.rgbaFormGroup.controls.alphaForm.setValue((colour.getAlpha() * 100).toString(), { eventEmit: false });
+        this.rgbaFormGroup.controls.alphaForm.setValue((colour.getAlpha() * Constants.PERCENTAGE).toString(), { eventEmit: false });
         this.rgbaFormGroup.controls.alphaForm.markAsTouched();
     }
 
@@ -24,7 +25,7 @@ export class RgbaFormService {
         if (this.rgbaFormGroup.valid) {
             const currentColourString = this.formString();
             const currentColour = Colour.hexToRgb(currentColourString);
-            currentColour.setAlpha(this.rgbaFormGroup.controls.alphaForm.value / 100);
+            currentColour.setAlpha(this.rgbaFormGroup.controls.alphaForm.value / Constants.PERCENTAGE);
             this.colourPickerService.setCurrentColour(currentColour);
         }
     }
