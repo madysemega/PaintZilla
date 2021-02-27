@@ -5,7 +5,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { EllipseService } from '@app/tools/services/tools/ellipse-service';
+import { EllipseSelectionService } from '@app/tools/services/tools/ellipse-selection.service';
 
 @Component({
     selector: 'app-drawing',
@@ -22,7 +22,7 @@ export class DrawingComponent implements AfterViewInit {
 
     wasResizing: boolean;
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService, public ellipseService: EllipseService) {
+    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService, public ellipseSelectionService: EllipseSelectionService) {
         this.wasResizing = false;
     }
 
@@ -110,7 +110,7 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     activateResizer(button: string): void {
-        this.ellipseService.stopManipulatingSelection();
+        this.ellipseSelectionService.stopManipulatingSelection();
         this.resizingService.activateResizer(button);
     }
 

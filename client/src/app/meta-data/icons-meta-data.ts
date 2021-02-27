@@ -27,14 +27,27 @@ export class IconsMetaData {
                 name: 'ellipse-contoured-and-filled',
                 path: '../assets/icons/ellipse-contoured-and-filled.svg',
             },
+
+            {
+                name: 'ellipse-selection',
+                path: '../assets/icons/ellipse-selection.svg',
+            },
+
             {
                 name: 'rectangle-contoured',
                 path: '../assets/icons/rectangle-contoured.svg',
             },
+
             {
                 name: 'rectangle-filled',
                 path: '../assets/icons/rectangle-filled.svg',
             },
+
+            {
+                name: 'rectangle-selection',
+                path: '../assets/icons/rectangle-selection.svg',
+            },
+
             {
                 name: 'rectangle-contoured-and-filled',
                 path: '../assets/icons/rectangle-contoured-and-filled.svg',

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RectangleSelectService } from './rectangle-select.service';
+import { RectangleSelectionService } from './rectangle-selection.service';
 
 describe('RectangleSelectService', () => {
-  let service: RectangleSelectService;
+  let service: RectangleSelectionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(RectangleSelectService);
+    service = TestBed.inject(RectangleSelectionService);
   });
 
   it('should be created', () => {

@@ -9,6 +9,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
+import { EllipseSelectionService } from '../tools/ellipse-selection.service';
 
 @Injectable({
     providedIn: 'root',
@@ -73,6 +74,7 @@ export class ToolSelectorService {
         ellipseService: EllipseService,
         rectangleService: RectangleService,
         lineService: LineService,
+        ellipseSelectionService: EllipseSelectionService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
@@ -103,6 +105,20 @@ export class ToolSelectorService {
             icon: 'pencil-with-line',
             keyboardShortcut: 'l',
             tool: lineService,
+        });
+
+        this.tools.set('test', {
+            displayName: 'Sélection par rectangle',
+            icon: 'rectangle-selection',
+            keyboardShortcut: 'r',
+            tool: rectangleService,
+        });
+
+        this.tools.set(ellipseSelectionService.key, {
+            displayName: 'Sélection par ellipse',
+            icon: 'ellipse-selection',
+            keyboardShortcut: 's',
+            tool: ellipseSelectionService,
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
