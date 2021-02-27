@@ -57,10 +57,6 @@ export class SelectionMoverService extends Tool {
   private isReversedY: boolean;
 
   private arrowKeyDown: boolean[] = [false, false, false, false];
-  /*private isArrowUpDown: boolean;
-  private isArrowDownDown: boolean;
-  private isArrowLeftDown: boolean;
-  private isArrowRightDown: boolean;*/
   private isContinousMovementByKeyboardOn: boolean;
 
   private subscription: Subscription;
@@ -108,14 +104,7 @@ export class SelectionMoverService extends Tool {
       return;
     }
 
-    this.moveSelectionByMouse(mousePosition);
-  }
-
-  startMovingSelectionContinous(movement: Vec2, arrowIndex: number) {
-    this.subscription.unsubscribe();
-    const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
-    this.subscription = source.subscribe(() => this.moveSelectionByKeyboard(movement));
-    this.isContinousMovementByKeyboardOn = true;
+    this.moveSelection(this.convertToMovement(mousePosition), true);
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -183,7 +172,7 @@ export class SelectionMoverService extends Tool {
         this.isContinousMovementByKeyboardOn = false;
         return;
       }
-      this.moveSelectionByKeyboard(this.MOVEMENT_DOWN);
+      this.moveSelection(this.MOVEMENT_DOWN, false);
     }
 
     if (event.key == 'ArrowUp' && this.arrowKeyDown[Arrow.up]) {
@@ -193,7 +182,7 @@ export class SelectionMoverService extends Tool {
         this.isContinousMovementByKeyboardOn = false;
         return;
       }
-      this.moveSelectionByKeyboard(this.MOVEMENT_UP);
+      this.moveSelection(this.MOVEMENT_UP, false);
     }
 
     if (event.key == 'ArrowLeft' && this.arrowKeyDown[Arrow.left]) {
@@ -203,7 +192,7 @@ export class SelectionMoverService extends Tool {
         this.isContinousMovementByKeyboardOn = false;
         return;
       }
-      this.moveSelectionByKeyboard(this.MOVEMENT_LEFT);
+      this.moveSelection(this.MOVEMENT_LEFT, false);
     }
 
     if (event.key == 'ArrowRight' && this.arrowKeyDown[Arrow.right]) {
@@ -213,9 +202,15 @@ export class SelectionMoverService extends Tool {
         this.isContinousMovementByKeyboardOn = false;
         return;
       }
-      this.moveSelectionByKeyboard(this.MOVEMENT_RIGHT);
+      this.moveSelection(this.MOVEMENT_RIGHT, false);
     }
   }
+
+
+
+
+
+
 
   initialize(topLeft: Vec2, bottomRight: Vec2) {
     this.resetProperties();
@@ -224,21 +219,13 @@ export class SelectionMoverService extends Tool {
     this.computeDiagonalEquation();
   }
 
-  moveSelectionByKeyboard(movement: Vec2) {
+  moveSelection(movement: Vec2, isMouseMovement: boolean) {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    this.addMovementToPositions(movement, false);
-    this.moveSelection();
+    this.addMovementToPositions(movement, isMouseMovement);
+    this.drawSelection();
   }
 
-  moveSelectionByMouse(mousePos: Vec2): void {
-    this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
-    const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
-    this.addMovementToPositions(mouseMovement, true);
-    this.moveSelection();
-  }
-
-  moveSelection() {
+  drawSelection() {
     this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
   }
@@ -283,6 +270,23 @@ export class SelectionMoverService extends Tool {
     this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
 
     this.resetProperties();
+  }
+
+
+  
+
+  
+
+  convertToMovement(mousePos: Vec2): Vec2 {
+    const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
+    return mouseMovement;
+  }
+
+  startMovingSelectionContinous(movement: Vec2, arrowIndex: number) {
+    this.subscription.unsubscribe();
+    const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
+    this.subscription = source.subscribe(() => this.moveSelection(movement, false));
+    this.isContinousMovementByKeyboardOn = true;
   }
 
   addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
