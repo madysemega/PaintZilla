@@ -132,7 +132,7 @@ export class SelectionMoverService extends Tool {
     if(event.key == 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]){
       this.moveIfPressLongEnough(this.MOVEMENT_LEFT, Arrow.left);
     }
-
+    
     if(event.key == 'ArrowRight' && !this.arrowKeyDown[Arrow.right]){
       this.moveIfPressLongEnough(this.MOVEMENT_RIGHT, Arrow.right);
     }
@@ -144,27 +144,19 @@ export class SelectionMoverService extends Tool {
     }
 
     if (event.key == 'ArrowDown' && this.arrowKeyDown[Arrow.down]) {
-      this.arrowKeyDown[Arrow.down] = false;
-      this.stopContinuousMovement();
-      this.moveSelection(this.MOVEMENT_DOWN, false);
+      this.singleMove(Arrow.down, this.MOVEMENT_DOWN);
     }
 
     if (event.key == 'ArrowUp' && this.arrowKeyDown[Arrow.up]) {
-      this.arrowKeyDown[Arrow.up] = false;
-      this.stopContinuousMovement();
-      this.moveSelection(this.MOVEMENT_UP, false);
+      this.singleMove(Arrow.up, this.MOVEMENT_UP);
     }
 
     if (event.key == 'ArrowLeft' && this.arrowKeyDown[Arrow.left]) {
-      this.arrowKeyDown[Arrow.left] = false;
-      this.stopContinuousMovement();
-      this.moveSelection(this.MOVEMENT_LEFT, false);
+      this.singleMove(Arrow.left, this.MOVEMENT_LEFT);
     }
-
+    
     if (event.key == 'ArrowRight' && this.arrowKeyDown[Arrow.right]) {
-      this.arrowKeyDown[Arrow.right] = false;
-      this.stopContinuousMovement();
-      this.moveSelection(this.MOVEMENT_RIGHT, false);
+      this.singleMove(Arrow.right, this.MOVEMENT_RIGHT);
     }
   }
 
@@ -228,11 +220,6 @@ export class SelectionMoverService extends Tool {
     this.resetProperties();
   }
 
-
-  
-
-  
-
   convertToMovement(mousePos: Vec2): Vec2 {
     const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
     return mouseMovement;
@@ -246,18 +233,17 @@ export class SelectionMoverService extends Tool {
   }
 
   addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
-
     ////this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
     if (isMouseMovement) {
-      this.mouseDownLastPos.x += mouseMovement.x;
-      this.mouseDownLastPos.y += mouseMovement.y;
+      this.add(this.mouseDownLastPos, mouseMovement);
     }
+    this.add(this.topLeft, mouseMovement);
+    this.add(this.bottomRight, mouseMovement);
+  }
 
-    this.topLeft.x += mouseMovement.x;
-    this.topLeft.y += mouseMovement.y;
-
-    this.bottomRight.x += mouseMovement.x;
-    this.bottomRight.y += mouseMovement.y;
+  add(vect: Vec2, amount: Vec2){
+    vect.x += amount.x;
+    vect.y += amount.y;
   }
 
   moveIfPressLongEnough(movement: Vec2, arrowIndex: number){
@@ -272,6 +258,12 @@ export class SelectionMoverService extends Tool {
       this.isContinousMovementByKeyboardOn = false;
       return;
     }
+  }
+
+  singleMove(arrowIndex: number, singleMovement: Vec2){
+    this.arrowKeyDown[arrowIndex] = false;
+    this.stopContinuousMovement();
+    this.moveSelection(singleMovement, false);
   }
 
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
