@@ -1,7 +1,24 @@
-<form class="container" autocomplete="off">
-    <mat-form-field class="rgbFormItem">
-        <mat-label>#RGB</mat-label>
-        <input [formControl]="rgbForm" matInput />
-        <mat-error *ngIf="rgbForm.invalid">Entrée RGB invalide</mat-error>
-    </mat-form-field>
+<form class="container" [formGroup]="rgbaFormGroup" autocomplete="off">
+    <div class="formsContainer">
+        <mat-form-field class="rgbFormItem">
+            <mat-label>Rouge</mat-label>
+            <input matInput formControlName="redForm" />
+            <mat-error *ngIf="rgbaFormGroup.controls.redForm.invalid">Invalide</mat-error>
+        </mat-form-field>
+        <mat-form-field class="rgbFormItem">
+            <mat-label>Vert</mat-label>
+            <input matInput formControlName="greenForm" />
+            <mat-error *ngIf="rgbaFormGroup.controls.greenForm.invalid">Invalide</mat-error>
+        </mat-form-field>
+        <mat-form-field class="rgbFormItem">
+            <mat-label>Bleu</mat-label>
+            <input matInput formControlName="blueForm" />
+            <mat-error *ngIf="rgbaFormGroup.controls.blueForm.invalid">Invalide</mat-error>
+        </mat-form-field>
+        <mat-form-field class="rgbFormItem">
+            <mat-label>Alpha</mat-label>
+            <input matInput formControlName="alphaForm" />
+            <mat-error *ngIf="rgbaFormGroup.controls.alphaForm.invalid">Invalide</mat-error>
+        </mat-form-field>
+    </div>
 </form>

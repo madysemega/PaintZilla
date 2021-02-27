@@ -2,7 +2,14 @@
     display: flex;
 }
 
-.rbgFormItem {
-    text-align: center;
+.formsContainer {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rgbFormItem {
+    text-align: center;
+    width: 60px;
+    margin-left: 4px;
 }
