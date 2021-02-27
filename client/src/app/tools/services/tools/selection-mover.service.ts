@@ -5,6 +5,8 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { SelectionService } from './selection.service';
+import { interval, Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 export enum ResizingMode {
   off = 0,
@@ -18,11 +20,26 @@ export enum ResizingMode {
   towardsBottomLeft = 8,
 }
 
+export enum Arrow {
+  down = 0,
+  up = 1,
+  left = 2,
+  right = 3,
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SelectionMoverService extends Tool {
-  public readonly OUTSIDE_DETECTION_OFFSET: number = 15;
+  public readonly MOVEMENT_PX: number = 3;
+  public readonly TIME_BEFORE_START_MOV: number = 500;
+  public readonly TIME_BETWEEN_MOV: number = 100;
+  public readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
+
+  public readonly MOVEMENT_DOWN = { x: 0, y: this.MOVEMENT_PX };
+  public readonly MOVEMENT_UP = { x: 0, y: -this.MOVEMENT_PX };
+  public readonly MOVEMENT_LEFT = { x: -this.MOVEMENT_PX, y: 0 };
+  public readonly MOVEMENT_RIGHT = { x: this.MOVEMENT_PX, y: 0 };
 
   public topLeft: Vec2;
   public bottomRight: Vec2;
@@ -38,6 +55,15 @@ export class SelectionMoverService extends Tool {
   private isShiftDown: boolean;
   private isReversedX: boolean;
   private isReversedY: boolean;
+
+  private arrowKeyDown: boolean[] = [false, false, false, false];
+  /*private isArrowUpDown: boolean;
+  private isArrowDownDown: boolean;
+  private isArrowLeftDown: boolean;
+  private isArrowRightDown: boolean;*/
+  private isContinousMovementByKeyboardOn: boolean;
+
+  private subscription: Subscription;
 
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
@@ -82,8 +108,14 @@ export class SelectionMoverService extends Tool {
       return;
     }
 
-    this.moveSelection(mousePosition);
+    this.moveSelectionByMouse(mousePosition);
+  }
 
+  startMovingSelectionContinous(movement: Vec2, arrowIndex: number) {
+    this.subscription.unsubscribe();
+    const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
+    this.subscription = source.subscribe(() => this.moveSelectionByKeyboard(movement));
+    this.isContinousMovementByKeyboardOn = true;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -95,6 +127,43 @@ export class SelectionMoverService extends Tool {
       let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
       this.resizeSelection(adjustedMousePos, this.resizingMode);
     }
+
+    let isAnyArrowKeyDown: boolean = false;
+
+    this.arrowKeyDown.forEach(element => {
+      if(element){
+        isAnyArrowKeyDown = true;
+      }
+    });
+
+    if(isAnyArrowKeyDown){
+      return;
+    }
+
+    if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
+      this.arrowKeyDown[Arrow.up] = true;
+      const source = interval(this.TIME_BEFORE_START_MOV);
+      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_UP, Arrow.up);})
+    }
+
+    if (event.key == 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
+      this.arrowKeyDown[Arrow.down] = true;
+      const source = interval(this.TIME_BEFORE_START_MOV);
+      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_DOWN, Arrow.down); })
+    }
+
+    if(event.key == 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]){
+      this.arrowKeyDown[Arrow.left] = true;
+      const source = interval(this.TIME_BEFORE_START_MOV);
+      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_LEFT, Arrow.left);})
+    }
+
+    if(event.key == 'ArrowRight' && !this.arrowKeyDown[Arrow.right]){
+      this.arrowKeyDown[Arrow.right] = true;
+      const source = interval(this.TIME_BEFORE_START_MOV);
+      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_RIGHT, Arrow.right);})
+    }
+
   }
 
   onKeyUp(event: KeyboardEvent): void {
@@ -103,7 +172,48 @@ export class SelectionMoverService extends Tool {
     }
 
     if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
-      this.resizeSelection(this.mouseLastPos, this.resizingMode);
+      //this.resizeSelection(this.mouseLastPos, this.resizingMode);
+    }
+
+    if (event.key == 'ArrowDown' && this.arrowKeyDown[Arrow.down]) {
+      this.arrowKeyDown[Arrow.down] = false;
+
+      this.subscription.unsubscribe();
+      if (this.isContinousMovementByKeyboardOn) {
+        this.isContinousMovementByKeyboardOn = false;
+        return;
+      }
+      this.moveSelectionByKeyboard(this.MOVEMENT_DOWN);
+    }
+
+    if (event.key == 'ArrowUp' && this.arrowKeyDown[Arrow.up]) {
+      this.arrowKeyDown[Arrow.up] = false;
+      this.subscription.unsubscribe();
+      if (this.isContinousMovementByKeyboardOn) {
+        this.isContinousMovementByKeyboardOn = false;
+        return;
+      }
+      this.moveSelectionByKeyboard(this.MOVEMENT_UP);
+    }
+
+    if (event.key == 'ArrowLeft' && this.arrowKeyDown[Arrow.left]) {
+      this.arrowKeyDown[Arrow.left] = false;
+      this.subscription.unsubscribe();
+      if (this.isContinousMovementByKeyboardOn) {
+        this.isContinousMovementByKeyboardOn = false;
+        return;
+      }
+      this.moveSelectionByKeyboard(this.MOVEMENT_LEFT);
+    }
+
+    if (event.key == 'ArrowRight' && this.arrowKeyDown[Arrow.right]) {
+      this.arrowKeyDown[Arrow.right] = false;
+      this.subscription.unsubscribe();
+      if (this.isContinousMovementByKeyboardOn) {
+        this.isContinousMovementByKeyboardOn = false;
+        return;
+      }
+      this.moveSelectionByKeyboard(this.MOVEMENT_RIGHT);
     }
   }
 
@@ -114,12 +224,21 @@ export class SelectionMoverService extends Tool {
     this.computeDiagonalEquation();
   }
 
-  moveSelection(mousePos: Vec2): void {
+  moveSelectionByKeyboard(movement: Vec2) {
+    this.drawingService.clearCanvas(this.drawingService.previewCtx);
+    this.addMovementToPositions(movement, false);
+    this.moveSelection();
+  }
+
+  moveSelectionByMouse(mousePos: Vec2): void {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
     const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
-    this.addMovementToPositions(mouseMovement);
+    this.addMovementToPositions(mouseMovement, true);
+    this.moveSelection();
+  }
 
+  moveSelection() {
     this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
     this.drawSelectionOutline();
   }
@@ -166,11 +285,13 @@ export class SelectionMoverService extends Tool {
     this.resetProperties();
   }
 
-  addMovementToPositions(mouseMovement: Vec2) {
+  addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
 
     ////this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
-    this.mouseDownLastPos.x += mouseMovement.x;
-    this.mouseDownLastPos.y += mouseMovement.y;
+    if (isMouseMovement) {
+      this.mouseDownLastPos.x += mouseMovement.x;
+      this.mouseDownLastPos.y += mouseMovement.y;
+    }
 
     this.topLeft.x += mouseMovement.x;
     this.topLeft.y += mouseMovement.y;
@@ -226,21 +347,21 @@ export class SelectionMoverService extends Tool {
     let yOutsideSelection: boolean
 
     if (this.isReversedX) {
-      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET);
+      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET_PX)
+        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX);
     }
     else {
-      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET);
+      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX)
+        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX);
     }
 
     if (this.isReversedY) {
-      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET);
+      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET_PX)
+        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET_PX);
     }
     else {
-      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET)
-        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET);
+      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET_PX)
+        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET_PX);
     }
 
     return (xOutsideSelection || yOutsideSelection);
