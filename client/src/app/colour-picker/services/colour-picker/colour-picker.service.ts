@@ -56,21 +56,18 @@ export class ColourPickerService {
     }
 
     set hue(hue: number) {
-        console.log('HUE: ' + hue);
         this.currentColour = Colour.hsvToRgb(hue, this.saturationSubject.value, this.valueSubject.value);
         this.currentColour.setAlpha(this.alphaSubject.value);
         this.hueSubject.next(hue);
     }
 
     set saturation(saturation: number) {
-        console.log('SATURATION: ' + saturation);
         this.currentColour = Colour.hsvToRgb(this.hueSubject.value, saturation, this.valueSubject.value);
         this.currentColour.setAlpha(this.alphaSubject.value);
         this.saturationSubject.next(saturation);
     }
 
     set value(value: number) {
-        console.log('VALUE: ' + value);
         this.currentColour = Colour.hsvToRgb(this.hueSubject.value, this.saturationSubject.value, value);
         this.currentColour.setAlpha(this.alphaSubject.value);
         this.valueSubject.next(value);

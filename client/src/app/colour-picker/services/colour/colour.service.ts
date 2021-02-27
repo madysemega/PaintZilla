@@ -15,7 +15,6 @@ export class ColourService {
     showColourPickerChange: EventEmitter<boolean>;
     primaryColourChanged: EventEmitter<Colour>;
     secondaryColourChanged: EventEmitter<Colour>;
-    colour: Colour;
 
     constructor(private colourPickerService: ColourPickerService) {
         this.primaryColour = Constants.DEFAULT_PRIMARY;
@@ -84,7 +83,7 @@ export class ColourService {
 
     swapComponentColours(): void {
         this.swapColours();
-        this.colour = this.primaryColourSelected ? this.getPrimaryColour() : this.getSecondaryColour();
+        this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.getPrimaryColour() : this.getSecondaryColour());
     }
 
     private updatePreviousColours(colour: Colour): void {

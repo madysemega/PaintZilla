@@ -41,7 +41,7 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.strokeWidthProperty = new StrokeWidthProperty();
         this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
-        this.jointsColourProperty = new FillStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour().toStringRBGA());
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,
