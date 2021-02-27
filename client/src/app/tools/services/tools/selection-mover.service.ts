@@ -61,7 +61,6 @@ export class SelectionMoverService extends Tool {
   
   private isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
-
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
     this.key = 'selection-manipulator';
@@ -118,10 +117,6 @@ export class SelectionMoverService extends Tool {
       let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
       this.resizeSelection(adjustedMousePos, this.resizingMode);
     }
-
-   /* if(this.isAnArrowKeyPressed()){
-      return;
-    }*/
 
     if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
       this.moveIfPressLongEnough(this.MOVEMENT_UP,Arrow.up);
