@@ -61,20 +61,15 @@ export class EllipseSelectionHandlerService {
     this.drawCanvas(this.selectionCanvas, this.originalCanvasCopyCtx);
   }
 
-  /*reselectArea(topLeftOnSource: Vec2, center: Vec2, radii: Vec2): void {
-    this.selectArea(this.drawingService.previewCanvas, topLeftOnSource, center, radii);
-    this.hasBeenManipulated = true;
-    this.needWhiteEllipsePostDrawing = false;
-  }*/
-
   drawSelection(target: CanvasRenderingContext2D, positionOnTarget: Vec2): void {
-    if (this.hasSelectionBeenManipulated(positionOnTarget)) {
-      target.imageSmoothingEnabled = false;
-      if (this.needWhiteEllipsePostDrawing) {
-        this.selectionService.drawPostSelectionEllipse(this.originalCenter, this.originalRadii);
-      }
-      this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
+    if (!this.hasSelectionBeenManipulated(positionOnTarget)) {
+      return;
     }
+
+    if (this.needWhiteEllipsePostDrawing) {
+      this.selectionService.drawPostSelectionEllipse(this.originalCenter, this.originalRadii);
+    }
+    this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
   }
 
   resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
@@ -174,15 +169,7 @@ export class EllipseSelectionHandlerService {
     this.horizontalModificationCanvas.width = this.drawingService.canvas.width;
     this.horizontalModificationCanvas.height = this.drawingService.canvas.height;
     this.verticalModificationCanvas.width = this.drawingService.canvas.width;
-    this.verticalModificationCanvas.height = this.drawingService.canvas.height;
-    /*this.selectionCanvas.width = 2000;
-    this.selectionCanvas.height = 2000;
-    this.originalCanvasCopy.width = 2000;
-    this.originalCanvasCopy.height = 2000;
-    this.horizontalModificationCanvas.width = 2000;
-    this.horizontalModificationCanvas.height = 2000;
-    this.verticalModificationCanvas.width = 2000;
-    this.verticalModificationCanvas.height =2000;*/
+    this.verticalModificationCanvas.height = this.drawingService.canvas.height; //=2000?
   }
 
   hasSelectionBeenManipulated(topLeftOnTarget: Vec2): boolean {
