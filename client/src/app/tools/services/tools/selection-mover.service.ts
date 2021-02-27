@@ -117,40 +117,24 @@ export class SelectionMoverService extends Tool {
       this.resizeSelection(adjustedMousePos, this.resizingMode);
     }
 
-    let isAnyArrowKeyDown: boolean = false;
-
-    this.arrowKeyDown.forEach(element => {
-      if(element){
-        isAnyArrowKeyDown = true;
-      }
-    });
-
-    if(isAnyArrowKeyDown){
+    if(this.isAnArrowKeyPressed()){
       return;
     }
 
     if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
-      this.arrowKeyDown[Arrow.up] = true;
-      const source = interval(this.TIME_BEFORE_START_MOV);
-      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_UP, Arrow.up);})
+      this.moveIfPressLongEnough(this.MOVEMENT_UP,Arrow.up);
     }
 
     if (event.key == 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
-      this.arrowKeyDown[Arrow.down] = true;
-      const source = interval(this.TIME_BEFORE_START_MOV);
-      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_DOWN, Arrow.down); })
+     this.moveIfPressLongEnough(this.MOVEMENT_DOWN, Arrow.down);
     }
 
     if(event.key == 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]){
-      this.arrowKeyDown[Arrow.left] = true;
-      const source = interval(this.TIME_BEFORE_START_MOV);
-      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_LEFT, Arrow.left);})
+      this.moveIfPressLongEnough(this.MOVEMENT_LEFT, Arrow.left);
     }
 
     if(event.key == 'ArrowRight' && !this.arrowKeyDown[Arrow.right]){
-      this.arrowKeyDown[Arrow.right] = true;
-      const source = interval(this.TIME_BEFORE_START_MOV);
-      this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(this.MOVEMENT_RIGHT, Arrow.right);})
+      this.moveIfPressLongEnough(this.MOVEMENT_RIGHT, Arrow.right);
     }
 
   }
@@ -304,6 +288,12 @@ export class SelectionMoverService extends Tool {
     this.bottomRight.y += mouseMovement.y;
   }
 
+  moveIfPressLongEnough(movement: Vec2, arrowIndex: number){
+    this.arrowKeyDown[arrowIndex] = true;
+    const source = interval(this.TIME_BEFORE_START_MOV);
+    this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(movement, arrowIndex);})
+  }
+
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
     this.mouseLastPos.x = mousePos.x;
     this.mouseLastPos.y = mousePos.y;
@@ -369,6 +359,18 @@ export class SelectionMoverService extends Tool {
     }
 
     return (xOutsideSelection || yOutsideSelection);
+  }
+
+  isAnArrowKeyPressed(): boolean{
+    let isAnyArrowKeyDown: boolean = false;
+
+    this.arrowKeyDown.forEach(element => {
+      if(element){
+        isAnyArrowKeyDown = true;
+      }
+    });
+
+    return isAnyArrowKeyDown;
   }
 
   adjustIfOutsideCanvas(pos: Vec2): void {
