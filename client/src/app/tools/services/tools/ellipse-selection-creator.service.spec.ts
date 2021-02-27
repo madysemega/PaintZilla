@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EllipseSelectionService } from './ellipse-selection.service';
+import { EllipseSelectionCreatorService } from './ellipse-selection-creator.service';
 
 describe('EllipseSelectionToolService', () => {
-  let service: EllipseSelectionService;
+  let service: EllipseSelectionCreatorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EllipseSelectionService);
+    service = TestBed.inject(EllipseSelectionCreatorService);
   });
 
   it('should be created', () => {

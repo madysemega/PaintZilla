@@ -37,8 +37,8 @@ export class EllipseSelectionHandlerService {
   private hasBeenManipulated: boolean;
   private needWhiteEllipsePostDrawing: boolean;
   private originalTopLeft: Vec2;
-  private originalCenter: Vec2;
-  private originalRadii: Vec2;
+  private originalCenter: Vec2; //
+  private originalRadii: Vec2; //
 
   constructor(private drawingService: DrawingService, private selectionService: SelectionService) {
     this.selectionCanvas = document.createElement('canvas');
@@ -55,7 +55,7 @@ export class EllipseSelectionHandlerService {
     this.clearAndResetAllCanvas();
     this.initAllProperties(topLeftOnSource, center, radii);
 
-    this.drawEllipseRegion(sourceCanvas, topLeftOnSource, radii);
+    this.drawEllipseRegion(sourceCanvas, topLeftOnSource, radii); //will call drawRegion which will be abstract
     this.drawCanvas(this.selectionCanvas, this.horizontalModificationCtx);
     this.drawCanvas(this.selectionCanvas, this.verticalModificationCtx);
     this.drawCanvas(this.selectionCanvas, this.originalCanvasCopyCtx);
@@ -67,7 +67,7 @@ export class EllipseSelectionHandlerService {
     }
 
     if (this.needWhiteEllipsePostDrawing) {
-      this.selectionService.drawPostSelectionEllipse(this.originalCenter, this.originalRadii);
+      this.selectionService.drawPostSelectionEllipse(this.originalCenter, this.originalRadii); //will call drawPostSelectionRegion which will be abstract
     }
     this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
   }
@@ -118,7 +118,7 @@ export class EllipseSelectionHandlerService {
     target.closePath();
   }
 
-  drawEllipseRegion(sourceCanvas: HTMLCanvasElement, topLeftOnSource: Vec2, radii: Vec2) {
+  drawEllipseRegion(sourceCanvas: HTMLCanvasElement, topLeftOnSource: Vec2, radii: Vec2) { //will be abstract drawRegion
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
     this.selectionCtx.ellipse(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
@@ -147,7 +147,7 @@ export class EllipseSelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
-  initAllProperties(topLeftOnSource: Vec2, center: Vec2, radii: Vec2) {
+  initAllProperties(topLeftOnSource: Vec2, center: Vec2, radii: Vec2) {//will be abstract
     this.topLeft.x = this.selectionCanvas.width / 2 - radii.x;
     this.topLeft.y = this.selectionCanvas.height / 2 - radii.y;
     this.originalWidth = radii.x * 2;

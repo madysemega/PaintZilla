@@ -6,7 +6,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { SelectionMoverService } from '@app/tools/services/tools/selection-mover.service'
+import { SelectionManipulatorService } from '@app/tools/services/tools/selection-manipulator.service'
 import { EllipseSelectionHandlerService } from '@app/tools/services/tools/ellipse-selection-handler-service'
 import { SelectionService } from './selection.service';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
@@ -14,13 +14,13 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 @Injectable({
     providedIn: 'root',
 })
-export class EllipseSelectionService extends ShapeTool implements ISelectableTool, IDeselectableTool {
+export class EllipseSelectionCreatorService extends ShapeTool implements ISelectableTool, IDeselectableTool {
     private readonly MINIMUM_SELECTION_WIDTH: number = 5;
     private startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     private isShiftDown: boolean;
 
-    constructor(drawingService: DrawingService, private selectionMoverService: SelectionMoverService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
+    constructor(drawingService: DrawingService, private selectionManipulatorService: SelectionManipulatorService, private selectionHandler: EllipseSelectionHandlerService, private selectionService: SelectionService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse-selection'; 
@@ -33,7 +33,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
         this.registerMousePosition(mousePosition, true);
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.onMouseDown(event);
+            this.selectionManipulatorService.onMouseDown(event);
         }
     }
 
@@ -42,7 +42,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
         this.adjustPositionToStayInCanvas(mousePosition);
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.onMouseMove(event);
+            this.selectionManipulatorService.onMouseMove(event);
             return;
         }
 
@@ -58,7 +58,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
         this.adjustPositionToStayInCanvas(mousePosition);
         
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.onMouseUp(event);
+            this.selectionManipulatorService.onMouseUp(event);
             this.mouseDown = false;
             return;
         }
@@ -75,7 +75,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
 
     onKeyDown(event: KeyboardEvent): void {
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.onKeyDown(event);
+            this.selectionManipulatorService.onKeyDown(event);
             return;
         }
 
@@ -91,7 +91,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
 
     onKeyUp(event: KeyboardEvent): void {
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.onKeyUp(event);
+            this.selectionManipulatorService.onKeyUp(event);
             return;
         }
 
@@ -109,11 +109,9 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
-    onToolDeselect(): void {///////////////// resize canvas
-        if(this.isSelectionBeingManipulated()){
-            this.selectionService.setIsSelectionBeingManipulated(false);
-            this.selectionMoverService.stopManipulation();
-        }
+    onToolDeselect(): void {
+        this.resetProperties();
+        this.stopManipulatingSelection();
     }
 
     createSelection(startPoint: Vec2, endPoint: Vec2): void {
@@ -123,21 +121,26 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
 
         this.convertToTopLeftAndBottomRight(startPoint, endPoint);
 
+        //////////////////
         let center: Vec2 = { x: 0, y: 0 }, radii: Vec2 = { x: 0, y: 0 };
         this.selectionService.getEllipseParam(startPoint, endPoint, center, radii);
-
         this.selectionHandler.select(this.drawingService.canvas, startPoint, center, radii);
+        //////////////////
 
         this.selectionService.setIsSelectionBeingManipulated(true);
-        this.selectionMoverService.initialize(startPoint, endPoint);
+        this.selectionManipulatorService.initialize(startPoint, endPoint);
     }
 
     stopManipulatingSelection() {
         if (this.isSelectionBeingManipulated()) {
-            this.selectionMoverService.stopManipulation();
+            this.selectionManipulatorService.stopManipulation(true);
+            this.selectionService.setIsSelectionBeingManipulated(false);
+            return;
         }
+        this.selectionManipulatorService.stopManipulation(false);
     }
 
+    ///////////
     drawSelectionOutline(endPoint: Vec2) {
         let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
 
@@ -149,6 +152,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
         this.selectionService.drawSelectionEllipse(center, radii);
         this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
     }
+    ////////////
 
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2) {
         let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
@@ -199,6 +203,7 @@ export class EllipseSelectionService extends ShapeTool implements ISelectableToo
     resetProperties(){
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
+        this.mouseDown = false;
         this.isShiftDown = false;
     }
 }

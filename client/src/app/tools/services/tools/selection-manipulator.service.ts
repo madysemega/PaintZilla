@@ -26,11 +26,11 @@ export enum Arrow {
   left = 2,
   right = 3,
 }
-
 @Injectable({
   providedIn: 'root'
 })
-export class SelectionMoverService extends Tool {
+
+export class SelectionManipulatorService extends Tool {
   public readonly MOVEMENT_PX: number = 3;
   public readonly TIME_BEFORE_START_MOV: number = 500;
   public readonly TIME_BETWEEN_MOV: number = 100;
@@ -78,7 +78,7 @@ export class SelectionMoverService extends Tool {
     }
 
     if (this.isClickOutsideSelection(event)) {
-      this.stopManipulation();
+      this.stopManipulation(true);
       return;
     }
 
@@ -208,12 +208,14 @@ export class SelectionMoverService extends Tool {
     this.drawSelectionOutline();
   }
 
-  stopManipulation() {
+  stopManipulation(needDrawSelection: boolean) {
     this.selectionService.setIsSelectionBeingManipulated(false);
 
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
-
+    if(needDrawSelection){
+      this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
+    }
+    this.subscriptions.forEach((sub) => {sub.unsubscribe();})
     this.resetProperties();
   }
 
@@ -289,13 +291,13 @@ export class SelectionMoverService extends Tool {
     return { x: mousePos.x, y: mousePos.x * this.diagonalSlope + this.diagonalYIntercept };
   }
 
-  drawSelectionOutline(): void {
+  drawSelectionOutline(): void {///////////////////
     let center: Vec2 = { x: 0, y: 0 };
     let radii: Vec2 = { x: 0, y: 0 };
     this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
     this.selectionService.drawSelectionEllipse(center, radii);
-  }
+  }////////////////////
 
   isSelectionBeingResizedDiagonally() {
     return this.resizingMode === ResizingMode.towardsBottomLeft

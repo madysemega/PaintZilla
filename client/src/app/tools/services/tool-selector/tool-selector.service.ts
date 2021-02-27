@@ -9,7 +9,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
-import { EllipseSelectionService } from '../tools/ellipse-selection.service';
+import { EllipseSelectionCreatorService } from '../tools/ellipse-selection-creator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -74,7 +74,7 @@ export class ToolSelectorService {
         ellipseService: EllipseService,
         rectangleService: RectangleService,
         lineService: LineService,
-        ellipseSelectionService: EllipseSelectionService,
+        ellipseSelectionService: EllipseSelectionCreatorService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
