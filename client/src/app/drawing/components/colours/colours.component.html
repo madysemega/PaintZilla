@@ -1,3 +1,14 @@
+<div class="previous-colours-container" onContextMenu="return false">
+    <div
+        class="previous-colour mat-elevation-z2"
+        *ngFor="let color of previousColours"
+        [matTooltip]="'#' + color.toStringHex()"
+        matRipple
+        [style.background-color]="color.toStringRBG()"
+        (click)="onPreviousColourClick($event, color)"
+        (contextmenu)="onPreviousColourClick($event, color)"
+    ></div>
+</div>
 <div class="colours-container">
     <div
         matRipple
@@ -10,7 +21,7 @@
         (click)="selectPrimaryColour()"
     ></div>
     <button class="inverserButton" mat-icon-button (click)="swapColours()" matTooltip="Inverser les couleurs" matTooltipPosition="above">
-        <mat-icon>swap_verti</mat-icon>
+        <mat-icon>swap_horiz</mat-icon>
     </button>
     <div
         matRipple
@@ -21,17 +32,5 @@
         [class.mat-elevation-z12]="!primaryColourSelected && showColourPicker"
         [class.mat-elevation-z2]="primaryColourSelected || !showColourPicker"
         (click)="selectSecondaryColour()"
-    ></div>
-</div>
-
-<div class="previous-colours-container" onContextMenu="return false">
-    <div
-        class="previous-colour mat-elevation-z2"
-        *ngFor="let color of previousColours"
-        [matTooltip]="'#' + color.toStringHex()"
-        matRipple
-        [style.background-color]="color.toStringRBG()"
-        (click)="onPreviousColourClick($event, color)"
-        (contextmenu)="onPreviousColourClick($event, color)"
     ></div>
 </div>
