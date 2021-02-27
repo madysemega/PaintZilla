@@ -57,13 +57,15 @@ export class SelectionMoverService extends Tool {
   private isReversedY: boolean;
 
   private arrowKeyDown: boolean[] = [false, false, false, false];
-  private isContinousMovementByKeyboardOn: boolean;
+  private subscriptions: Array<Subscription>;
+  
+  private isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
-  private subscription: Subscription;
 
   constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
     super(drawingService);
     this.key = 'selection-manipulator';
+    this.subscriptions = new Array<Subscription>(3);
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -117,9 +119,9 @@ export class SelectionMoverService extends Tool {
       this.resizeSelection(adjustedMousePos, this.resizingMode);
     }
 
-    if(this.isAnArrowKeyPressed()){
+   /* if(this.isAnArrowKeyPressed()){
       return;
-    }
+    }*/
 
     if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
       this.moveIfPressLongEnough(this.MOVEMENT_UP,Arrow.up);
@@ -143,19 +145,19 @@ export class SelectionMoverService extends Tool {
       this.isShiftDown = false;
     }
 
-    if (event.key == 'ArrowDown' && this.arrowKeyDown[Arrow.down]) {
+    if (event.key == 'ArrowDown' ) {
       this.singleMove(Arrow.down, this.MOVEMENT_DOWN);
     }
 
-    if (event.key == 'ArrowUp' && this.arrowKeyDown[Arrow.up]) {
+    if (event.key == 'ArrowUp') {
       this.singleMove(Arrow.up, this.MOVEMENT_UP);
     }
 
-    if (event.key == 'ArrowLeft' && this.arrowKeyDown[Arrow.left]) {
+    if (event.key == 'ArrowLeft' ) {
       this.singleMove(Arrow.left, this.MOVEMENT_LEFT);
     }
-    
-    if (event.key == 'ArrowRight' && this.arrowKeyDown[Arrow.right]) {
+
+    if (event.key == 'ArrowRight' ) {
       this.singleMove(Arrow.right, this.MOVEMENT_RIGHT);
     }
   }
@@ -226,10 +228,10 @@ export class SelectionMoverService extends Tool {
   }
 
   startMovingSelectionContinous(movement: Vec2, arrowIndex: number) {
-    this.subscription.unsubscribe();
+    this.subscriptions[arrowIndex].unsubscribe();
     const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
-    this.subscription = source.subscribe(() => this.moveSelection(movement, false));
-    this.isContinousMovementByKeyboardOn = true;
+    this.subscriptions[arrowIndex] = source.subscribe(() => this.moveSelection(movement, false));
+    this.isContinousMovementByKeyboardOn[arrowIndex] = true;
   }
 
   addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
@@ -249,20 +251,20 @@ export class SelectionMoverService extends Tool {
   moveIfPressLongEnough(movement: Vec2, arrowIndex: number){
     this.arrowKeyDown[arrowIndex] = true;
     const source = interval(this.TIME_BEFORE_START_MOV);
-    this.subscription = source.subscribe(val => { this.startMovingSelectionContinous(movement, arrowIndex);})
+    this.subscriptions[arrowIndex] = source.subscribe(val => { this.startMovingSelectionContinous(movement, arrowIndex);})
   }
 
-  stopContinuousMovement(){
-    this.subscription.unsubscribe();
-    if (this.isContinousMovementByKeyboardOn) {
-      this.isContinousMovementByKeyboardOn = false;
+  stopContinuousMovement(arrowIndex: number){
+    this.subscriptions[arrowIndex].unsubscribe();
+    if (this.isContinousMovementByKeyboardOn[arrowIndex]) {
+      this.isContinousMovementByKeyboardOn[arrowIndex] = false;
       return;
     }
   }
 
   singleMove(arrowIndex: number, singleMovement: Vec2){
     this.arrowKeyDown[arrowIndex] = false;
-    this.stopContinuousMovement();
+    this.stopContinuousMovement(arrowIndex);
     this.moveSelection(singleMovement, false);
   }
 
