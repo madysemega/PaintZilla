@@ -22,14 +22,16 @@ export class RgbaFormService {
 
     updateColourComponents(): void {
         if (this.rgbaFormGroup.valid) {
-            const currentColourString =
-                '' +
-                this.rgbaFormGroup.controls.redForm.value +
-                this.rgbaFormGroup.controls.greenForm.value +
-                this.rgbaFormGroup.controls.blueForm.value;
+            const currentColourString = this.formString();
             const currentColour = Colour.hexToRgb(currentColourString);
             currentColour.setAlpha(this.rgbaFormGroup.controls.alphaForm.value / 100);
             this.colourPickerService.setCurrentColour(currentColour);
         }
+    }
+
+    formString(): string {
+        return (
+            '' + this.rgbaFormGroup.controls.redForm.value + this.rgbaFormGroup.controls.greenForm.value + this.rgbaFormGroup.controls.blueForm.value
+        );
     }
 }
