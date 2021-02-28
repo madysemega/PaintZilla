@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { RectangleSelectionHandlerService } from './rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
-import { SelectionManipulatorService } from './selection-manipulator.service';
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 
 @Injectable({
   providedIn: 'root'

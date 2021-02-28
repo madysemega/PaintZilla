@@ -3,7 +3,8 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
-import { SelectionManipulatorService } from './selection-manipulator.service';
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+
 
 @Injectable({
   providedIn: 'root'

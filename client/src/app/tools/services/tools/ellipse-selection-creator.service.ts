@@ -210,12 +210,12 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
 }*/
 
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service'
-import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse-selection-helper.service'
-import { SelectionCreatorService } from '@app/tools/services/selection/selection-creator.service'
-import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse-selection-handler-service';
 import { Vec2 } from '@app/app/classes/vec2';
 import { Injectable } from '@angular/core';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
+import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
+import { EllipseSelectionManipulatorService  } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 
 @Injectable({
     providedIn: 'root',

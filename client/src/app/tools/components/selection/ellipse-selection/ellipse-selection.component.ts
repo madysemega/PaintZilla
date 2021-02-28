@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse-selection-helper.service';
-import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service';
-import { ResizingMode, } from '@app/tools/services/selection/selection-manipulator.service';
+import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
+import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
+import { ResizingMode } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 
 @Component({
   selector: 'app-ellipse-selection',

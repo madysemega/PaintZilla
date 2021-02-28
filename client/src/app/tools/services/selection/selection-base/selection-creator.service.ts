@@ -4,11 +4,11 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { SelectionManipulatorService } from '@app/tools/services/selection/selection-manipulator.service'
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service'
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
-import { SelectionService } from '@app/tools/services/selection/selection.service';
 import { SelectionHandlerService } from './selection-handler.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionService } from './selection.service';
 
 @Injectable({
     providedIn: 'root',
