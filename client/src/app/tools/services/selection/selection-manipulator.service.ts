@@ -3,10 +3,10 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
-import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { SelectionService } from './selection.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
+import { SelectionHandlerService } from './selection-handler.service';
 
 export enum ResizingMode {
   off = 0,
@@ -30,7 +30,7 @@ export enum Arrow {
   providedIn: 'root'
 })
 
-export class SelectionManipulatorService extends Tool {
+export abstract class SelectionManipulatorService extends Tool {
   public readonly MOVEMENT_PX: number = 3;
   public readonly TIME_BEFORE_START_MOV: number = 500;
   public readonly TIME_BETWEEN_MOV: number = 100;
@@ -52,7 +52,7 @@ export class SelectionManipulatorService extends Tool {
 
   public resizingMode: ResizingMode = ResizingMode.off;
 
-  private isShiftDown: boolean;
+  protected isShiftDown: boolean;
   private isReversedX: boolean;
   private isReversedY: boolean;
 
@@ -61,11 +61,13 @@ export class SelectionManipulatorService extends Tool {
   
   private isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
-  constructor(drawingService: DrawingService, public selectionService: SelectionService, private selectionHandler: EllipseSelectionHandlerService) {
+  constructor(protected drawingService: DrawingService, protected selectionService: SelectionService, protected selectionHandler: SelectionHandlerService) {
     super(drawingService);
     this.key = 'selection-manipulator';
     this.subscriptions = new Array<Subscription>(3);
   }
+
+  abstract drawSelectionOutline(): void;
 
   onMouseDown(event: MouseEvent): void {
     this.mouseDown = event.button === MouseButton.Left;
@@ -114,8 +116,7 @@ export class SelectionManipulatorService extends Tool {
     }
 
     if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
-      let adjustedMousePos: Vec2 = this.getMousePosOnDiagonal(this.mouseLastPos);
-      this.resizeSelection(adjustedMousePos, this.resizingMode);
+      this.resizeSelection(this.mouseLastPos, this.resizingMode);
     }
 
     if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
@@ -138,6 +139,10 @@ export class SelectionManipulatorService extends Tool {
   onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Shift') {
       this.isShiftDown = false;
+    }
+
+    if(event.key == 'Shift' && this.isSelectionBeingResizedDiagonally()){
+        this.resizeSelection(this.mouseLastPos, this.resizingMode);
     }
 
     if (event.key == 'ArrowDown' ) {
@@ -268,7 +273,7 @@ export class SelectionManipulatorService extends Tool {
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
     this.mouseLastPos.x = mousePos.x;
     this.mouseLastPos.y = mousePos.y;
-
+    console.log(this.mouseLastPos.x, this.mouseLastPos.y);
     if (isMouseDownLastPos) {
       this.mouseDownLastPos.x = mousePos.x;
       this.mouseDownLastPos.y = mousePos.y;
@@ -290,14 +295,6 @@ export class SelectionManipulatorService extends Tool {
   getMousePosOnDiagonal(mousePos: Vec2): Vec2 {
     return { x: mousePos.x, y: mousePos.x * this.diagonalSlope + this.diagonalYIntercept };
   }
-
-  drawSelectionOutline(): void {///////////////////
-    let center: Vec2 = { x: 0, y: 0 };
-    let radii: Vec2 = { x: 0, y: 0 };
-    this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, false);
-    this.selectionService.drawSelectionEllipse(center, radii);
-  }////////////////////
 
   isSelectionBeingResizedDiagonally() {
     return this.resizingMode === ResizingMode.towardsBottomLeft
