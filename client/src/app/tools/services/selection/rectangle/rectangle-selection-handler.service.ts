@@ -38,7 +38,7 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
   drawRegion(sourceCanvas: HTMLCanvasElement) { //will be abstract drawRegion
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
-    this.selectionCtx.rect(this.topLeft.x, this.topLeft.x, this.originalWidth, this.originalHeight);
+    this.selectionCtx.rect(this.topLeft.x, this.topLeft.y, this.originalWidth, this.originalHeight);
     this.selectionCtx.clip();
     this.selectionCtx.imageSmoothingEnabled = false;
     this.selectionCtx.drawImage(sourceCanvas, this.topLeft.x - this.originalTopLeft.x, this.topLeft.y - this.originalTopLeft.y);
@@ -47,6 +47,6 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
   }
 
   drawPostSelectionRegion() {
-    //this.selectionService.drawPostSelectionEllipse(this.originalCenter, this.originalRadii);
+    this.selectionService.drawPostSelectionRectangle(this.originalTopLeft, this.originalWidth, this.originalHeight);
   }
 }

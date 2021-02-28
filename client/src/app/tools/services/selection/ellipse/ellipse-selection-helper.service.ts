@@ -36,13 +36,13 @@ drawPostSelectionEllipse(center: Vec2, radii: Vec2){
     let radiiCopy = {x:radii.x, y:radii.y};
     ctx.save();
     ctx.beginPath();
-    ctx.strokeStyle = this.colourService.secondaryColour;
     radiiCopy.x += radiiCopy.x>=1 ? -1: 0;
     radiiCopy.y += radiiCopy.y>=1 ? -1: 0;
     ctx.ellipse(center.x, center.y, radiiCopy.x, radiiCopy.y, 0, 0, this.CIRCLE_MAX_ANGLE);
     ctx.clip();
     ctx.fillStyle="white";
     ctx.fill();
+    ctx.closePath();
     ctx.restore();
 }
 

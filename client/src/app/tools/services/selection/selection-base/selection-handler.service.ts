@@ -70,7 +70,6 @@ export abstract class SelectionHandlerService {
     if (this.needWhiteEllipsePostDrawing) {
       this.drawPostSelectionRegion();
     }
-    console.log(this.topLeft);
     this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
   }
 
