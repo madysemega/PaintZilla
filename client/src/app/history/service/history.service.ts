@@ -10,7 +10,7 @@ export class HistoryService {
         this.future = new Array<IUserAction>();
         this.undoEventObservers = new Array<() => void>();
     }
-    
+
     private undoEventObservers: (() => void)[];
 
     private past: IUserAction[];

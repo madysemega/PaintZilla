@@ -5,8 +5,10 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 describe('ResizingService', () => {
     let service: ResizingService;
+    let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
     let baseCtxStub: CanvasRenderingContext2D;
@@ -14,7 +16,8 @@ describe('ResizingService', () => {
     let canvasSizeStub: Vec2;
     let testMouseEvent: MouseEvent;
     beforeEach(async(() => {
-        drawingServiceStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingServiceStub = new DrawingService(historyServiceStub);
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawingServiceStub }],
         }).compileComponents();

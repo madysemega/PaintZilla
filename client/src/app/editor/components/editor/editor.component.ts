@@ -33,11 +33,10 @@ export class EditorComponent implements AfterViewInit {
         this.toolSelector.getSelectedTool().onKeyUp(event);
 
         const isCtrlZ: boolean = event.ctrlKey && event.key.toUpperCase() === 'Z';
-        if(isCtrlZ) {
-            if(event.shiftKey) {
+        if (isCtrlZ) {
+            if (event.shiftKey) {
                 this.historyService.redo();
-            }
-            else {
+            } else {
                 this.historyService.undo();
             }
         }

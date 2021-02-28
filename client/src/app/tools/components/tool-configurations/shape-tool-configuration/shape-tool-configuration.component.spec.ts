@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
@@ -23,12 +24,14 @@ describe('ShapeToolConfigurationComponent', () => {
 
     let component: ShapeToolConfigurationComponent;
     let fixture: ComponentFixture<ShapeToolConfigurationComponent>;
+    let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourToolService;
     let ellipseToolStub: EllipseService;
 
     beforeEach(async(() => {
-        drawingStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourToolService();
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 

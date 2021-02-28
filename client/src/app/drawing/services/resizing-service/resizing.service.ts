@@ -25,13 +25,13 @@ export class ResizingService {
     }
 
     resizeCanvas(event: MouseEvent): void {
-        let resizeHorizontally = this.canBeResizedHorizontally(event) && (this.rightResizerEnabled || this.rightDownResizerEnabled);
-        let resizeVertically   = this.canBeResizedVertically(event)   && (this.downResizerEnabled  || this.rightDownResizerEnabled);
+        const resizeHorizontally = this.canBeResizedHorizontally(event) && (this.rightResizerEnabled || this.rightDownResizerEnabled);
+        const resizeVertically = this.canBeResizedVertically(event) && (this.downResizerEnabled || this.rightDownResizerEnabled);
 
-        if(resizeHorizontally) {
+        if (resizeHorizontally) {
             this.canvasResize.x = event.offsetX;
         }
-        if(resizeVertically) {
+        if (resizeVertically) {
             this.canvasResize.y = event.offsetY;
         }
 
@@ -74,15 +74,11 @@ export class ResizingService {
 
     finalizeResizingEvent(): void {
         this.historyService.do(
-            new UserActionResizeDrawingSurface(
-                this.canvasResize.x,
-                this.canvasResize.y,
-                (width: number, height: number) => {
-                    this.activateResizer(ResizingType.RIGHTDOWN);
-                    this.resizeCanvas({ offsetX: width, offsetY: height } as MouseEvent);
-                    this.disableResizer();
-                }
-            )
+            new UserActionResizeDrawingSurface(this.canvasResize.x, this.canvasResize.y, (width: number, height: number) => {
+                this.activateResizer(ResizingType.RIGHTDOWN);
+                this.resizeCanvas({ offsetX: width, offsetY: height } as MouseEvent);
+                this.disableResizer();
+            }),
         );
     }
 

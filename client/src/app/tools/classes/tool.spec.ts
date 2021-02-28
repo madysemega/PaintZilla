@@ -1,5 +1,6 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from './tool';
 
 class ToolStub extends Tool {}
@@ -12,6 +13,7 @@ describe('Tool', () => {
 
     let toolStub: ToolStub;
 
+    let historyServiceStub: HistoryService;
     let drawingService: DrawingService;
 
     let fakeCanvas: HTMLCanvasElement;
@@ -26,7 +28,8 @@ describe('Tool', () => {
             },
         } as HTMLCanvasElement;
 
-        drawingService = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingService = new DrawingService(historyServiceStub);
         drawingService.canvas = fakeCanvas;
 
         toolStub = new ToolStub(drawingService);

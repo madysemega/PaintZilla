@@ -52,9 +52,9 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     }
 
     private resetShape(): void {
-        this.lineShape = new LineShape([]);
+        this.lineShape = this.lineShape ? new LineShape([], this.lineShape.jointsDiameter) : new LineShape([]);
 
-        this.strokeWidthProperty = new StrokeWidthProperty();
+        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.strokeColourProperty = new StrokeStyleProperty(this.colourService.primaryColour);
         this.jointsColourProperty = new FillStyleProperty(this.colourService.secondaryColour);
 

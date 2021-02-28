@@ -143,14 +143,11 @@ describe('LineService', () => {
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
         service.onMouseDoubleClick(mouseEventLeft);
 
-        expect(lineShapeIsCloseableWithMock).toHaveBeenCalledTimes(1);
-        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalledTimes(1);
-
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
         service.onMouseDoubleClick(mouseEventRight);
 
         expect(lineShapeIsCloseableWithMock).toHaveBeenCalledTimes(2);
-        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalledTimes(2);
+        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalled();
     });
 
     it('onMouseDoubleClick() should render the joints on the base canvas if line type is WITH_JOINTS and mouse button is left', () => {

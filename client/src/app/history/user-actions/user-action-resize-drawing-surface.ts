@@ -5,9 +5,5 @@ export class UserActionResizeDrawingSurface implements IUserAction {
         this.onResizeCallback(this.width, this.height);
     }
 
-    constructor(
-        private width: number,
-        private height: number,
-        private onResizeCallback: (width: number, height: number) => void
-    ) {}
+    constructor(private width: number, private height: number, private onResizeCallback: (width: number, height: number) => void) {}
 }

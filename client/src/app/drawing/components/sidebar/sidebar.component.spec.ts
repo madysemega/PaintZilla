@@ -6,6 +6,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
 import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { ColourSliderComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-slider/colour-slider.component';
@@ -31,6 +32,7 @@ describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
     let toolSelectorServiceStub: ToolSelectorService;
+    let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourToolService;
     let ellipseToolStub: EllipseService;
@@ -57,14 +59,15 @@ describe('SidebarComponent', () => {
     }
 
     beforeEach(async(() => {
-        drawingStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourToolService();
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
-        lineServiceStub = new LineService(drawingStub, colourServiceStub);
+        lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
 
         TestBed.configureTestingModule({
