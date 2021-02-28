@@ -1,5 +1,4 @@
 .container {
-    height: auto;
     min-height: 98vh;
     padding: 0 5px 0 5px;
     margin-right: 5px;
@@ -17,4 +16,12 @@
 .navbar-section {
     margin-top: 12px;
     margin-bottom: 12px;
+}
+
+.colour-section {
+    border-bottom: 1px solid #bbb;
+    position: relative;
+    margin-top: 10px;
+    height: 150px;
+    padding: auto;
 }

@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { ShapeType } from '@app/app/classes/shape-type';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { ShapeToolConfigurationComponent } from './shape-tool-configuration.component';
 
@@ -24,12 +25,12 @@ describe('ShapeToolConfigurationComponent', () => {
     let component: ShapeToolConfigurationComponent;
     let fixture: ComponentFixture<ShapeToolConfigurationComponent>;
     let drawingStub: DrawingService;
-    let colourServiceStub: ColourToolService;
+    let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
 
     beforeEach(async(() => {
         drawingStub = new DrawingService();
-        colourServiceStub = new ColourToolService();
+        colourServiceStub = new ColourService({} as ColourPickerService);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 
         TestBed.configureTestingModule({

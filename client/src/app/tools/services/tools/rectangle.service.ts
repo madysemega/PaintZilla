@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +19,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService, public colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
@@ -111,8 +111,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRBGA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRBGA();
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
