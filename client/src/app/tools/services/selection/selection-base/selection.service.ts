@@ -11,6 +11,8 @@ export abstract class SelectionService {
   public readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
+  public actions: Vec2[]=[]; //////////////////FOR TESTING PURPOSES/////////////////////
+
   constructor(protected drawingService : DrawingService, protected colourService: ColourToolService) { 
     this.isSelectionBeingManipulated =  new BehaviorSubject<boolean>(false);
   }
