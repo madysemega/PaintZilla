@@ -28,14 +28,16 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     ) {}
 
     ngAfterViewInit(): void {
-        this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas.nativeElement.width = this.drawingService.canvasSize.x;
         this.canvas.nativeElement.height = this.drawingService.canvasSize.y;
+        console.log('export image size: ' + this.canvas.nativeElement.width + ' ' + this.canvas.nativeElement.height);
+        this.ctx = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.ctx.drawImage(this.drawingService.canvas, 0, 0);
 
         this.previewCanvas.nativeElement.width = this.canvas.nativeElement.width / 2;
         this.previewCanvas.nativeElement.height = this.canvas.nativeElement.height / 2;
         this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        console.log('preview image size: ' + this.previewCanvas.nativeElement.width + ' ' + this.previewCanvas.nativeElement.height);
         this.previewCtx.drawImage(
             this.drawingService.canvas,
             0,
@@ -47,6 +49,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
             this.previewCanvas.nativeElement.width,
             this.previewCanvas.nativeElement.height,
         );
+        console.log('resizing service resize: ' + this.resizingService.canvasResize.x + ' ' + this.resizingService.canvasResize.y);
     }
 
     updatePreviewImage(event: MatSelectChange): void {
@@ -65,7 +68,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
             this.previewCanvas.nativeElement.width,
             this.previewCanvas.nativeElement.height,
         );
-        this.previewCtx.filter = event.value;
+        console.log('resizing service resize: ' + this.resizingService.canvasResize.x + ' ' + this.resizingService.canvasResize.y);
     }
 
     updateImageFormat(event: MatSelectChange): void {

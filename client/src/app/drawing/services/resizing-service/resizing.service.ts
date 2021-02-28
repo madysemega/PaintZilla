@@ -21,6 +21,7 @@ export class ResizingService {
     }
 
     resizeCanvas(event: MouseEvent): void {
+        console.log('real size ' + this.canvasResize.x + ' ' + this.canvasResize.y);
         if (this.rightResizerEnabled && this.canBeResizedHorizontally(event)) {
             this.canvasResize.x = event.offsetX;
         } else if (this.downResizerEnabled && this.canBeResizedVertically(event)) {
