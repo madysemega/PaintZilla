@@ -23,7 +23,7 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
     constructor(drawingService: DrawingService, protected selectionManipulatorService: SelectionManipulatorService, protected selectionHandler: SelectionHandlerService, protected selectionService: SelectionService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
-        this.key = 'ellipse-selection'; 
+        this.key = 'ellipse-selection';
     }
 
     abstract drawSelectionOutline(endPoint: Vec2): void;
@@ -58,7 +58,7 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
     onMouseUp(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.adjustPositionToStayInCanvas(mousePosition);
-        
+
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onMouseUp(event);
             this.mouseDown = false;
@@ -85,7 +85,7 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
             this.isShiftDown = true;
         }
 
-        if (this.isShiftDown && this.mouseDown ) {
+        if (this.isShiftDown && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSelectionOutline(this.lastMousePosition);
         }
@@ -97,14 +97,14 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
             return;
         }
 
-        if (this.isShiftDown && this.mouseDown ) {
+        if (event.key === 'Shift') {
+            this.isShiftDown = false;
+        }
+
+        if (event.key === 'Shift' && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSelectionOutline(this.lastMousePosition);
         }
-
-        if (event.key === 'Shift') {
-            this.isShiftDown = false;
-        } 
     }
 
     onToolSelect(): void {
@@ -187,7 +187,7 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
         }
     }
 
-    resetProperties(){
+    resetProperties() {
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
         this.mouseDown = false;
