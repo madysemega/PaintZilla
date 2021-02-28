@@ -65,10 +65,9 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
             return;
         }
 
-        if (this.mouseDown && this.startPointIsFarEnoughFrom(mousePosition)) {
+        if (this.mouseDown && this.startPointIsFarEnoughFrom(mousePosition)) {     
             this.registerMousePosition(mousePosition, false);
             this.createSelection(this.startPoint, mousePosition);
-            this.drawSelectionOutline(mousePosition);
             this.resetProperties();
         }
 

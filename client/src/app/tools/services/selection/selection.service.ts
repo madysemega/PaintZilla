@@ -118,6 +118,5 @@ isClickOutsideSelection(positions: Vec2[], isReversedX: boolean, isReversedY: bo
   }
   return (xOutsideSelection || yOutsideSelection);
 }
-
 }
 

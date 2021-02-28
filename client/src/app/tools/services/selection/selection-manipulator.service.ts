@@ -72,8 +72,6 @@ export abstract class SelectionManipulatorService extends Tool {
     this.mouseDown = event.button === MouseButton.Left;
     let mousePos = this.getPositionFromMouse(event);
 
-    console.log("down");
-
     if (!this.mouseDown) {
       return;
     }
@@ -270,7 +268,7 @@ export abstract class SelectionManipulatorService extends Tool {
   registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean) {
     this.mouseLastPos.x = mousePos.x;
     this.mouseLastPos.y = mousePos.y;
-    console.log(this.mouseLastPos.x, this.mouseLastPos.y);
+
     if (isMouseDownLastPos) {
       this.mouseDownLastPos.x = mousePos.x;
       this.mouseDownLastPos.y = mousePos.y;
@@ -303,7 +301,6 @@ export abstract class SelectionManipulatorService extends Tool {
   isClickOutsideSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
     let positions: Vec2[] = [];
-
     positions.push(mousePosition, this.topLeft, this.bottomRight);
     return this.selectionService.isClickOutsideSelection(positions, this.isReversedX, this.isReversedY);
   }
@@ -316,7 +313,6 @@ export abstract class SelectionManipulatorService extends Tool {
         isAnyArrowKeyDown = true;
       }
     });
-
     return isAnyArrowKeyDown;
   }
 

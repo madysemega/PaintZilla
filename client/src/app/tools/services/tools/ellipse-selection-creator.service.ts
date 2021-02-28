@@ -231,9 +231,7 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
     }
 
     drawSelectionOutline(endPoint: Vec2): void {
-        console.log((new Error).stack);
         let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
-
         if(this.isShiftDown){
             endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
         }
