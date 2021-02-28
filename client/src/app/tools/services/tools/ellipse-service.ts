@@ -137,9 +137,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(endPoint.x - startPoint.x) / 2 - this.lineWidth / 2,
-            y: Math.abs(endPoint.y - startPoint.y) / 2 - this.lineWidth / 2,
+            x: Math.abs(endPoint.x - startPoint.x) / 2 ,
+            y: Math.abs(endPoint.y - startPoint.y) / 2 ,
         };
+
+        if(this.shapeType != ShapeType.Filled){
+            radii.x -= this.lineWidth/2;
+            radii.y -= this.lineWidth/2;
+            radii.x = Math.max(radii.x, 0);
+            radii.y = Math.max(radii.y, 0);
+        }
 
         ctx.save();
         ctx.beginPath();
