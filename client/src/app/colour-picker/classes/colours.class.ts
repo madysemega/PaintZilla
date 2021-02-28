@@ -35,6 +35,10 @@ export class Colour {
         return hex.length === 1 ? '0' + hex : hex;
     }
 
+    equals(colour: Colour): boolean {
+        return this.alpha === colour.alpha && this.red === colour.red && this.green === colour.green && this.blue === colour.blue;
+    }
+
     getRed(): number {
         return this.red;
     }
