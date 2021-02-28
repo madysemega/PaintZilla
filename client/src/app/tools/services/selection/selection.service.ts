@@ -8,6 +8,7 @@ import { ColourToolService } from '@app/tools/services/tools/colour-tool.service
   providedIn: 'root'
 })
 export class SelectionService {
+  public readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
   private readonly CIRCLE_MAX_ANGLE: number = 360;
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
@@ -89,5 +90,34 @@ drawPostSelectionEllipse(center: Vec2, radii: Vec2){
 setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
   this.isSelectionBeingManipulated.next(isItBeingManipulated);
 }
+
+isClickOutsideSelection(positions: Vec2[], isReversedX: boolean, isReversedY: boolean ): boolean {
+  let mousePosition: Vec2 = positions[0];
+  let topLeft: Vec2 = positions[1];
+  let bottomRight: Vec2 = positions[2];
+
+  let xOutsideSelection: boolean;
+  let yOutsideSelection: boolean
+
+  if (isReversedX) {
+    xOutsideSelection = (mousePosition.x > topLeft.x + this.OUTSIDE_DETECTION_OFFSET_PX)
+      || (mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX);
+  }
+  else {
+    xOutsideSelection = (mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX)
+      || (mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX);
+  }
+
+  if (isReversedY) {
+    yOutsideSelection = (mousePosition.y > topLeft.y + this.OUTSIDE_DETECTION_OFFSET_PX)
+      || (mousePosition.y < bottomRight.y - this.OUTSIDE_DETECTION_OFFSET_PX);
+  }
+  else {
+    yOutsideSelection = (mousePosition.y < topLeft.y - this.OUTSIDE_DETECTION_OFFSET_PX)
+      || (mousePosition.y > bottomRight.y + this.OUTSIDE_DETECTION_OFFSET_PX);
+  }
+  return (xOutsideSelection || yOutsideSelection);
+}
+
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
@@ -6,15 +6,16 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { SelectionManipulatorService } from '@app/tools/services/tools/selection-manipulator.service'
-import { EllipseSelectionHandlerService } from '@app/tools/services/tools/ellipse-selection-handler-service'
-import { SelectionService } from './selection.service';
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-manipulator.service'
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
+import { SelectionService } from '@app/tools/services/selection/selection.service';
+import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse-selection-handler-service';
+import { SelectionCreatorService } from '@app/tools/services/selection*'
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipseSelectionCreatorService extends ShapeTool implements ISelectableTool, IDeselectableTool {
+export class EllipseSelectionCreatorService extends SelectionCreatorService {
     private readonly MINIMUM_SELECTION_WIDTH: number = 5;
     private startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
@@ -206,4 +207,39 @@ export class EllipseSelectionCreatorService extends ShapeTool implements ISelect
         this.mouseDown = false;
         this.isShiftDown = false;
     }
+}*/
+
+
+import { ShapeType } from '@app/app/classes/shape-type';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service'
+import { SelectionService } from '@app/tools/services/selection/selection.service';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-creator.service'
+import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse-selection-handler-service';
+import { Vec2 } from '@app/app/classes/vec2';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class EllipseSelectionCreatorService extends SelectionCreatorService {
+
+    constructor(drawingService: DrawingService, selectionManipulatorService: EllipseSelectionManipulatorService, selectionHandler: EllipseSelectionHandlerService, selectionService: SelectionService) {
+        super(drawingService, selectionManipulatorService, selectionHandler, selectionService);
+        this.shapeType = ShapeType.Contoured;
+        this.key = 'ellipse-selection';
+    }
+
+    drawSelectionOutline(endPoint: Vec2): void {
+        console.log((new Error).stack);
+        let center: Vec2 = { x: 0, y: 0 }, radii = { x: 0, y: 0 };
+
+        if(this.isShiftDown){
+            endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
+        }
+        this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
+        this.selectionService.drawSelectionEllipse(center, radii);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
+    }
 }
+

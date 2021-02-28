@@ -29,7 +29,6 @@ export enum Arrow {
 @Injectable({
   providedIn: 'root'
 })
-
 export abstract class SelectionManipulatorService extends Tool {
   public readonly MOVEMENT_PX: number = 3;
   public readonly TIME_BEFORE_START_MOV: number = 500;
@@ -58,7 +57,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
   private arrowKeyDown: boolean[] = [false, false, false, false];
   private subscriptions: Array<Subscription>;
-  
+
   private isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
   constructor(protected drawingService: DrawingService, protected selectionService: SelectionService, protected selectionHandler: SelectionHandlerService) {
@@ -119,19 +118,19 @@ export abstract class SelectionManipulatorService extends Tool {
       this.resizeSelection(this.mouseLastPos, this.resizingMode);
     }
 
-    if(event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]){
-      this.moveIfPressLongEnough(this.MOVEMENT_UP,Arrow.up);
+    if (event.key == 'ArrowUp' && !this.arrowKeyDown[Arrow.up]) {
+      this.moveIfPressLongEnough(this.MOVEMENT_UP, Arrow.up);
     }
 
     if (event.key == 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
-     this.moveIfPressLongEnough(this.MOVEMENT_DOWN, Arrow.down);
+      this.moveIfPressLongEnough(this.MOVEMENT_DOWN, Arrow.down);
     }
 
-    if(event.key == 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]){
+    if (event.key == 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]) {
       this.moveIfPressLongEnough(this.MOVEMENT_LEFT, Arrow.left);
     }
-    
-    if(event.key == 'ArrowRight' && !this.arrowKeyDown[Arrow.right]){
+
+    if (event.key == 'ArrowRight' && !this.arrowKeyDown[Arrow.right]) {
       this.moveIfPressLongEnough(this.MOVEMENT_RIGHT, Arrow.right);
     }
   }
@@ -141,11 +140,11 @@ export abstract class SelectionManipulatorService extends Tool {
       this.isShiftDown = false;
     }
 
-    if(event.key == 'Shift' && this.isSelectionBeingResizedDiagonally()){
-        this.resizeSelection(this.mouseLastPos, this.resizingMode);
+    if (event.key == 'Shift' && this.isSelectionBeingResizedDiagonally()) {
+      this.resizeSelection(this.mouseLastPos, this.resizingMode);
     }
 
-    if (event.key == 'ArrowDown' ) {
+    if (event.key == 'ArrowDown') {
       this.singleMove(Arrow.down, this.MOVEMENT_DOWN);
     }
 
@@ -153,11 +152,11 @@ export abstract class SelectionManipulatorService extends Tool {
       this.singleMove(Arrow.up, this.MOVEMENT_UP);
     }
 
-    if (event.key == 'ArrowLeft' ) {
+    if (event.key == 'ArrowLeft') {
       this.singleMove(Arrow.left, this.MOVEMENT_LEFT);
     }
 
-    if (event.key == 'ArrowRight' ) {
+    if (event.key == 'ArrowRight') {
       this.singleMove(Arrow.right, this.MOVEMENT_RIGHT);
     }
   }
@@ -181,7 +180,6 @@ export abstract class SelectionManipulatorService extends Tool {
   }
 
   resizeSelection(newPos: Vec2, direction: ResizingMode): void {
-    ////this.adjustIfOutsideCanvas(newPos)
     if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
       newPos = this.getMousePosOnDiagonal(newPos);
     }
@@ -217,10 +215,10 @@ export abstract class SelectionManipulatorService extends Tool {
     this.selectionService.setIsSelectionBeingManipulated(false);
 
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
-    if(needDrawSelection){
+    if (needDrawSelection) {
       this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
     }
-    this.subscriptions.forEach((sub) => {sub.unsubscribe();})
+    this.subscriptions.forEach((sub) => { sub.unsubscribe(); })
     this.resetProperties();
   }
 
@@ -237,7 +235,6 @@ export abstract class SelectionManipulatorService extends Tool {
   }
 
   addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
-    ////this.adjustIfWillBeOutside(this.topLeft, this.bottomRight, mouseMovement);
     if (isMouseMovement) {
       this.add(this.mouseDownLastPos, mouseMovement);
     }
@@ -245,18 +242,18 @@ export abstract class SelectionManipulatorService extends Tool {
     this.add(this.bottomRight, mouseMovement);
   }
 
-  add(vect: Vec2, amount: Vec2){
+  add(vect: Vec2, amount: Vec2) {
     vect.x += amount.x;
     vect.y += amount.y;
   }
 
-  moveIfPressLongEnough(movement: Vec2, arrowIndex: number){
+  moveIfPressLongEnough(movement: Vec2, arrowIndex: number) {
     this.arrowKeyDown[arrowIndex] = true;
     const source = interval(this.TIME_BEFORE_START_MOV);
-    this.subscriptions[arrowIndex] = source.subscribe(val => { this.startMovingSelectionContinous(movement, arrowIndex);})
+    this.subscriptions[arrowIndex] = source.subscribe(val => { this.startMovingSelectionContinous(movement, arrowIndex); })
   }
 
-  stopContinuousMovement(arrowIndex: number){
+  stopContinuousMovement(arrowIndex: number) {
     this.subscriptions[arrowIndex].unsubscribe();
     if (this.isContinousMovementByKeyboardOn[arrowIndex]) {
       this.isContinousMovementByKeyboardOn[arrowIndex] = false;
@@ -264,7 +261,7 @@ export abstract class SelectionManipulatorService extends Tool {
     }
   }
 
-  singleMove(arrowIndex: number, singleMovement: Vec2){
+  singleMove(arrowIndex: number, singleMovement: Vec2) {
     this.arrowKeyDown[arrowIndex] = false;
     this.stopContinuousMovement(arrowIndex);
     this.moveSelection(singleMovement, false);
@@ -305,91 +302,22 @@ export abstract class SelectionManipulatorService extends Tool {
 
   isClickOutsideSelection(event: MouseEvent): boolean {
     const mousePosition = this.getPositionFromMouse(event);
-    let xOutsideSelection: boolean;
-    let yOutsideSelection: boolean
+    let positions: Vec2[] = [];
 
-    if (this.isReversedX) {
-      xOutsideSelection = (mousePosition.x > this.topLeft.x + this.OUTSIDE_DETECTION_OFFSET_PX)
-        || (mousePosition.x < this.bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX);
-    }
-    else {
-      xOutsideSelection = (mousePosition.x < this.topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX)
-        || (mousePosition.x > this.bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX);
-    }
-
-    if (this.isReversedY) {
-      yOutsideSelection = (mousePosition.y > this.topLeft.y + this.OUTSIDE_DETECTION_OFFSET_PX)
-        || (mousePosition.y < this.bottomRight.y - this.OUTSIDE_DETECTION_OFFSET_PX);
-    }
-    else {
-      yOutsideSelection = (mousePosition.y < this.topLeft.y - this.OUTSIDE_DETECTION_OFFSET_PX)
-        || (mousePosition.y > this.bottomRight.y + this.OUTSIDE_DETECTION_OFFSET_PX);
-    }
-
-    return (xOutsideSelection || yOutsideSelection);
+    positions.push(mousePosition, this.topLeft, this.bottomRight);
+    return this.selectionService.isClickOutsideSelection(positions, this.isReversedX, this.isReversedY);
   }
 
-  isAnArrowKeyPressed(): boolean{
+  isAnArrowKeyPressed(): boolean {
     let isAnyArrowKeyDown: boolean = false;
 
     this.arrowKeyDown.forEach(element => {
-      if(element){
+      if (element) {
         isAnyArrowKeyDown = true;
       }
     });
 
     return isAnyArrowKeyDown;
-  }
-
-  adjustIfOutsideCanvas(pos: Vec2): void {
-    let canvasSize: Vec2 = this.drawingService.canvasSize;
-    if (pos.x < 0) {
-      pos.x = 0;
-    }
-    if (pos.x > canvasSize.x) {
-      pos.x = canvasSize.x;
-    }
-    if (pos.y > canvasSize.y) {
-      pos.y = canvasSize.y;
-    }
-    if (pos.y < 0) {
-      pos.y = 0;
-    }
-  }
-
-  adjustIfWillBeOutside(topLeft: Vec2, bottomRight: Vec2, movement: Vec2): void {
-    let copy: number;
-    let topLeftCopy: Vec2 = { x: topLeft.x, y: topLeft.y };
-    let bottomRightCopy: Vec2 = { x: bottomRight.x, y: bottomRight.y };
-
-    if (this.isReversedX) {
-      copy = topLeftCopy.x;
-      topLeftCopy.x = bottomRightCopy.x;
-      bottomRightCopy.x = copy;
-    }
-
-    if (this.isReversedY) {
-      copy = topLeftCopy.y;
-      topLeftCopy.y = bottomRightCopy.y;
-      bottomRightCopy.y = copy;
-    }
-
-    let futureTopLeft = { x: topLeftCopy.x + movement.x, y: topLeftCopy.y + movement.y };
-    let futureBottomRight = { x: bottomRightCopy.x + movement.x, y: bottomRightCopy.y + movement.y };
-
-    let canvasSize: Vec2 = this.drawingService.canvasSize;
-    if (futureTopLeft.x <= 0) {
-      movement.x = 0 - topLeftCopy.x;
-    }
-    if (futureBottomRight.x >= canvasSize.x) {
-      movement.x = canvasSize.x - bottomRightCopy.x;
-    }
-    if (futureTopLeft.y <= 0) {
-      movement.y = 0 - topLeftCopy.y;
-    }
-    if (futureBottomRight.y >= canvasSize.y) {
-      movement.y = canvasSize.y - bottomRightCopy.y;
-    }
   }
 
   resetProperties() {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ResizingMode, SelectionManipulatorService } from '@app/tools/services/tools/selection-manipulator.service';
-import { SelectionService } from '@app/tools/services/tools/selection.service';
+import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service';
+import { ResizingMode, } from '@app/tools/services/selection/selection-manipulator.service';
+import { SelectionService } from '@app/tools/services/selection/selection.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class EllipseSelectionComponent implements OnInit {
   public showControlPoint: boolean
   //public isShiftDown: boolean;
 
-  constructor(public selectionManipulator: SelectionManipulatorService, public selectionService: SelectionService) {
+  constructor(public selectionManipulator: EllipseSelectionManipulatorService, public selectionService: SelectionService) {
   }
 
  /* @HostListener('document:keydown', ['$event'])
