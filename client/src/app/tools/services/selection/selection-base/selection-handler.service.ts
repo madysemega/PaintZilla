@@ -28,7 +28,7 @@ export abstract class SelectionHandlerService {
   public verticalModificationCtx: CanvasRenderingContext2D;
   public originalCanvasCopyCtx: CanvasRenderingContext2D;
 
-  public topLeft: Vec2 = { x: 0, y: 0 };
+  public fixedTopLeft: Vec2 = { x: 0, y: 0 };
   public offset: Vec2 = { x: 0, y: 0 };
 
   public originalWidth: number;
@@ -36,7 +36,7 @@ export abstract class SelectionHandlerService {
 
   protected hasBeenManipulated: boolean;
   protected needWhiteEllipsePostDrawing: boolean;
-  protected originalTopLeft: Vec2;
+  protected originalTopLeftOnBaseCanvas: Vec2;
 
   constructor(protected drawingService: DrawingService, protected selectionService: SelectionService) {
     this.selectionCanvas = document.createElement('canvas');
@@ -50,16 +50,16 @@ export abstract class SelectionHandlerService {
   }
 
   abstract initAllProperties(vertices: Vec2[]): void;
-  abstract drawRegion(sourceCanvas: HTMLCanvasElement): void;
-  abstract drawPostSelectionRegion(): void;
+  abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
+  abstract drawWhitePostSelection(): void;
 
  select(sourceCanvas: HTMLCanvasElement, vertices: Vec2[]): void {
     this.clearAndResetAllCanvas();
     this.initAllProperties(vertices);
-    this.drawRegion(sourceCanvas);
-    this.drawCanvas(this.selectionCanvas, this.horizontalModificationCtx);
-    this.drawCanvas(this.selectionCanvas, this.verticalModificationCtx);
-    this.drawCanvas(this.selectionCanvas, this.originalCanvasCopyCtx);
+    this.extractSelectionFromSource(sourceCanvas);
+    this.drawACanvasOnAnother(this.selectionCanvas, this.horizontalModificationCtx);
+    this.drawACanvasOnAnother(this.selectionCanvas, this.verticalModificationCtx);
+    this.drawACanvasOnAnother(this.selectionCanvas, this.originalCanvasCopyCtx);
   }
 
   drawSelection(target: CanvasRenderingContext2D, positionOnTarget: Vec2): void {
@@ -68,9 +68,9 @@ export abstract class SelectionHandlerService {
     }
 
     if (this.needWhiteEllipsePostDrawing) {
-      this.drawPostSelectionRegion();
+      this.drawWhitePostSelection();
     }
-    this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
+    this.drawACanvasOnAnother(this.selectionCanvas, target, { x: positionOnTarget.x - this.fixedTopLeft.x + this.offset.x, y: positionOnTarget.y - this.fixedTopLeft.y + this.offset.y });
   }
 
   resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
@@ -81,16 +81,16 @@ export abstract class SelectionHandlerService {
     if (isHorizontal) {
       newlength = (bottomRightOnSource.x - topLeftOnSource.x);
       scaling = newlength / this.originalWidth;
-      this.drawResized(this.horizontalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
-      this.drawResized(this.originalCanvasCopy, this.verticalModificationCtx, scaling, isHorizontal);
+      this.overwriteACanvasWithAnother(this.horizontalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
+      this.overwriteACanvasWithAnother(this.originalCanvasCopy, this.verticalModificationCtx, scaling, isHorizontal);
       this.updateHorizontalOffset(newlength);
       return;
     }
 
     newlength = (bottomRightOnSource.y - topLeftOnSource.y);
     scaling = newlength / this.originalHeight;
-    this.drawResized(this.verticalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
-    this.drawResized(this.originalCanvasCopy, this.horizontalModificationCtx, scaling, isHorizontal);
+    this.overwriteACanvasWithAnother(this.verticalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
+    this.overwriteACanvasWithAnother(this.originalCanvasCopy, this.horizontalModificationCtx, scaling, isHorizontal);
     this.updateVerticalOffset(newlength);
   }
 
@@ -105,7 +105,7 @@ export abstract class SelectionHandlerService {
     contextToTransform.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
   }
 
-  drawCanvas(source: HTMLCanvasElement, target: CanvasRenderingContext2D, topLeftOnTarget?: Vec2) {
+  drawACanvasOnAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, topLeftOnTarget?: Vec2) {
     let definedPosition: Vec2;
     if (topLeftOnTarget == undefined) {
       definedPosition = { x: 0, y: 0 };
@@ -119,7 +119,7 @@ export abstract class SelectionHandlerService {
     target.closePath();
   }
 
-  drawResized(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontalResizing: boolean) {
+  overwriteACanvasWithAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontalResizing: boolean) {
     this.drawingService.clearCanvas(target);
     target.beginPath();
     this.transform(target, scaling, isHorizontalResizing);
@@ -152,6 +152,6 @@ export abstract class SelectionHandlerService {
     if (this.hasBeenManipulated) {
       return true;
     }
-    return this.hasBeenManipulated = (this.originalTopLeft.x != topLeftOnTarget.x || this.originalTopLeft.y != topLeftOnTarget.y);
+    return this.hasBeenManipulated = (this.originalTopLeftOnBaseCanvas.x != topLeftOnTarget.x || this.originalTopLeftOnBaseCanvas.y != topLeftOnTarget.y);
   }
 }

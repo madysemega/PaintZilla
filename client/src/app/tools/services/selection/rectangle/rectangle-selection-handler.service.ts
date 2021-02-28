@@ -22,31 +22,31 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     super(drawingService, selectionService);
   }
 
-  initAllProperties(vertices: Vec2[]): void {//will be abstract
+  initAllProperties(vertices: Vec2[]): void {
     this.originalWidth = vertices[1].x - vertices[0].x;
     this.originalHeight = vertices[1].y - vertices[0].y
-    this.topLeft.x = this.selectionCanvas.width / 2 - this.originalWidth/2;
-    this.topLeft.y = this.selectionCanvas.height / 2 - this.originalHeight/2;
+    this.fixedTopLeft.x = this.selectionCanvas.width / 2 - this.originalWidth/2;
+    this.fixedTopLeft.y = this.selectionCanvas.height / 2 - this.originalHeight/2;
     this.offset = { x: 0, y: 0 };
 
-    this.originalTopLeft = { x: vertices[0].x, y: vertices[0].y };
+    this.originalTopLeftOnBaseCanvas = { x: vertices[0].x, y: vertices[0].y };
 
     this.hasBeenManipulated = false;
     this.needWhiteEllipsePostDrawing = true;
   }
 
-  drawRegion(sourceCanvas: HTMLCanvasElement) { //will be abstract drawRegion
+  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement) { 
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
-    this.selectionCtx.rect(this.topLeft.x, this.topLeft.y, this.originalWidth, this.originalHeight);
+    this.selectionCtx.rect(this.fixedTopLeft.x, this.fixedTopLeft.y, this.originalWidth, this.originalHeight);
     this.selectionCtx.clip();
     this.selectionCtx.imageSmoothingEnabled = false;
-    this.selectionCtx.drawImage(sourceCanvas, this.topLeft.x - this.originalTopLeft.x, this.topLeft.y - this.originalTopLeft.y);
+    this.selectionCtx.drawImage(sourceCanvas, this.fixedTopLeft.x - this.originalTopLeftOnBaseCanvas.x, this.fixedTopLeft.y - this.originalTopLeftOnBaseCanvas.y);
     this.selectionCtx.closePath();
     this.selectionCtx.restore();
   }
 
-  drawPostSelectionRegion() {
-    this.selectionService.drawPostSelectionRectangle(this.originalTopLeft, this.originalWidth, this.originalHeight);
+  drawWhitePostSelection() {
+    this.selectionService.drawPostSelectionRectangle(this.originalTopLeftOnBaseCanvas, this.originalWidth, this.originalHeight);
   }
 }
