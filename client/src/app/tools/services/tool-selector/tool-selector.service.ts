@@ -11,6 +11,7 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
 import { EllipseSelectionCreatorService } from '../tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service'
+import { SelectionCreatorService } from '../selection/selection-base/selection-creator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,6 +23,13 @@ export class ToolSelectorService {
 
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
+    }
+
+    getActiveSelectionTool(): SelectionCreatorService| undefined{
+        if(this.getSelectedTool() instanceof SelectionCreatorService){
+            return this.getSelectedTool() as SelectionCreatorService;
+        }
+        return undefined;
     }
 
     selectTool(name: string | undefined): boolean {

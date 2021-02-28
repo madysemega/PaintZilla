@@ -4,6 +4,7 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
@@ -112,8 +113,10 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     activateResizer(button: string): void {
-        this.ellipseSelectionCreatorService.stopManipulatingSelection();
-        this.rectangleSelectionCreatorService.stopManipulatingSelection();
+        let creator: SelectionCreatorService|undefined = this.toolSelector.getActiveSelectionTool();
+        if(creator!=undefined){
+            (creator as SelectionCreatorService).stopManipulatingSelection();
+        }
         this.resizingService.activateResizer(button);
     }
 
