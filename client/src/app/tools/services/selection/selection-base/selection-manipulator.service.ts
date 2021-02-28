@@ -52,8 +52,8 @@ export abstract class SelectionManipulatorService extends Tool {
   public resizingMode: ResizingMode = ResizingMode.off;
 
   protected isShiftDown: boolean;
-  private isReversedX: boolean;
-  private isReversedY: boolean;
+  public isReversedX: boolean;
+  public isReversedY: boolean;
 
   private arrowKeyDown: boolean[] = [false, false, false, false];
   private subscriptions: Array<Subscription>;

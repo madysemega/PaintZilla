@@ -24,4 +24,12 @@ export class EllipseSelectionComponent implements OnInit {
     this.selectionService.isSelectionBeingManipulated.subscribe(isActivated => (this.showControlPoint = isActivated));
   }
 
+  isXRev(): boolean{
+    return this.selectionManipulator.isReversedX;
+  }
+
+  isYRev(): boolean{
+    return this.selectionManipulator.isReversedY;
+  }
+
 }

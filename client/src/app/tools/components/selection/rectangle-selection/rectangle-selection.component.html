@@ -57,7 +57,7 @@
         draggable="false"
         [style.top.px]="this.selectionManipulator.topLeft.y"
         [style.left.px]="this.selectionManipulator.bottomRight.x"
-        [ngStyle]="{ cursor: 'nesw-resize' }"
+        [ngStyle]="{ cursor: (!isXRev() && !isYRev()) || (isXRev() && isYRev())  ? 'nesw-resize': 'nwse-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsTopRight)"
         (mouseup)="setResizingMode(resizingMode.off)"
     >
@@ -70,7 +70,7 @@
         draggable="false"
         [style.top.px]="this.selectionManipulator.bottomRight.y"
         [style.left.px]="this.selectionManipulator.bottomRight.x"
-        [ngStyle]="{ cursor: 'nwse-resize' }"
+        [ngStyle]="{ cursor: (!isXRev() && !isYRev()) || (isXRev() && isYRev())  ? 'nwse-resize': 'nesw-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsBottomRight)"
         (mouseup)="setResizingMode(resizingMode.off)"
     >
@@ -83,7 +83,7 @@
         draggable="false"
         [style.top.px]="this.selectionManipulator.topLeft.y"
         [style.left.px]="this.selectionManipulator.topLeft.x"
-        [ngStyle]="{ cursor: 'nwse-resize' }"
+        [ngStyle]="{ cursor: (!isXRev() && !isYRev()) || (isXRev() && isYRev())  ? 'nwse-resize': 'nesw-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsTopLeft)"
         (mouseup)="setResizingMode(resizingMode.off)"
     >
@@ -96,9 +96,10 @@
         draggable="false"
         [style.top.px]="this.selectionManipulator.bottomRight.y"
         [style.left.px]="this.selectionManipulator.topLeft.x"
-        [ngStyle]="{ cursor: 'nesw-resize' }"
+        [ngStyle]="{ cursor: (!isXRev() && !isYRev()) || (isXRev() && isYRev())  ? 'nesw-resize': 'nwse-resize' }"
         (mousedown)="setResizingMode(resizingMode.towardsBottomLeft)"
         (mouseup)="setResizingMode(resizingMode.off)"
     >
 </div>
+    
     
