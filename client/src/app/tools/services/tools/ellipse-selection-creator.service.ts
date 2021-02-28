@@ -209,11 +209,9 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
     }
 }*/
 
-
-import { ShapeType } from '@app/app/classes/shape-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service'
-import { SelectionService } from '@app/tools/services/selection/selection.service';
+import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse-selection-helper.service'
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-creator.service'
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse-selection-handler-service';
 import { Vec2 } from '@app/app/classes/vec2';
@@ -224,9 +222,8 @@ import { Injectable } from '@angular/core';
 })
 export class EllipseSelectionCreatorService extends SelectionCreatorService {
 
-    constructor(drawingService: DrawingService, selectionManipulatorService: EllipseSelectionManipulatorService, selectionHandler: EllipseSelectionHandlerService, selectionService: SelectionService) {
+    constructor(drawingService: DrawingService, selectionManipulatorService: EllipseSelectionManipulatorService, selectionHandler: EllipseSelectionHandlerService, protected selectionService: EllipseSelectionHelperService) {
         super(drawingService, selectionManipulatorService, selectionHandler, selectionService);
-        this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse-selection';
     }
 

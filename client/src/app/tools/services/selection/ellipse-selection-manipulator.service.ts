@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
+import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 import { SelectionManipulatorService } from './selection-manipulator.service';
-import { SelectionService } from './selection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EllipseSelectionManipulatorService extends SelectionManipulatorService{
 
-  constructor(drawingService: DrawingService, selectionService: SelectionService, selectionHandler: EllipseSelectionHandlerService) { 
+  constructor(drawingService: DrawingService, protected selectionService: EllipseSelectionHelperService, selectionHandler: EllipseSelectionHandlerService) { 
     super(drawingService, selectionService, selectionHandler);
   }
 

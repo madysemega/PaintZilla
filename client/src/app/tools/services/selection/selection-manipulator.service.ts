@@ -104,7 +104,7 @@ export abstract class SelectionManipulatorService extends Tool {
       return;
     }
 
-    this.moveSelection(this.convertToMovement(mousePosition), true);
+    this.moveSelection(this.selectionService.convertToMovement(mousePosition, this.mouseDownLastPos), true);
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -220,11 +220,6 @@ export abstract class SelectionManipulatorService extends Tool {
     this.resetProperties();
   }
 
-  convertToMovement(mousePos: Vec2): Vec2 {
-    const mouseMovement: Vec2 = { x: mousePos.x - this.mouseDownLastPos.x, y: mousePos.y - this.mouseDownLastPos.y }
-    return mouseMovement;
-  }
-
   startMovingSelectionContinous(movement: Vec2, arrowIndex: number) {
     this.subscriptions[arrowIndex].unsubscribe();
     const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
@@ -234,15 +229,10 @@ export abstract class SelectionManipulatorService extends Tool {
 
   addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean) {
     if (isMouseMovement) {
-      this.add(this.mouseDownLastPos, mouseMovement);
+      this.selectionService.add(this.mouseDownLastPos, mouseMovement);
     }
-    this.add(this.topLeft, mouseMovement);
-    this.add(this.bottomRight, mouseMovement);
-  }
-
-  add(vect: Vec2, amount: Vec2) {
-    vect.x += amount.x;
-    vect.y += amount.y;
+    this.selectionService.add(this.topLeft, mouseMovement);
+    this.selectionService.add(this.bottomRight, mouseMovement);
   }
 
   moveIfPressLongEnough(movement: Vec2, arrowIndex: number) {

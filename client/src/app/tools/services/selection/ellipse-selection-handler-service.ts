@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 import { SelectionHandlerService } from './selection-handler.service';
-import { SelectionService } from './selection.service';
 
 export enum ResizingMode {
   off = 0,
@@ -21,7 +21,7 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
   private originalCenter: Vec2;
   private originalRadii: Vec2;
 
-  constructor(drawingService: DrawingService, selectionService: SelectionService) {
+  constructor(drawingService: DrawingService, protected selectionService: EllipseSelectionHelperService) {
     super(drawingService, selectionService);
   }
 

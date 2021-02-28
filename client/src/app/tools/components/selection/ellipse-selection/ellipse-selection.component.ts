@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse-selection-manipulator.service';
 import { ResizingMode, } from '@app/tools/services/selection/selection-manipulator.service';
-import { SelectionService } from '@app/tools/services/selection/selection.service';
-
 
 @Component({
   selector: 'app-ellipse-selection',
@@ -13,24 +12,9 @@ export class EllipseSelectionComponent implements OnInit {
 
   public resizingMode: typeof ResizingMode = ResizingMode;
   public showControlPoint: boolean
-  //public isShiftDown: boolean;
 
-  constructor(public selectionManipulator: EllipseSelectionManipulatorService, public selectionService: SelectionService) {
+  constructor(public selectionManipulator: EllipseSelectionManipulatorService, public selectionService: EllipseSelectionHelperService) {
   }
-
- /* @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Shift') {
-      this.isShiftDown = true;
-    }
-  }
-
-  @HostListener('document:keyup', ['$event'])
-  onKeyUp(event: KeyboardEvent): void {
-    if (event.key === 'Shift') {
-      this.isShiftDown = false;
-    }
-  }*/
 
   setResizingMode(resizingMode: ResizingMode): void {
     this.selectionManipulator.resizingMode = resizingMode;

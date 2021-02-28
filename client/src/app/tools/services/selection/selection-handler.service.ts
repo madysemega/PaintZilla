@@ -70,6 +70,7 @@ export abstract class SelectionHandlerService {
     if (this.needWhiteEllipsePostDrawing) {
       this.drawPostSelectionRegion();
     }
+    console.log(this.topLeft);
     this.drawCanvas(this.selectionCanvas, target, { x: positionOnTarget.x - this.topLeft.x + this.offset.x, y: positionOnTarget.y - this.topLeft.y + this.offset.y });
   }
 
@@ -137,7 +138,7 @@ export abstract class SelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
-  clearAndResetAllCanvas() {
+  clearAndResetAllCanvas() { //changing canvas size clears it
     this.selectionCanvas.width = this.drawingService.canvas.width;
     this.selectionCanvas.height = this.drawingService.canvas.height;
     this.originalCanvasCopy.width = this.drawingService.canvas.width;

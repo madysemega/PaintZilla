@@ -7,12 +7,11 @@ import { ColourToolService } from '@app/tools/services/tools/colour-tool.service
 @Injectable({
   providedIn: 'root'
 })
-export class SelectionService {
+export abstract class SelectionService {
   public readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
-  private readonly CIRCLE_MAX_ANGLE: number = 360;
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
-  constructor(private drawingService : DrawingService, private colourService: ColourToolService) { 
+  constructor(protected drawingService : DrawingService, protected colourService: ColourToolService) { 
     this.isSelectionBeingManipulated =  new BehaviorSubject<boolean>(false);
   }
 
@@ -55,37 +54,6 @@ export class SelectionService {
     ctx.restore();
 }
 
-getEllipseParam(startPoint: Vec2, endPoint: Vec2, center: Vec2, radii: Vec2): void {
-    center.x = (startPoint.x + endPoint.x) / 2;
-    center.y = (startPoint.y + endPoint.y) / 2;
-    radii.x=Math.abs(endPoint.x - startPoint.x) / 2;
-    radii.y= Math.abs(endPoint.y - startPoint.y) / 2;
-  }
-
-drawSelectionEllipse(center: Vec2, radii: Vec2): void{
-    let ctx : CanvasRenderingContext2D = this.drawingService.previewCtx;
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeStyle = this.colourService.secondaryColour;
-    ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-    ctx.stroke();
-    ctx.restore();
-}
-
-drawPostSelectionEllipse(center: Vec2, radii: Vec2){
-    let ctx : CanvasRenderingContext2D = this.drawingService.baseCtx;
-    let radiiCopy = {x:radii.x, y:radii.y};
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeStyle = this.colourService.secondaryColour;
-    radiiCopy.x += radiiCopy.x>=1 ? -1: 0;
-    radiiCopy.y += radiiCopy.y>=1 ? -1: 0;
-    ctx.ellipse(center.x, center.y, radiiCopy.x, radiiCopy.y, 0, 0, this.CIRCLE_MAX_ANGLE);
-    ctx.clip();
-    ctx.fillStyle="white";
-    ctx.fill();
-    ctx.restore();
-}
 
 setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
   this.isSelectionBeingManipulated.next(isItBeingManipulated);
@@ -118,5 +86,16 @@ isClickOutsideSelection(positions: Vec2[], isReversedX: boolean, isReversedY: bo
   }
   return (xOutsideSelection || yOutsideSelection);
 }
+
+add(vect: Vec2, amount: Vec2) {
+  vect.x += amount.x;
+  vect.y += amount.y;
+}
+
+convertToMovement(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
+  const mouseMovement: Vec2 = { x: mousePos.x - mouseDownLastPos.x, y: mousePos.y - mouseDownLastPos.y }
+  return mouseMovement;
+}
+
 }
 

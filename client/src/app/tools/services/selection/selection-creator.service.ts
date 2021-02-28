@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ShapeTool } from '@app/app/classes/shape-tool';
-import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -10,11 +8,12 @@ import { SelectionManipulatorService } from '@app/tools/services/selection/selec
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { SelectionService } from '@app/tools/services/selection/selection.service';
 import { SelectionHandlerService } from './selection-handler.service';
+import { Tool } from '@app/tools/classes/tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export abstract class SelectionCreatorService extends ShapeTool implements ISelectableTool, IDeselectableTool {
+export abstract class SelectionCreatorService extends Tool implements ISelectableTool, IDeselectableTool {
     private readonly MINIMUM_SELECTION_WIDTH: number = 5;
     protected startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
@@ -22,7 +21,6 @@ export abstract class SelectionCreatorService extends ShapeTool implements ISele
 
     constructor(drawingService: DrawingService, protected selectionManipulatorService: SelectionManipulatorService, protected selectionHandler: SelectionHandlerService, protected selectionService: SelectionService) {
         super(drawingService);
-        this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse-selection';
     }
 
