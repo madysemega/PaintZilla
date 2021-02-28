@@ -143,16 +143,6 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
                     this.lineShape.vertices.pop();
                 }
                 break;
-            case 'z':
-            case 'Z':
-                if (event.ctrlKey) {
-                    if (event.shiftKey) {
-                        this.historyService.redo();
-                    } else {
-                        this.historyService.undo();
-                    }
-                }
-                break;
         }
     }
 

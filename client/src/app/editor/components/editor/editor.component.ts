@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -10,7 +11,11 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
 
-    constructor(public toolSelector: ToolSelectorService, private drawingCreatorService: DrawingCreatorService) {}
+    constructor(
+        public toolSelector: ToolSelectorService,
+        private drawingCreatorService: DrawingCreatorService,
+        private historyService: HistoryService,
+    ) {}
 
     ngAfterViewInit(): void {
         this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
@@ -24,9 +29,18 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
-        const toolName = this.toolSelector.fromKeyboardShortcut(event.key);
-        this.toolSelector.selectTool(toolName);
+        this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
         this.toolSelector.getSelectedTool().onKeyUp(event);
+
+        const isCtrlZ: boolean = event.ctrlKey && event.key.toUpperCase() === 'Z';
+        if(isCtrlZ) {
+            if(event.shiftKey) {
+                this.historyService.redo();
+            }
+            else {
+                this.historyService.undo();
+            }
+        }
     }
 
     @HostListener('mousemove', ['$event'])
