@@ -40,7 +40,7 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     constructor(drawingService: DrawingService, private colourService: ColourToolService, private historyService: HistoryService) {
         super(drawingService);
 
-        this.resetShape();
+        this.initialize();
 
         colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
         colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
@@ -51,8 +51,8 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 
-    private resetShape(): void {
-        this.lineShape = this.lineShape ? new LineShape([], this.lineShape.jointsDiameter) : new LineShape([]);
+    private initialize(): void {
+        this.lineShape = new LineShape([]);
 
         this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.strokeColourProperty = new StrokeStyleProperty(this.colourService.primaryColour);
@@ -159,12 +159,14 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.historyService.do(
             new UserActionRenderShape(
-                this.lineType === LineType.WITH_JOINTS ? [this.lineShapeRenderer, this.lineJointsRenderer] : [this.lineShapeRenderer],
+                this.lineType === LineType.WITH_JOINTS ?
+                    [this.lineShapeRenderer.clone(), this.lineJointsRenderer.clone()] :
+                    [this.lineShapeRenderer.clone()],
                 this.drawingService.baseCtx,
             ),
         );
 
-        this.resetShape();
+        this.lineShape.clear();
     }
 
     previewLine(mousePosition: Vec2): void {

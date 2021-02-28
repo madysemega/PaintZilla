@@ -7,6 +7,10 @@ export class StrokeWidthProperty extends ShapeProperty {
         ctx.lineWidth = this.strokeWidth;
     }
 
+    clone(): ShapeProperty {
+        return new StrokeWidthProperty(this.strokeWidth);
+    }
+
     constructor(public strokeWidth: number = StrokeWidthProperty.DEFAULT_STROKE_WIDTH) {
         super();
     }

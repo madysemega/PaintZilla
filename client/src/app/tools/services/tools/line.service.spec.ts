@@ -3,6 +3,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
@@ -31,6 +32,7 @@ describe('LineService', () => {
 
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let colourService: ColourToolService;
 
     let baseCtxStub: CanvasRenderingContext2D;
@@ -38,12 +40,15 @@ describe('LineService', () => {
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
+
         colourService = new ColourToolService();
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: ColourToolService, useValue: colourService },
+                { provide: HistoryService, useValue: historyServiceStub }
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -150,38 +155,16 @@ describe('LineService', () => {
         expect(lineShapeCloseMethodSpy).not.toHaveBeenCalled();
     });
 
-    it('onMouseDoubleClick() should render the joints on the base canvas if line type is WITH_JOINTS and mouse button is left', () => {
+    it('onMouseDoubleClick() should add a user action to the history', () => {
         service['lineType'] = LineType.WITH_JOINTS;
+
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
+
         spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
 
         const mouseEvent: MouseEvent = { button: MouseButton.Left, clientX: 3, clientY: 42 } as MouseEvent;
         service.onMouseDoubleClick(mouseEvent);
-        expect(lineJointsRendererRenderMethodStub).toHaveBeenCalledWith(drawServiceSpy.baseCtx);
-    });
-
-    it('onMouseDoubleClick() should not render the joints on the base canvas if line type is WITH_JOINTS but mouse button is not left', () => {
-        service['lineType'] = LineType.WITH_JOINTS;
-        lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
-        spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
-
-        const mouseEvent: MouseEvent = { button: MouseButton.Right, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEvent);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
-    });
-
-    it('onMouseDoubleClick() should not render the joints on the base canvas if line type is WITHOUT_JOINTS', () => {
-        service['lineType'] = LineType.WITHOUT_JOINTS;
-        lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
-        spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
-
-        const mouseEventLeft: MouseEvent = { button: MouseButton.Left, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEventLeft);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
-
-        const mouseEventRight: MouseEvent = { button: MouseButton.Right, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEventRight);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
+        expect(historyServiceStub.do).toHaveBeenCalled();
     });
 
     it("onMouseMove should clear preview canvas and then render on it using the shape's renderer if a line is currently being drawn", () => {

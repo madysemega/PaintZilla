@@ -14,4 +14,8 @@ export class LineShapeRenderer extends ShapeRenderer<LineShape> {
         });
         ctx.stroke();
     }
+
+    clone(): ShapeRenderer<LineShape> {
+        return new LineShapeRenderer(this.getShapeCopy(), this.getPropertiesCopy());
+    }
 }
