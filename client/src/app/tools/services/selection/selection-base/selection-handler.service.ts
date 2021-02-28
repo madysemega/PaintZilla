@@ -95,7 +95,8 @@ export abstract class SelectionHandlerService {
     if (this.needWhiteEllipsePostDrawing) {
       this.drawWhitePostSelection();
     }
-    this.drawACanvasOnAnother(this.selectionCanvas, target, { x: topLeftOnTarget.x - this.fixedTopLeft.x + this.offset.x, y: topLeftOnTarget.y - this.fixedTopLeft.y + this.offset.y });
+    let topLeft: Vec2= { x: topLeftOnTarget.x - this.fixedTopLeft.x + this.offset.x, y: topLeftOnTarget.y - this.fixedTopLeft.y + this.offset.y };
+    this.drawACanvasOnAnother(this.selectionCanvas, target, topLeft);
   }
 
   resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
@@ -181,16 +182,7 @@ export abstract class SelectionHandlerService {
   }
 
   createMemento(): HandlerMemento {
-    let memento: HandlerMemento = new HandlerMemento();
-
-    memento.selectionCanvas = document.createElement('canvas');
-    memento.selectionCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
-    memento.originalCanvasCopy = document.createElement('canvas');
-    memento.originalCanvasCopyCtx = this.originalCanvasCopy.getContext('2d') as CanvasRenderingContext2D;
-    memento.horizontalModificationCanvas = document.createElement('canvas');
-    memento.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
-    memento.verticalModificationCanvas = document.createElement('canvas');
-    memento.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
+    let memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
 
     memento.fixedTopLeft = this.fixedTopLeft;
     memento.offset = this.offset;
@@ -203,12 +195,11 @@ export abstract class SelectionHandlerService {
     memento.originalTopLeftOnBaseCanvas = this.originalTopLeftOnBaseCanvas;
     memento.originalCenter = this.originalCenter;
     memento.originalVertices = this.originalVertices;
-
-    this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx);
+   
+    this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx, {x:0, y:0});
     this.drawACanvasOnAnother(this.horizontalModificationCanvas, memento.horizontalModificationCtx);
     this.drawACanvasOnAnother(this.verticalModificationCanvas, this.verticalModificationCtx);
     this.drawACanvasOnAnother(this.originalCanvasCopy, this.originalCanvasCopyCtx);
-
     return memento;
   }
 
@@ -235,6 +226,8 @@ export abstract class SelectionHandlerService {
 
     this.originalCenter = memento.originalCenter;
     this.originalVertices = memento.originalVertices;
+
+    //this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
   }
 
 }

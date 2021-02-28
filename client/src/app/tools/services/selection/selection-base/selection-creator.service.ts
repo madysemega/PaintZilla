@@ -76,23 +76,8 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
         //////////////////FOR TESTING PURPOSES/////////////////////
         if (event.key == 'k') {
-            console.log(this.selectionService.actions.length);
-            let selectionTL: Vec2 = this.selectionService.actions[0];
-            let selectionBR: Vec2 = this.selectionService.actions[1];
-            let resizingTLV: Vec2 = this.selectionService.actions[2];
-            let resizingBRV: Vec2 = this.selectionService.actions[3];
-            let resizingTLH: Vec2 = this.selectionService.actions[4];
-            let resizingBRH: Vec2 = this.selectionService.actions[5];
-            let targetTL: Vec2 = this.selectionService.actions[6];
-            console.log(selectionTL, targetTL);
-            this.selectionHandler.select(this.drawingService.canvas, [selectionTL, selectionBR]);
-            if (resizingTLH != undefined) {
-                this.selectionHandler.resizeSelection(resizingTLH, resizingBRH, true);
-            }
-            if (resizingTLV != undefined) {
-                this.selectionHandler.resizeSelection(resizingTLV, resizingBRV, false);
-            }
-            this.selectionHandler.drawSelection(this.drawingService.baseCtx, targetTL);
+            this.selectionHandler.restoreFromMemento(this.selectionService.memento);
+            this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.selectionService.where);
         }
         //////////////////FOR TESTING PURPOSES/////////////////////
 
@@ -147,9 +132,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         vertices.push(startPoint);
         vertices.push(endPoint);
         this.selectionHandler.select(this.drawingService.canvas, vertices);
-
-        this.selectionService.actions = [];
-        this.selectionService.actions.push(startPoint, endPoint);
 
         this.selectionService.setIsSelectionBeingManipulated(true);
         this.selectionManipulatorService.initialize(startPoint, endPoint);

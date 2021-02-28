@@ -3,6 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { BehaviorSubject } from 'rxjs';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+import { HandlerMemento } from '@app/app/classes/handlerMemento';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export abstract class SelectionService {
   public readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
-  public actions: Vec2[]=[]; //////////////////FOR TESTING PURPOSES/////////////////////
+  public memento: HandlerMemento; //////////////////FOR TESTING PURPOSES/////////////////////
+  public where: Vec2;
 
   constructor(protected drawingService : DrawingService, protected colourService: ColourToolService) { 
     this.isSelectionBeingManipulated =  new BehaviorSubject<boolean>(false);

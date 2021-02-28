@@ -226,7 +226,8 @@ export abstract class SelectionManipulatorService extends Tool {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
     if (needDrawSelection) {
       //////////////////FOR TESTING PURPOSES/////////////////////
-      this.selectionService.actions.push(this.lastResizing[2], this.lastResizing[3], this.lastResizing[4], this.lastResizing[5], { x: this.topLeft.x, y: this.topLeft.y });
+      this.selectionService.memento = this.selectionHandler.createMemento();
+      this.selectionService.where = {x: this.topLeft.x, y: this.topLeft.y};
       //////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
     }
