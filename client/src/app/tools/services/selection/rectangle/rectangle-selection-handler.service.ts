@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
@@ -22,20 +21,7 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     super(drawingService, selectionService);
   }
 
-  initAllProperties(vertices: Vec2[]): void {
-    this.originalWidth = vertices[1].x - vertices[0].x;
-    this.originalHeight = vertices[1].y - vertices[0].y
-    this.fixedTopLeft.x = this.selectionCanvas.width / 2 - this.originalWidth/2;
-    this.fixedTopLeft.y = this.selectionCanvas.height / 2 - this.originalHeight/2;
-    this.offset = { x: 0, y: 0 };
-
-    this.originalTopLeftOnBaseCanvas = { x: vertices[0].x, y: vertices[0].y };
-
-    this.hasBeenManipulated = false;
-    this.needWhiteEllipsePostDrawing = true;
-  }
-
-  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement) { 
+  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement) {
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
     this.selectionCtx.rect(this.fixedTopLeft.x, this.fixedTopLeft.y, this.originalWidth, this.originalHeight);

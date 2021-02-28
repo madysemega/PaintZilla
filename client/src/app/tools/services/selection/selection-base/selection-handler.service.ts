@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionService } from './selection.service';
+import { HandlerMemento } from '@app/app/classes/handlerMemento'
 
 export enum ResizingMode {
   off = 0,
@@ -33,6 +34,8 @@ export abstract class SelectionHandlerService {
 
   public originalWidth: number;
   public originalHeight: number;
+  public originalCenter: Vec2;
+  public originalVertices: Vec2[];
 
   protected hasBeenManipulated: boolean;
   protected needWhiteEllipsePostDrawing: boolean;
@@ -49,11 +52,25 @@ export abstract class SelectionHandlerService {
     this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
   }
 
-  abstract initAllProperties(vertices: Vec2[]): void;
+  initAllProperties(vertices: Vec2[]): void {
+    this.originalVertices = vertices;
+    this.originalWidth = vertices[1].x - vertices[0].x;
+    this.originalHeight = vertices[1].y - vertices[0].y
+    this.fixedTopLeft.x = this.selectionCanvas.width / 2 - this.originalWidth / 2;
+    this.fixedTopLeft.y = this.selectionCanvas.height / 2 - this.originalHeight / 2;
+    this.offset = { x: 0, y: 0 };
+
+    this.originalTopLeftOnBaseCanvas = { x: vertices[0].x, y: vertices[0].y };
+    this.originalCenter = { x: (vertices[0].x + vertices[1].x) / 2, y: (vertices[0].y + vertices[1].y) / 2 };
+
+    this.hasBeenManipulated = false;
+    this.needWhiteEllipsePostDrawing = true;
+  }
+
   abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
   abstract drawWhitePostSelection(): void;
 
- select(sourceCanvas: HTMLCanvasElement, vertices: Vec2[]): void {
+  select(sourceCanvas: HTMLCanvasElement, vertices: Vec2[]): void {
     this.clearAndResetAllCanvas();
     this.initAllProperties(vertices);
     this.extractSelectionFromSource(sourceCanvas);
@@ -62,15 +79,23 @@ export abstract class SelectionHandlerService {
     this.drawACanvasOnAnother(this.selectionCanvas, this.originalCanvasCopyCtx);
   }
 
-  drawSelection(target: CanvasRenderingContext2D, positionOnTarget: Vec2): void {
-    if (!this.hasSelectionBeenManipulated(positionOnTarget)) {
+  /*quickDraw(previousSelection: HTMLCanvasElement, target: CanvasRenderingContext2D,  fixedTopLeft: Vec2, offset: Vec2, topLeftOnTarget: Vec2){
+    this.clearAndResetAllCanvas();
+    this.selectionCanvas = previousSelection;
+    this.fixedTopLeft = fixedTopLeft;
+    this.offset = offset;
+    this.drawSelection(target, topLeftOnTarget);
+  }*/
+
+  drawSelection(target: CanvasRenderingContext2D, topLeftOnTarget: Vec2): void {
+    if (!this.hasSelectionBeenManipulated(topLeftOnTarget)) {
       return;
     }
 
     if (this.needWhiteEllipsePostDrawing) {
       this.drawWhitePostSelection();
     }
-    this.drawACanvasOnAnother(this.selectionCanvas, target, { x: positionOnTarget.x - this.fixedTopLeft.x + this.offset.x, y: positionOnTarget.y - this.fixedTopLeft.y + this.offset.y });
+    this.drawACanvasOnAnother(this.selectionCanvas, target, { x: topLeftOnTarget.x - this.fixedTopLeft.x + this.offset.x, y: topLeftOnTarget.y - this.fixedTopLeft.y + this.offset.y });
   }
 
   resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
@@ -154,4 +179,62 @@ export abstract class SelectionHandlerService {
     }
     return this.hasBeenManipulated = (this.originalTopLeftOnBaseCanvas.x != topLeftOnTarget.x || this.originalTopLeftOnBaseCanvas.y != topLeftOnTarget.y);
   }
+
+  createMemento(): HandlerMemento {
+    let memento: HandlerMemento = new HandlerMemento();
+
+    memento.selectionCanvas = document.createElement('canvas');
+    memento.selectionCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D
+    memento.originalCanvasCopy = document.createElement('canvas');
+    memento.originalCanvasCopyCtx = this.originalCanvasCopy.getContext('2d') as CanvasRenderingContext2D;
+    memento.horizontalModificationCanvas = document.createElement('canvas');
+    memento.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
+    memento.verticalModificationCanvas = document.createElement('canvas');
+    memento.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D
+
+    memento.fixedTopLeft = this.fixedTopLeft;
+    memento.offset = this.offset;
+
+    memento.originalWidth = this.originalWidth;
+    memento.originalHeight = this.originalHeight;
+
+    memento.hasBeenManipulated = true;
+    memento.needWhiteEllipsePostDrawing = true;//////
+    memento.originalTopLeftOnBaseCanvas = this.originalTopLeftOnBaseCanvas;
+    memento.originalCenter = this.originalCenter;
+    memento.originalVertices = this.originalVertices;
+
+    this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx);
+    this.drawACanvasOnAnother(this.horizontalModificationCanvas, memento.horizontalModificationCtx);
+    this.drawACanvasOnAnother(this.verticalModificationCanvas, this.verticalModificationCtx);
+    this.drawACanvasOnAnother(this.originalCanvasCopy, this.originalCanvasCopyCtx);
+
+    return memento;
+  }
+
+  restoreFromMemento(memento: HandlerMemento) {
+    this.selectionCanvas = memento.selectionCanvas;
+    this.horizontalModificationCanvas = memento.horizontalModificationCanvas;
+    this.verticalModificationCanvas = memento.verticalModificationCanvas;
+    this.originalCanvasCopy = memento.originalCanvasCopy;
+
+    this.selectionCtx = memento.selectionCtx;
+    this.horizontalModificationCtx = memento.horizontalModificationCtx;
+    this.verticalModificationCtx = memento.verticalModificationCtx;
+    this.originalCanvasCopyCtx = memento.originalCanvasCopyCtx;
+
+    this.fixedTopLeft = memento.fixedTopLeft;
+    this.offset = memento.offset;
+
+    this.originalWidth = memento.originalWidth;
+    this.originalHeight = memento.originalHeight;
+
+    this.hasBeenManipulated = true;
+    this.needWhiteEllipsePostDrawing = true;//////
+    this.originalTopLeftOnBaseCanvas = memento.originalTopLeftOnBaseCanvas;
+
+    this.originalCenter = memento.originalCenter;
+    this.originalVertices = memento.originalVertices;
+  }
+
 }

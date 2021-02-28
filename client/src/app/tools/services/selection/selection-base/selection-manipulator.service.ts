@@ -7,6 +7,7 @@ import { SelectionService } from './selection.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { SelectionHandlerService } from './selection-handler.service';
+import { ManipulatorMemento } from '@app/app/classes/manipulatorMemento';
 
 export enum ResizingMode {
   off = 0,
@@ -55,7 +56,7 @@ export abstract class SelectionManipulatorService extends Tool {
   public isReversedX: boolean;
   public isReversedY: boolean;
 
-  public lastResizing: Vec2[] =[];
+  public lastResizing: Vec2[] = [];
 
   private arrowKeyDown: boolean[] = [false, false, false, false];
   private subscriptions: Array<Subscription>;
@@ -163,8 +164,8 @@ export abstract class SelectionManipulatorService extends Tool {
 
   initialize(topLeft: Vec2, bottomRight: Vec2) {
     this.resetProperties();
-    this.topLeft = {x: topLeft.x, y: topLeft.y};
-    this.bottomRight = {x: bottomRight.x, y: bottomRight.y};
+    this.topLeft = { x: topLeft.x, y: topLeft.y };
+    this.bottomRight = { x: bottomRight.x, y: bottomRight.y };
     this.computeDiagonalEquation();
   }
 
@@ -189,29 +190,29 @@ export abstract class SelectionManipulatorService extends Tool {
     if (direction === ResizingMode.towardsBottom || direction == ResizingMode.towardsBottomRight || direction == ResizingMode.towardsBottomLeft) {
       this.bottomRight.y = newPos.y;
       this.isReversedY = newPos.y < this.topLeft.y;
-      this.lastResizing[2] = {x: this.topLeft.x, y: this.topLeft.y}; //////////////////FOR TESTING PURPOSES/////////////////////
-      this.lastResizing[3]= newPos;//////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[2] = { x: this.topLeft.x, y: this.topLeft.y }; //////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[3] = newPos;//////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.resizeSelection(this.topLeft, newPos, false);
     }
     if (direction === ResizingMode.towardsTop || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsTopLeft) {
       this.topLeft.y = newPos.y;
       this.isReversedY = newPos.y > this.bottomRight.y;
       this.lastResizing[2] = newPos; //////////////////FOR TESTING PURPOSES/////////////////////
-      this.lastResizing[3]= {x: this.bottomRight.x, y: this.bottomRight.y};//////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[3] = { x: this.bottomRight.x, y: this.bottomRight.y };//////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.resizeSelection(newPos, this.bottomRight, false);
     }
     if (direction === ResizingMode.towardsRight || direction == ResizingMode.towardsTopRight || direction == ResizingMode.towardsBottomRight) {
       this.bottomRight.x = newPos.x;
       this.isReversedX = newPos.x < this.topLeft.x;
-      this.lastResizing[4] = {x: this.topLeft.x, y: this.topLeft.y}; //////////////////FOR TESTING PURPOSES/////////////////////
-      this.lastResizing[5]= newPos;//////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[4] = { x: this.topLeft.x, y: this.topLeft.y }; //////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[5] = newPos;//////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.resizeSelection(this.topLeft, newPos, true);
     }
     if (direction === ResizingMode.towardsLeft || direction == ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
       this.topLeft.x = newPos.x;
       this.isReversedX = newPos.x > this.bottomRight.x;
       this.lastResizing[4] = newPos; //////////////////FOR TESTING PURPOSES/////////////////////
-      this.lastResizing[5]= {x: this.bottomRight.x, y: this.bottomRight.y};//////////////////FOR TESTING PURPOSES/////////////////////
+      this.lastResizing[5] = { x: this.bottomRight.x, y: this.bottomRight.y };//////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.resizeSelection(newPos, this.bottomRight, true);
     }
 
@@ -225,7 +226,7 @@ export abstract class SelectionManipulatorService extends Tool {
     this.drawingService.clearCanvas(this.drawingService.previewCtx);
     if (needDrawSelection) {
       //////////////////FOR TESTING PURPOSES/////////////////////
-      this.selectionService.actions.push(this.lastResizing[2], this.lastResizing[3],this.lastResizing[4], this.lastResizing[5], {x:this.topLeft.x, y: this.topLeft.y});
+      this.selectionService.actions.push(this.lastResizing[2], this.lastResizing[3], this.lastResizing[4], this.lastResizing[5], { x: this.topLeft.x, y: this.topLeft.y });
       //////////////////FOR TESTING PURPOSES/////////////////////
       this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
     }
@@ -331,5 +332,28 @@ export abstract class SelectionManipulatorService extends Tool {
     this.isShiftDown = false;
     this.isReversedY = false;
     this.isReversedX = false;
+  }
+
+  createMemento(): ManipulatorMemento {
+    let memento: ManipulatorMemento = new ManipulatorMemento();
+    memento.topLeft = this.topLeft;
+    memento.bottomRight = this.bottomRight;
+    memento.diagonalSlope = this.diagonalSlope;
+    memento.diagonalYIntercept = this.diagonalYIntercept;
+    memento.mouseLastPos = this.mouseLastPos;
+    memento.isReversedX = this.isReversedX;
+    memento.isReversedY = this.isReversedY;
+    return memento;
+  }
+
+  restoreFromMemento(memento: ManipulatorMemento) {
+    this.topLeft = memento.topLeft;
+    this.bottomRight = memento.bottomRight;
+    this.diagonalSlope = memento.diagonalSlope;
+    this.diagonalYIntercept = memento.diagonalYIntercept;
+    this.mouseLastPos = memento.mouseLastPos;
+    this.isReversedX = memento.isReversedX;
+    this.isReversedY = memento.isReversedY;
+    return memento;
   }
 }
