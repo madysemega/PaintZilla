@@ -36,26 +36,17 @@ export class DrawingService {
     }
 
     fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number, colour: string): void {
-        ctx.beginPath();
-        ctx.rect(0, 0, width, height);
         ctx.fillStyle = colour;
-        ctx.fill();
-        ctx.closePath();
+        ctx.fillRect(0, 0, width, height);
     }
 
     updateCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
-        this.canvas.style.backgroundColor = Constants.PREVIEW_CTX_COLOR;
-        this.previewCanvas.style.backgroundColor = Constants.CTX_COLOR;
-        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
-        this.fillCanvas(this.previewCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
-        this.canvas.style.backgroundColor = Constants.CTX_COLOR;
-        this.previewCanvas.style.backgroundColor = Constants.PREVIEW_CTX_COLOR;
-        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
         this.fillCanvas(this.previewCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
+        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 }
