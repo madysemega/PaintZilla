@@ -72,7 +72,10 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyDown(event: KeyboardEvent): void {
-
+        if (event.key === 'Escape') {
+            this.resetProperties();
+            this.stopManipulatingSelection();
+        }
         //////////////////FOR TESTING PURPOSES/////////////////////
         if (event.key == 'k') {
             this.selectionHandler.restoreFromMemento(this.selectionService.memento);
@@ -96,6 +99,8 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
+
+
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onKeyUp(event);
             return;
