@@ -21,7 +21,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     constructor(drawingService: DrawingService, protected selectionManipulatorService: SelectionManipulatorService, protected selectionHandler: SelectionHandlerService, protected selectionService: SelectionService) {
         super(drawingService);
-        this.key = 'ellipse-selection';
     }
 
     abstract drawSelectionOutline(endPoint: Vec2): void;

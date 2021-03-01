@@ -22,6 +22,14 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
     }
     this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
   }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.ctrlKey && event.key==='a') {
+      this.createSelection({x:0, y:0}, {x: this.drawingService.canvasSize.x, y: this.drawingService.canvasSize.y});
+      return;
+    }
+    super.onKeyDown(event);
+}
 }
 
 

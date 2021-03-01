@@ -222,7 +222,7 @@ import { EllipseSelectionManipulatorService  } from '@app/tools/services/selecti
 })
 export class EllipseSelectionCreatorService extends SelectionCreatorService {
 
-    constructor(drawingService: DrawingService, selectionManipulatorService: EllipseSelectionManipulatorService, selectionHandler: EllipseSelectionHandlerService, protected selectionService: EllipseSelectionHelperService) {
+    constructor(drawingService: DrawingService, selectionManipulatorService: EllipseSelectionManipulatorService, selectionHandler: EllipseSelectionHandlerService,  protected selectionService: EllipseSelectionHelperService) {
         super(drawingService, selectionManipulatorService, selectionHandler, selectionService);
         this.key = 'ellipse-selection';
     }
