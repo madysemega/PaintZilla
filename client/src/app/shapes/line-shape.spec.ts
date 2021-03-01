@@ -171,4 +171,17 @@ describe('LineShape', () => {
             expect(obtainedMagnitude).toEqual(expectedMagnitude);
         }
     });
+
+    it('clone should return a shape with the same vertex positions', () => {
+        vertices.push({ x: 0, y: 0 });
+        vertices.push({ x: 0, y: 20 });
+        vertices.push({ x: 20, y: 20 });
+
+        const clonedShape = lineShape.clone() as LineShape;
+
+        clonedShape.vertices.forEach((vertex, index) => {
+            expect(vertex.x).toEqual(vertices[index].x);
+            expect(vertex.y).toEqual(vertices[index].y);
+        });
+    })
 });

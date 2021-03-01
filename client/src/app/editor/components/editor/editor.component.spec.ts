@@ -39,7 +39,7 @@ describe('EditorComponent', () => {
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
-    let historyServiceStub: HistoryService;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let keyboardZEvent: KeyboardEvent;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
@@ -53,7 +53,7 @@ describe('EditorComponent', () => {
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
-        historyServiceStub = new HistoryService();
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
         drawingStub = new DrawingService(historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
 
@@ -71,6 +71,7 @@ describe('EditorComponent', () => {
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: HistoryService, useValue: historyServiceStub },
                 { provide: ToolSelectorService },
                 { provide: ColourToolService },
                 { provide: EllipseService },
@@ -131,5 +132,25 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it('Ctrl+Z should call history service undo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: false,
+            key: 'Z'
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.undo).toHaveBeenCalled();
+    });
+
+    it('Ctrl+Shift+Z should call history service redo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: true,
+            key: 'Z'
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.redo).toHaveBeenCalled();
     });
 });
