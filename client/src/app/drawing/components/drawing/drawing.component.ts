@@ -33,8 +33,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
-        this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
-        this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
+        this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+        this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
     }
 
     @HostListener('document:mousemove', ['$event'])

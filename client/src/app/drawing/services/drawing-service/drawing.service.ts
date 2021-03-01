@@ -13,6 +13,7 @@ export class DrawingService {
     previewCanvas: HTMLCanvasElement;
     canvasIsEmpty: boolean = true;
     canvasSize: Vec2;
+    canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
     setCursorType(type: CursorType): void {
         if (this.previewCanvas) {
@@ -34,23 +35,27 @@ export class DrawingService {
         return this.canvasIsEmpty;
     }
 
-    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): void {
+    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number, colour: string): void {
         ctx.beginPath();
         ctx.rect(0, 0, width, height);
-        ctx.fillStyle = Constants.CTX_COLOR;
+        ctx.fillStyle = colour;
         ctx.fill();
         ctx.closePath();
     }
 
     updateCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
-        this.canvas.style.background = Constants.PREVIEW_CTX_COLOR;
-        this.previewCanvas.style.background = Constants.CTX_COLOR;
+        this.canvas.style.backgroundColor = Constants.PREVIEW_CTX_COLOR;
+        this.previewCanvas.style.backgroundColor = Constants.CTX_COLOR;
+        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
+        this.fillCanvas(this.previewCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
-        this.canvas.style.background = Constants.CTX_COLOR;
-        this.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
+        this.canvas.style.backgroundColor = Constants.CTX_COLOR;
+        this.previewCanvas.style.backgroundColor = Constants.PREVIEW_CTX_COLOR;
+        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
+        this.fillCanvas(this.previewCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
     }
 }
