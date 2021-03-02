@@ -31,7 +31,7 @@ drawSelectionEllipse(center: Vec2, radii: Vec2): void{
     ctx.restore();
 }
 
-drawPostSelectionEllipse(center: Vec2, radii: Vec2){
+drawPostSelectionEllipse(center: Vec2, radii: Vec2): void{
     let ctx : CanvasRenderingContext2D = this.drawingService.baseCtx;
     let radiiCopy = {x:radii.x, y:radii.y};
     ctx.save();

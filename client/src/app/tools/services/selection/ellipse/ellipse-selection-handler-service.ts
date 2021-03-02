@@ -22,7 +22,7 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
     super(drawingService, selectionService);
   }
 
-  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement) {
+  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
     let originalRadii: Vec2 = {x: this.originalWidth/2, y: this.originalHeight/2};
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
@@ -34,7 +34,7 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
     this.selectionCtx.restore();
   }
 
- drawWhitePostSelection() {
+ drawWhitePostSelection(): void {
     let originalRadii: Vec2 = {x: this.originalWidth/2, y: this.originalHeight/2};
     this.selectionService.drawPostSelectionEllipse(this.originalCenter, originalRadii);
   }

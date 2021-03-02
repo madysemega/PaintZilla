@@ -141,7 +141,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         this.selectionManipulatorService.initialize(startPoint, endPoint);
     }
 
-    stopManipulatingSelection() {
+    stopManipulatingSelection(): void {
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.stopManipulation(true);
             this.selectionService.setIsSelectionBeingManipulated(false);
@@ -150,7 +150,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         this.selectionManipulatorService.stopManipulation(false);
     }
 
-    convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2) {
+    convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2): void {
         let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
 
         if (startPoint.x > endPoint.x) {
@@ -196,7 +196,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         }
     }
 
-    resetProperties() {
+    resetProperties(): void {
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
         this.mouseDown = false;

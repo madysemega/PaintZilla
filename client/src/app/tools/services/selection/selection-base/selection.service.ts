@@ -13,7 +13,7 @@ export abstract class SelectionService {
   public isSelectionBeingManipulated: BehaviorSubject<boolean>; 
 
   public memento: HandlerMemento; //////////////////FOR TESTING PURPOSES/////////////////////
-  public where: Vec2;
+  public where: Vec2; //////////////////FOR TESTING PURPOSES/////////////////////
 
   constructor(protected drawingService : DrawingService, protected colourService: ColourToolService) { 
     this.isSelectionBeingManipulated =  new BehaviorSubject<boolean>(false);
@@ -59,7 +59,7 @@ export abstract class SelectionService {
 }
 
 
-setIsSelectionBeingManipulated(isItBeingManipulated: boolean) {
+setIsSelectionBeingManipulated(isItBeingManipulated: boolean): void {
   this.isSelectionBeingManipulated.next(isItBeingManipulated);
 }
 
@@ -100,6 +100,5 @@ convertToMovement(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
   const mouseMovement: Vec2 = { x: mousePos.x - mouseDownLastPos.x, y: mousePos.y - mouseDownLastPos.y }
   return mouseMovement;
 }
-
 }
 

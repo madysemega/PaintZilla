@@ -120,7 +120,7 @@ export abstract class SelectionHandlerService {
     this.updateVerticalOffset(newlength);
   }
 
-  transform(contextToTransform: CanvasRenderingContext2D, scaling: number, isHorizontal: boolean) {
+  transform(contextToTransform: CanvasRenderingContext2D, scaling: number, isHorizontal: boolean): void {
     contextToTransform.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
     if (isHorizontal) {
       contextToTransform.transform(scaling, 0, 0, 1, 0, 0);
@@ -131,7 +131,7 @@ export abstract class SelectionHandlerService {
     contextToTransform.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
   }
 
-  drawACanvasOnAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, topLeftOnTarget?: Vec2) {
+  drawACanvasOnAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, topLeftOnTarget?: Vec2): void {
     let definedPosition: Vec2;
     if (topLeftOnTarget == undefined) {
       definedPosition = { x: 0, y: 0 };
@@ -145,7 +145,7 @@ export abstract class SelectionHandlerService {
     target.closePath();
   }
 
-  overwriteACanvasWithAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontalResizing: boolean) {
+  overwriteACanvasWithAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontalResizing: boolean): void {
     this.drawingService.clearCanvas(target);
     target.beginPath();
     this.transform(target, scaling, isHorizontalResizing);
@@ -163,7 +163,7 @@ export abstract class SelectionHandlerService {
     this.offset.y = (newHeight - this.originalHeight) / 2;
   }
 
-  clearAndResetAllCanvas() { //changing canvas size clears it
+  clearAndResetAllCanvas(): void { //changing canvas size clears it
     this.selectionCanvas.width = this.drawingService.canvas.width;
     this.selectionCanvas.height = this.drawingService.canvas.height;
     this.originalCanvasCopy.width = this.drawingService.canvas.width;
@@ -203,7 +203,7 @@ export abstract class SelectionHandlerService {
     return memento;
   }
 
-  restoreFromMemento(memento: HandlerMemento) {
+  restoreFromMemento(memento: HandlerMemento): void {
     this.selectionCanvas = memento.selectionCanvas;
     this.horizontalModificationCanvas = memento.horizontalModificationCanvas;
     this.verticalModificationCanvas = memento.verticalModificationCanvas;

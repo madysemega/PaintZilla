@@ -21,7 +21,7 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     super(drawingService, selectionService);
   }
 
-  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement) {
+  extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
     this.selectionCtx.save();
     this.selectionCtx.beginPath();
     this.selectionCtx.rect(this.fixedTopLeft.x, this.fixedTopLeft.y, this.originalWidth, this.originalHeight);
@@ -32,7 +32,7 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     this.selectionCtx.restore();
   }
 
-  drawWhitePostSelection() {
+  drawWhitePostSelection(): void {
     this.selectionService.drawPostSelectionRectangle(this.originalTopLeftOnBaseCanvas, this.originalWidth, this.originalHeight);
   }
 }
