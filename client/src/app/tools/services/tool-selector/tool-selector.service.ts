@@ -116,7 +116,6 @@ export class ToolSelectorService {
             keyboardShortcut: 'l',
             tool: lineService,
         });
-
         this.tools.set(rectangleSelectionCreatorService.key, {
             displayName: 'Sélection par rectangle',
             icon: 'rectangle-selection',

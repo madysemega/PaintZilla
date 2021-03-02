@@ -14,12 +14,20 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
+import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
+import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
+import { RectangleSelectionHandlerService } from '@app/tools/services/selection/rectangle/rectangle-selection-handler.service';
+import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
+import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
 
@@ -34,10 +42,21 @@ describe('SidebarComponent', () => {
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
+    
     let pencilStoolStub: PencilService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
+    let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
+    let ellipseSelectionManipulatorService: EllipseSelectionManipulatorService;
+    let ellipseSelectionHelperService: EllipseSelectionHelperService;
+    let ellipseSelectionCreatorService: EllipseSelectionCreatorService;
+
+    let rectangleSelectionHandlerService: RectangleSelectionHandlerService;
+    let rectangleSelectionManipulatorService: RectangleSelectionManipulatorService;
+    let rectangleSelectionHelperService: RectangleSelectionHelperService;
+    let rectangleSelectionCreatorService: RectangleSelectionCreatorService;
+    
     class RectangleServiceStub extends RectangleService {
         constructor(drawingService: DrawingService, colourService: ColourToolService) {
             super(drawingService, colourService);
@@ -63,7 +82,18 @@ describe('SidebarComponent', () => {
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
+        
+        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub);
+        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(drawingStub, ellipseSelectionHelperService, ellipseSelectionHandlerService);
+        ellipseSelectionCreatorService = new EllipseSelectionCreatorService(drawingStub, ellipseSelectionManipulatorService, ellipseSelectionHandlerService, ellipseSelectionHelperService);
+
+        rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub);
+        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService);
+        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService);
+        rectangleSelectionCreatorService = new RectangleSelectionCreatorService(drawingStub, rectangleSelectionManipulatorService, rectangleSelectionHandlerService, rectangleSelectionHelperService);
+
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub, ellipseSelectionCreatorService, rectangleSelectionCreatorService);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],
@@ -89,6 +119,14 @@ describe('SidebarComponent', () => {
                 { provide: LineService },
                 { provide: PencilService },
                 { provide: RectangleService },
+                { provide: EllipseSelectionHandlerService },
+                { provide: EllipseSelectionManipulatorService },
+                { provide: EllipseSelectionHelperService },
+                { provide: EllipseSelectionCreatorService },
+                { provide: RectangleSelectionHandlerService },
+                { provide: RectangleSelectionManipulatorService },
+                { provide: RectangleSelectionHelperService },
+                { provide: RectangleSelectionCreatorService },
             ],
         })
             .overrideModule(MatIconModule, {

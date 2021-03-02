@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EllipseSelectionRendererService } from './ellipse-selection-handler-service';
+import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 
 describe('SelectionRendererService', () => {
-    let service: EllipseSelectionRendererService;
+    let service: EllipseSelectionHandlerService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(EllipseSelectionRendererService);
+        service = TestBed.inject(EllipseSelectionHandlerService);
     });
 
     it('should be created', () => {
