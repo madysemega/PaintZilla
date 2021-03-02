@@ -8,6 +8,7 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 import { HistoryService } from '@app/history/service/history.service';
 
 // tslint:disable:max-file-line-count
+// tslint:disable:no-string-literal
 describe('ResizingService', () => {
     let service: ResizingService;
     let historyServiceStub: HistoryService;
@@ -342,7 +343,7 @@ describe('ResizingService', () => {
 
         service.finalizeResizingEvent();
 
-        expect(historyServiceStub.past.length).toEqual(1);
+        expect(historyServiceStub['past'].length).toEqual(1);
     });
 
     it('history undo should reset canvas dimensions', () => {

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { IUserAction } from '@app/history/user-actions/user-action';
 import { HistoryService } from './history.service';
 
+// tslint:disable:no-string-literal
 describe('HistoryService', () => {
     let service: HistoryService;
 
@@ -47,7 +48,7 @@ describe('HistoryService', () => {
     it('do should register and apply a user action', () => {
         service.do(userActions[0]);
         expect(userActions[0].apply).toHaveBeenCalled();
-        expect(service.past[0]).toBe(userActions[0]);
+        expect(service['past'][0]).toBe(userActions[0]);
     });
 
     it('undo should call all callbacks registered with onUndo if there are registered user actions', () => {
