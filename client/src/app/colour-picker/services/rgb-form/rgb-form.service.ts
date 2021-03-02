@@ -8,20 +8,23 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 })
 export class RgbaFormService {
     rgbaFormGroup: FormGroup;
+    isTyping: boolean = false;
     constructor(private colourPickerService: ColourPickerService) {}
 
     updateRgbForm(colour: Colour): void {
-        // tslint:disable-next-line: radix
-        this.rgbaFormGroup.controls.redForm.setValue(Colour.toHex(parseInt(colour.getRed().toString())), { emitEvent: false });
-        this.rgbaFormGroup.controls.redForm.markAsTouched();
-        // tslint:disable-next-line: radix
-        this.rgbaFormGroup.controls.greenForm.setValue(Colour.toHex(parseInt(colour.getGreen().toString())), { emitEvent: false });
-        this.rgbaFormGroup.controls.greenForm.markAsTouched();
-        // tslint:disable-next-line: radix
-        this.rgbaFormGroup.controls.blueForm.setValue(Colour.toHex(parseInt(colour.getBlue().toString())), { eventEmit: false });
-        this.rgbaFormGroup.controls.blueForm.markAsTouched();
-        this.rgbaFormGroup.controls.alphaForm.setValue((colour.getAlpha() * Constants.PERCENTAGE).toString(), { eventEmit: false });
-        this.rgbaFormGroup.controls.alphaForm.markAsTouched();
+        if (!this.isTyping) {
+            // tslint:disable-next-line: radix
+            this.rgbaFormGroup.controls.redForm.setValue(Colour.toHex(parseInt(colour.getRed().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.redForm.markAsTouched();
+            // tslint:disable-next-line: radix
+            this.rgbaFormGroup.controls.greenForm.setValue(Colour.toHex(parseInt(colour.getGreen().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.greenForm.markAsTouched();
+            // tslint:disable-next-line: radix
+            this.rgbaFormGroup.controls.blueForm.setValue(Colour.toHex(parseInt(colour.getBlue().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.blueForm.markAsTouched();
+            this.rgbaFormGroup.controls.alphaForm.setValue((colour.getAlpha() * Constants.PERCENTAGE).toString(), { emitEvent: false });
+            this.rgbaFormGroup.controls.alphaForm.markAsTouched();
+        }
     }
 
     updateColourComponents(): void {

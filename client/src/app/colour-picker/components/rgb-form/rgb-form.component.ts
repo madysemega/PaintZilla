@@ -10,17 +10,18 @@ import { combineLatest, Subscription } from 'rxjs';
     styleUrls: ['./rgb-form.component.scss'],
 })
 export class RgbFormComponent implements OnInit, OnDestroy {
-    rgbaFormGroup: FormGroup = new FormGroup({
-        redForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-        greenForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-        blueForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-        alphaForm: new FormControl('100', [Validators.required, Validators.pattern(RegularExpressions.ALPHA_FORM_REGEX)]),
-    });
+    rgbaFormGroup: FormGroup;
     private colourSubscription: Subscription;
     private rgbaFormSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private rgbaFormService: RgbaFormService) {}
 
     ngOnInit(): void {
+        this.rgbaFormGroup = new FormGroup({
+            redForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+            greenForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+            blueForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+            alphaForm: new FormControl('100', [Validators.required, Validators.pattern(RegularExpressions.ALPHA_FORM_REGEX)]),
+        });
         this.rgbaFormService.rgbaFormGroup = this.rgbaFormGroup;
         this.colourSubscription = combineLatest([
             this.colourPickerService.hueObservable,
@@ -33,7 +34,9 @@ export class RgbFormComponent implements OnInit, OnDestroy {
         });
 
         this.rgbaFormSubscription = this.rgbaFormGroup.valueChanges.subscribe(() => {
+            this.rgbaFormService.isTyping = true;
             this.rgbaFormService.updateColourComponents();
+            this.rgbaFormService.isTyping = false;
         });
     }
     ngOnDestroy(): void {
