@@ -6,7 +6,6 @@ import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.compon
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
-import { MaterialModule } from '@app/material.module';
 import { Tool } from '@app/tools/classes/tool';
 import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
 import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
@@ -56,7 +55,7 @@ describe('EditorComponent', () => {
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [],
             declarations: [
                 DrawingComponent,
                 SidebarComponent,
