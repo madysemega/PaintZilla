@@ -3,14 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { EllipseSelectionRendererService } from './ellipse-selection-handler-service';
 
 describe('SelectionRendererService', () => {
-  let service: EllipseSelectionRendererService;
+    let service: EllipseSelectionRendererService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(EllipseSelectionRendererService);
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(EllipseSelectionRendererService);
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
 });

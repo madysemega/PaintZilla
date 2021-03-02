@@ -136,18 +136,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
             y: (startPoint.y + endPoint.y) / 2,
         };
 
-        
-
         const radii: Vec2 = {
             x: Math.abs(endPoint.x - startPoint.x) / 2,
             y: Math.abs(endPoint.y - startPoint.y) / 2,
         };
 
-        if(this.shapeType != ShapeType.Filled){
-            radii.x -= this.lineWidth/2;
-            radii.y -= this.lineWidth/2;
-            radii.x = radii.x <0? 0 : radii.x;
-            radii.y = radii.y <0? 0: radii.y;
+        if (this.shapeType !== ShapeType.Filled) {
+            radii.x -= this.lineWidth / 2;
+            radii.y -= this.lineWidth / 2;
+            radii.x = radii.x < 0 ? 0 : radii.x;
+            radii.y = radii.y < 0 ? 0 : radii.y;
         }
 
         ctx.save();

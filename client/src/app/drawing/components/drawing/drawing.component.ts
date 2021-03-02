@@ -7,7 +7,6 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
-
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
@@ -50,7 +49,7 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (!this.resizingService.isResizing()) { 
+        if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
         }
     }
@@ -60,7 +59,7 @@ export class DrawingComponent implements AfterViewInit {
         if (this.resizingService.isResizing()) {
             this.wasResizing = true;
             this.resizingService.disableResizer();
-        } 
+        }
     }
 
     @HostListener('click', ['$event'])
@@ -111,8 +110,8 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     activateResizer(button: string): void {
-        let creator: SelectionCreatorService|undefined = this.toolSelector.getActiveSelectionTool();
-        if(creator!=undefined){
+        const creator: SelectionCreatorService | undefined = this.toolSelector.getActiveSelectionTool();
+        if (creator != undefined) {
             (creator as SelectionCreatorService).stopManipulatingSelection();
         }
         this.resizingService.activateResizer(button);

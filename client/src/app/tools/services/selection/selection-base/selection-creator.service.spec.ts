@@ -3,14 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { SelectionCreatorService } from './selection-creator.service';
 
 describe('SelectionCreatorService', () => {
-  let service: SelectionCreatorService;
+    let service: SelectionCreatorService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SelectionCreatorService);
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(SelectionCreatorService);
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
 });

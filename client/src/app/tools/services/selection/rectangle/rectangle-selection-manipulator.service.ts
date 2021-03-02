@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 import { RectangleSelectionHandlerService } from './rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
-import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
-export class RectangleSelectionManipulatorService extends SelectionManipulatorService{
+export class RectangleSelectionManipulatorService extends SelectionManipulatorService {
+    constructor(
+        drawingService: DrawingService,
+        protected selectionService: RectangleSelectionHelperService,
+        selectionHandler: RectangleSelectionHandlerService,
+    ) {
+        super(drawingService, selectionService, selectionHandler);
+    }
 
-  constructor(drawingService: DrawingService, protected selectionService: RectangleSelectionHelperService, selectionHandler: RectangleSelectionHandlerService) { 
-    super(drawingService, selectionService, selectionHandler);
-  }
-
-  drawSelectionOutline(): void {
-    this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, this.isShiftDown);
-}
+    drawSelectionOutline(): void {
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, this.isShiftDown);
+    }
 }

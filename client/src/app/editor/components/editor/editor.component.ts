@@ -18,7 +18,7 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        if(event.ctrlKey && event.key ==='a'){
+        if (event.ctrlKey && event.key === 'a') {
             this.toolSelector.selectTool('rectangle-selection');
         }
         this.toolSelector.getSelectedTool().onKeyDown(event);

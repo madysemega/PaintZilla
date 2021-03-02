@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service'
-import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
-import { SelectionHandlerService } from './selection-handler.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { SelectionHandlerService } from './selection-handler.service';
 import { SelectionService } from './selection.service';
 
 @Injectable({
@@ -19,7 +19,12 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     protected isShiftDown: boolean;
 
-    constructor(drawingService: DrawingService, protected selectionManipulatorService: SelectionManipulatorService, protected selectionHandler: SelectionHandlerService, protected selectionService: SelectionService) {
+    constructor(
+        drawingService: DrawingService,
+        protected selectionManipulatorService: SelectionManipulatorService,
+        protected selectionHandler: SelectionHandlerService,
+        protected selectionService: SelectionService,
+    ) {
         super(drawingService);
     }
 
@@ -76,12 +81,12 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
             this.resetProperties();
             this.stopManipulatingSelection();
         }
-        //////////////////FOR TESTING PURPOSES/////////////////////
-        if (event.key == 'k') {
+        ////////////////// FOR TESTING PURPOSES/////////////////////
+        if (event.key === 'k') {
             this.selectionHandler.restoreFromMemento(this.selectionService.memento);
             this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.selectionService.where);
         }
-        //////////////////FOR TESTING PURPOSES/////////////////////
+        ////////////////// FOR TESTING PURPOSES/////////////////////
 
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onKeyDown(event);
@@ -99,8 +104,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
-
-
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onKeyUp(event);
             return;
@@ -132,7 +135,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
         this.convertToTopLeftAndBottomRight(startPoint, endPoint);
 
-        let vertices: Vec2[] = [];
+        const vertices: Vec2[] = [];
         vertices.push(startPoint);
         vertices.push(endPoint);
         this.selectionHandler.select(this.drawingService.canvas, vertices);
@@ -151,7 +154,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2): void {
-        let startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
+        const startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
 
         if (startPoint.x > endPoint.x) {
             startPoint.x = endPoint.x;
@@ -164,7 +167,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     registerMousePosition(mousePos: Vec2, isStartPoint: boolean): void {
-        this.lastMousePosition = mousePos
+        this.lastMousePosition = mousePos;
 
         if (isStartPoint) {
             this.mouseDownCoord = mousePos;
@@ -181,7 +184,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     adjustPositionToStayInCanvas(mousePos: Vec2): void {
-        let canvasSize: Vec2 = this.drawingService.canvasSize;
+        const canvasSize: Vec2 = this.drawingService.canvasSize;
         if (mousePos.x < 0) {
             mousePos.x = 0;
         }
