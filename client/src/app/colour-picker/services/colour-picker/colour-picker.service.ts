@@ -85,11 +85,11 @@ export class ColourPickerService {
     setCurrentColour(colour: Colour): void {
         if (!this.currentColour.equals(colour)) {
             this.currentColour = colour.clone();
-            // const hsv = colour.rgbToHsv();
-            // this.hueSubject.next(hsv[Constants.HUE_INDEX]);
-            // this.saturationSubject.next(hsv[Constants.SATURATION_INDEX] / Constants.PERCENTAGE);
-            // this.valueSubject.next(hsv[Constants.VALUE_INDEX] / Constants.PERCENTAGE);
-            // this.alphaSubject.next(colour.getAlpha());
+            const hsv = colour.rgbToHsv();
+            this.hueSubject.next(hsv[Constants.HUE_INDEX]);
+            this.saturationSubject.next(hsv[Constants.SATURATION_INDEX] / Constants.PERCENTAGE);
+            this.valueSubject.next(hsv[Constants.VALUE_INDEX] / Constants.PERCENTAGE);
+            this.alphaSubject.next(colour.getAlpha());
         }
     }
 }
