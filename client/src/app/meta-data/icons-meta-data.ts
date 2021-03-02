@@ -55,6 +55,10 @@ export class IconsMetaData {
                 name: 'plus-sign',
                 path: '../assets/icons/plus-sign.svg',
             },
+            {
+                name: 'polygon-shape',
+                path: '../assets/icons/polygon-shape.svg',
+            },
         ];
     }
 }

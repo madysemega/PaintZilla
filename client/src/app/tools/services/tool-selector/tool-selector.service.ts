@@ -7,6 +7,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -73,6 +74,7 @@ export class ToolSelectorService {
         ellipseService: EllipseService,
         rectangleService: RectangleService,
         lineService: LineService,
+        polygonService: PolygonService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
@@ -103,6 +105,12 @@ export class ToolSelectorService {
             icon: 'pencil-with-line',
             keyboardShortcut: 'l',
             tool: lineService,
+        });
+        this.tools.set(polygonService.key, {
+            displayName: 'Polygon',
+            icon: 'polygon-shape',
+            keyboardShortcut: '3',
+            tool: polygonService,
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
