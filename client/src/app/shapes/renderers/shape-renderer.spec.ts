@@ -31,7 +31,7 @@ class StubShape extends Shape {
 
 class StubShapeRenderer extends ShapeRenderer<Shape> {
     draw(ctx: CanvasRenderingContext2D): void {}
-    
+
     clone(): ShapeRenderer<Shape> {
         return new StubShapeRenderer(this.getShapeCopy(), this.getPropertiesCopy());
     }

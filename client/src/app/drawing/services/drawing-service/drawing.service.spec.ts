@@ -5,6 +5,7 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
 import { DrawingService } from './drawing.service';
 
+// tslint:disable:no-any
 describe('DrawingService', () => {
     let service: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
@@ -19,9 +20,7 @@ describe('DrawingService', () => {
     beforeEach(() => {
         historyServiceStub = new HistoryService();
         TestBed.configureTestingModule({
-            providers: [
-                { provide: HistoryService, useValue: historyServiceStub }
-            ]
+            providers: [{ provide: HistoryService, useValue: historyServiceStub }],
         });
         service = TestBed.inject(DrawingService);
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -87,7 +86,7 @@ describe('DrawingService', () => {
     it('history service undo should restore canvas style and clear canvas', () => {
         historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
         historyServiceStub.undo();
-        
+
         expect(restoreCanvasStyleStub).toHaveBeenCalled();
         expect(clearCanvasStub).toHaveBeenCalledTimes(2);
     });

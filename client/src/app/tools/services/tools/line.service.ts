@@ -159,9 +159,9 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.historyService.do(
             new UserActionRenderShape(
-                this.lineType === LineType.WITH_JOINTS ?
-                    [this.lineShapeRenderer.clone(), this.lineJointsRenderer.clone()] :
-                    [this.lineShapeRenderer.clone()],
+                this.lineType === LineType.WITH_JOINTS
+                    ? [this.lineShapeRenderer.clone(), this.lineJointsRenderer.clone()]
+                    : [this.lineShapeRenderer.clone()],
                 this.drawingService.baseCtx,
             ),
         );

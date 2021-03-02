@@ -138,7 +138,7 @@ describe('EditorComponent', () => {
         const keyboardEvent = {
             ctrlKey: true,
             shiftKey: false,
-            key: 'Z'
+            key: 'Z',
         } as KeyboardEvent;
         component.onKeyUp(keyboardEvent);
         expect(historyServiceStub.undo).toHaveBeenCalled();
@@ -148,7 +148,7 @@ describe('EditorComponent', () => {
         const keyboardEvent = {
             ctrlKey: true,
             shiftKey: true,
-            key: 'Z'
+            key: 'Z',
         } as KeyboardEvent;
         component.onKeyUp(keyboardEvent);
         expect(historyServiceStub.redo).toHaveBeenCalled();

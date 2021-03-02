@@ -6,7 +6,7 @@ export abstract class ShapeRenderer<ShapeType extends Shape> implements ICloneab
     abstract draw(ctx: CanvasRenderingContext2D): void;
 
     constructor(protected shape: ShapeType, private properties: ShapeProperty[]) {}
-    
+
     render(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         this.properties.forEach((property) => property.apply(ctx));
@@ -19,13 +19,13 @@ export abstract class ShapeRenderer<ShapeType extends Shape> implements ICloneab
     }
 
     protected getPropertiesCopy(): ShapeProperty[] {
-        let clonedProperties = new Array<ShapeProperty>();
+        const clonedProperties = new Array<ShapeProperty>();
 
         this.properties.forEach((property) => {
             const clone = property.clone();
             clonedProperties.push(clone);
         });
-        
+
         return clonedProperties;
     }
 

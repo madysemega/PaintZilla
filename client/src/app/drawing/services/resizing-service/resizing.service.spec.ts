@@ -7,6 +7,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 
+// tslint:disable:max-file-line-count
 describe('ResizingService', () => {
     let service: ResizingService;
     let historyServiceStub: HistoryService;
@@ -23,7 +24,7 @@ describe('ResizingService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: HistoryService, useValue: historyServiceStub },
-            ]
+            ],
         }).compileComponents();
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         drawingServiceStub = TestBed.inject(DrawingService);
@@ -338,10 +339,10 @@ describe('ResizingService', () => {
     it('finalizeResizingEvent should create, apply and register a user action', () => {
         spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
-        
+
         service.finalizeResizingEvent();
 
-        expect(historyServiceStub['past'].length).toEqual(1);
+        expect(historyServiceStub.past.length).toEqual(1);
     });
 
     it('history undo should reset canvas dimensions', () => {

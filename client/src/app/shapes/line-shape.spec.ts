@@ -183,5 +183,5 @@ describe('LineShape', () => {
             expect(vertex.x).toEqual(vertices[index].x);
             expect(vertex.y).toEqual(vertices[index].y);
         });
-    })
+    });
 });

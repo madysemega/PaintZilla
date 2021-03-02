@@ -48,7 +48,7 @@ describe('LineService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: ColourToolService, useValue: colourService },
-                { provide: HistoryService, useValue: historyServiceStub }
+                { provide: HistoryService, useValue: historyServiceStub },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

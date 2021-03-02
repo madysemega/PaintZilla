@@ -32,10 +32,10 @@ export class HistoryService {
 
     undo(): void {
         const lastAction = this.past.pop();
-        
+
         if (lastAction != undefined) {
             this.future.push(lastAction);
-            
+
             this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
             this.past.forEach((action) => action.apply());

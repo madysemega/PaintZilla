@@ -73,15 +73,15 @@ export class LineShape extends Shape {
     }
 
     clone(): Shape {
-        let clonedVertices = new Array<Vec2>();
+        const clonedVertices = new Array<Vec2>();
 
         this.vertices.forEach((vertex) => {
-            if(vertex != undefined) {
-                const clone = { x: vertex.x, y: vertex.y};
+            if (vertex != undefined) {
+                const clone = { x: vertex.x, y: vertex.y };
                 clonedVertices.push(clone);
             }
         });
-        
+
         return new LineShape(clonedVertices, this.jointsDiameter);
     }
 }

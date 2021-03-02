@@ -8,7 +8,7 @@ export class FillStyleProperty extends ShapeProperty {
     clone(): ShapeProperty {
         return new FillStyleProperty(this.colour);
     }
-    
+
     constructor(public colour: string) {
         super();
     }
