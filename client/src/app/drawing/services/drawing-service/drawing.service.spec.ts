@@ -32,8 +32,8 @@ describe('DrawingService', () => {
         service.canvas.style.background = Constants.CTX_COLOR;
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
-        restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle');
-        clearCanvasStub = spyOn(service, 'clearCanvas');
+        restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
+        clearCanvasStub = spyOn(service, 'clearCanvas').and.callThrough();
     });
 
     it('should be created', () => {
