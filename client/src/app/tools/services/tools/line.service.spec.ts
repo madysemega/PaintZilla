@@ -32,7 +32,7 @@ describe('LineService', () => {
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let historyServiceStub: jasmine.SpyObj<HistoryService>;
-    
+
     let colourService: ColourService;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;

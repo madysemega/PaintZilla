@@ -65,11 +65,11 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             new LineJoinProperty('round'),
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
-        
+
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => {
             this.strokeColourProperty.colour = colour.toStringRBGA();
         });
-        
+
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour.toStringRBGA()));
         this.isShiftDown = false;
 
