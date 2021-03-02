@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -18,8 +20,6 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -37,13 +37,13 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService, private historyService: HistoryService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
 
         this.initialize();
 
-        colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
-        colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
+        colourService.primaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
+        colourService.secondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
 
         this.isShiftDown = false;
 
@@ -55,8 +55,8 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         this.lineShape = new LineShape([]);
 
         this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.primaryColour);
-        this.jointsColourProperty = new FillStyleProperty(this.colourService.secondaryColour);
+        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour().toStringRBGA());
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,
@@ -65,6 +65,16 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             new LineJoinProperty('round'),
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
+        
+        this.colourService.primaryColourChanged.subscribe((colour: Colour) => {
+            this.strokeColourProperty.colour = colour.toStringRBGA();
+        });
+        
+        this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour.toStringRBGA()));
+        this.isShiftDown = false;
+
+        this.lineType = LineType.WITHOUT_JOINTS;
+        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 
     onToolSelect(): void {
