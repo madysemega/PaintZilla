@@ -5,6 +5,10 @@ export class LineCapProperty extends ShapeProperty {
         ctx.lineCap = this.lineCapOption;
     }
 
+    clone(): ShapeProperty {
+        return new LineCapProperty(this.lineCapOption);
+    }
+
     constructor(public lineCapOption: CanvasLineCap) {
         super();
     }

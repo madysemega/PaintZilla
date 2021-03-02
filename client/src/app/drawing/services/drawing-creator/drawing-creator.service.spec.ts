@@ -6,11 +6,13 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { of } from 'rxjs';
 
 // tslint:disable:no-any
 describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
+    let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
 
     let canvasTestHelper: CanvasTestHelper;
@@ -26,8 +28,9 @@ describe('DrawingCreatorService', () => {
 
     let keyboardEvent: KeyboardEvent;
     beforeEach(() => {
-        drawingServiceSpy = new DrawingService();
-        resizingServiceSpy = new ResizingService(drawingServiceSpy);
+        historyServiceStub = new HistoryService();
+        drawingServiceSpy = new DrawingService(historyServiceStub);
+        resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);

@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
@@ -16,12 +17,14 @@ import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.
 describe('EllipseToolConfigurationComponent', () => {
     let component: EllipseToolConfigurationComponent;
     let fixture: ComponentFixture<EllipseToolConfigurationComponent>;
+    let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
 
     beforeEach(async(() => {
-        drawingStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 

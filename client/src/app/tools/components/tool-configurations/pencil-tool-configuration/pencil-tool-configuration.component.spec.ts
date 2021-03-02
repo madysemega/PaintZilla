@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
@@ -11,12 +12,14 @@ describe('PencilToolConfigurationComponent', () => {
     let component: PencilToolConfigurationComponent;
     let fixture: ComponentFixture<PencilToolConfigurationComponent>;
 
+    let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
     let pencilServiceStub: PencilService;
 
     beforeEach(async(() => {
-        drawingServiceStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilServiceStub = new PencilService(drawingServiceStub, colourServiceStub);
 

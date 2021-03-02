@@ -6,6 +6,7 @@ import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.compon
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -35,6 +36,7 @@ describe('EditorComponent', () => {
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let keyboardZEvent: KeyboardEvent;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
@@ -48,7 +50,8 @@ describe('EditorComponent', () => {
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
-        drawingStub = new DrawingService();
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
+        drawingStub = new DrawingService(historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
 
         TestBed.configureTestingModule({
@@ -58,6 +61,7 @@ describe('EditorComponent', () => {
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: HistoryService, useValue: historyServiceStub },
                 { provide: ToolSelectorService },
                 { provide: EllipseService },
                 { provide: EraserService },
@@ -117,5 +121,25 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it('Ctrl+Z should call history service undo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: false,
+            key: 'Z',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.undo).toHaveBeenCalled();
+    });
+
+    it('Ctrl+Shift+Z should call history service redo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: true,
+            key: 'Z',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.redo).toHaveBeenCalled();
     });
 });

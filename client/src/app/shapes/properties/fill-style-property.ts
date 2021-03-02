@@ -5,6 +5,10 @@ export class FillStyleProperty extends ShapeProperty {
         ctx.fillStyle = this.colour;
     }
 
+    clone(): ShapeProperty {
+        return new FillStyleProperty(this.colour);
+    }
+
     constructor(public colour: string) {
         super();
     }

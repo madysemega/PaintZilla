@@ -5,6 +5,7 @@ import { ShapeType } from '@app/app/classes/shape-type';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
@@ -24,12 +25,14 @@ describe('ShapeToolConfigurationComponent', () => {
 
     let component: ShapeToolConfigurationComponent;
     let fixture: ComponentFixture<ShapeToolConfigurationComponent>;
+    let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
 
     beforeEach(async(() => {
-        drawingStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
 

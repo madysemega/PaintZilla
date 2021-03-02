@@ -13,16 +13,28 @@ class MockShapeProperty extends ShapeProperty {
         this.hasBeenApplied = true;
     }
 
+    clone(): ShapeProperty {
+        return new MockShapeProperty();
+    }
+
     constructor() {
         super();
         this.hasBeenApplied = false;
     }
 }
 
-class StubShape extends Shape {}
+class StubShape extends Shape {
+    clone(): Shape {
+        return new StubShape();
+    }
+}
 
 class StubShapeRenderer extends ShapeRenderer<Shape> {
     draw(ctx: CanvasRenderingContext2D): void {}
+
+    clone(): ShapeRenderer<Shape> {
+        return new StubShapeRenderer(this.getShapeCopy(), this.getPropertiesCopy());
+    }
 
     constructor(shape: Shape, properties: ShapeProperty[]) {
         super(shape, properties);

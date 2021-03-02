@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { IndexService } from '@app/tools/services/index/index.service';
 import { of } from 'rxjs';
 import { MainPageComponent } from './main-page.component';
@@ -13,12 +14,14 @@ describe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;
     let indexServiceSpy: SpyObj<IndexService>;
+    let historyServiceStub: HistoryService;
     let resizingServiceStub: ResizingService;
     beforeEach(async(() => {
         indexServiceSpy = jasmine.createSpyObj('IndexService', ['basicGet', 'basicPost']);
         indexServiceSpy.basicGet.and.returnValue(of({ title: '', body: '' }));
         indexServiceSpy.basicPost.and.returnValue(of());
-        resizingServiceStub = new ResizingService({} as DrawingService);
+        historyServiceStub = new HistoryService();
+        resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, HttpClientModule],
             declarations: [MainPageComponent],

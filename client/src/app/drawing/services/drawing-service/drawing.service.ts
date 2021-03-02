@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
+import { HistoryService } from '@app/history/service/history.service';
 
 @Injectable({
     providedIn: 'root',
@@ -52,5 +53,13 @@ export class DrawingService {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
         this.canvas.style.background = Constants.CTX_COLOR;
         this.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
+    }
+
+    constructor(historyService: HistoryService) {
+        historyService.onUndo(() => {
+            this.restoreCanvasStyle();
+            this.clearCanvas(this.baseCtx);
+            this.clearCanvas(this.previewCtx);
+        });
     }
 }

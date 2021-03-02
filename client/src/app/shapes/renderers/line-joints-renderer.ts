@@ -18,4 +18,8 @@ export class LineJointsRenderer extends ShapeRenderer<LineShape> {
             ctx.fill();
         });
     }
+
+    clone(): ShapeRenderer<LineShape> {
+        return new LineJointsRenderer(this.getShapeCopy(), this.getPropertiesCopy());
+    }
 }
