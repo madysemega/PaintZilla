@@ -5,6 +5,10 @@ export class LineJoinProperty extends ShapeProperty {
         ctx.lineJoin = this.lineJoinOption;
     }
 
+    clone(): ShapeProperty {
+        return new LineJoinProperty(this.lineJoinOption);
+    }
+
     constructor(public lineJoinOption: CanvasLineJoin) {
         super();
     }

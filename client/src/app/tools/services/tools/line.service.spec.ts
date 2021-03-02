@@ -1,23 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';
 import { MouseButton } from '@app/tools/classes/mouse-button';
-import { ColourToolService } from './colour-tool.service';
 import { LineService } from './line.service';
-
 // tslint:disable:no-any
 // tslint:disable:max-file-line-count
 describe('LineService', () => {
     const VALID_NB_VERTICES_FOR_CLOSING_SHAPE = 5;
     // tslint:disable-next-line: no-magic-numbers
     const SAMPLE_DIAMETERS = [5, 0, 52, 42];
-    const SAMPLE_COLOURS = ['#000FFFAAA', 'black', 'rgba(255, 126, 0, 1)'];
 
     let service: LineService;
     let lineShapeStub: LineShape;
@@ -31,19 +31,23 @@ describe('LineService', () => {
 
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
-    let colourService: ColourToolService;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
 
+    let colourService: ColourService;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
-        colourService = new ColourToolService();
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
+
+        colourService = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
-                { provide: ColourToolService, useValue: colourService },
+                { provide: HistoryService, useValue: historyServiceStub },
+                { provide: ColourService, useValue: colourService },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -143,48 +147,23 @@ describe('LineService', () => {
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
         service.onMouseDoubleClick(mouseEventLeft);
 
-        expect(lineShapeIsCloseableWithMock).toHaveBeenCalledTimes(1);
-        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalledTimes(1);
-
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
         service.onMouseDoubleClick(mouseEventRight);
 
         expect(lineShapeIsCloseableWithMock).toHaveBeenCalledTimes(2);
-        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalledTimes(2);
+        expect(lineShapeCloseMethodSpy).not.toHaveBeenCalled();
     });
 
-    it('onMouseDoubleClick() should render the joints on the base canvas if line type is WITH_JOINTS and mouse button is left', () => {
+    it('onMouseDoubleClick() should add a user action to the history', () => {
         service['lineType'] = LineType.WITH_JOINTS;
+
         lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
+
         spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
 
         const mouseEvent: MouseEvent = { button: MouseButton.Left, clientX: 3, clientY: 42 } as MouseEvent;
         service.onMouseDoubleClick(mouseEvent);
-        expect(lineJointsRendererRenderMethodStub).toHaveBeenCalledWith(drawServiceSpy.baseCtx);
-    });
-
-    it('onMouseDoubleClick() should not render the joints on the base canvas if line type is WITH_JOINTS but mouse button is not left', () => {
-        service['lineType'] = LineType.WITH_JOINTS;
-        lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
-        spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
-
-        const mouseEvent: MouseEvent = { button: MouseButton.Right, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEvent);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
-    });
-
-    it('onMouseDoubleClick() should not render the joints on the base canvas if line type is WITHOUT_JOINTS', () => {
-        service['lineType'] = LineType.WITHOUT_JOINTS;
-        lineShapeStub.vertices.length = VALID_NB_VERTICES_FOR_CLOSING_SHAPE;
-        spyOn<any>(lineShapeStub, 'isCloseableWith').and.returnValue(false);
-
-        const mouseEventLeft: MouseEvent = { button: MouseButton.Left, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEventLeft);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
-
-        const mouseEventRight: MouseEvent = { button: MouseButton.Right, clientX: 3, clientY: 42 } as MouseEvent;
-        service.onMouseDoubleClick(mouseEventRight);
-        expect(lineJointsRendererRenderMethodStub).not.toHaveBeenCalled();
+        expect(historyServiceStub.do).toHaveBeenCalled();
     });
 
     it("onMouseMove should clear preview canvas and then render on it using the shape's renderer if a line is currently being drawn", () => {
@@ -407,20 +386,6 @@ describe('LineService', () => {
         SAMPLE_DIAMETERS.forEach((diameter) => {
             service.jointsDiameter = diameter;
             expect(service.jointsDiameter).toEqual(diameter);
-        });
-    });
-
-    it('when primary colour changes, it should be reflected in the stroke colour property', () => {
-        SAMPLE_COLOURS.forEach((colour) => {
-            colourService.primaryColour = colour;
-            expect(service['strokeColourProperty'].colour).toEqual(colour);
-        });
-    });
-
-    it('when secondary colour changes, it should be reflected in the joints colour property', () => {
-        SAMPLE_COLOURS.forEach((colour) => {
-            colourService.secondaryColour = colour;
-            expect(service['jointsColourProperty'].colour).toEqual(colour);
         });
     });
 });

@@ -5,8 +5,13 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
+
+// tslint:disable:max-file-line-count
+// tslint:disable:no-string-literal
 describe('ResizingService', () => {
     let service: ResizingService;
+    let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
     let baseCtxStub: CanvasRenderingContext2D;
@@ -14,9 +19,13 @@ describe('ResizingService', () => {
     let canvasSizeStub: Vec2;
     let testMouseEvent: MouseEvent;
     beforeEach(async(() => {
-        drawingServiceStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingServiceStub = new DrawingService(historyServiceStub);
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawingServiceStub }],
+            providers: [
+                { provide: DrawingService, useValue: drawingServiceStub },
+                { provide: HistoryService, useValue: historyServiceStub },
+            ],
         }).compileComponents();
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         drawingServiceStub = TestBed.inject(DrawingService);
@@ -326,5 +335,25 @@ describe('ResizingService', () => {
         service.resetCanvasDimensions();
         expect(service.canvasResize.x).toEqual(Constants.DEFAULT_WIDTH);
         expect(service.canvasResize.y).toEqual(Constants.DEFAULT_HEIGHT);
+    });
+
+    it('finalizeResizingEvent should create, apply and register a user action', () => {
+        spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
+        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
+
+        service.finalizeResizingEvent();
+
+        expect(historyServiceStub['past'].length).toEqual(1);
+    });
+
+    it('history undo should reset canvas dimensions', () => {
+        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
+
+        const resetCanvasDimensionsSpy = spyOn(service, 'resetCanvasDimensions');
+
+        historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
+        historyServiceStub.undo();
+
+        expect(resetCanvasDimensionsSpy).toHaveBeenCalledTimes(1);
     });
 });

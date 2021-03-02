@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -15,7 +15,7 @@ export abstract class SelectionService {
     memento: HandlerMemento; ////////////////// FOR TESTING PURPOSES/////////////////////
     where: Vec2; ////////////////// FOR TESTING PURPOSES/////////////////////
 
-    constructor(protected drawingService: DrawingService, protected colourService: ColourToolService) {
+    constructor(protected drawingService: DrawingService, protected colourService: ColourService) {
         this.isSelectionBeingManipulated = new BehaviorSubject<boolean>(false);
     }
 

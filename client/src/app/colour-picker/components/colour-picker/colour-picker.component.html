@@ -1,0 +1,17 @@
+<div class="container">
+    <app-colour-palette> </app-colour-palette>
+    <app-colour-slider></app-colour-slider>
+    <app-opacity-slider></app-opacity-slider>
+    <div class="formAndPreviewContainer">
+        <app-rgb-form class="rgbForm mat-elevation-z2"></app-rgb-form>
+        <div matRipple class="color-preview-display mat-elevation-z2" (click)="confirmColor()">
+            <div
+                class="color-preview"
+                [matTooltip]="'Confirmer le choix'"
+                matTooltipPosition="right"
+                matRipple
+                [style.background-color]="color.toStringRBGA()"
+            ></div>
+        </div>
+    </div>
+</div>

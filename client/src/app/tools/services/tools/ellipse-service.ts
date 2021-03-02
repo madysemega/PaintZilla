@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +19,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -144,14 +144,14 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         if (this.shapeType !== ShapeType.Filled) {
             radii.x -= this.lineWidth / 2;
             radii.y -= this.lineWidth / 2;
-            radii.x = radii.x < 0 ? 0 : radii.x;
-            radii.y = radii.y < 0 ? 0 : radii.y;
+            radii.x = Math.max(radii.x, 0);
+            radii.y = Math.max(radii.y, 0);
         }
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
+        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {

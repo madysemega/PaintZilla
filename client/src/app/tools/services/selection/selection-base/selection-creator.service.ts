@@ -138,10 +138,9 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         const vertices: Vec2[] = [];
         vertices.push(startPoint);
         vertices.push(endPoint);
-        this.selectionHandler.select(this.drawingService.canvas, vertices);
 
         this.selectionService.setIsSelectionBeingManipulated(true);
-        this.selectionManipulatorService.initialize(startPoint, endPoint);
+        this.selectionManipulatorService.initialize(vertices);
     }
 
     stopManipulatingSelection(): void {

@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RectangleSelectionHelperService extends SelectionService {
-    constructor(drawingService: DrawingService, colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, colourService: ColourService) {
         super(drawingService, colourService);
     }
 

@@ -140,11 +140,14 @@ export abstract class SelectionManipulatorService extends Tool {
         }
     }
 
-    initialize(topLeft: Vec2, bottomRight: Vec2): void {
+    initialize(vertices: Vec2[]): void {
         this.resetProperties();
+        let topLeft = vertices[0];
+        let bottomRight = vertices[1];
         this.topLeft = { x: topLeft.x, y: topLeft.y };
         this.bottomRight = { x: bottomRight.x, y: bottomRight.y };
         this.computeDiagonalEquation();
+        this.selectionHandler.select(this.drawingService.canvas, vertices);
     }
 
     moveSelection(movement: Vec2, isMouseMovement: boolean): void {

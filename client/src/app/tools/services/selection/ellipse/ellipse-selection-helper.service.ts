@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+
 
 @Injectable({
     providedIn: 'root',
@@ -10,7 +11,7 @@ import { ColourToolService } from '@app/tools/services/tools/colour-tool.service
 export class EllipseSelectionHelperService extends SelectionService {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    constructor(drawingService: DrawingService, colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, colourService: ColourService) {
         super(drawingService, colourService);
     }
 
@@ -25,7 +26,7 @@ export class EllipseSelectionHelperService extends SelectionService {
         const ctx: CanvasRenderingContext2D = this.drawingService.previewCtx;
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.strokeStyle = '#888';
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
