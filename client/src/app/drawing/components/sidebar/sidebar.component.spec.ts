@@ -23,11 +23,8 @@ import { RectangleSelectionHandlerService } from '@app/tools/services/selection/
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-<<<<<<< HEAD
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+//import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
-=======
->>>>>>> master
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
@@ -88,8 +85,7 @@ describe('SidebarComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
-<<<<<<< HEAD
-        lineServiceStub = new LineService(drawingStub, colourServiceStub);
+        lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
@@ -102,10 +98,8 @@ describe('SidebarComponent', () => {
         rectangleSelectionCreatorService = new RectangleSelectionCreatorService(drawingStub, rectangleSelectionManipulatorService, rectangleSelectionHandlerService, rectangleSelectionHelperService);
 
         toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub, ellipseSelectionCreatorService, rectangleSelectionCreatorService);
-=======
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
->>>>>>> master
+        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub, ellipseSelectionCreatorService, rectangleSelectionCreatorService);
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],

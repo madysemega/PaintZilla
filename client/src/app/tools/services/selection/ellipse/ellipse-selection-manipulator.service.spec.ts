@@ -42,7 +42,7 @@ describe('EllipseSelectionManipulatorService', () => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = {x: 0, y: 0};
 
-        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection']);
+        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select']);
         ellipseSelectionHelpereMock = jasmine.createSpyObj('EllipseSelectionHelperService', ['getEllipseParam', 'drawSelectionEllipse', 'add', 'isClickOutsideSelection', 'convertToMovement', 'add', 
         'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAjustedPerimeter' ]);
         selectionServiceMock = jasmine.createSpyObj('SelectionService', ['isClickOutsideSelection', 'convertToMovement', 'add', 
@@ -271,7 +271,9 @@ describe('EllipseSelectionManipulatorService', () => {
     it('initialize should set values correctly', () => {
         let topLeft = {x:5, y:7};
         let bottomRight = {x:10, y:9};
-        service.initialize(topLeft, bottomRight);
+        let vertices: Vec2[] =[];
+        vertices.push(topLeft, bottomRight);
+        service.initialize(vertices);
         expect(service.topLeft.x).toEqual(topLeft.x);
         expect(service.topLeft.y).toEqual(topLeft.y);
         expect(service.bottomRight.x).toEqual(bottomRight.x);
