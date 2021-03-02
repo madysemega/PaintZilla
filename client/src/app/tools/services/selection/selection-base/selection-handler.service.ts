@@ -33,12 +33,12 @@ export abstract class SelectionHandlerService {
 
     originalWidth: number;
     originalHeight: number;
-    originalCenter: Vec2;
-    originalVertices: Vec2[];
+    originalCenter: Vec2={x: 0, y:0};
+    originalVertices: Vec2[] =[];
 
     protected hasBeenManipulated: boolean;
     protected needWhiteEllipsePostDrawing: boolean;
-    protected originalTopLeftOnBaseCanvas: Vec2;
+    protected originalTopLeftOnBaseCanvas: Vec2 ={x: 0, y:0};
 
     constructor(protected drawingService: DrawingService, protected selectionService: SelectionService) {
         this.selectionCanvas = document.createElement('canvas');

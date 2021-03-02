@@ -25,19 +25,19 @@ export abstract class SelectionManipulatorService extends Tool {
     readonly MOVEMENT_LEFT: Vec2 = { x: -this.MOVEMENT_PX, y: 0 };
     readonly MOVEMENT_RIGHT: Vec2 = { x: this.MOVEMENT_PX, y: 0 };
 
-    topLeft: Vec2;
-    bottomRight: Vec2;
-    private diagonalSlope: number;
-    private diagonalYIntercept: number;
-    private mouseLastPos: Vec2 = { x: 0, y: 0 };
-    private mouseDownLastPos: Vec2 = { x: 0, y: 0 };
+    topLeft: Vec2 ={x: 0, y:0};
+    bottomRight: Vec2 ={x: 0, y:0};
+    public diagonalSlope: number =0;
+    public diagonalYIntercept: number=0;
+    public mouseLastPos: Vec2 = { x: 0, y: 0 };
+    public mouseDownLastPos: Vec2 = { x: 0, y: 0 };
     resizingMode: ResizingMode = ResizingMode.off;
-    protected isShiftDown: boolean;
-    isReversedX: boolean;
-    isReversedY: boolean;
-    private arrowKeyDown: boolean[] = [false, false, false, false];
-    private subscriptions: Subscription[];
-    private isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
+    public isShiftDown: boolean = false;
+    isReversedX: boolean = false;
+    isReversedY: boolean = false;
+    public arrowKeyDown: boolean[] = [false, false, false, false];
+    public subscriptions: Subscription[] =[];
+    public isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
     constructor(
         protected drawingService: DrawingService,
@@ -54,7 +54,6 @@ export abstract class SelectionManipulatorService extends Tool {
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         const mousePos = this.getPositionFromMouse(event);
-
         if (!this.mouseDown) {
             return;
         }
