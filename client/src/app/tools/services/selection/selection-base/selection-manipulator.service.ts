@@ -210,7 +210,6 @@ export abstract class SelectionManipulatorService extends Tool {
                 let memento: HandlerMemento = this.selectionHandler.createMemento();
                 let userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, { x: this.topLeft.x, y: this.topLeft.y });
                 this.historyService.register(userAction);
-                this.selectionService.mementos.push(memento);
             }
             //this.selectionService.memento = this.selectionHandler.createMemento();
             //this.selectionService.where = { x: this.topLeft.x, y: this.topLeft.y };

@@ -7,7 +7,6 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
-import { SelectionHandlerService } from './selection-handler.service';
 import { SelectionService } from './selection.service';
 
 @Injectable({
@@ -22,7 +21,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     constructor(
         drawingService: DrawingService,
         protected selectionManipulatorService: SelectionManipulatorService,
-        protected selectionHandler: SelectionHandlerService,
         protected selectionService: SelectionService,
     ) {
         super(drawingService);
@@ -85,12 +83,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         if (event.key === 'm') {
             this.selectionService.mementos.forEach((value)=>{console.log(value)});
         }
-        ////////////////// FOR TESTING PURPOSES/////////////////////
-        if (event.key === 'k') {
-            this.selectionHandler.restoreFromMemento(this.selectionService.memento);
-            this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.selectionService.where);
-        }
-        ////////////////// FOR TESTING PURPOSES/////////////////////
 
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onKeyDown(event);

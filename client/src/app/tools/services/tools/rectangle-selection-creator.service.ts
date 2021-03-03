@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { RectangleSelectionHandlerService } from '@app/tools/services/selection/rectangle/rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
@@ -13,10 +12,9 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
     constructor(
         drawingService: DrawingService,
         selectionManipulatorService: RectangleSelectionManipulatorService,
-        selectionHandler: RectangleSelectionHandlerService,
         protected selectionService: RectangleSelectionHelperService,
     ) {
-        super(drawingService, selectionManipulatorService, selectionHandler, selectionService);
+        super(drawingService, selectionManipulatorService, selectionService);
         this.key = 'rectangle-selection';
     }
 

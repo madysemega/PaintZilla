@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
@@ -13,10 +12,9 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
     constructor(
         drawingService: DrawingService,
         selectionManipulatorService: EllipseSelectionManipulatorService,
-        selectionHandler: EllipseSelectionHandlerService,
         protected selectionService: EllipseSelectionHelperService,
     ) {
-        super(drawingService, selectionManipulatorService, selectionHandler, selectionService);
+        super(drawingService, selectionManipulatorService,  selectionService);
         this.key = 'ellipse-selection';
     }
 

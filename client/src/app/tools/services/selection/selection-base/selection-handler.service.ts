@@ -36,9 +36,9 @@ export abstract class SelectionHandlerService {
     originalCenter: Vec2={x: 0, y:0};
     originalVertices: Vec2[] =[];
 
-    protected hasBeenManipulated: boolean;
-    protected needWhiteEllipsePostDrawing: boolean;
-    protected originalTopLeftOnBaseCanvas: Vec2 ={x: 0, y:0};
+    public hasBeenManipulated: boolean;
+    public needWhiteEllipsePostDrawing: boolean;
+    public originalTopLeftOnBaseCanvas: Vec2 ={x: 0, y:0};
 
     constructor(protected drawingService: DrawingService, protected selectionService: SelectionService) {
         this.selectionCanvas = document.createElement('canvas');
@@ -77,14 +77,6 @@ export abstract class SelectionHandlerService {
         this.drawACanvasOnAnother(this.selectionCanvas, this.verticalModificationCtx);
         this.drawACanvasOnAnother(this.selectionCanvas, this.originalCanvasCopyCtx);
     }
-
-    /*quickDraw(previousSelection: HTMLCanvasElement, target: CanvasRenderingContext2D,  fixedTopLeft: Vec2, offset: Vec2, topLeftOnTarget: Vec2){
-    this.clearAndResetAllCanvas();
-    this.selectionCanvas = previousSelection;
-    this.fixedTopLeft = fixedTopLeft;
-    this.offset = offset;
-    this.drawSelection(target, topLeftOnTarget);
-  }*/
 
     drawSelection(target: CanvasRenderingContext2D, topLeftOnTarget: Vec2): boolean {
         console.log(this.selectionCanvas.width, this.selectionCanvas.height);
@@ -225,6 +217,7 @@ export abstract class SelectionHandlerService {
         this.originalTopLeftOnBaseCanvas = {x: memento.originalTopLeftOnBaseCanvas.x , y: memento.originalTopLeftOnBaseCanvas.y};
     
         this.originalCenter = {x: memento.originalCenter.x, y: memento.originalCenter.y};
+        this.originalVertices = [];
         memento.originalVertices.forEach((value) => {this.originalVertices.push({x:value.x, y:value.y})});
         //this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
 

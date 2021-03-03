@@ -23,7 +23,7 @@ describe('EllipseSelectionManipulatorService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionHandlerMock: jasmine.SpyObj<SelectionHandlerService>;
     let selectionServiceMock: jasmine.SpyObj<SelectionService>;
-    let ellipseSelectionHelpereMock: jasmine.SpyObj<EllipseSelectionHelperService>;
+    let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
 
     let stopManipulationSpy : jasmine.Spy<any>;
     let resizeSelectionSpy : jasmine.Spy<any>;
@@ -43,7 +43,7 @@ describe('EllipseSelectionManipulatorService', () => {
         drawServiceSpy.canvasSize = {x: 0, y: 0};
 
         selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select']);
-        ellipseSelectionHelpereMock = jasmine.createSpyObj('EllipseSelectionHelperService', ['getEllipseParam', 'drawSelectionEllipse', 'add', 'isClickOutsideSelection', 'convertToMovement', 'add', 
+        ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', ['getEllipseParam', 'drawSelectionEllipse', 'add', 'isClickOutsideSelection', 'convertToMovement', 'add', 
         'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAjustedPerimeter' ]);
         selectionServiceMock = jasmine.createSpyObj('SelectionService', ['isClickOutsideSelection', 'convertToMovement', 'add', 
         'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAjustedPerimeter']);
@@ -52,7 +52,7 @@ describe('EllipseSelectionManipulatorService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy }, 
                 { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock},
-                { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelpereMock },
+                { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
                 { provide: SelectionService, useValue: selectionServiceMock },
             ],
         });
@@ -329,10 +329,18 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(service.isReversedX).toEqual( newPos.x > service.bottomRight.x);
     });
 
-    it('stopManipulation should call createMemento if needDrawSelection is true', () => {
+    it('stopManipulation should call createMemento if needDrawSelection and drawSelection from SelectionHandler are true', () => {
+        selectionHandlerMock.drawSelection.and.returnValue(true);
         service.stopManipulation(true);
         expect(selectionHandlerMock.createMemento).toHaveBeenCalled();
     });
+
+    it('stopManipulation should not call createMemento if needDrawSelection and drawSelection from SelectionHandler are true', () => {
+        selectionHandlerMock.drawSelection.and.returnValue(false);
+        service.stopManipulation(true);
+        expect(selectionHandlerMock.createMemento).not.toHaveBeenCalled();
+    });
+
 
     it('stopManipulation should call drawSelection if needDrawSelection is true', () => {
         service.stopManipulation(true);
@@ -377,7 +385,7 @@ describe('EllipseSelectionManipulatorService', () => {
     it('addMovementToPosition should call add 3 times if isMouseMovement is true ', () => {
         let mouseMovement = {x:10, y:11};
         service.addMovementToPositions(mouseMovement, true);
-        expect(ellipseSelectionHelpereMock.add).toHaveBeenCalledTimes(3);
+        expect(ellipseSelectionHelperMock.add).toHaveBeenCalledTimes(3);
     });
 
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
@@ -448,7 +456,7 @@ describe('EllipseSelectionManipulatorService', () => {
 
     it('isClickOutsideSelection should isClickOutsideSelection from SelectionService', () => {
         service.isClickOutsideSelection(mouseEvent);
-        expect(ellipseSelectionHelpereMock.isClickOutsideSelection).toHaveBeenCalled();
+        expect(ellipseSelectionHelperMock.isClickOutsideSelection).toHaveBeenCalled();
     });
 
     it('isAnArrowKeyPressed should return true if an arrow key is pressed', () => {
