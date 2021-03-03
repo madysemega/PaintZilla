@@ -86,9 +86,9 @@ export abstract class SelectionHandlerService {
     this.drawSelection(target, topLeftOnTarget);
   }*/
 
-    drawSelection(target: CanvasRenderingContext2D, topLeftOnTarget: Vec2): void {
+    drawSelection(target: CanvasRenderingContext2D, topLeftOnTarget: Vec2): boolean {
         if (!this.hasSelectionBeenManipulated(topLeftOnTarget)) {
-            return;
+            return false;
         }
 
         if (this.needWhiteEllipsePostDrawing) {
@@ -99,6 +99,7 @@ export abstract class SelectionHandlerService {
             y: topLeftOnTarget.y - this.fixedTopLeft.y + this.offset.y,
         };
         this.drawACanvasOnAnother(this.selectionCanvas, target, topLeft);
+        return true;
     }
 
     resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
@@ -187,47 +188,44 @@ export abstract class SelectionHandlerService {
         const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
 
         memento.fixedTopLeft = {x: this.fixedTopLeft.x, y: this.fixedTopLeft.y};
-        memento.offset = this.offset;
-
+        memento.offset = {x: this.offset.x, y: this.offset.y};
+    
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
-
+    
         memento.hasBeenManipulated = true;
-        memento.needWhiteEllipsePostDrawing = true; //////
-        memento.originalTopLeftOnBaseCanvas = this.originalTopLeftOnBaseCanvas;
-        memento.originalCenter = this.originalCenter;
-        memento.originalVertices = this.originalVertices;
-
-        this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx, { x: 0, y: 0 });
+        memento.needWhiteEllipsePostDrawing = true;//////
+        memento.originalTopLeftOnBaseCanvas = {x: this.originalTopLeftOnBaseCanvas.x, y: this.originalTopLeftOnBaseCanvas.y};
+        memento.originalCenter = {x: this.originalCenter.x, y: this.originalCenter.y};
+        this.originalVertices.forEach((value) => {memento.originalVertices.push({x:value.x, y:value.y})});
+       
+        this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx);
         this.drawACanvasOnAnother(this.horizontalModificationCanvas, memento.horizontalModificationCtx);
-        this.drawACanvasOnAnother(this.verticalModificationCanvas, this.verticalModificationCtx);
-        this.drawACanvasOnAnother(this.originalCanvasCopy, this.originalCanvasCopyCtx);
+        this.drawACanvasOnAnother(this.verticalModificationCanvas, memento.verticalModificationCtx);
+        this.drawACanvasOnAnother(this.originalCanvasCopy, memento.originalCanvasCopyCtx);
         return memento;
     }
 
     restoreFromMemento(memento: HandlerMemento): void {
-        this.selectionCanvas = memento.selectionCanvas;
-        this.horizontalModificationCanvas = memento.horizontalModificationCanvas;
-        this.verticalModificationCanvas = memento.verticalModificationCanvas;
-        this.originalCanvasCopy = memento.originalCanvasCopy;
-
-        this.selectionCtx = memento.selectionCtx;
-        this.horizontalModificationCtx = memento.horizontalModificationCtx;
-        this.verticalModificationCtx = memento.verticalModificationCtx;
-        this.originalCanvasCopyCtx = memento.originalCanvasCopyCtx;
-
-        this.fixedTopLeft = memento.fixedTopLeft;
-        this.offset = memento.offset;
-
+        this.clearAndResetAllCanvas();
+        this.drawACanvasOnAnother(memento.selectionCanvas, this.selectionCtx );
+        this.drawACanvasOnAnother(memento.horizontalModificationCanvas,this.horizontalModificationCtx);
+        this.drawACanvasOnAnother(memento.verticalModificationCanvas, this.verticalModificationCtx);
+        this.drawACanvasOnAnother(memento.originalCanvasCopy, this.originalCanvasCopyCtx);
+    
+        this.fixedTopLeft ={x: memento.fixedTopLeft.x , y: memento.fixedTopLeft.y};
+        this.offset ={x: memento.offset.x, y: memento.offset.y};
+    
         this.originalWidth = memento.originalWidth;
         this.originalHeight = memento.originalHeight;
-
+    
         this.hasBeenManipulated = true;
-        this.needWhiteEllipsePostDrawing = true; //////
-        this.originalTopLeftOnBaseCanvas = memento.originalTopLeftOnBaseCanvas;
-
-        this.originalCenter = memento.originalCenter;
-        this.originalVertices = memento.originalVertices;
+        this.needWhiteEllipsePostDrawing = true;//////
+        this.originalTopLeftOnBaseCanvas = {x: memento.originalTopLeftOnBaseCanvas.x , y: memento.originalTopLeftOnBaseCanvas.y};
+    
+        this.originalCenter = {x: memento.originalCenter.x, y: memento.originalCenter.y};
+        memento.originalVertices.forEach((value) => {this.originalVertices.push({x:value.x, y:value.y})});
+        //this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
 
         // this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
     }

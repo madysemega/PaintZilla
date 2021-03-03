@@ -11,7 +11,7 @@ import { takeWhile } from 'rxjs/operators';
 import { Arrow } from './arrow';
 import { ResizingMode } from './resizing-mode';
 import { SelectionHandlerService } from './selection-handler.service';
-import { UserActionRenderSelection} from '@app/history/user-actions/user-action-render-selection';
+import { UserActionRenderSelection } from '@app/history/user-actions/user-action-render-selection';
 import { HandlerMemento } from '@app/app/classes/handler-memento';
 
 @Injectable({
@@ -28,10 +28,10 @@ export abstract class SelectionManipulatorService extends Tool {
     readonly MOVEMENT_LEFT: Vec2 = { x: -this.MOVEMENT_PX, y: 0 };
     readonly MOVEMENT_RIGHT: Vec2 = { x: this.MOVEMENT_PX, y: 0 };
 
-    topLeft: Vec2 ={x: 0, y:0};
-    bottomRight: Vec2 ={x: 0, y:0};
-    public diagonalSlope: number =0;
-    public diagonalYIntercept: number=0;
+    topLeft: Vec2 = { x: 0, y: 0 };
+    bottomRight: Vec2 = { x: 0, y: 0 };
+    public diagonalSlope: number = 0;
+    public diagonalYIntercept: number = 0;
     public mouseLastPos: Vec2 = { x: 0, y: 0 };
     public mouseDownLastPos: Vec2 = { x: 0, y: 0 };
     resizingMode: ResizingMode = ResizingMode.off;
@@ -39,7 +39,7 @@ export abstract class SelectionManipulatorService extends Tool {
     isReversedX: boolean = false;
     isReversedY: boolean = false;
     public arrowKeyDown: boolean[] = [false, false, false, false];
-    public subscriptions: Subscription[] =[];
+    public subscriptions: Subscription[] = [];
     public isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
     constructor(
@@ -204,15 +204,18 @@ export abstract class SelectionManipulatorService extends Tool {
         this.selectionService.setIsSelectionBeingManipulated(false);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
+            
             ////////////////// FOR TESTING PURPOSES/////////////////////
-            let memento: HandlerMemento = this.selectionHandler.createMemento();
-            let userAction : UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {x:this.topLeft.x, y:this.topLeft.y});
-            this.historyService.register(userAction);
-            this.selectionService.mementos.push(memento);
+            if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
+                console.log("dRaWiNG");
+                let memento: HandlerMemento = this.selectionHandler.createMemento();
+                let userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, { x: this.topLeft.x, y: this.topLeft.y });
+                this.historyService.register(userAction);
+                this.selectionService.mementos.push(memento);
+            }
             //this.selectionService.memento = this.selectionHandler.createMemento();
             //this.selectionService.where = { x: this.topLeft.x, y: this.topLeft.y };
             ////////////////// FOR TESTING PURPOSES/////////////////////
-            this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
         }
         this.subscriptions.forEach((sub) => {
             sub.unsubscribe();
@@ -325,23 +328,26 @@ export abstract class SelectionManipulatorService extends Tool {
 
     createMemento(): ManipulatorMemento {
         const memento: ManipulatorMemento = new ManipulatorMemento();
-        memento.topLeft = this.topLeft;
-        memento.bottomRight = this.bottomRight;
+        memento.topLeft = { x: this.topLeft.x, y: this.topLeft.y };
+        memento.bottomRight = { x: this.bottomRight.x, y: this.bottomRight.y };
         memento.diagonalSlope = this.diagonalSlope;
         memento.diagonalYIntercept = this.diagonalYIntercept;
-        memento.mouseLastPos = this.mouseLastPos;
+        memento.mouseLastPos = { x: this.mouseLastPos.x, y: this.mouseLastPos.y };
         memento.isReversedX = this.isReversedX;
         memento.isReversedY = this.isReversedY;
         return memento;
     }
 
     restoreFromMemento(memento: ManipulatorMemento): void {
-        this.topLeft = memento.topLeft;
-        this.bottomRight = memento.bottomRight;
+        this.resetProperties();
+        this.stopManipulation(false);
+        this.topLeft = { x: memento.topLeft.x, y: memento.topLeft.y };
+        this.bottomRight = { x: memento.bottomRight.x, y: memento.bottomRight.y };
         this.diagonalSlope = memento.diagonalSlope;
         this.diagonalYIntercept = memento.diagonalYIntercept;
-        this.mouseLastPos = memento.mouseLastPos;
+        this.mouseLastPos = { x: memento.mouseLastPos.x, y: memento.mouseLastPos.y };
         this.isReversedX = memento.isReversedX;
         this.isReversedY = memento.isReversedY;
     }
+
 }
