@@ -16,6 +16,7 @@ import { ColoursComponent } from '@app/drawing/components/colours/colours.compon
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { MaterialModule } from '@app/material.module';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
@@ -50,6 +51,7 @@ import { SprayToolConfigurationComponent } from '@app/tools/components/tool-conf
         ColourPickerComponent,
         RgbFormComponent,
         ColoursComponent,
+        HistoryControlsComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 
