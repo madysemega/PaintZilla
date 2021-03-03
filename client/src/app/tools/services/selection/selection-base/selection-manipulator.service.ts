@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ManipulatorMemento } from '@app/app/classes/manipulator-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
@@ -10,6 +11,8 @@ import { takeWhile } from 'rxjs/operators';
 import { Arrow } from './arrow';
 import { ResizingMode } from './resizing-mode';
 import { SelectionHandlerService } from './selection-handler.service';
+import { UserActionRenderSelection} from '@app/history/user-actions/user-action-render-selection';
+import { HandlerMemento } from '@app/app/classes/handler-memento';
 
 @Injectable({
     providedIn: 'root',
@@ -43,6 +46,7 @@ export abstract class SelectionManipulatorService extends Tool {
         protected drawingService: DrawingService,
         protected selectionService: SelectionService,
         protected selectionHandler: SelectionHandlerService,
+        protected historyService: HistoryService,
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
@@ -201,8 +205,12 @@ export abstract class SelectionManipulatorService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
             ////////////////// FOR TESTING PURPOSES/////////////////////
-            this.selectionService.memento = this.selectionHandler.createMemento();
-            this.selectionService.where = { x: this.topLeft.x, y: this.topLeft.y };
+            let memento: HandlerMemento = this.selectionHandler.createMemento();
+            let userAction : UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {x:this.topLeft.x, y:this.topLeft.y});
+            this.historyService.register(userAction);
+            this.selectionService.mementos.push(memento);
+            //this.selectionService.memento = this.selectionHandler.createMemento();
+            //this.selectionService.where = { x: this.topLeft.x, y: this.topLeft.y };
             ////////////////// FOR TESTING PURPOSES/////////////////////
             this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
         }

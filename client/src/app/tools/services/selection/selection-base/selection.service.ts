@@ -15,6 +15,8 @@ export abstract class SelectionService {
     memento: HandlerMemento; ////////////////// FOR TESTING PURPOSES/////////////////////
     where: Vec2; ////////////////// FOR TESTING PURPOSES/////////////////////
 
+    mementos: HandlerMemento[] = [];
+
     constructor(protected drawingService: DrawingService, protected colourService: ColourService) {
         this.isSelectionBeingManipulated = new BehaviorSubject<boolean>(false);
     }

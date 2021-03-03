@@ -186,7 +186,7 @@ export abstract class SelectionHandlerService {
     createMemento(): HandlerMemento {
         const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
 
-        memento.fixedTopLeft = this.fixedTopLeft;
+        memento.fixedTopLeft = {x: this.fixedTopLeft.x, y: this.fixedTopLeft.y};
         memento.offset = this.offset;
 
         memento.originalWidth = this.originalWidth;

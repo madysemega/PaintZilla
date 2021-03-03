@@ -81,6 +81,10 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
             this.resetProperties();
             this.stopManipulatingSelection();
         }
+
+        if (event.key === 'm') {
+            this.selectionService.mementos.forEach((value)=>{console.log(value)});
+        }
         ////////////////// FOR TESTING PURPOSES/////////////////////
         if (event.key === 'k') {
             this.selectionHandler.restoreFromMemento(this.selectionService.memento);
