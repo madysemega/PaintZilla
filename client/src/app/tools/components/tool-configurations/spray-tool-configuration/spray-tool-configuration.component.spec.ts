@@ -16,6 +16,8 @@ describe('SprayToolConfigurationComponent', () => {
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
     let sprayServiceStub: SprayService;
+        // tslint:disable-next-line: no-magic-numbers
+        const SAMPLE_DIAMETERS = [5, 1, 52, 42];
 
     beforeEach(async(() => {
         historyServiceStub = new HistoryService();
@@ -36,6 +38,38 @@ describe('SprayToolConfigurationComponent', () => {
         fixture.detectChanges();
     });
 
+    it('onDiameterPointChange() should change the diameter attribute accordingly', () => {
+        SAMPLE_DIAMETERS.forEach((initialDiameter) => {
+            SAMPLE_DIAMETERS.forEach((givenDiameter) => {
+                component.diameterChange = initialDiameter;
+                component.onDiameterPointChange(givenDiameter);
+                expect(component.diameterChange).toEqual(givenDiameter);
+            });
+        });
+    });
+
+    it('onDiameterPointChange() should set diameter in the spray service to the given parameter', () => {
+        SAMPLE_DIAMETERS.forEach((diameter) => {
+            component.onDiameterPointChange(diameter);
+            expect(sprayServiceStub.diameterDraw).toEqual(diameter);
+        });
+    });
+    it('onNumberPointChange() should change the number attribute accordingly', () => {
+        SAMPLE_DIAMETERS.forEach((initialDiameter) => {
+            SAMPLE_DIAMETERS.forEach((givenDiameter) => {
+                component.numberChange = initialDiameter;
+                component.onNumberPointChange(givenDiameter);
+                expect(component.numberChange).toEqual(givenDiameter);
+            });
+        });
+    });
+
+    it('onNumberPointChange() should set number in the spray service to the given parameter', () => {
+        SAMPLE_DIAMETERS.forEach((diameter) => {
+            component.onNumberPointChange(diameter);
+            expect(sprayServiceStub.numberPoints).toEqual(diameter);
+        });
+    });
     it('should create', () => {
         expect(component).toBeTruthy();
     });

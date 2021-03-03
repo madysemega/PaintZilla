@@ -53,6 +53,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
             this.vertices.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
            this.drawVertices(this.drawingService.baseCtx);
+           this.clearVertices();
         }
     }
 
@@ -71,13 +72,9 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         for (let i = 0; i < this.numberPoints; i++) {
             ctx.strokeRect(this.vertices[0].x+Math.floor(Math.random() * (max - min +1)) + min,this.vertices[1].y+Math.floor(Math.random() * (max - min +1)) + min,1,1);
           }
-        ctx.stroke();
-
-        ctx.restore();
-        this.clearVertices();
     }
 
-    private clearVertices(): void {
+    public clearVertices(): void {
         this.vertices = [];
     }
 }
