@@ -9,12 +9,16 @@ export class HistoryService {
         this.past = new Array<IUserAction>();
         this.future = new Array<IUserAction>();
         this.undoEventObservers = new Array<() => void>();
+
+        this.isLocked = false;
     }
 
     private undoEventObservers: (() => void)[];
 
     private past: IUserAction[];
     private future: IUserAction[];
+
+    isLocked: boolean;
 
     onUndo(callback: () => void): void {
         this.undoEventObservers.push(callback);
@@ -28,6 +32,8 @@ export class HistoryService {
     register(action: IUserAction): void {
         this.future = new Array<IUserAction>();
         this.past.push(action);
+
+        this.isLocked = false;
     }
 
     undo(): void {
@@ -50,5 +56,13 @@ export class HistoryService {
 
             lastUndoneAction.apply();
         }
+    }
+
+    canUndo(): boolean {
+        return this.past.length > 0 && !this.isLocked;
+    }
+
+    canRedo(): boolean {
+        return this.future.length > 0 && !this.isLocked;
     }
 }
