@@ -16,8 +16,8 @@ describe('SprayToolConfigurationComponent', () => {
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
     let sprayServiceStub: SprayService;
-        // tslint:disable-next-line: no-magic-numbers
-        const SAMPLE_DIAMETERS = [5, 1, 52, 42];
+    // tslint:disable-next-line: no-magic-numbers
+    const SAMPLE_DIAMETERS = [5, 1, 52, 42];
 
     beforeEach(async(() => {
         historyServiceStub = new HistoryService();

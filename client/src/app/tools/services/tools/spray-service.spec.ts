@@ -81,8 +81,6 @@ describe('SprayService', () => {
         expect(service.mouseDown).toEqual(false);
     });
 
-  
-
     it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
         service.mouseDown = false;
         service.mouseDownCoord = { x: 0, y: 0 };
@@ -98,6 +96,7 @@ describe('SprayService', () => {
         service.onMouseDown(mouseEvent);
 
         service.onMouseMove(mouseEvent);
+        expect(service.clearVertices()).toHaveBeenCalled();
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawVerticesSpy).toHaveBeenCalled();
     });

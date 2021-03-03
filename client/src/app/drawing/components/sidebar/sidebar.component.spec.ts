@@ -70,7 +70,14 @@ describe('SidebarComponent', () => {
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, sprayStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            sprayStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+        );
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],

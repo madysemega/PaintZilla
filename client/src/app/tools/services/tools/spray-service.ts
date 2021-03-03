@@ -12,8 +12,8 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 })
 export class SprayService extends ResizableTool implements ISelectableTool {
     private vertices: Vec2[];
-    public diameterDraw: number=1;
-    public numberPoints: number=1;
+    diameterDraw: number = 1;
+    numberPoints: number = 1;
     constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.vertices = [];
@@ -52,15 +52,15 @@ export class SprayService extends ResizableTool implements ISelectableTool {
             const mousePosition = this.getPositionFromMouse(event);
             this.vertices.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
-           this.drawVertices(this.drawingService.baseCtx);
-           this.clearVertices();
+            this.drawVertices(this.drawingService.baseCtx);
         }
+        this.clearVertices();
     }
 
     private drawVertices(ctx: CanvasRenderingContext2D): void {
         ctx.save();
-        var min: number = -this.diameterDraw;
-        var max: number = this.diameterDraw;
+        let min: number = -this.diameterDraw;
+        let max: number = this.diameterDraw;
         min = Math.ceil(min);
         max = Math.floor(max);
         ctx.lineWidth = this.lineWidth;
@@ -70,11 +70,16 @@ export class SprayService extends ResizableTool implements ISelectableTool {
 
         ctx.beginPath();
         for (let i = 0; i < this.numberPoints; i++) {
-            ctx.strokeRect(this.vertices[0].x+Math.floor(Math.random() * (max - min +1)) + min,this.vertices[1].y+Math.floor(Math.random() * (max - min +1)) + min,1,1);
-          }
+            ctx.strokeRect(
+                this.vertices[0].x + Math.floor(Math.random() * (max - min + 1)) + min,
+                this.vertices[1].y + Math.floor(Math.random() * (max - min + 1)) + min,
+                1,
+                1,
+            );
+        }
     }
 
-    public clearVertices(): void {
+    clearVertices(): void {
         this.vertices = [];
     }
 }

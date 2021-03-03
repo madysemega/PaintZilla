@@ -12,11 +12,11 @@ export class SprayToolConfigurationComponent {
     constructor(public sprayService: SprayService) {}
 
     onDiameterPointChange(diameterChange: number): void {
-        this.diameterChange=diameterChange;
+        this.diameterChange = diameterChange;
         this.sprayService.diameterDraw = diameterChange;
     }
     onNumberPointChange(numberChange: number): void {
-        this.numberChange=numberChange;
+        this.numberChange = numberChange;
         this.sprayService.numberPoints = numberChange;
     }
 }
