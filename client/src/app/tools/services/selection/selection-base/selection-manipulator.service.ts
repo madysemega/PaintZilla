@@ -207,7 +207,6 @@ export abstract class SelectionManipulatorService extends Tool {
             
             ////////////////// FOR TESTING PURPOSES/////////////////////
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
-                console.log("dRaWiNG");
                 let memento: HandlerMemento = this.selectionHandler.createMemento();
                 let userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, { x: this.topLeft.x, y: this.topLeft.y });
                 this.historyService.register(userAction);
