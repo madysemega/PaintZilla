@@ -22,26 +22,14 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.key = 'polygon';
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
-        this.numberSides = 6;
+        this.numberSides = 4;
     }
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
-    onToolDeselect(): void {
-        if (this.mouseDown) {
-            // const mousePosition = this.getPositionFromMouse(event);
-            // this.lastMousePosition = this.startPoint;
-            // this.startPoint = mousePosition;
-            this.drawPolygon(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
-            this.startPoint = { x: 0, y: 0 };
-        }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.mouseDown = false;
-        this.lastMousePosition = { x: 0, y: 0 };
-    }
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        console.log('appeler');
+        console.log('appelé');
         if (this.mouseDown) {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
@@ -50,19 +38,16 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     }
     onMouseUp(event: MouseEvent): void {
         if (this.mouseDown) {
-            // const mousePosition = this.getPositionFromMouse(event);
-            // this.lastMousePosition = this.startPoint;
-            // this.startPoint = mousePosition;
+            this.lastMousePosition = this.getPositionFromMouse(event);
             this.drawPolygon(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
-            this.startPoint = { x: 0, y: 0 };
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
-        this.lastMousePosition = { x: 0, y: 0 };
     }
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
+            this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawPolygon(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
         }
     }
@@ -77,11 +62,15 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.fillStyle = this.colourService.primaryColour;
         ctx.strokeStyle = this.colourService.secondaryColour;
         const SIZE = this.getPolygonSize(startPoint, endPoint);
-        const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x - endPoint.x) / 2), y: Math.abs((startPoint.y - endPoint.y) / 2) };
+        const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };
+        console.log(startPoint);
+
         ctx.beginPath();
-        ctx.moveTo(startPoint.x + SIZE * Math.cos(0), startPoint.y + SIZE * Math.cos(0));
-        for (let i = 1; i <= this.numberSides; i++) {
-            console.log(this.numberSides);
+        ctx.moveTo(
+            CENTER_POINT.x + SIZE * Math.cos((2 * Math.PI) / this.numberSides),
+            CENTER_POINT.y + SIZE * Math.sin((2 * Math.PI) / this.numberSides),
+        );
+        for (let i = 2; i <= this.numberSides; i++) {
             ctx.lineTo(
                 CENTER_POINT.x + SIZE * Math.cos((i * 2 * Math.PI) / this.numberSides),
                 CENTER_POINT.y + SIZE * Math.sin((i * 2 * Math.PI) / this.numberSides),
