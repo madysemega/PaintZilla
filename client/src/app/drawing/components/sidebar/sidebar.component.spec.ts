@@ -16,12 +16,14 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
@@ -37,6 +39,7 @@ describe('SidebarComponent', () => {
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
+    let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
@@ -61,12 +64,20 @@ describe('SidebarComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
+        sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            sprayStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+        );
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],
@@ -74,6 +85,7 @@ describe('SidebarComponent', () => {
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
                 PencilToolConfigurationComponent,
+                SprayToolConfigurationComponent,
                 EraserToolConfigurationComponent,
                 RectangleToolConfigurationComponent,
                 LineToolConfigurationComponent,
@@ -88,6 +100,7 @@ describe('SidebarComponent', () => {
                 { provide: EraserService },
                 { provide: LineService },
                 { provide: PencilService },
+                { provide: SprayService },
                 { provide: RectangleService },
             ],
         })

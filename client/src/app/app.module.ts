@@ -24,6 +24,7 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 
 @NgModule({
     declarations: [
@@ -34,12 +35,14 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
         MainPageComponent,
         EllipseToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        SprayToolConfigurationComponent,
         EraserToolConfigurationComponent,
         RectangleToolConfigurationComponent,
         DiscardChangesDialogComponent,
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        SprayToolConfigurationComponent,
         ColourPaletteComponent,
         LineToolConfigurationComponent,
         OpacitySliderComponent,
