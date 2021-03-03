@@ -72,7 +72,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         for (let i = 0; i < this.numberPoints; i++) {
             ctx.strokeRect(
                 this.vertices[0].x + Math.floor(Math.random() * (max - min + 1)) + min,
-                this.vertices[1].y + Math.floor(Math.random() * (max - min + 1)) + min,
+                this.vertices[0].y + Math.floor(Math.random() * (max - min + 1)) + min,
                 1,
                 1,
             );

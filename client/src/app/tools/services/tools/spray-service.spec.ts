@@ -96,7 +96,6 @@ describe('SprayService', () => {
         service.onMouseDown(mouseEvent);
 
         service.onMouseMove(mouseEvent);
-        expect(service.clearVertices()).toHaveBeenCalled();
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawVerticesSpy).toHaveBeenCalled();
     });
