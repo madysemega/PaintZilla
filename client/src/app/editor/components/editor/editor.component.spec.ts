@@ -40,6 +40,7 @@ describe('EditorComponent', () => {
     let drawingStub: DrawingService;
     let keyboardZEvent: KeyboardEvent;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
+    let toolSelectorStub: jasmine.SpyObj<any>;
 
     keyboardZEvent = {
         key: 'Z',
@@ -52,7 +53,10 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
         drawingStub = new DrawingService(historyServiceStub);
+        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut']);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
+
+        toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
             imports: [],
@@ -62,7 +66,7 @@ describe('EditorComponent', () => {
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
                 { provide: HistoryService, useValue: historyServiceStub },
-                { provide: ToolSelectorService },
+                { provide: ToolSelectorService, useValue: toolSelectorStub },
                 { provide: EllipseService },
                 { provide: EraserService },
                 { provide: LineService },
@@ -121,6 +125,15 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it('Ctrl+a should select the rectangle-selection tool from the tool selector', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            key: 'a',
+        } as KeyboardEvent;
+        component.onKeyDown(keyboardEvent);
+        expect(toolSelectorStub.selectTool).toHaveBeenCalled();
     });
 
     it('Ctrl+Z should call history service undo method', () => {

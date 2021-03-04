@@ -36,14 +36,6 @@ export class EditorComponent implements AfterViewInit {
         this.drawingCreatorService.onKeyDown(event);
     }
 
-    @HostListener('document:mousedown', ['$event'])
-    onMouseDown(event: MouseEvent): void {
-        if (this.colourService.showColourPicker && !this.colourService.onColourPicker) {
-            this.colourService.onColourPicker = false;
-            this.showColourPicker = false;
-        }
-    }
-
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
         this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
@@ -56,6 +48,14 @@ export class EditorComponent implements AfterViewInit {
             } else {
                 this.historyService.undo();
             }
+        }
+    }
+
+    @HostListener('document:mousedown', ['$event'])
+    onMouseDown(event: MouseEvent): void {
+        if (this.colourService.showColourPicker && !this.colourService.onColourPicker) {
+            this.colourService.onColourPicker = false;
+            this.showColourPicker = false;
         }
     }
 

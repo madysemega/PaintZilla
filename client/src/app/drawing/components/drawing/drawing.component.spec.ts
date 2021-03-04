@@ -4,6 +4,9 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { DrawingComponent } from './drawing.component';
 
@@ -16,7 +19,11 @@ describe('DrawingComponent', () => {
     let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let resizingServiceStub: ResizingService;
+    let toolSelectorStub: jasmine.SpyObj<any>;
+    let creatorStub: SelectionCreatorService;
+
     beforeEach(async(() => {
+        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut', 'getActiveSelectionTool']);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
         historyServiceStub.do.and.stub();
         historyServiceStub.undo.and.stub();
@@ -25,14 +32,19 @@ describe('DrawingComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         drawingStub = new DrawingService(historyServiceStub);
         resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
+        toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: ResizingService, useValue: resizingServiceStub },
+                { provide: ToolSelectorService, useValue: toolSelectorStub },
             ],
         }).compileComponents();
+
+        creatorStub = TestBed.inject(EllipseSelectionCreatorService);
+
     }));
 
     beforeEach(() => {
@@ -201,6 +213,15 @@ describe('DrawingComponent', () => {
         component.activateResizer(argument);
         expect(resizerSpy).toHaveBeenCalled();
         expect(resizerSpy).toHaveBeenCalledWith(argument);
+    });
+
+    it("activateResizer(): should tell the active selection tool to stop selection", () => {
+        spyOn(resizingServiceStub, 'saveCurrentImage').and.returnValue();
+        toolSelectorStub.getActiveSelectionTool.and.returnValue(creatorStub);
+        const argument = '';
+        let stopSelectionSpy: jasmine.Spy<any> = spyOn(creatorStub, 'stopManipulatingSelection').and.callThrough();
+        component.activateResizer(argument);
+        expect(stopSelectionSpy).toHaveBeenCalled();
     });
 
     it("disableResizer(): should call resizerService's disable resizer method", () => {
