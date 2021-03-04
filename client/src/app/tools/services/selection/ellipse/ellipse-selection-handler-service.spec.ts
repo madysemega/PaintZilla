@@ -3,7 +3,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { SelectionService } from '../selection-base/selection.service';
+import { SelectionHelperService } from '../selection-base/selection-helper.service';
 
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
@@ -16,7 +16,7 @@ describe('SelectionRendererService', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
-    let selectionServiceMock: jasmine.SpyObj<SelectionService>;
+    let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHandlerService>;
 
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
@@ -40,7 +40,7 @@ describe('SelectionRendererService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy }, 
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
-                { provide: SelectionService, useValue: selectionServiceMock },
+                { provide: SelectionHelperService, useValue: selectionServiceMock },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

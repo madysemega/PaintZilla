@@ -5,7 +5,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
-import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
+import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { Arrow } from './arrow';
@@ -44,7 +44,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
     constructor(
         protected drawingService: DrawingService,
-        protected selectionService: SelectionService,
+        protected selectionService: SelectionHelperService,
         protected selectionHandler: SelectionHandlerService,
         protected historyService: HistoryService,
     ) {
@@ -205,15 +205,12 @@ export abstract class SelectionManipulatorService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
             
-            ////////////////// FOR TESTING PURPOSES/////////////////////
+         
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
                 let memento: HandlerMemento = this.selectionHandler.createMemento();
                 let userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, { x: this.topLeft.x, y: this.topLeft.y });
                 this.historyService.register(userAction);
             }
-            //this.selectionService.memento = this.selectionHandler.createMemento();
-            //this.selectionService.where = { x: this.topLeft.x, y: this.topLeft.y };
-            ////////////////// FOR TESTING PURPOSES/////////////////////
         }
         this.subscriptions.forEach((sub) => {
             sub.unsubscribe();

@@ -99,15 +99,6 @@ describe('DrawingComponent', () => {
         expect(mouseEventSpy).not.toHaveBeenCalledWith(event);
     });
 
-    /*it("onMouseUp(): should call the tool's mouse up when receiving a mouse up event and canvas is \
-    not resizing and was resizing should be false", () => {
-        const event = {} as MouseEvent;
-        const mouseEventSpy = spyOn(toolStub, 'onMouseUp').and.callThrough();
-        component.onMouseUp(event);
-        expect(mouseEventSpy).toHaveBeenCalled();
-        expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });*/
-
     it("onMouseUp(): should call resizingService's disableResizer method when receiving a mouse up event \
     and canvas is resizing and wasResizing should be true", () => {
         const event = {} as MouseEvent;

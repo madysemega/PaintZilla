@@ -7,7 +7,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
-import { SelectionService } from './selection.service';
+import { SelectionHelperService } from './selection-helper.service';
 
 @Injectable({
     providedIn: 'root',
@@ -21,7 +21,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     constructor(
         drawingService: DrawingService,
         protected selectionManipulatorService: SelectionManipulatorService,
-        protected selectionService: SelectionService,
+        protected selectionService: SelectionHelperService,
     ) {
         super(drawingService);
     }

@@ -4,17 +4,14 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { BehaviorSubject } from 'rxjs';
-import { EllipseService } from '../../tools/ellipse-service';
+import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 
 @Injectable({
     providedIn: 'root',
 })
-export abstract class SelectionService {
+export abstract class SelectionHelperService {
     readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
     isSelectionBeingManipulated: BehaviorSubject<boolean>;
-
-    memento: HandlerMemento; ////////////////// FOR TESTING PURPOSES/////////////////////
-    where: Vec2; ////////////////// FOR TESTING PURPOSES/////////////////////
 
     mementos: HandlerMemento[] = [];
 

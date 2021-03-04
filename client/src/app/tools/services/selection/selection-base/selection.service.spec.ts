@@ -3,10 +3,10 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { BehaviorSubject } from 'rxjs';
 import { EllipseService } from '../../tools/ellipse-service';
 
-import { SelectionService } from './selection.service';
+import { SelectionHelperService } from './selection-helper.service';
 
 describe('SelectionService', () => {
-    let service: SelectionService;
+    let service: SelectionHelperService;
 
     /*let moveIfPressLongEnoughSpy : jasmine.Spy<any>;
     let singleMoveSpy : jasmine.Spy<any>;
@@ -24,7 +24,7 @@ describe('SelectionService', () => {
             { provide: EllipseService, useValue: ellipseServiceMock }, 
             ],
         });
-        service = TestBed.inject(SelectionService);
+        service = TestBed.inject(SelectionHelperService);
 
       /*  stopManipulationSpy = spyOn<any>(service, 'stopManipulation').and.callThrough();
         resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();

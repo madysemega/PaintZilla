@@ -6,7 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { BehaviorSubject } from 'rxjs';
 import { EllipseSelectionHelperService } from '../selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '../selection/ellipse/ellipse-selection-manipulator.service';
-import { SelectionService } from '../selection/selection-base/selection.service';
+import { SelectionHelperService } from '../selection/selection-base/selection-helper.service';
 
 import { EllipseSelectionCreatorService } from './ellipse-selection-creator.service';
 
@@ -21,7 +21,7 @@ describe('EllipseSelectionToolService', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
-    let selectionServiceMock: jasmine.SpyObj<SelectionService>;
+    let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
     let ellipseSelectionManipulatorMock: EllipseSelectionManipulatorService;
 
@@ -48,7 +48,7 @@ describe('EllipseSelectionToolService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy }, 
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
-                { provide: SelectionService, useValue: selectionServiceMock },
+                { provide: SelectionHelperService, useValue: selectionServiceMock },
                 { provide: EllipseSelectionManipulatorService, useValue: ellipseSelectionManipulatorMock },
             ],
         });

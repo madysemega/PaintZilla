@@ -6,7 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
 import { interval } from 'rxjs';
 import { SelectionHandlerService } from '../selection-base/selection-handler.service';
-import { SelectionService } from '../selection-base/selection.service';
+import { SelectionHelperService } from '../selection-base/selection-helper.service';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 
@@ -22,7 +22,7 @@ describe('EllipseSelectionManipulatorService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionHandlerMock: jasmine.SpyObj<SelectionHandlerService>;
-    let selectionServiceMock: jasmine.SpyObj<SelectionService>;
+    let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
 
     let stopManipulationSpy : jasmine.Spy<any>;
@@ -53,7 +53,7 @@ describe('EllipseSelectionManipulatorService', () => {
                 { provide: DrawingService, useValue: drawServiceSpy }, 
                 { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock},
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
-                { provide: SelectionService, useValue: selectionServiceMock },
+                { provide: SelectionHelperService, useValue: selectionServiceMock },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

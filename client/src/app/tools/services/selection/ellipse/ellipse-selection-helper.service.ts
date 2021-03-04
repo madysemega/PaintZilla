@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
+import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { EllipseService } from '../../tools/ellipse-service';
 
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipseSelectionHelperService extends SelectionService {
+export class EllipseSelectionHelperService extends SelectionHelperService {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
     constructor(public drawingService: DrawingService, colourService: ColourService, ellipseService: EllipseService	) {

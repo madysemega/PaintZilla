@@ -26,8 +26,6 @@ describe('RectangleSelectionCreatorService', () => {
 
     beforeEach(() => {
 
-        /*selectionServiceMock = jasmine.createSpyObj('SelectionService', ['isClickOutsideSelection', 'convertToMovement', 'add', 
-        'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAdjustedPerimeter']);*/
         rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', ['getSquareAdjustedPerimeter', 'drawPerimeter', 'setIsSelectionBeingManipulated']);
         rectangleSelectionHelperService.isSelectionBeingManipulated = new BehaviorSubject(true);
         

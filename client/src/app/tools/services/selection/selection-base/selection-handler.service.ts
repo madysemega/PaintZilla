@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
+import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 
 export enum ResizingMode {
     off = 0,
@@ -40,7 +40,7 @@ export abstract class SelectionHandlerService {
     public needWhiteEllipsePostDrawing: boolean;
     public originalTopLeftOnBaseCanvas: Vec2 ={x: 0, y:0};
 
-    constructor(protected drawingService: DrawingService, protected selectionService: SelectionService) {
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
         this.selectionCanvas = document.createElement('canvas');
         this.selectionCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D;
         this.originalCanvasCopy = document.createElement('canvas');
