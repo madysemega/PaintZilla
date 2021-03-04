@@ -110,7 +110,8 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.beginPath();
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
-        ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
+        ctx.lineWidth = 1;
+        ctx.ellipse(center.x, center.y, size + this.lineWidth, size + this.lineWidth, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
     }
