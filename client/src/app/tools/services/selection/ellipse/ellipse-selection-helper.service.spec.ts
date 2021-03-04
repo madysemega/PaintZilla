@@ -67,15 +67,38 @@ describe('EllipseSelectionHelperService', () => {
         expect(ctxStrokeSpy).toHaveBeenCalled();
     });
 
-    it('drawing a post selection ellipse should use ellipse() from CanvasRenderingContext2D', () => {
-        const center: Vec2 = { x: 0, y: 0 };
-        const radii: Vec2 = { x: 0, y: 0 };
+    it('drawing a post selection ellipse should work even if radii components both =0', () => {
+        let center: Vec2 = { x: 0, y: 0 };
+        let radii: Vec2 = { x: 0, y: 0 };
 
         const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+
+        service.drawPostSelectionEllipse(center, radii);
+
+        center = { x: 10, y: 15 };
+        radii = { x: 27, y: 28 };
 
         service.drawSelectionEllipse(center, radii);
 
         expect(ctxEllipseSpy).toHaveBeenCalled();
     });
+
+    it('drawing a post selection ellipse should use ellipse() from CanvasRenderingContext2D', () => {
+        let center: Vec2 = { x: 7, y: 9 };
+        let radii: Vec2 = { x: 7, y: 8 };
+
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+
+        service.drawPostSelectionEllipse(center, radii);
+
+        center = { x: 10, y: 15 };
+        radii = { x: 27, y: 28 };
+
+        service.drawSelectionEllipse(center, radii);
+
+        expect(ctxEllipseSpy).toHaveBeenCalled();
+    });
+
 });
