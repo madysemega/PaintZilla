@@ -76,7 +76,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         min = Math.ceil(min);
         max = Math.floor(max);
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.colourService.getPrimaryColour().toStringRBGA();
+        ctx.strokeStyle = this.colourService.primaryColour.toStringRBGA();
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 

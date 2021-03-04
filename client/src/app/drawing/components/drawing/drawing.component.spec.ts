@@ -4,11 +4,15 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { DrawingComponent } from './drawing.component';
 
 class ToolStub extends Tool {}
 
+// tslint:disable:no-any
 describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
@@ -16,7 +20,11 @@ describe('DrawingComponent', () => {
     let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let resizingServiceStub: ResizingService;
+    let toolSelectorStub: jasmine.SpyObj<any>;
+    let creatorStub: SelectionCreatorService;
+
     beforeEach(async(() => {
+        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut', 'getActiveSelectionTool']);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
         historyServiceStub.do.and.stub();
         historyServiceStub.undo.and.stub();
@@ -25,14 +33,18 @@ describe('DrawingComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         drawingStub = new DrawingService(historyServiceStub);
         resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
+        toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: ResizingService, useValue: resizingServiceStub },
+                { provide: ToolSelectorService, useValue: toolSelectorStub },
             ],
         }).compileComponents();
+
+        creatorStub = TestBed.inject(EllipseSelectionCreatorService);
     }));
 
     beforeEach(() => {
@@ -87,17 +99,8 @@ describe('DrawingComponent', () => {
         expect(mouseEventSpy).not.toHaveBeenCalledWith(event);
     });
 
-    it("onMouseUp(): should call the tool's mouse up when receiving a mouse up event and canvas is \
-    not resizing and was resizing should be false", () => {
-        const event = {} as MouseEvent;
-        const mouseEventSpy = spyOn(toolStub, 'onMouseUp').and.callThrough();
-        component.onMouseUp(event);
-        expect(mouseEventSpy).toHaveBeenCalled();
-        expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });
-
-    it("onMouseUp(): should call resizingService's disableResizer method when receiving a mouse up event \
-    and canvas is resizing and wasResizing should be true", () => {
+    it("onMouseUp(): should call resizingService's disableResizer method and wasResizing should be true when receiving a mouse up event \
+    and canvas is resizing ", () => {
         const event = {} as MouseEvent;
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(true);
         spyOn(resizingServiceStub, 'restoreBaseImageData').and.returnValue();
@@ -106,6 +109,18 @@ describe('DrawingComponent', () => {
         component.onMouseUp(event);
         expect(disableResizerStub).toHaveBeenCalled();
         expect(component.wasResizing).toEqual(true);
+    });
+
+    it("onMouseUp(): should not call resizingService's disableResizer method and wasResizing should be false when receiving a mouse up event \
+    and canvas is not resizing", () => {
+        const event = {} as MouseEvent;
+        spyOn(resizingServiceStub, 'isResizing').and.returnValue(false);
+        spyOn(resizingServiceStub, 'restoreBaseImageData').and.returnValue();
+        spyOn(resizingServiceStub, 'updateCanvasSize').and.returnValue();
+        const disableResizerStub = spyOn(resizingServiceStub, 'disableResizer').and.stub();
+        component.onMouseUp(event);
+        expect(disableResizerStub).not.toHaveBeenCalled();
+        expect(component.wasResizing).toEqual(false);
     });
 
     it("onMouseClick(): should call the tool's mouse click when receiving a mouse click event and canvas \
@@ -201,6 +216,15 @@ describe('DrawingComponent', () => {
         component.activateResizer(argument);
         expect(resizerSpy).toHaveBeenCalled();
         expect(resizerSpy).toHaveBeenCalledWith(argument);
+    });
+
+    it('activateResizer(): should tell the active selection tool to stop selection', () => {
+        spyOn(resizingServiceStub, 'saveCurrentImage').and.returnValue();
+        toolSelectorStub.getActiveSelectionTool.and.returnValue(creatorStub);
+        const argument = '';
+        const stopSelectionSpy: jasmine.Spy<any> = spyOn(creatorStub, 'stopManipulatingSelection').and.callThrough();
+        component.activateResizer(argument);
+        expect(stopSelectionSpy).toHaveBeenCalled();
     });
 
     it("disableResizer(): should call resizerService's disable resizer method", () => {

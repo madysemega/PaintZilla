@@ -1,9 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
+// tslint:disable:max-line-length
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
@@ -38,6 +43,25 @@ describe('ToolSelectorService', () => {
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as MetaWrappedTool).tool);
     });
 
+    it('selectTool should return false if it is called with undefined', () => {
+        const output: boolean = service.selectTool(undefined);
+        expect(output).toBe(false);
+    });
+
+    it('should return a selectionCreatorService when getActiveSelectionTool is called and the currently selected tool is a selectionCreatorService', () => {
+        service.selectTool('rectangle-selection');
+
+        expect(service.getActiveSelectionTool()).toBe(
+            (service.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as SelectionCreatorService,
+        );
+    });
+
+    it('should return undefined when getActiveSelectionTool is called and the currently selected tool is not a selectionCreatorService', () => {
+        service.selectTool('pencil');
+
+        expect(service.getActiveSelectionTool()).toBe(undefined);
+    });
+
     it("fromKeyboardShortcut should map 'c' to 'pencil'", () => {
         const expectedToolName = 'pencil';
         const toolName = service.fromKeyboardShortcut('c');
@@ -64,6 +88,11 @@ describe('ToolSelectorService', () => {
         const expectedToolName = 'ellipse';
         const toolName = service.fromKeyboardShortcut('2');
         expect(toolName).toBe(expectedToolName);
+    });
+
+    it("fromKeyboardShortcut should map 'aa' to undefined", () => {
+        const toolName = service.fromKeyboardShortcut('aa');
+        expect(toolName).toBe(undefined);
     });
 
     it('should keep last selected tool when user tries to select a non-existent tool', () => {

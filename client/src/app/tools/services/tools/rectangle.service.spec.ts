@@ -140,12 +140,12 @@ describe('RectangleService', () => {
         expect(drawRectSpy).toHaveBeenCalled();
     });
 
-    it(' onKeyDown should not call drawRect when mouse down if key != Shift', () => {
+    it(' onKeyDown should call drawRect when mouse down', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 
         service.onKeyDown(keyboardSpaceEvent);
-        expect(drawRectSpy).not.toHaveBeenCalled();
+        expect(drawRectSpy).toHaveBeenCalled();
     });
 
     it(' onKeyUp should call drawRect if key == Shift', () => {
@@ -162,14 +162,6 @@ describe('RectangleService', () => {
 
         service.onKeyUp(keyboardSpaceEvent);
         expect(drawRectSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onDeselectTool should call drawRect if mouseDown', () => {
-        service.mouseDown = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-
-        service.onToolDeselect();
-        expect(drawRectSpy).toHaveBeenCalled();
     });
 
     it(' onMouseMove should call stroke on preview canvas if shape type is Contoured', () => {

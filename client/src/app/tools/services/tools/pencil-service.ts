@@ -56,7 +56,7 @@ export class PencilService extends ResizableTool implements ISelectableTool {
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.colourService.getPrimaryColour().toStringRBGA();
+        ctx.strokeStyle = this.colourService.primaryColour.toStringRBGA();
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
