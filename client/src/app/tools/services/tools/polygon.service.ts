@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
@@ -12,25 +13,27 @@ import { ColourToolService } from '@app/tools/services/tools/colour-tool.service
     providedIn: 'root',
 })
 export class PolygonService extends ShapeTool implements ISelectableTool {
+    private readonly CIRCLE_MAX_ANGLE: number = 360;
     startPoint: Vec2;
     lastMousePosition: Vec2;
     numberSides: number;
-
+    isToDrawPerim: boolean;
     constructor(drawingService: DrawingService, private colourService: ColourToolService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
-        this.numberSides = 4;
+        this.numberSides = 3;
+        this.isToDrawPerim = true;
     }
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        console.log('appelé');
         if (this.mouseDown) {
+            this.isToDrawPerim = true;
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.lastMousePosition = this.mouseDownCoord;
             this.startPoint = this.mouseDownCoord;
@@ -39,6 +42,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     onMouseUp(event: MouseEvent): void {
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
+            this.isToDrawPerim = false;
             this.drawPolygon(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -51,19 +55,31 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
             this.drawPolygon(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
         }
     }
-
+    changeNbSides(event: MatSliderChange): void {
+        this.numberSides = event.value as number;
+    }
+    squarePoint(startPoint: Vec2, endPoint: Vec2): number {
+        const COMP_X = endPoint.x - startPoint.x;
+        const COMP_Y = endPoint.y - startPoint.y;
+        const COMP = Math.abs(COMP_X) < Math.abs(COMP_Y) ? COMP_X : COMP_Y;
+        return COMP;
+    }
     getPolygonSize(startPoint: Vec2, endPoint: Vec2): number {
-        return Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
+        const COMP = this.squarePoint(startPoint, endPoint);
+        endPoint = { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
+        console.log(endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+        return COMP;
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         ctx.save();
-        ctx.lineWidth = 1;
+        ctx.lineWidth = this.lineWidth;
         ctx.fillStyle = this.colourService.primaryColour;
         ctx.strokeStyle = this.colourService.secondaryColour;
+        const COMP = this.squarePoint(startPoint, endPoint);
+        endPoint = { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
         const SIZE = this.getPolygonSize(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };
-        console.log(startPoint);
 
         ctx.beginPath();
         ctx.moveTo(
@@ -77,7 +93,24 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
             );
         }
         ctx.closePath();
-        // ctx.fill();
+        if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
+            ctx.fill();
+        }
+        if (this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled) {
+            ctx.stroke();
+        }
+        if (this.isToDrawPerim) {
+            this.drawPerimeter(ctx, CENTER_POINT, SIZE);
+        }
+        ctx.restore();
+    }
+    drawPerimeter(ctx: CanvasRenderingContext2D, center: Vec2, size: number): void {
+        const DASH_NUMBER = 8;
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([DASH_NUMBER]);
+        ctx.strokeStyle = '#888';
+        ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
     }
