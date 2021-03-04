@@ -13,10 +13,10 @@ import { SelectionService } from './selection.service';
     providedIn: 'root',
 })
 export abstract class SelectionCreatorService extends Tool implements ISelectableTool, IDeselectableTool {
-    private readonly MINIMUM_SELECTION_WIDTH: number = 5;
-    protected startPoint: Vec2 = { x: 0, y: 0 };
+    public readonly MINIMUM_SELECTION_WIDTH: number = 5;
+    public startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
-    protected isShiftDown: boolean;
+    public isShiftDown: boolean;
 
     constructor(
         drawingService: DrawingService,
@@ -80,10 +80,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
             this.stopManipulatingSelection();
         }
 
-        if (event.key === 'm') {
-            this.selectionService.mementos.forEach((value)=>{console.log(value)});
-        }
-
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulatorService.onKeyDown(event);
             return;
@@ -126,7 +122,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     createSelection(startPoint: Vec2, endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAjustedPerimeter(startPoint, endPoint);
+            endPoint = this.selectionService.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
 
         this.convertToTopLeftAndBottomRight(startPoint, endPoint);
@@ -149,7 +145,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2): void {
-        const startPointCopy: Vec2 = { x: this.startPoint.x, y: this.startPoint.y };
+        const startPointCopy: Vec2 = { x: startPoint.x, y: startPoint.y };//was this.startPoint
 
         if (startPoint.x > endPoint.x) {
             startPoint.x = endPoint.x;

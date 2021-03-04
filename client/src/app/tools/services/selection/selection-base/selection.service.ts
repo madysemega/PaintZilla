@@ -4,6 +4,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { BehaviorSubject } from 'rxjs';
+import { EllipseService } from '../../tools/ellipse-service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,47 +18,16 @@ export abstract class SelectionService {
 
     mementos: HandlerMemento[] = [];
 
-    constructor(protected drawingService: DrawingService, protected colourService: ColourService) {
+    constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {
         this.isSelectionBeingManipulated = new BehaviorSubject<boolean>(false);
     }
 
-    getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
-        const endPointWithRespectToStartPoint: Vec2 = {
-            x: endPoint.x - startPoint.x,
-            y: endPoint.y - startPoint.y,
-        };
-
-        const endPointShortestComponent = Math.min(Math.abs(endPointWithRespectToStartPoint.x), Math.abs(endPointWithRespectToStartPoint.y));
-
-        const isXComponentPositive: boolean = startPoint.x < endPoint.x;
-        const isYComponentPositive: boolean = startPoint.y < endPoint.y;
-
-        return {
-            x: startPoint.x + (isXComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
-            y: startPoint.y + (isYComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
-        };
+    getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
+        return this.ellipseService.getSquareAdjustedPerimeter(startPoint, endPoint);
     }
 
-    drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2, isShiftDown: boolean): void {
-        const DASH_NUMBER = 8;
-
-        const topLeft: Vec2 = {
-            x: Math.min(startPoint.x, endPoint.x),
-            y: Math.min(startPoint.y, endPoint.y),
-        };
-
-        const dimensions: Vec2 = {
-            x: Math.abs(endPoint.x - startPoint.x),
-            y: Math.abs(endPoint.y - startPoint.y),
-        };
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.setLineDash([DASH_NUMBER]);
-        ctx.strokeStyle = '#888';
-        ctx.rect(topLeft.x, topLeft.y, dimensions.x, dimensions.y);
-        ctx.stroke();
-        ctx.restore();
+    drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        this.ellipseService.drawRectangle(ctx, startPoint, endPoint);
     }
 
     setIsSelectionBeingManipulated(isItBeingManipulated: boolean): void {

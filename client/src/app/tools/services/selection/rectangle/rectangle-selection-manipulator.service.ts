@@ -19,6 +19,6 @@ export class RectangleSelectionManipulatorService extends SelectionManipulatorSe
     }
 
     drawSelectionOutline(): void {
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, this.isShiftDown);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
 }

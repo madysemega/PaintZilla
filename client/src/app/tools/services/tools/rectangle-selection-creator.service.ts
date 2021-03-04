@@ -20,9 +20,9 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
 
     drawSelectionOutline(endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAjustedPerimeter(this.startPoint, endPoint);
+            endPoint = this.selectionService.getSquareAdjustedPerimeter(this.startPoint, endPoint);
         }
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint, this.isShiftDown);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
 
     onKeyDown(event: KeyboardEvent): void {

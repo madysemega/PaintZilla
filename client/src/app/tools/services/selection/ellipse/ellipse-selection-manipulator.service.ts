@@ -25,6 +25,6 @@ export class EllipseSelectionManipulatorService extends SelectionManipulatorServ
 
         this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
         this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight, this.isShiftDown);
+        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
 }

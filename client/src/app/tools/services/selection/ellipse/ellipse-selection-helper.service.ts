@@ -3,6 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionService } from '@app/tools/services/selection/selection-base/selection.service';
+import { EllipseService } from '../../tools/ellipse-service';
 
 
 @Injectable({
@@ -11,8 +12,8 @@ import { SelectionService } from '@app/tools/services/selection/selection-base/s
 export class EllipseSelectionHelperService extends SelectionService {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    constructor(drawingService: DrawingService, colourService: ColourService) {
-        super(drawingService, colourService);
+    constructor(public drawingService: DrawingService, colourService: ColourService, ellipseService: EllipseService	) {
+        super(drawingService, colourService, ellipseService);
     }
 
     getEllipseParam(startPoint: Vec2, endPoint: Vec2, center: Vec2, radii: Vec2): void {

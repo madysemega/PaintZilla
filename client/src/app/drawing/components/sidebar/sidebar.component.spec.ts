@@ -87,12 +87,12 @@ describe('SidebarComponent', () => {
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         
-        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub);
+        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
         ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(drawingStub, ellipseSelectionHelperService, ellipseSelectionHandlerService, historyServiceStub);
         ellipseSelectionCreatorService = new EllipseSelectionCreatorService(drawingStub, ellipseSelectionManipulatorService, ellipseSelectionHelperService);
 
-        rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub);
+        rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService, historyServiceStub);
         rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService, historyServiceStub);
         rectangleSelectionCreatorService = new RectangleSelectionCreatorService(drawingStub, rectangleSelectionManipulatorService, rectangleSelectionHelperService);
