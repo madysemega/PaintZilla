@@ -43,6 +43,11 @@ describe('ToolSelectorService', () => {
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('ellipse') as MetaWrappedTool).tool);
     });
 
+    it('selectTool should return false if it is called with undefined', () => {
+        const output: boolean = service.selectTool(undefined);
+        expect(output).toBe(false);
+    });
+
     it('should return a selectionCreatorService when getActiveSelectionTool is called and the currently selected tool is a selectionCreatorService', () => {
         service.selectTool('rectangle-selection');
 
@@ -83,6 +88,11 @@ describe('ToolSelectorService', () => {
         const expectedToolName = 'ellipse';
         const toolName = service.fromKeyboardShortcut('2');
         expect(toolName).toBe(expectedToolName);
+    });
+
+    it("fromKeyboardShortcut should map 'aa' to undefined", () => {
+        const toolName = service.fromKeyboardShortcut('aa');
+        expect(toolName).toBe(undefined);
     });
 
     it('should keep last selected tool when user tries to select a non-existent tool', () => {

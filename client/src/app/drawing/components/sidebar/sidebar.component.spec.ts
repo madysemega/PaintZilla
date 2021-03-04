@@ -83,6 +83,7 @@ describe('SidebarComponent', () => {
     beforeEach(async(() => {
         historyServiceStub = new HistoryService();
         drawingStub = new DrawingService(historyServiceStub);
+        drawingStub.canvasSize = { x: 500, y: 600 };
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
         sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
@@ -203,6 +204,13 @@ describe('SidebarComponent', () => {
     it('should return <Outil inconnu>', () => {
         const toolName = 'rectangle';
         component.selectTool('rectangle');
+        expect(component.selectedToolName).toBe(toolName);
+    });
+
+    it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+        const toolName = 'rectangle-selection';
+        spyOn(rectangleSelectionCreatorService, 'selectEntireCanvas').and.returnValue();
+        component.selectTheEntireCanvas();
         expect(component.selectedToolName).toBe(toolName);
     });
 
