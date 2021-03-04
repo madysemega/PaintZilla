@@ -15,6 +15,5 @@ export class UserActionRenderSelection implements IUserAction {
         private selectionHandler: SelectionHandlerService,
         private handlerMemento: HandlerMemento,
         private topLeft: Vec2,
-        ) {}
+    ) {}
 }
-

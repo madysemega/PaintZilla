@@ -60,7 +60,7 @@ export class DrawingComponent implements AfterViewInit {
             this.wasResizing = true;
             this.resizingService.disableResizer();
             this.resizingService.finalizeResizingEvent();
-        } 
+        }
     }
 
     @HostListener('click', ['$event'])

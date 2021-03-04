@@ -5,37 +5,35 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
 describe('EllipseSelectionHelperService', () => {
     let service: EllipseSelectionHelperService;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let canvasTestHelper: CanvasTestHelper;
     let canvas: HTMLCanvasElement;
-    //let canvasPosition: Vec2;
+    // let canvasPosition: Vec2;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
-        drawServiceSpy.canvasSize = {x: 1000, y: 500};
+        drawServiceSpy.canvasSize = { x: 1000, y: 500 };
 
-
-        TestBed.configureTestingModule({providers: [
-            { provide: DrawingService, useValue: drawServiceSpy }, 
-        ],});
+        TestBed.configureTestingModule({ providers: [{ provide: DrawingService, useValue: drawServiceSpy }] });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
 
         canvas = canvasTestHelper.canvas;
-       // canvasPosition = { x: 50, y: 40 };
+        // canvasPosition = { x: 50, y: 40 };
 
         service = TestBed.inject(EllipseSelectionHelperService);
 
-        service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
-        service['drawingService'].previewCtx = previewCtxStub;
-        service['drawingService'].canvas = canvas;
-
+        service.drawingService.baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
+        service.drawingService.previewCtx = previewCtxStub;
+        service.drawingService.canvas = canvas;
     });
 
     it('should be created', () => {
@@ -43,12 +41,12 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('getEllipseParam should not change startPoint and endPoint', () => {
-        let startPoint: Vec2 = {x:5, y:8};
-        let startPointCopy: Vec2 = {x:5, y:8};
-        let endPoint: Vec2 = {x:4, y: 9};
-        let endPointCopy: Vec2 = {x:4, y:9};
-        let center: Vec2 = {x:0, y:0};
-        let radii: Vec2 = {x:0, y:0};
+        const startPoint: Vec2 = { x: 5, y: 8 };
+        const startPointCopy: Vec2 = { x: 5, y: 8 };
+        const endPoint: Vec2 = { x: 4, y: 9 };
+        const endPointCopy: Vec2 = { x: 4, y: 9 };
+        const center: Vec2 = { x: 0, y: 0 };
+        const radii: Vec2 = { x: 0, y: 0 };
         service.getEllipseParam(startPoint, endPoint, center, radii);
 
         expect(startPoint).toEqual(startPointCopy);
@@ -56,12 +54,12 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('drawing a selection ellipse should use ellipse() and stroke() from CanvasRenderingContext2D', () => {
-        let center: Vec2 = {x:0, y:0};
-        let radii: Vec2 = {x:0, y:0};
+        const center: Vec2 = { x: 0, y: 0 };
+        const radii: Vec2 = { x: 0, y: 0 };
 
-        let ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
-        let ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
-        let ctxStrokeSpy: jasmine.Spy<any> = spyOn(ctx, 'stroke');
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+        const ctxStrokeSpy: jasmine.Spy<any> = spyOn(ctx, 'stroke');
 
         service.drawSelectionEllipse(center, radii);
 
@@ -70,14 +68,14 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('drawing a post selection ellipse should use ellipse() from CanvasRenderingContext2D', () => {
-        let center: Vec2 = {x:0, y:0};
-        let radii: Vec2 = {x:0, y:0};
+        const center: Vec2 = { x: 0, y: 0 };
+        const radii: Vec2 = { x: 0, y: 0 };
 
-        let ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
-        let ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
         service.drawSelectionEllipse(center, radii);
-        
+
         expect(ctxEllipseSpy).toHaveBeenCalled();
     });
 });

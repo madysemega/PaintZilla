@@ -14,7 +14,7 @@ export class EllipseSelectionManipulatorService extends SelectionManipulatorServ
         drawingService: DrawingService,
         protected selectionService: EllipseSelectionHelperService,
         selectionHandler: EllipseSelectionHandlerService,
-        historyService: HistoryService
+        historyService: HistoryService,
     ) {
         super(drawingService, selectionService, selectionHandler, historyService);
     }

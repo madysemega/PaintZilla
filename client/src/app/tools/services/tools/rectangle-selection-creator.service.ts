@@ -10,7 +10,7 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 })
 export class RectangleSelectionCreatorService extends SelectionCreatorService {
     constructor(
-        drawingService: DrawingService,
+        public drawingService: DrawingService,
         selectionManipulatorService: RectangleSelectionManipulatorService,
         protected selectionService: RectangleSelectionHelperService,
     ) {

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { ManipulatorMemento } from '@app/app/classes/manipulator-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderSelection } from '@app/history/user-actions/user-action-render-selection';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
@@ -11,8 +13,6 @@ import { takeWhile } from 'rxjs/operators';
 import { Arrow } from './arrow';
 import { ResizingMode } from './resizing-mode';
 import { SelectionHandlerService } from './selection-handler.service';
-import { UserActionRenderSelection } from '@app/history/user-actions/user-action-render-selection';
-import { HandlerMemento } from '@app/app/classes/handler-memento';
 
 @Injectable({
     providedIn: 'root',
@@ -30,17 +30,17 @@ export abstract class SelectionManipulatorService extends Tool {
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
-    public diagonalSlope: number = 0;
-    public diagonalYIntercept: number = 0;
-    public mouseLastPos: Vec2 = { x: 0, y: 0 };
-    public mouseDownLastPos: Vec2 = { x: 0, y: 0 };
+    diagonalSlope: number = 0;
+    diagonalYIntercept: number = 0;
+    mouseLastPos: Vec2 = { x: 0, y: 0 };
+    mouseDownLastPos: Vec2 = { x: 0, y: 0 };
     resizingMode: ResizingMode = ResizingMode.off;
-    public isShiftDown: boolean = false;
+    isShiftDown: boolean = false;
     isReversedX: boolean = false;
     isReversedY: boolean = false;
-    public arrowKeyDown: boolean[] = [false, false, false, false];
-    public subscriptions: Subscription[] = [];
-    public isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
+    arrowKeyDown: boolean[] = [false, false, false, false];
+    subscriptions: Subscription[] = [];
+    isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
     constructor(
         protected drawingService: DrawingService,
@@ -146,8 +146,8 @@ export abstract class SelectionManipulatorService extends Tool {
 
     initialize(vertices: Vec2[]): void {
         this.resetProperties();
-        let topLeft = vertices[0];
-        let bottomRight = vertices[1];
+        const topLeft = vertices[0];
+        const bottomRight = vertices[1];
         this.topLeft = { x: topLeft.x, y: topLeft.y };
         this.bottomRight = { x: bottomRight.x, y: bottomRight.y };
         this.computeDiagonalEquation();
@@ -204,11 +204,12 @@ export abstract class SelectionManipulatorService extends Tool {
         this.selectionService.setIsSelectionBeingManipulated(false);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
-            
-         
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
-                let memento: HandlerMemento = this.selectionHandler.createMemento();
-                let userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, { x: this.topLeft.x, y: this.topLeft.y });
+                const memento: HandlerMemento = this.selectionHandler.createMemento();
+                const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
+                    x: this.topLeft.x,
+                    y: this.topLeft.y,
+                });
                 this.historyService.register(userAction);
             }
         }
@@ -344,5 +345,4 @@ export abstract class SelectionManipulatorService extends Tool {
         this.isReversedX = memento.isReversedX;
         this.isReversedY = memento.isReversedY;
     }
-
 }

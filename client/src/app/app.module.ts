@@ -17,6 +17,8 @@ import { DrawingComponent } from '@app/drawing/components/drawing/drawing.compon
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { MaterialModule } from '@app/material.module';
+import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
+import { RectangleSelectionComponent } from '@app/tools/components/selection/rectangle-selection/rectangle-selection.component';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -24,8 +26,6 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
-import { RectangleSelectionComponent } from '@app/tools/components/selection/rectangle-selection/rectangle-selection.component';
-import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
 import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 
 @NgModule({

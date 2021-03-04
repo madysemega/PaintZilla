@@ -11,9 +11,7 @@ describe('EllipseSelectionComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [EllipseSelectionComponent],
-            providers: [
-                { provide: EllipseSelectionManipulatorService }
-            ],
+            providers: [{ provide: EllipseSelectionManipulatorService }],
         }).compileComponents();
     }));
 
@@ -28,21 +26,21 @@ describe('EllipseSelectionComponent', () => {
     });
 
     it('setResizingMode should set selectionManipulator resizingMode', () => {
-        let resizingModeInitialValue: number =0;
+        const resizingModeInitialValue = 0;
         component.selectionManipulator.resizingMode = resizingModeInitialValue;
         component.setResizingMode(ResizingMode.towardsBottom);
         expect(component.selectionManipulator.resizingMode).toEqual(ResizingMode.towardsBottom);
     });
 
     it('isXRev should return selectionManipulator isReversedX', () => {
-        let isReversedXInitialValue: boolean =true;
+        const isReversedXInitialValue = true;
         component.selectionManipulator.isReversedX = isReversedXInitialValue;
         const output: boolean = component.isXRev();
         expect(output).toEqual(true);
     });
 
     it('isYRev should return selectionManipulator isReversedY', () => {
-        let isReversedYInitialValue: boolean =true;
+        const isReversedYInitialValue = true;
         component.selectionManipulator.isReversedY = isReversedYInitialValue;
         const output: boolean = component.isYRev();
         expect(output).toEqual(true);

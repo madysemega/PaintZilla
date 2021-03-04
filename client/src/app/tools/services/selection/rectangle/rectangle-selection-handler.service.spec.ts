@@ -3,23 +3,25 @@ import { TestBed } from '@angular/core/testing';
 import { RectangleSelectionHandlerService } from './rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
 describe('RectangleSelectionHandlerService', () => {
     let service: RectangleSelectionHandlerService;
 
     let rectangleSelectionHelperService: jasmine.SpyObj<RectangleSelectionHelperService>;
 
-
     let drawImageSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
-
-        rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', ['drawPostSelectionRectangle', 'drawPerimeter', 'setIsSelectionBeingManipulated']);
+        rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', [
+            'drawPostSelectionRectangle',
+            'drawPerimeter',
+            'setIsSelectionBeingManipulated',
+        ]);
 
         TestBed.configureTestingModule({
-            providers:
-            [   
-                { provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService },
-            ],
+            providers: [{ provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService }],
         });
         service = TestBed.inject(RectangleSelectionHandlerService);
 
@@ -33,8 +35,8 @@ describe('RectangleSelectionHandlerService', () => {
     it('extractSelectionFromSource should call drawImage from  CanvasRenderingContext2D', () => {
         const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
         sourceCanvas.width = 500;
-        sourceCanvas.height =764;
-        service.extractSelectionFromSource(sourceCanvas)
+        sourceCanvas.height = 764;
+        service.extractSelectionFromSource(sourceCanvas);
         expect(drawImageSpy).toHaveBeenCalled();
     });
 

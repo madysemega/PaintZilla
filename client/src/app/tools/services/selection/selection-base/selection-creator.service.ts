@@ -13,10 +13,10 @@ import { SelectionHelperService } from './selection-helper.service';
     providedIn: 'root',
 })
 export abstract class SelectionCreatorService extends Tool implements ISelectableTool, IDeselectableTool {
-    public readonly MINIMUM_SELECTION_WIDTH: number = 5;
-    public startPoint: Vec2 = { x: 0, y: 0 };
+    readonly MINIMUM_SELECTION_WIDTH: number = 5;
+    startPoint: Vec2 = { x: 0, y: 0 };
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
-    public isShiftDown: boolean;
+    isShiftDown: boolean;
 
     constructor(
         drawingService: DrawingService,
@@ -145,7 +145,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2): void {
-        const startPointCopy: Vec2 = { x: startPoint.x, y: startPoint.y };//was this.startPoint
+        const startPointCopy: Vec2 = { x: startPoint.x, y: startPoint.y }; // was this.startPoint
 
         if (startPoint.x > endPoint.x) {
             startPoint.x = endPoint.x;

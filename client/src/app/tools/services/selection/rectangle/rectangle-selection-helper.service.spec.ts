@@ -5,6 +5,9 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
 describe('RectangleSelectionHelperService', () => {
     let service: RectangleSelectionHelperService;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
@@ -17,16 +20,11 @@ describe('RectangleSelectionHelperService', () => {
     let rectSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
-
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 0, y: 0 };
-        
-        
+
         TestBed.configureTestingModule({
-            providers:
-                [
-                    { provide: DrawingService, useValue: drawServiceSpy },
-                ],
+            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
         });
 
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -45,9 +43,9 @@ describe('RectangleSelectionHelperService', () => {
     });
 
     it('drawPostSelectionRectangle should use rect from CanvasRenderingContext2D', () => {
-        let topLeft: Vec2 = {x:434, y: 564};
-        let originalWidth: number =50;
-        let originalHeight: number = 432;
+        const topLeft: Vec2 = { x: 434, y: 564 };
+        const originalWidth = 50;
+        const originalHeight = 432;
         service.drawPostSelectionRectangle(topLeft, originalWidth, originalHeight);
         expect(rectSpy).toHaveBeenCalled();
     });

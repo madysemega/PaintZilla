@@ -4,6 +4,9 @@ import { RectangleSelectionHelperService } from './rectangle-selection-helper.se
 
 import { RectangleSelectionManipulatorService } from './rectangle-selection-manipulator.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
 describe('RectangleSelectionManipulatorService', () => {
     let service: RectangleSelectionManipulatorService;
 
@@ -12,16 +15,18 @@ describe('RectangleSelectionManipulatorService', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
 
     beforeEach(() => {
-
-        rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', ['getSquareAdjustedPerimeter', 'drawPerimeter', 'setIsSelectionBeingManipulated']);
+        rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', [
+            'getSquareAdjustedPerimeter',
+            'drawPerimeter',
+            'setIsSelectionBeingManipulated',
+        ]);
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType', 'drawPerimeter']);
-        drawServiceSpy.canvasSize = {x: 1000, y: 500};
+        drawServiceSpy.canvasSize = { x: 1000, y: 500 };
 
         TestBed.configureTestingModule({
-                providers: 
-            [   
-                //{ provide: SelectionService, useValue: selectionServiceMock },
-                { provide: DrawingService, useValue: drawServiceSpy }, 
+            providers: [
+                // { provide: SelectionService, useValue: selectionServiceMock },
+                { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService },
             ],
         });

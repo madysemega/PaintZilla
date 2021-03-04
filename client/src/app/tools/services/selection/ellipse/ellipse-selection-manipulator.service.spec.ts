@@ -4,13 +4,19 @@ import { ManipulatorMemento } from '@app/app/classes/manipulator-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
+import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
+import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval } from 'rxjs';
-import { SelectionHandlerService } from '../selection-base/selection-handler.service';
-import { SelectionHelperService } from '../selection-base/selection-helper.service';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 
 import { EllipseSelectionManipulatorService } from './ellipse-selection-manipulator.service';
+
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
+// tslint:disable:max-file-line-count
+// tslint:disable:no-unused-expression
 
 describe('EllipseSelectionManipulatorService', () => {
     let service: EllipseSelectionManipulatorService;
@@ -25,33 +31,49 @@ describe('EllipseSelectionManipulatorService', () => {
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
 
-    let stopManipulationSpy : jasmine.Spy<any>;
-    let resizeSelectionSpy : jasmine.Spy<any>;
-    //let registerMousePosSpy : jasmine.Spy<any>;
-    let computeDiagonalEquation : jasmine.Spy<any>;
-    let moveSelectionSpy : jasmine.Spy<any>;
-    let moveIfPressLongEnoughSpy : jasmine.Spy<any>;
-    let singleMoveSpy : jasmine.Spy<any>;
+    let stopManipulationSpy: jasmine.Spy<any>;
+    let resizeSelectionSpy: jasmine.Spy<any>;
+    // let registerMousePosSpy : jasmine.Spy<any>;
+    let computeDiagonalEquation: jasmine.Spy<any>;
+    let moveSelectionSpy: jasmine.Spy<any>;
+    let moveIfPressLongEnoughSpy: jasmine.Spy<any>;
+    let singleMoveSpy: jasmine.Spy<any>;
     let getMousePosOnDiagonalSpy: jasmine.Spy<any>;
-    //let drawSelectionSpy: jasmine.Spy<any>;
+    // let drawSelectionSpy: jasmine.Spy<any>;
 
-    //let isClickOutsideSelectionSpy: jasmine.Spy<any>;
+    // let isClickOutsideSelectionSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
-
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
-        drawServiceSpy.canvasSize = {x: 0, y: 0};
+        drawServiceSpy.canvasSize = { x: 0, y: 0 };
 
         selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select']);
-        ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', ['getEllipseParam', 'drawSelectionEllipse', 'add', 'isClickOutsideSelection', 'convertToMovement', 'add', 
-        'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAjustedPerimeter' ]);
-        selectionServiceMock = jasmine.createSpyObj('SelectionService', ['isClickOutsideSelection', 'convertToMovement', 'add', 
-        'setIsSelectionBeingManipulated', 'setIsSelectionBeingManipulated', 'drawPerimeter', 'getSquareAjustedPerimeter']);
+        ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
+            'getEllipseParam',
+            'drawSelectionEllipse',
+            'add',
+            'isClickOutsideSelection',
+            'convertToMovement',
+            'add',
+            'setIsSelectionBeingManipulated',
+            'setIsSelectionBeingManipulated',
+            'drawPerimeter',
+            'getSquareAjustedPerimeter',
+        ]);
+        selectionServiceMock = jasmine.createSpyObj('SelectionService', [
+            'isClickOutsideSelection',
+            'convertToMovement',
+            'add',
+            'setIsSelectionBeingManipulated',
+            'setIsSelectionBeingManipulated',
+            'drawPerimeter',
+            'getSquareAjustedPerimeter',
+        ]);
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: DrawingService, useValue: drawServiceSpy }, 
-                { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock},
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
                 { provide: SelectionHelperService, useValue: selectionServiceMock },
             ],
@@ -65,32 +87,30 @@ describe('EllipseSelectionManipulatorService', () => {
 
         service = TestBed.inject(EllipseSelectionManipulatorService);
 
-        let dummyTime: number = 1;
+        const dummyTime = 1;
         const source = interval(dummyTime);
         // tslint:disable:no-magic-numbers
-        service.subscriptions[0] = source.subscribe(()=>{});
-        service.subscriptions[1] = source.subscribe(()=>{});
-        service.subscriptions[2] = source.subscribe(()=>{});
-        service.subscriptions[3] = source.subscribe(()=>{});
-        
+        service.subscriptions[0] = source.subscribe(() => {});
+        service.subscriptions[1] = source.subscribe(() => {});
+        service.subscriptions[2] = source.subscribe(() => {});
+        service.subscriptions[3] = source.subscribe(() => {});
+
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
             jasmine
                 .createSpy('getBoundingClientRect')
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        
         stopManipulationSpy = spyOn<any>(service, 'stopManipulation').and.callThrough();
         resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
-        //registerMousePosSpy = spyOn<any>(service, 'registerMousePos').and.callThrough();
+        // registerMousePosSpy = spyOn<any>(service, 'registerMousePos').and.callThrough();
         computeDiagonalEquation = spyOn<any>(service, 'computeDiagonalEquation').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
         moveIfPressLongEnoughSpy = spyOn<any>(service, 'moveIfPressLongEnough').and.callThrough();
         singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
         getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
-        //drawSelectionSpy = spyOn<any>(selectionHandlerMock, 'drawSelection').and.callThrough();
+        // drawSelectionSpy = spyOn<any>(selectionHandlerMock, 'drawSelection').and.callThrough();
 
-        
         // Configuration du spy du service
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
@@ -154,7 +174,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.resizingMode = ResizingMode.off;
         service.onMouseMove(mouseEvent);
         expect(moveSelectionSpy).toHaveBeenCalled();
-    });    
+    });
 
     it('isShiftDown should be true if event.key === Shift', () => {
         const keyboardEvent: KeyboardEvent = {
@@ -165,7 +185,7 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(service.isShiftDown).toEqual(true);
     });
 
-    it('resizeSelection should be called if isShiftDown and isSelectionBeingResizedDiagonally are true', ()=> {
+    it('resizeSelection should be called if isShiftDown and isSelectionBeingResizedDiagonally are true', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
@@ -193,7 +213,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.onKeyDown(keyboardEvent);
         expect(moveIfPressLongEnoughSpy).toHaveBeenCalled();
     });
-    
+
     it('onKeyDown should call moveIfPressLongEnough if event.key === ArrowLeft !arrowKeyDown[Arrow.Left]', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'ArrowLeft',
@@ -221,7 +241,7 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(service.isShiftDown).toEqual(false);
     });
 
-    it('resizeSelection should be called if isShiftDown and isSelectionBeingResizedDiagonally are true', ()=> {
+    it('resizeSelection should be called if isShiftDown and isSelectionBeingResizedDiagonally are true', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'Shift',
         } as KeyboardEvent;
@@ -232,15 +252,15 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(resizeSelectionSpy).toHaveBeenCalled;
     });
 
-    it('onKeyDown should call singleMove if event.key === ArrowDown, ()', ()=> {
+    it('onKeyDown should call singleMove if event.key === ArrowDown, ()', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'ArrowDown',
         } as KeyboardEvent;
-    
+
         service.onKeyUp(keyboardEvent);
         expect(singleMoveSpy).toHaveBeenCalled();
     });
-    
+
     it('onKeyDown should call singleMove if event.key === ArrowUp', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'ArrowUp',
@@ -250,7 +270,7 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(singleMoveSpy).toHaveBeenCalled();
     });
 
-    it('onKeyDown should call singleMove if event.key === ArrowLeft, () =>',()=> {
+    it('onKeyDown should call singleMove if event.key === ArrowLeft, () =>', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'ArrowLeft',
         } as KeyboardEvent;
@@ -258,7 +278,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.onKeyUp(keyboardEvent);
         expect(singleMoveSpy).toHaveBeenCalled();
     });
-    
+
     it('onKeyDown should call singleMove if event.key === ArrowRight', () => {
         const keyboardEvent: KeyboardEvent = {
             key: 'ArrowRight',
@@ -269,9 +289,9 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('initialize should set values correctly', () => {
-        let topLeft = {x:5, y:7};
-        let bottomRight = {x:10, y:9};
-        let vertices: Vec2[] =[];
+        const topLeft = { x: 5, y: 7 };
+        const bottomRight = { x: 10, y: 9 };
+        const vertices: Vec2[] = [];
         vertices.push(topLeft, bottomRight);
         service.initialize(vertices);
         expect(service.topLeft.x).toEqual(topLeft.x);
@@ -281,8 +301,8 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('resizeSelction should call getMousePosOnDiagonal if shiftIsDown and isSelectionBeingResizedDiagonally are true', () => {
-        let newPos = {x:5, y:7};
-        let resizingMode = ResizingMode.towardsBottom;
+        const newPos = { x: 5, y: 7 };
+        const resizingMode = ResizingMode.towardsBottom;
         service.isShiftDown = true;
         spyOn<any>(service, 'isSelectionBeingResizedDiagonally').and.returnValue('true');
         service.resizeSelection(newPos, resizingMode);
@@ -290,43 +310,43 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('resizeSelction should update bottomRight and isReversed correctly if direction === ResizingMode.towardsBottom', () => {
-        let newPos = {x:5, y:7};
-        let resizingMode = ResizingMode.towardsBottom;
-        let bottomRight = {x: 10, y:15};
+        const newPos = { x: 5, y: 7 };
+        const resizingMode = ResizingMode.towardsBottom;
+        const bottomRight = { x: 10, y: 15 };
         service.bottomRight = bottomRight;
         service.resizeSelection(newPos, resizingMode);
         expect(service.bottomRight.y).toEqual(newPos.y);
-        expect(service.isReversedY).toEqual( newPos.y < service.topLeft.y);
+        expect(service.isReversedY).toEqual(newPos.y < service.topLeft.y);
     });
 
     it('resizeSelction should update topLeft and isReversed correctly if direction === ResizingMode.towardsTop', () => {
-        let newPos = {x:5, y:7};
-        let resizingMode = ResizingMode.towardsTop;
-        let topLeft = {x: 10, y:15};
+        const newPos = { x: 5, y: 7 };
+        const resizingMode = ResizingMode.towardsTop;
+        const topLeft = { x: 10, y: 15 };
         service.topLeft = topLeft;
         service.resizeSelection(newPos, resizingMode);
         expect(service.topLeft.y).toEqual(newPos.y);
-        expect(service.isReversedY).toEqual( newPos.y > service.bottomRight.y);
+        expect(service.isReversedY).toEqual(newPos.y > service.bottomRight.y);
     });
 
     it('resizeSelction should update bottomRight and isReversed correctly if direction === ResizingMode.towardsRight', () => {
-        let newPos = {x:5, y:7};
-        let resizingMode = ResizingMode.towardsRight;
-        let bottomRight = {x: 10, y:15};
+        const newPos = { x: 5, y: 7 };
+        const resizingMode = ResizingMode.towardsRight;
+        const bottomRight = { x: 10, y: 15 };
         service.bottomRight = bottomRight;
         service.resizeSelection(newPos, resizingMode);
         expect(service.bottomRight.x).toEqual(newPos.x);
-        expect(service.isReversedX).toEqual( newPos.x < service.topLeft.x);
+        expect(service.isReversedX).toEqual(newPos.x < service.topLeft.x);
     });
 
     it('resizeSelction should update topLeft and isReversed correctly if direction === ResizingMode.towardsLeft', () => {
-        let newPos = {x:5, y:7};
-        let resizingMode = ResizingMode.towardsLeft;
-        let topLeft = {x: 10, y:15};
+        const newPos = { x: 5, y: 7 };
+        const resizingMode = ResizingMode.towardsLeft;
+        const topLeft = { x: 10, y: 15 };
         service.topLeft = topLeft;
         service.resizeSelection(newPos, resizingMode);
         expect(service.topLeft.x).toEqual(newPos.x);
-        expect(service.isReversedX).toEqual( newPos.x > service.bottomRight.x);
+        expect(service.isReversedX).toEqual(newPos.x > service.bottomRight.x);
     });
 
     it('stopManipulation should call createMemento if needDrawSelection and drawSelection from SelectionHandler are true', () => {
@@ -341,7 +361,6 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(selectionHandlerMock.createMemento).not.toHaveBeenCalled();
     });
 
-
     it('stopManipulation should call drawSelection if needDrawSelection is true', () => {
         service.stopManipulation(true);
         expect(selectionHandlerMock.drawSelection).toHaveBeenCalled();
@@ -353,52 +372,52 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('startMovingSelection should set isContinousMovementByKeyboardOn of the correct arrowIndex to true', () => {
-        const movement: Vec2 = {x:5, y:7};
-        const arrowIndex: number =1;
+        const movement: Vec2 = { x: 5, y: 7 };
+        const arrowIndex = 1;
         service.startMovingSelectionContinous(movement, arrowIndex);
         expect(service.isContinousMovementByKeyboardOn[arrowIndex]).toEqual(true);
     });
 
     it('moveIfPressedLongEnough should set arrowKeyDown of the correct arrowIndex to true', () => {
-        const movement: Vec2 = {x:5, y:7};
-        const arrowIndex: number =1;
+        const movement: Vec2 = { x: 5, y: 7 };
+        const arrowIndex = 1;
         service.moveIfPressLongEnough(movement, arrowIndex);
         expect(service.arrowKeyDown[arrowIndex]).toEqual(true);
     });
 
     it('stopMovingContinuous should set isContinousMovementByKeyboardOn of the correct arrowIndex to false', () => {
-        const arrowIndex: number =1;
+        const arrowIndex = 1;
         service.isContinousMovementByKeyboardOn[arrowIndex] = true;
         service.stopContinuousMovement(arrowIndex);
         expect(service.isContinousMovementByKeyboardOn[arrowIndex]).toEqual(false);
     });
 
     it('singleMove should call stopContinuousMovement with correct arrowIndex', () => {
-        const movement: Vec2 = {x:5, y:7};
-        const arrowIndex: number =1;
+        const movement: Vec2 = { x: 5, y: 7 };
+        const arrowIndex = 1;
         service.isContinousMovementByKeyboardOn[arrowIndex] = true;
-        let stopContinuousMovementSpy : jasmine.Spy<any> = spyOn<any>(service, 'stopContinuousMovement').and.callThrough();
+        const stopContinuousMovementSpy: jasmine.Spy<any> = spyOn<any>(service, 'stopContinuousMovement').and.callThrough();
         service.singleMove(arrowIndex, movement);
         expect(stopContinuousMovementSpy).toHaveBeenCalledWith(arrowIndex);
     });
 
     it('addMovementToPosition should call add 3 times if isMouseMovement is true ', () => {
-        let mouseMovement = {x:10, y:11};
+        const mouseMovement = { x: 10, y: 11 };
         service.addMovementToPositions(mouseMovement, true);
         expect(ellipseSelectionHelperMock.add).toHaveBeenCalledTimes(3);
     });
 
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
-        let mouseDownLastPos: Vec2 = {x:1, y:2};
-        let mouseMovement: Vec2 = {x:10, y:11};
+        const mouseDownLastPos: Vec2 = { x: 1, y: 2 };
+        const mouseMovement: Vec2 = { x: 10, y: 11 };
         service.mouseDownLastPos = mouseDownLastPos;
         service.registerMousePos(mouseMovement, true);
         expect(service.mouseDownLastPos).toEqual(mouseMovement);
     });
 
     it('computeDiagonalEquation should update diagonal slope correctly if ResizingMode is towardsBottomRight ', () => {
-        let topLeft = {x: 3, y:4};
-        let bottomRight = {x: 7, y:6};
+        const topLeft = { x: 3, y: 4 };
+        const bottomRight = { x: 7, y: 6 };
         service.topLeft = topLeft;
         service.bottomRight = bottomRight;
         service.resizingMode = ResizingMode.towardsBottomRight;
@@ -406,18 +425,18 @@ describe('EllipseSelectionManipulatorService', () => {
         const deltaX = bottomRight.x - topLeft.x;
         const diagonalSlope = deltaY / deltaX;
         service.computeDiagonalEquation();
-        expect(service.diagonalSlope = -diagonalSlope);
+        expect((service.diagonalSlope = -diagonalSlope));
     });
 
     it('getMousePosOnDiagonal should output a position that belongs to the diagonal', () => {
-        let mousePos: Vec2 = {x: 3, y:4};
-        let diagonalSlope: number =1.2;
-        let yIntercept: number =2;        
+        const mousePos: Vec2 = { x: 3, y: 4 };
+        const diagonalSlope = 1.2;
+        const yIntercept = 2;
         service.diagonalSlope = diagonalSlope;
         service.diagonalYIntercept = yIntercept;
-       
+
         const output: Vec2 = service.getMousePosOnDiagonal(mousePos);
-        expect(output).toEqual({x: mousePos.x, y: mousePos.x * diagonalSlope + yIntercept});
+        expect(output).toEqual({ x: mousePos.x, y: mousePos.x * diagonalSlope + yIntercept });
     });
 
     it('resetProperties should also reset isReversedX and isReversedY', () => {
@@ -440,10 +459,10 @@ describe('EllipseSelectionManipulatorService', () => {
         service.isReversedY = true;
         service.isReversedX = true;
 
-        const memento :ManipulatorMemento = service.createMemento();
+        const memento: ManipulatorMemento = service.createMemento();
 
         service.resetProperties();
-        
+
         service.restoreFromMemento(memento);
 
         expect(service.diagonalSlope).toEqual(10);
@@ -464,7 +483,7 @@ describe('EllipseSelectionManipulatorService', () => {
             key: 'ArrowLeft',
         } as KeyboardEvent;
         service.onKeyDown(keyboardEvent);
-        let isPressed: boolean = service.isAnArrowKeyPressed();
+        const isPressed: boolean = service.isAnArrowKeyPressed();
         expect(isPressed).toEqual(true);
     });
 });

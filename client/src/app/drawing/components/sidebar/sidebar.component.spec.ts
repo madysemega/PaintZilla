@@ -23,7 +23,7 @@ import { RectangleSelectionHandlerService } from '@app/tools/services/selection/
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-//import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+// import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -35,6 +35,7 @@ import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
+// tslint:disable: prefer-const
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
@@ -45,7 +46,7 @@ describe('SidebarComponent', () => {
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
-    
+
     let pencilStoolStub: PencilService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
@@ -59,7 +60,7 @@ describe('SidebarComponent', () => {
     let rectangleSelectionManipulatorService: RectangleSelectionManipulatorService;
     let rectangleSelectionHelperService: RectangleSelectionHelperService;
     let rectangleSelectionCreatorService: RectangleSelectionCreatorService;
-    
+
     class RectangleServiceStub extends RectangleService {
         constructor(drawingService: DrawingService, colourService: ColourService) {
             super(drawingService, colourService);
@@ -86,20 +87,59 @@ describe('SidebarComponent', () => {
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        
+
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
-        ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(drawingStub, ellipseSelectionHelperService, ellipseSelectionHandlerService, historyServiceStub);
-        ellipseSelectionCreatorService = new EllipseSelectionCreatorService(drawingStub, ellipseSelectionManipulatorService, ellipseSelectionHelperService);
+        ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(
+            drawingStub,
+            ellipseSelectionHelperService,
+            ellipseSelectionHandlerService,
+            historyServiceStub,
+        );
+        ellipseSelectionCreatorService = new EllipseSelectionCreatorService(
+            drawingStub,
+            ellipseSelectionManipulatorService,
+            ellipseSelectionHelperService,
+        );
 
         rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
-        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService, historyServiceStub);
-        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(drawingStub, rectangleSelectionHelperService, rectangleSelectionHandlerService, historyServiceStub);
-        rectangleSelectionCreatorService = new RectangleSelectionCreatorService(drawingStub, rectangleSelectionManipulatorService, rectangleSelectionHelperService);
+        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(
+            drawingStub,
+            rectangleSelectionHelperService,
+            rectangleSelectionHandlerService,
+            historyServiceStub,
+        );
+        rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(
+            drawingStub,
+            rectangleSelectionHelperService,
+            rectangleSelectionHandlerService,
+            historyServiceStub,
+        );
+        rectangleSelectionCreatorService = new RectangleSelectionCreatorService(
+            drawingStub,
+            rectangleSelectionManipulatorService,
+            rectangleSelectionHelperService,
+        );
 
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub, ellipseSelectionCreatorService, rectangleSelectionCreatorService);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+            ellipseSelectionCreatorService,
+            rectangleSelectionCreatorService,
+        );
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub, ellipseSelectionCreatorService, rectangleSelectionCreatorService);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+            ellipseSelectionCreatorService,
+            rectangleSelectionCreatorService,
+        );
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],

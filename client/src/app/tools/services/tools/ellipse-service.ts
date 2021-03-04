@@ -108,7 +108,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         this.drawRectangle(ctx, startPoint, endPoint);
     }
 
-    drawRectangle(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2){
+    drawRectangle(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         const DASH_NUMBER = 8;
 
         const topLeft: Vec2 = {

@@ -12,6 +12,7 @@ import { DrawingComponent } from './drawing.component';
 
 class ToolStub extends Tool {}
 
+// tslint:disable:no-any
 describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
@@ -44,7 +45,6 @@ describe('DrawingComponent', () => {
         }).compileComponents();
 
         creatorStub = TestBed.inject(EllipseSelectionCreatorService);
-
     }));
 
     beforeEach(() => {
@@ -206,11 +206,11 @@ describe('DrawingComponent', () => {
         expect(resizerSpy).toHaveBeenCalledWith(argument);
     });
 
-    it("activateResizer(): should tell the active selection tool to stop selection", () => {
+    it('activateResizer(): should tell the active selection tool to stop selection', () => {
         spyOn(resizingServiceStub, 'saveCurrentImage').and.returnValue();
         toolSelectorStub.getActiveSelectionTool.and.returnValue(creatorStub);
         const argument = '';
-        let stopSelectionSpy: jasmine.Spy<any> = spyOn(creatorStub, 'stopManipulatingSelection').and.callThrough();
+        const stopSelectionSpy: jasmine.Spy<any> = spyOn(creatorStub, 'stopManipulatingSelection').and.callThrough();
         component.activateResizer(argument);
         expect(stopSelectionSpy).toHaveBeenCalled();
     });

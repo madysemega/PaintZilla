@@ -7,8 +7,8 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 })
 export class ColourService {
     private previousColours: Colour[];
-    public primaryColour: Colour;
-    public secondaryColour: Colour;
+    primaryColour: Colour;
+    secondaryColour: Colour;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
     onColourPicker: boolean;

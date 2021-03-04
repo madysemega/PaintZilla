@@ -21,5 +21,4 @@ describe('RectangleSelectionComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
 });

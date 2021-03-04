@@ -36,7 +36,7 @@ export class HandlerMemento {
     originalHeight: number;
     hasBeenManipulated: boolean;
     needWhiteEllipsePostDrawing: boolean;
-    originalTopLeftOnBaseCanvas: Vec2 ={x:0, y:0};
-    originalCenter: Vec2 ={x:0, y:0};
-    originalVertices: Vec2[] =[];
+    originalTopLeftOnBaseCanvas: Vec2 = { x: 0, y: 0 };
+    originalCenter: Vec2 = { x: 0, y: 0 };
+    originalVertices: Vec2[] = [];
 }

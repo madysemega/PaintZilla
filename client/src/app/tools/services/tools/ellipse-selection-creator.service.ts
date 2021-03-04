@@ -14,7 +14,7 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
         selectionManipulatorService: EllipseSelectionManipulatorService,
         public selectionService: EllipseSelectionHelperService,
     ) {
-        super(drawingService, selectionManipulatorService,  selectionService);
+        super(drawingService, selectionManipulatorService, selectionService);
         this.key = 'ellipse-selection';
     }
 
