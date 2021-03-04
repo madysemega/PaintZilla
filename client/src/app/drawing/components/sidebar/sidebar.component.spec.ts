@@ -16,13 +16,13 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { RectangleSelectionHandlerService } from '@app/tools/services/selection/rectangle/rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
-import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 // import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
@@ -126,7 +126,7 @@ describe('SidebarComponent', () => {
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
-        
+
         toolSelectorServiceStub = new ToolSelectorService(
             pencilStoolStub,
             sprayStoolStub,

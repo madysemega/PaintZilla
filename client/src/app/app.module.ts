@@ -26,8 +26,8 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
-import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 
 @NgModule({
     declarations: [
