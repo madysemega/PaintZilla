@@ -32,15 +32,6 @@ describe('EllipseSelectionToolService', () => {
     let resetPropertiesSpy: jasmine.Spy<any>;
     let drawSelectionOutlineSpy: jasmine.Spy<any>;
 
-
-  /*  let resizeSelectionSpy : jasmine.Spy<any>;
-    //let registerMousePosSpy : jasmine.Spy<any>;
-    let computeDiagonalEquation : jasmine.Spy<any>;
-    let moveSelectionSpy : jasmine.Spy<any>;
-    let moveIfPressLongEnoughSpy : jasmine.Spy<any>;
-    let singleMoveSpy : jasmine.Spy<any>;
-    let getMousePosOnDiagonalSpy: jasmine.Spy<any>;*/
-
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
         drawServiceSpy.canvasSize = {x: 1000, y: 500};
@@ -77,7 +68,6 @@ describe('EllipseSelectionToolService', () => {
                 .createSpy('getBoundingClientRect')
                 .and.returnValue({ top: 1, height: drawServiceSpy.canvasSize.y, left: 2, width: drawServiceSpy.canvasSize.x, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
-
         
         isSelectionBeingManipulatedSpy = spyOn<any>(service, 'isSelectionBeingManipulated').and.callThrough();
         registerMousePositionSpy = spyOn<any>(service, 'registerMousePosition').and.callThrough();
@@ -85,8 +75,6 @@ describe('EllipseSelectionToolService', () => {
         createSelectionSpy = spyOn<any>(service, 'createSelection').and.callThrough();
         resetPropertiesSpy = spyOn<any>(service, 'resetProperties').and.callThrough();
         drawSelectionOutlineSpy = spyOn<any>(service, 'drawSelectionOutline').and.callThrough();
-
-
 
        /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
