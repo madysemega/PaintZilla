@@ -22,6 +22,7 @@ import { EllipseSelectionManipulatorService } from '@app/tools/services/selectio
 import { RectangleSelectionHandlerService } from '@app/tools/services/selection/rectangle/rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
+import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 // import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
@@ -31,6 +32,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
@@ -48,6 +50,7 @@ describe('SidebarComponent', () => {
     let lineServiceStub: LineService;
 
     let pencilStoolStub: PencilService;
+    let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
@@ -82,6 +85,7 @@ describe('SidebarComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
+        sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
@@ -121,18 +125,11 @@ describe('SidebarComponent', () => {
             rectangleSelectionHelperService,
         );
 
-        toolSelectorServiceStub = new ToolSelectorService(
-            pencilStoolStub,
-            eraserStoolStub,
-            ellipseToolStub,
-            rectangleService,
-            lineServiceStub,
-            ellipseSelectionCreatorService,
-            rectangleSelectionCreatorService,
-        );
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
+        
         toolSelectorServiceStub = new ToolSelectorService(
             pencilStoolStub,
+            sprayStoolStub,
             eraserStoolStub,
             ellipseToolStub,
             rectangleService,
@@ -147,6 +144,7 @@ describe('SidebarComponent', () => {
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
                 PencilToolConfigurationComponent,
+                SprayToolConfigurationComponent,
                 EraserToolConfigurationComponent,
                 RectangleToolConfigurationComponent,
                 LineToolConfigurationComponent,
@@ -161,6 +159,7 @@ describe('SidebarComponent', () => {
                 { provide: EraserService },
                 { provide: LineService },
                 { provide: PencilService },
+                { provide: SprayService },
                 { provide: RectangleService },
                 { provide: EllipseSelectionHandlerService },
                 { provide: EllipseSelectionManipulatorService },

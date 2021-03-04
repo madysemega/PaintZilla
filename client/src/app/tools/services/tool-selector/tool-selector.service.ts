@@ -11,6 +11,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -79,6 +80,7 @@ export class ToolSelectorService {
     }
     constructor(
         pencilService: PencilService,
+        sprayService: SprayService,
         eraserService: EraserService,
         ellipseService: EllipseService,
         rectangleService: RectangleService,
@@ -97,6 +99,12 @@ export class ToolSelectorService {
             icon: 'eraser',
             keyboardShortcut: 'e',
             tool: eraserService,
+        });
+        this.tools.set(sprayService.key, {
+            displayName: 'Aerosol',
+            icon: 'spray',
+            keyboardShortcut: 'a',
+            tool: sprayService,
         });
         this.tools.set(rectangleService.key, {
             displayName: 'Rectangle',

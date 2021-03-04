@@ -16,6 +16,7 @@ import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { EditorComponent } from './editor.component';
 
 // tslint:disable:no-any
@@ -69,6 +70,7 @@ describe('EditorComponent', () => {
                 { provide: ToolSelectorService, useValue: toolSelectorStub },
                 { provide: EllipseService },
                 { provide: EraserService },
+                { provide: SprayService },
                 { provide: LineService },
                 { provide: RectangleService },
                 { provide: ResizingService },

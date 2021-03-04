@@ -8,6 +8,10 @@ export class IconsMetaData {
                 path: '../assets/icons/pencil.svg',
             },
             {
+                name: 'spray',
+                path: '../assets/icons/spray.svg',
+            },
+            {
                 name: 'eraser',
                 path: '../assets/icons/eraser.svg',
             },
