@@ -16,6 +16,7 @@ import { ColoursComponent } from '@app/drawing/components/colours/colours.compon
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { MaterialModule } from '@app/material.module';
 import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
 import { RectangleSelectionComponent } from '@app/tools/components/selection/rectangle-selection/rectangle-selection.component';
@@ -56,6 +57,7 @@ import { SelectionComponent } from './tools/components/selection/selection/selec
         RectangleSelectionComponent,
         EllipseSelectionComponent,
         SelectionComponent,
+        HistoryControlsComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 

@@ -105,6 +105,8 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             if (this.lineType === LineType.WITH_JOINTS) {
                 this.lineJointsRenderer.render(this.drawingService.previewCtx);
             }
+
+            this.historyService.isLocked = true;
         }
     }
 

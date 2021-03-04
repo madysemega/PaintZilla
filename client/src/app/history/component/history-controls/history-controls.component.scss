@@ -1,0 +1,20 @@
+.history-control {
+    cursor: pointer;
+    margin: 12px 12px 0px 12px;
+    padding: 3px;
+
+    transition: ease all 500ms;
+    border-radius: 24px;
+
+    user-select: none;
+}
+
+.history-control:not(.disabled):hover {
+    background-color: rgba(138, 138, 138, 0.315);
+    color: white;
+}
+
+.history-control.disabled {
+    cursor: default;
+    opacity: 0.25;
+}
