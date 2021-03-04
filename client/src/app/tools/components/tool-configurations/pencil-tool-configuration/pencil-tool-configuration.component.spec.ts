@@ -21,7 +21,7 @@ describe('PencilToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService();
         drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        pencilServiceStub = new PencilService(drawingServiceStub, colourServiceStub);
+        pencilServiceStub = new PencilService(drawingServiceStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],

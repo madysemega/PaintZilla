@@ -80,11 +80,11 @@ export class Colour {
         return color;
     }
 
-    toStringRBG(): string {
+    toStringRGB(): string {
         return `rgb(${this.red}, ${this.green}, ${this.blue})`;
     }
 
-    toStringRBGA(): string {
+    toStringRGBA(): string {
         return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
 

@@ -111,8 +111,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRBGA();
-        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRBGA();
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRGBA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRGBA();
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);
