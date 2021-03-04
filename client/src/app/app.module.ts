@@ -26,6 +26,7 @@ import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { RectangleSelectionComponent } from '@app/tools/components/selection/rectangle-selection/rectangle-selection.component';
 import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
+import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 
 @NgModule({
     declarations: [
@@ -51,6 +52,7 @@ import { EllipseSelectionComponent } from '@app/tools/components/selection/ellip
         ColoursComponent,
         RectangleSelectionComponent,
         EllipseSelectionComponent,
+        SelectionComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 

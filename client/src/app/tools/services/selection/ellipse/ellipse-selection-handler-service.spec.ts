@@ -19,17 +19,12 @@ describe('SelectionRendererService', () => {
     let selectionServiceMock: jasmine.SpyObj<SelectionService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHandlerService>;
 
-
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
     let hasSelectionBeenManipulatedSpy: jasmine.Spy<any>;
     let drawWhitePostSelectionSpy: jasmine.Spy<any>;
     let updateHorizontalOffsetSpy: jasmine.Spy<any>;
     let updateVerticalOffsetSpy: jasmine.Spy<any>;
     //let drawImageSpy: jasmine.Spy<any>;
-
-
-
-
 
     beforeEach(() => {
 
