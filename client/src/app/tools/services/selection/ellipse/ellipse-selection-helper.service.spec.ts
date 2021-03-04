@@ -100,5 +100,4 @@ describe('EllipseSelectionHelperService', () => {
 
         expect(ctxEllipseSpy).toHaveBeenCalled();
     });
-
 });
