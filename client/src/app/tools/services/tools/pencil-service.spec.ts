@@ -9,6 +9,7 @@ import { HistoryService } from '@app/history/service/history.service';
 import { PencilService } from './pencil-service';
 
 // tslint:disable:no-any
+// tslint:disable:no-string-literal
 describe('PencilService', () => {
     let service: PencilService;
     let mouseEvent: MouseEvent;
@@ -52,7 +53,7 @@ describe('PencilService', () => {
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        drawVerticesSpy = spyOn<any>(service.renderer, 'render').and.callThrough();
+        drawVerticesSpy = spyOn<any>(service['renderer'], 'render').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
