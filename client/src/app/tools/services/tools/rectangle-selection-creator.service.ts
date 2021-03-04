@@ -27,9 +27,13 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'a') {
-            this.createSelection({ x: 0, y: 0 }, { x: this.drawingService.canvasSize.x, y: this.drawingService.canvasSize.y });
+            this.selectEntireCanvas();
             return;
         }
         super.onKeyDown(event);
+    }
+
+    selectEntireCanvas(): void {
+        this.createSelection({ x: 0, y: 0 }, { x: this.drawingService.canvasSize.x, y: this.drawingService.canvasSize.y });
     }
 }

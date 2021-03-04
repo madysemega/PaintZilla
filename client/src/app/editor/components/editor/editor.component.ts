@@ -30,7 +30,7 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         const isCtrl: boolean = event.ctrlKey;
-        const isA: boolean = event.key === 'a'
+        const isA: boolean = event.key === 'a';
 
         if (isCtrl) {
             if (isA) {
@@ -45,7 +45,7 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
         const isCtrl: boolean = event.ctrlKey;
-        const isZ: boolean = event.key.toUpperCase() === 'Z'
+        const isZ: boolean = event.key.toUpperCase() === 'Z';
         const isShift: boolean = event.shiftKey;
 
         if (isCtrl) {
