@@ -14,6 +14,9 @@ export class SprayService extends ResizableTool implements ISelectableTool {
     private vertices: Vec2[];
     diameterDraw: number = 1;
     numberPoints: number = 1;
+    delaiPoints: number = 10;
+    lastMousePosition: Vec2;
+    sprayTimer: ReturnType<typeof setTimeout>;
     constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.vertices = [];
@@ -31,6 +34,13 @@ export class SprayService extends ResizableTool implements ISelectableTool {
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
+            this.lastMousePosition = this.mouseDownCoord;
+
+            this.sprayTimer = setInterval(() => {
+                this.vertices.push(this.lastMousePosition);
+                this.drawingService.clearCanvas(this.drawingService.previewCtx);
+                this.drawVertices(this.drawingService.baseCtx);
+            }, this.delaiPoints);
         }
     }
     private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
@@ -41,18 +51,20 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.vertices.push(mousePosition);
+            clearInterval(this.sprayTimer);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
         this.clearVertices();
+        clearInterval();
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.vertices.push(mousePosition);
+            this.lastMousePosition = mousePosition;
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.drawVertices(this.drawingService.baseCtx);
         }
         this.clearVertices();
     }
