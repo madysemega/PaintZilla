@@ -16,6 +16,7 @@ describe('ExportDrawingDialogComponent', () => {
     let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
     let resizingServiceSpy: ResizingService;
+    // tslint:disable:no-any
     let matDialogRefSpy: jasmine.SpyObj<any>;
 
     let canvasTestHelper: CanvasTestHelper;
@@ -144,7 +145,9 @@ describe('ExportDrawingDialogComponent', () => {
     it('changeName should change the image name', () => {
         const event = ({
             target: { value: 'test' },
-            stopPropagation(): void {},
+            stopPropagation(): void {
+                return;
+            },
         } as unknown) as KeyboardEvent;
         const stopPropagationSpy = spyOn(event, 'stopPropagation').and.stub();
         component.changeName(event);

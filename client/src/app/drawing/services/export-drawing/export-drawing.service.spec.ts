@@ -4,10 +4,11 @@ import { ExportDrawingService } from './export-drawing.service';
 
 describe('ExportDrawingService', () => {
     let service: ExportDrawingService;
+    // tslint:disable:no-any
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let matDialogSpy: jasmine.SpyObj<any>;
 
-    let numberOfDialogs: number = 0;
+    const numberOfDialogs = 0;
     beforeEach(() => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
 
