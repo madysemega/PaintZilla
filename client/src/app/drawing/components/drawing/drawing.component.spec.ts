@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from '@app/tools/classes/tool';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { DrawingComponent } from './drawing.component';
@@ -12,12 +13,18 @@ describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
     let toolStub: ToolStub;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let resizingServiceStub: ResizingService;
     beforeEach(async(() => {
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
+        historyServiceStub.do.and.stub();
+        historyServiceStub.undo.and.stub();
+        historyServiceStub.redo.and.stub();
+        historyServiceStub.onUndo.and.stub();
         toolStub = new ToolStub({} as DrawingService);
-        drawingStub = new DrawingService();
-        resizingServiceStub = new ResizingService({} as DrawingService);
+        drawingStub = new DrawingService(historyServiceStub);
+        resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [

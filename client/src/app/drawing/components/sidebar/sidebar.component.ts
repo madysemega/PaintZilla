@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ExportDrawingDialogComponent } from '@app/components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -21,7 +21,6 @@ export class SidebarComponent implements OnInit {
         private drawingCreatorService: DrawingCreatorService,
         public exportDrawingService: ExportDrawingService,
         public drawingService: DrawingService,
-        public dialog: MatDialog,
     ) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }

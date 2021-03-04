@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+}
+
+.formsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rgbFormItem {
+    text-align: center;
+    width: 60px;
+    margin-left: 4px;
+}

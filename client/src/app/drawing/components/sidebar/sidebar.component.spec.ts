@@ -4,11 +4,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
-import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
-import { ColourSliderComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-slider/colour-slider.component';
+import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -16,13 +17,14 @@ import { PencilToolConfigurationComponent } from '@app/tools/components/tool-con
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
+import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
@@ -31,17 +33,20 @@ describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
     let toolSelectorServiceStub: ToolSelectorService;
+    let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
-    let colourServiceStub: ColourToolService;
+    let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
     let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
+    let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
+    let exportDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
     class RectangleServiceStub extends RectangleService {
-        constructor(drawingService: DrawingService, colourService: ColourToolService) {
+        constructor(drawingService: DrawingService, colourService: ColourService) {
             super(drawingService, colourService);
         }
     }
@@ -57,15 +62,25 @@ describe('SidebarComponent', () => {
     }
 
     beforeEach(async(() => {
-        drawingStub = new DrawingService();
-        colourServiceStub = new ColourToolService();
+        historyServiceStub = new HistoryService();
+        drawingStub = new DrawingService(historyServiceStub);
+        colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
+        sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
-        lineServiceStub = new LineService(drawingStub, colourServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
+        exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
+        lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            sprayStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+        );
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],
@@ -73,23 +88,23 @@ describe('SidebarComponent', () => {
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
                 PencilToolConfigurationComponent,
+                SprayToolConfigurationComponent,
                 EraserToolConfigurationComponent,
                 RectangleToolConfigurationComponent,
                 LineToolConfigurationComponent,
                 ResizableToolConfigurationComponent,
                 ShapeToolConfigurationComponent,
-                ColourSelectorComponent,
-                ColourSliderComponent,
-                ColourPaletteComponent,
             ],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
-                { provide: ColourToolService },
+                { provide: ExportDrawingService, useValue: exportDrawingServiceSpy },
+                { provide: ColourService },
                 { provide: EllipseService },
                 { provide: EraserService },
                 { provide: LineService },
                 { provide: PencilService },
+                { provide: SprayService },
                 { provide: RectangleService },
             ],
         })
@@ -160,6 +175,11 @@ describe('SidebarComponent', () => {
 
     it('createNewDrawing should call DrawingCreatorService createNewDrawing method', () => {
         component.createNewDrawing();
+        expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
+    });
+
+    it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
+        component.exportDrawing();
         expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
     });
 });

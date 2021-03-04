@@ -2,8 +2,12 @@ import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { LineShape } from '@app/shapes/line-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
@@ -16,8 +20,6 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -35,13 +37,26 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
-    constructor(drawingService: DrawingService, colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
+
+        this.initialize();
+
+        colourService.primaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
+        colourService.secondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
+
+        this.isShiftDown = false;
+
+        this.lineType = LineType.WITHOUT_JOINTS;
+        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+    }
+
+    private initialize(): void {
         this.lineShape = new LineShape([]);
 
-        this.strokeWidthProperty = new StrokeWidthProperty();
-        this.strokeColourProperty = new StrokeStyleProperty(colourService.primaryColour);
-        this.jointsColourProperty = new FillStyleProperty(colourService.secondaryColour);
+        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
+        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour().toStringRBGA());
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,
@@ -51,9 +66,11 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
 
-        colourService.onPrimaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
-        colourService.onSecondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
+        this.colourService.primaryColourChanged.subscribe((colour: Colour) => {
+            this.strokeColourProperty.colour = colour.toStringRBGA();
+        });
 
+        this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour.toStringRBGA()));
         this.isShiftDown = false;
 
         this.lineType = LineType.WITHOUT_JOINTS;
@@ -150,10 +167,14 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     renderFinalizedLine(): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-        this.lineShapeRenderer.render(this.drawingService.baseCtx);
-        if (this.lineType === LineType.WITH_JOINTS) {
-            this.lineJointsRenderer.render(this.drawingService.baseCtx);
-        }
+        this.historyService.do(
+            new UserActionRenderShape(
+                this.lineType === LineType.WITH_JOINTS
+                    ? [this.lineShapeRenderer.clone(), this.lineJointsRenderer.clone()]
+                    : [this.lineShapeRenderer.clone()],
+                this.drawingService.baseCtx,
+            ),
+        );
 
         this.lineShape.clear();
     }

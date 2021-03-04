@@ -6,18 +6,17 @@ import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.compon
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { Tool } from '@app/tools/classes/tool';
-import { ColourPaletteComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-palette/colour-palette.component';
-import { ColourSelectorComponent } from '@app/tools/components/tool-configurations/colour-selector/colour-selector.component';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { EditorComponent } from './editor.component';
 
 // tslint:disable:no-any
@@ -38,6 +37,7 @@ describe('EditorComponent', () => {
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
     let keyboardZEvent: KeyboardEvent;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
@@ -51,27 +51,22 @@ describe('EditorComponent', () => {
 
     beforeEach(async(() => {
         toolStub = new ToolStub({} as DrawingService);
-        drawingStub = new DrawingService();
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
+        drawingStub = new DrawingService(historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
 
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [
-                DrawingComponent,
-                SidebarComponent,
-                EllipseToolConfigurationComponent,
-                LineToolConfigurationComponent,
-                ColourSelectorComponent,
-                ColourPaletteComponent,
-            ],
+            declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: HistoryService, useValue: historyServiceStub },
                 { provide: ToolSelectorService },
-                { provide: ColourToolService },
                 { provide: EllipseService },
                 { provide: EraserService },
+                { provide: SprayService },
                 { provide: LineService },
                 { provide: RectangleService },
                 { provide: ResizingService },
@@ -128,5 +123,25 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
+    });
+
+    it('Ctrl+Z should call history service undo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: false,
+            key: 'Z',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.undo).toHaveBeenCalled();
+    });
+
+    it('Ctrl+Shift+Z should call history service redo method', () => {
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: true,
+            key: 'Z',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(historyServiceStub.redo).toHaveBeenCalled();
     });
 });

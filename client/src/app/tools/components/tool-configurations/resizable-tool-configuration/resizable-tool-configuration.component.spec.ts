@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from './resizable-tool-configuration.component';
 
@@ -19,6 +20,7 @@ describe('ResizableToolConfigurationComponent', () => {
     let component: ResizableToolConfigurationComponent;
     let fixture: ComponentFixture<ResizableToolConfigurationComponent>;
     let resizableToolStub: ResizableTool;
+    let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
 
     beforeEach(async(() => {
@@ -29,7 +31,8 @@ describe('ResizableToolConfigurationComponent', () => {
     }));
 
     beforeEach(() => {
-        drawingServiceStub = new DrawingService();
+        historyServiceStub = new HistoryService();
+        drawingServiceStub = new DrawingService(historyServiceStub);
         resizableToolStub = new ResizableToolStub(drawingServiceStub);
         resizableToolStub.lineWidth = 1;
         fixture = TestBed.createComponent(ResizableToolConfigurationComponent);

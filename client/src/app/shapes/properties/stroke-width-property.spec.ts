@@ -20,4 +20,9 @@ describe('StrokeWidthProperty', () => {
         strokeWidthProperty.apply(ctxStub);
         expect(ctxStub.lineWidth).toBe(strokeWidth);
     });
+
+    it('if instantiated without any width given, width should be default', () => {
+        strokeWidthProperty = new StrokeWidthProperty();
+        expect(strokeWidthProperty.strokeWidth).toEqual(StrokeWidthProperty.DEFAULT_STROKE_WIDTH);
+    });
 });
