@@ -97,7 +97,6 @@ describe('SprayService', () => {
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawVerticesSpy).toHaveBeenCalled();
     });
 
     it(' onMouseMove should not call drawSegments if mouse was not already down', () => {

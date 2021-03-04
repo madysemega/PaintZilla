@@ -16,7 +16,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
     numberPoints: number = 1;
     delaiPoints: number = 10;
     lastMousePosition: Vec2;
-    sprayTimer: number;
+    sprayTimer: ReturnType<typeof setTimeout>;
     constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.vertices = [];
