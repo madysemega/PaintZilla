@@ -104,4 +104,11 @@ describe('ToolSelectorService', () => {
         service.selectTool('not-selectable');
         expect(service.selectedTool).toBeTruthy();
     });
+
+    it('should not crash when deselecting a tool which does not implement IDeselectableTool', () => {
+        // tslint:disable-next-line: no-string-literal
+        service['tools'].set('not-deselectable', { tool: {} as Tool } as MetaWrappedTool);
+        service.selectTool('not-deselectable');
+        expect(service.selectedTool).toBeTruthy();
+    });
 });
