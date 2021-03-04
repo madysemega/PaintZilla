@@ -36,11 +36,10 @@
         <app-spray-tool-configuration class="vertical" *ngIf="selectedToolName === 'spray'"></app-spray-tool-configuration>
         <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
         <app-line-tool-configuration class="vertical" *ngIf="selectedToolName === 'line'"></app-line-tool-configuration>
-        <div>
-            <div class="colour-section">
-                <mat-label>Couleur</mat-label>
-                <app-colours class="vertical"></app-colours>
-            </div>
+        <div class="colour-section">
+            <mat-label>Couleur</mat-label>
+            <app-colours class="vertical"></app-colours>
         </div>
+        <app-history-controls class="center"></app-history-controls>
     </div>
 </div>
