@@ -73,8 +73,8 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         ctx.save();
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
-        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRGBA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRGBA();
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
         const SIZE = this.squarePoint(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };
