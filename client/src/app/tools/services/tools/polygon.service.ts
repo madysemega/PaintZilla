@@ -3,11 +3,11 @@ import { MatSliderChange } from '@angular/material/slider';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +19,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     lastMousePosition: Vec2;
     numberSides: number;
     isToDrawPerim: boolean;
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';
@@ -73,8 +73,8 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         ctx.save();
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
+        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
         const SIZE = this.squarePoint(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -22,6 +23,11 @@ export class SidebarComponent implements OnInit {
 
     selectTool(toolName: string): void {
         this.toolSelectorService.selectTool(toolName);
+    }
+
+    selectTheEntireCanvas(): void {
+        this.toolSelectorService.selectTool('rectangle-selection');
+        (this.toolSelectorService.getSelectedTool() as RectangleSelectionCreatorService).selectEntireCanvas();
     }
 
     getTooltipInfo(toolName: string): string {

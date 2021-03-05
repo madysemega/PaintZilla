@@ -2,24 +2,23 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService extends ShapeTool implements ISelectableTool, IDeselectableTool {
+export class RectangleService extends ShapeTool implements ISelectableTool {
     startingPos: Vec2;
     width: number;
     height: number;
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    constructor(drawingService: DrawingService, public colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.startingPos = { x: 0, y: 0 };
         this.width = 0;
@@ -33,14 +32,12 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
-    onToolDeselect(): void {
-        this.finalize();
-    }
-
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.shiftDown = true;
             this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
+        } else {
+            this.finalize();
         }
     }
 
@@ -78,7 +75,6 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
             this.startingPos.x = 0;
             this.startingPos.y = 0;
         }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.lastMouseCoords.x = 0;
         this.lastMouseCoords.y = 0;
         this.width = 0;
@@ -111,8 +107,8 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         ctx.save();
 
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
+        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
 
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
             ctx.fillRect(this.startingPos.x, this.startingPos.y, this.width, this.height);

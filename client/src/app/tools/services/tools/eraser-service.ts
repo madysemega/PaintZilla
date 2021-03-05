@@ -76,7 +76,7 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         this.lineWidth = this.changeWidth(this.lineWidth);
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'white';
-        ctx.lineCap = 'round';
+        ctx.lineCap = 'square';
         ctx.lineJoin = 'round';
 
         ctx.beginPath();
@@ -94,8 +94,6 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
     }
 
     private drawCursor(position: Vec2, ctx: CanvasRenderingContext2D): void {
-        const FULL_CIRCLE_ANGLE = 360;
-
         ctx.save();
 
         ctx.beginPath();
@@ -103,8 +101,8 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         ctx.strokeStyle = this.CURSOR_STROKE_STYLE;
         ctx.fillStyle = this.CURSOR_FILL_STYLE;
 
-        const radius = this.lineWidth / 2;
-        ctx.ellipse(position.x, position.y, radius, radius, 0, 0, FULL_CIRCLE_ANGLE);
+        const radius = this.lineWidth;
+        ctx.rect(position.x - radius / 2, position.y - radius / 2, radius, radius);
 
         ctx.fill();
         ctx.stroke();

@@ -1,0 +1,23 @@
+<app-resizable-tool-configuration [toolService]="sprayService"></app-resizable-tool-configuration>
+    <div>
+        <mat-slider thumbLabel
+                    matTooltip="Distance des points"
+                    matTooltipPosition="right"
+                    step="1"
+                    min="1"
+                    max="50"
+                    [value]="diameterChange"
+                    (valueChange)="onDiameterPointChange($event)">
+        </mat-slider>
+    </div>
+    <div>
+        <mat-slider thumbLabel
+                    matTooltip="Nombre de points"
+                    matTooltipPosition="right"
+                    step="1"
+                    min="1"
+                    max="300"
+                    [value]="numberChange"
+                    (valueChange)="onNumberPointChange($event)">
+        </mat-slider>
+    </div>

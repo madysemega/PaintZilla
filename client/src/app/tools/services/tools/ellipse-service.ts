@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import { ColourToolService } from './colour-tool.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +19,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService, private colourService: ColourToolService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -83,7 +83,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         }
     }
 
-    getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
+    getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
         const endPointWithRespectToStartPoint: Vec2 = {
             x: endPoint.x - startPoint.x,
             y: endPoint.y - startPoint.y,
@@ -101,11 +101,15 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
-        const DASH_NUMBER = 8;
-
         if (this.isShiftDown) {
-            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+            endPoint = this.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
+
+        this.drawRectangle(ctx, startPoint, endPoint);
+    }
+
+    drawRectangle(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        const DASH_NUMBER = 8;
 
         const topLeft: Vec2 = {
             x: Math.min(startPoint.x, endPoint.x),
@@ -128,7 +132,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+            endPoint = this.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
 
         const center: Vec2 = {
@@ -150,8 +154,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = this.colourService.primaryColour;
-        ctx.strokeStyle = this.colourService.secondaryColour;
+        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
+        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {

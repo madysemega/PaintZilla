@@ -5,6 +5,10 @@ export class StrokeStyleProperty extends ShapeProperty {
         ctx.strokeStyle = this.colour;
     }
 
+    clone(): ShapeProperty {
+        return new StrokeStyleProperty(this.colour);
+    }
+
     constructor(public colour: string) {
         super();
     }
