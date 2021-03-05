@@ -7,8 +7,8 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 })
 export class ColourService {
     private previousColours: Colour[];
-    primaryColour: Colour;
-    secondaryColour: Colour;
+    private primaryColour: Colour;
+    private secondaryColour: Colour;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
     onColourPicker: boolean;
@@ -35,6 +35,14 @@ export class ColourService {
         this.secondaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.secondaryColour);
         this.secondaryColourChanged.emit(this.secondaryColour);
+    }
+
+    getPrimaryColour(): Colour {
+        return this.primaryColour;
+    }
+
+    getSecondaryColour(): Colour {
+        return this.secondaryColour;
     }
 
     setPrimaryColour(colour: Colour): void {
