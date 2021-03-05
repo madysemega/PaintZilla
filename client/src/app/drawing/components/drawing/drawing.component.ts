@@ -5,6 +5,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -69,8 +70,6 @@ export class DrawingComponent implements AfterViewInit {
             this.wasResizing = true;
             this.resizingService.disableResizer();
             this.resizingService.finalizeResizingEvent();
-        } else {
-            this.toolSelector.getSelectedTool().onMouseUp(event);
         }
     }
 
@@ -122,6 +121,10 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     activateResizer(button: string): void {
+        const creator: SelectionCreatorService | undefined = this.toolSelector.getActiveSelectionTool();
+        if (creator != undefined) {
+            (creator as SelectionCreatorService).stopManipulatingSelection();
+        }
         this.resizingService.activateResizer(button);
     }
 

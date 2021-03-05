@@ -56,11 +56,11 @@ export class ColoursComponent {
     }
 
     get primaryColour(): Colour {
-        return this.colourService.getPrimaryColour();
+        return this.colourService.primaryColour;
     }
 
     get secondaryColour(): Colour {
-        return this.colourService.getSecondaryColour();
+        return this.colourService.secondaryColour;
     }
 
     get previousColours(): Colour[] {

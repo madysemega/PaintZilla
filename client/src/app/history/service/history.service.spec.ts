@@ -65,4 +65,50 @@ describe('HistoryService', () => {
         service.undo();
         expect(callbackCalled).toBeFalsy();
     });
+
+    it('should be undoable if unlocked and user actions have been registered', () => {
+        service.isLocked = false;
+        userActions.forEach((userAction) => service.register(userAction));
+
+        expect(service.canUndo()).toBeTrue();
+    });
+
+    it('should not be undoable if locked or no user action has been registered', () => {
+        // unlocked & no action registered
+        service.isLocked = false;
+        expect(service.canUndo()).toBeFalse();
+
+        // locked & no action registered
+        service.isLocked = true;
+        expect(service.canUndo()).toBeFalse();
+
+        // locked & actions registered
+        userActions.forEach((userAction) => service.register(userAction));
+        service.isLocked = true;
+        expect(service.canUndo()).toBeFalse();
+    });
+
+    it('should be redoable if unlocked  and user actions have been undone', () => {
+        service.isLocked = false;
+        userActions.forEach((userAction) => service.register(userAction));
+        service.undo();
+
+        expect(service.canRedo()).toBeTrue();
+    });
+
+    it('should not be redoable if locked or no user action has been undone', () => {
+        // unlocked & no action undone
+        service.isLocked = false;
+        expect(service.canRedo()).toBeFalse();
+
+        // locked & no action undone
+        service.isLocked = true;
+        expect(service.canRedo()).toBeFalse();
+
+        // locked & action undone
+        userActions.forEach((userAction) => service.register(userAction));
+        service.undo();
+        service.isLocked = true;
+        expect(service.canRedo()).toBeFalse();
+    });
 });

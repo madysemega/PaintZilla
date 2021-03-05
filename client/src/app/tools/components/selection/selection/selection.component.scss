@@ -1,0 +1,10 @@
+.resizingButton {
+    transform: translate(-25%, -25%);
+    position: absolute;
+    border: black 1px solid;
+    height: 8px;
+    width: 8px;
+    background-color: teal;
+    z-index: 2;
+    border-radius: 50%;
+}
