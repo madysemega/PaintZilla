@@ -14,6 +14,7 @@ import { ColourToolService } from '@app/tools/services/tools/colour-tool.service
 })
 export class PolygonService extends ShapeTool implements ISelectableTool {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
+    private readonly TRIANGLE_SIDES: number = 3;
     startPoint: Vec2;
     lastMousePosition: Vec2;
     numberSides: number;
@@ -24,7 +25,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.key = 'polygon';
         this.startPoint = { x: 0, y: 0 };
         this.lastMousePosition = { x: 0, y: 0 };
-        this.numberSides = 3;
+        this.numberSides = this.TRIANGLE_SIDES;
         this.isToDrawPerim = true;
     }
     onToolSelect(): void {
@@ -64,11 +65,9 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         const COMP = Math.abs(COMP_X) < Math.abs(COMP_Y) ? COMP_X : COMP_Y;
         return COMP;
     }
-    getPolygonSize(startPoint: Vec2, endPoint: Vec2): number {
+    getSquareEndPoint(startPoint: Vec2, endPoint: Vec2): Vec2 {
         const COMP = this.squarePoint(startPoint, endPoint);
-        endPoint = { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
-        console.log(endPoint.x - startPoint.x, endPoint.y - startPoint.y);
-        return COMP;
+        return { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -76,9 +75,8 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.lineWidth = this.lineWidth;
         ctx.fillStyle = this.colourService.primaryColour;
         ctx.strokeStyle = this.colourService.secondaryColour;
-        const COMP = this.squarePoint(startPoint, endPoint);
-        endPoint = { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
-        const SIZE = this.getPolygonSize(startPoint, endPoint);
+        endPoint = this.getSquareEndPoint(startPoint, endPoint);
+        const SIZE = this.squarePoint(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };
 
         ctx.beginPath();

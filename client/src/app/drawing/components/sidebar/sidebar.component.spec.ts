@@ -22,6 +22,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SidebarComponent } from './sidebar.component';
 
@@ -35,6 +36,7 @@ describe('SidebarComponent', () => {
     let colourServiceStub: ColourToolService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
+    let polygonService: PolygonService;
     let lineServiceStub: LineService;
     let pencilStoolStub: PencilService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
@@ -63,9 +65,17 @@ describe('SidebarComponent', () => {
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
+        polygonService = new PolygonService(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub);
-        toolSelectorServiceStub = new ToolSelectorService(pencilStoolStub, eraserStoolStub, ellipseToolStub, rectangleService, lineServiceStub);
+        toolSelectorServiceStub = new ToolSelectorService(
+            pencilStoolStub,
+            eraserStoolStub,
+            ellipseToolStub,
+            rectangleService,
+            lineServiceStub,
+            polygonService,
+        );
 
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],
