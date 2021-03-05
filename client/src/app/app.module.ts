@@ -18,6 +18,8 @@ import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.compon
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { MaterialModule } from '@app/material.module';
+import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
+import { RectangleSelectionComponent } from '@app/tools/components/selection/rectangle-selection/rectangle-selection.component';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -26,6 +28,7 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 
 @NgModule({
     declarations: [
@@ -51,11 +54,13 @@ import { SprayToolConfigurationComponent } from '@app/tools/components/tool-conf
         ColourPickerComponent,
         RgbFormComponent,
         ColoursComponent,
+        RectangleSelectionComponent,
+        EllipseSelectionComponent,
+        SelectionComponent,
         HistoryControlsComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 
-    providers: [],
     bootstrap: [AppComponent],
     entryComponents: [DiscardChangesDialogComponent],
 })

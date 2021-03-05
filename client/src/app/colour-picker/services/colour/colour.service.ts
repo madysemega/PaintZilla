@@ -7,8 +7,8 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 })
 export class ColourService {
     private previousColours: Colour[];
-    private primaryColour: Colour;
-    private secondaryColour: Colour;
+    primaryColour: Colour;
+    secondaryColour: Colour;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
     onColourPicker: boolean;
@@ -23,14 +23,6 @@ export class ColourService {
         this.showColourPickerChange = new EventEmitter<boolean>(this.showColourPicker);
         this.primaryColourChanged = new EventEmitter<Colour>(true);
         this.secondaryColourChanged = new EventEmitter<Colour>(true);
-    }
-
-    getPrimaryColour(): Colour {
-        return this.primaryColour;
-    }
-
-    getSecondaryColour(): Colour {
-        return this.secondaryColour;
     }
 
     updatePrimaryColour(): void {
@@ -71,19 +63,19 @@ export class ColourService {
         this.primaryColourSelected = true;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colourPickerService.setCurrentColour(this.getPrimaryColour());
+        this.colourPickerService.setCurrentColour(this.primaryColour);
     }
 
     selectSecondaryColour(): void {
         this.primaryColourSelected = false;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colourPickerService.setCurrentColour(this.getSecondaryColour());
+        this.colourPickerService.setCurrentColour(this.secondaryColour);
     }
 
     swapComponentColours(): void {
         this.swapColours();
-        this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.getPrimaryColour() : this.getSecondaryColour());
+        this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.primaryColour : this.secondaryColour);
     }
 
     private updatePreviousColours(colour: Colour): void {

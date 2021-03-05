@@ -87,6 +87,7 @@ export class PencilService extends ResizableTool implements ISelectableTool, IDe
             const mousePosition = this.getPositionFromMouse(event);
             this.shape.vertices.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
+            
             this.renderer.render(this.drawingService.previewCtx);
         }
     }
