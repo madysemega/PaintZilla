@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 
 @Component({
@@ -6,8 +6,6 @@ import { PolygonService } from '@app/tools/services/tools/polygon.service';
     templateUrl: './polygon.component.html',
     styleUrls: ['./polygon.component.scss'],
 })
-export class PolygonComponent implements OnInit {
+export class PolygonComponent {
     constructor(public polygonTool: PolygonService) {}
-
-    ngOnInit(): void {}
 }
