@@ -8,6 +8,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
@@ -67,8 +68,8 @@ describe('SidebarComponent', () => {
     let rectangleSelectionCreatorService: RectangleSelectionCreatorService;
 
     class RectangleServiceStub extends RectangleService {
-        constructor(drawingService: DrawingService, colourService: ColourService) {
-            super(drawingService, colourService);
+        constructor(drawingService: DrawingService, colourService: ColourService, historyService: HistoryService) {
+            super(drawingService, colourService, historyService);
         }
     }
 
@@ -87,11 +88,11 @@ describe('SidebarComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         drawingStub.canvasSize = { x: 500, y: 600 };
         colourServiceStub = new ColourService({} as ColourPickerService);
-        pencilStoolStub = new PencilService(drawingStub, colourServiceStub);
+        pencilStoolStub = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
         sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
-        rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
+        rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
         polygonService = new PolygonService(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
@@ -155,6 +156,7 @@ describe('SidebarComponent', () => {
                 LineToolConfigurationComponent,
                 ResizableToolConfigurationComponent,
                 ShapeToolConfigurationComponent,
+                HistoryControlsComponent,
             ],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },

@@ -154,8 +154,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
-        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRGBA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRGBA();
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.lineWidth = this.lineWidth;
         if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {

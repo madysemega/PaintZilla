@@ -22,7 +22,7 @@ describe('RectangleToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService();
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        rectangleToolStub = new RectangleService(drawingStub, colourServiceStub);
+        rectangleToolStub = new RectangleService(drawingStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],

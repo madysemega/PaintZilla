@@ -1,15 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { PencilService } from './pencil-service';
 
 // tslint:disable:no-any
+// tslint:disable:no-string-literal
 describe('PencilService', () => {
     let service: PencilService;
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let historyServiceStub: HistoryService;
+    let colourServiceStub: ColourService;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
@@ -21,9 +28,15 @@ describe('PencilService', () => {
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        historyServiceStub = new HistoryService();
+        colourServiceStub = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HistoryService, useValue: historyServiceStub },
+                { provide: ColourService, useValue: colourServiceStub },
+            ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -40,7 +53,7 @@ describe('PencilService', () => {
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
+        drawVerticesSpy = spyOn<any>(service['renderer'], 'render').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -81,13 +94,15 @@ describe('PencilService', () => {
         expect(service.mouseDown).toEqual(false);
     });
 
-    it(' onMouseUp should call drawSegments if mouse was already down', () => {
+    it(' onMouseUp should call register a new user action if mouse was already down', () => {
+        const historyRegisterSpy = spyOn(historyServiceStub, 'register');
+
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.onMouseUp(mouseEvent);
-        expect(drawVerticesSpy).toHaveBeenCalled();
+        expect(historyRegisterSpy).toHaveBeenCalled();
     });
 
     it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
@@ -116,6 +131,28 @@ describe('PencilService', () => {
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
         expect(drawVerticesSpy).not.toHaveBeenCalled();
+    });
+
+    it('when stroke width changes, it should be reflected in the stroke width property', () => {
+        const INITIAL_LINE_WIDTH = 1;
+        const NEW_LINE_WIDTH = 3;
+
+        service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
+
+        service.lineWidth = NEW_LINE_WIDTH;
+        service.onLineWidthChanged();
+
+        expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
+    });
+
+    it('when primary colour changes, it should be reflected in the colour property', () => {
+        const GIVEN_COLOUR = Colour.hexToRgb('ABC');
+
+        colourServiceStub.setPrimaryColour(GIVEN_COLOUR);
+
+        colourServiceStub.primaryColourChanged.subscribe(() => {
+            expect(service['colourProperty'].colour).toEqual(GIVEN_COLOUR);
+        });
     });
 
     // Exemple de test d'intégration qui est quand même utile
