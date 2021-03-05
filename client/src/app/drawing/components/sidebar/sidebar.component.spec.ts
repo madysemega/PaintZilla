@@ -66,8 +66,8 @@ describe('SidebarComponent', () => {
     let rectangleSelectionCreatorService: RectangleSelectionCreatorService;
 
     class RectangleServiceStub extends RectangleService {
-        constructor(drawingService: DrawingService, colourService: ColourService) {
-            super(drawingService, colourService);
+        constructor(drawingService: DrawingService, colourService: ColourService, historyService: HistoryService) {
+            super(drawingService, colourService, historyService);
         }
     }
 
@@ -90,7 +90,7 @@ describe('SidebarComponent', () => {
         sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
-        rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub);
+        rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 

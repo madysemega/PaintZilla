@@ -9,7 +9,6 @@ export class VerticesRenderer extends ShapeRenderer<VerticesShape> {
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
-        console.log(ctx.strokeStyle);
         this.shape.vertices.forEach((vertex) => {
             ctx.lineTo(vertex.x, vertex.y);
         });

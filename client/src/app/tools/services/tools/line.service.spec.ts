@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
@@ -386,6 +387,26 @@ describe('LineService', () => {
         SAMPLE_DIAMETERS.forEach((diameter) => {
             service.jointsDiameter = diameter;
             expect(service.jointsDiameter).toEqual(diameter);
+        });
+    });
+
+    it('when primary colour changes, so should fill style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setPrimaryColour(COLOUR);
+
+        colourService.primaryColourChanged.subscribe(() => {
+            expect(service['strokeColourProperty'].colour).toEqual(COLOUR);
+        });
+    });
+
+    it('when secondary colour changes, so should stroke style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setSecondaryColour(COLOUR);
+
+        colourService.secondaryColourChanged.subscribe(() => {
+            expect(service['jointsColourProperty'].colour).toEqual(COLOUR);
         });
     });
 });
