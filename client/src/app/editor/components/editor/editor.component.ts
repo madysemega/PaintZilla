@@ -29,8 +29,36 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
+        const isCtrl: boolean = event.ctrlKey;
+        const isA: boolean = event.key === 'a';
+
+        if (isCtrl) {
+            if (isA) {
+                this.toolSelector.selectTool('rectangle-selection');
+            }
+        }
+
         this.toolSelector.getSelectedTool().onKeyDown(event);
         this.drawingCreatorService.onKeyDown(event);
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        const isCtrl: boolean = event.ctrlKey;
+        const isZ: boolean = event.key.toUpperCase() === 'Z';
+        const isShift: boolean = event.shiftKey;
+
+        if (isCtrl) {
+            if (isZ && isShift) {
+                this.historyService.redo();
+            } else if (isZ) {
+                this.historyService.undo();
+            }
+            return;
+        }
+
+        this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
+        this.toolSelector.getSelectedTool().onKeyUp(event);
     }
 
     @HostListener('document:mousedown', ['$event'])
@@ -38,21 +66,6 @@ export class EditorComponent implements AfterViewInit {
         if (this.colourService.showColourPicker && !this.colourService.onColourPicker) {
             this.colourService.onColourPicker = false;
             this.showColourPicker = false;
-        }
-    }
-
-    @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
-        this.toolSelector.getSelectedTool().onKeyUp(event);
-
-        const isCtrlZ: boolean = event.ctrlKey && event.key.toUpperCase() === 'Z';
-        if (isCtrlZ) {
-            if (event.shiftKey) {
-                this.historyService.redo();
-            } else {
-                this.historyService.undo();
-            }
         }
     }
 

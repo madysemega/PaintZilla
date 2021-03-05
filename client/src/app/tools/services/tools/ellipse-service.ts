@@ -83,7 +83,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
         }
     }
 
-    getSquareAjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
+    getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
         const endPointWithRespectToStartPoint: Vec2 = {
             x: endPoint.x - startPoint.x,
             y: endPoint.y - startPoint.y,
@@ -101,11 +101,15 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
     }
 
     drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
-        const DASH_NUMBER = 8;
-
         if (this.isShiftDown) {
-            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+            endPoint = this.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
+
+        this.drawRectangle(ctx, startPoint, endPoint);
+    }
+
+    drawRectangle(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        const DASH_NUMBER = 8;
 
         const topLeft: Vec2 = {
             x: Math.min(startPoint.x, endPoint.x),
@@ -128,7 +132,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool {
 
     drawEllipse(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.getSquareAjustedPerimeter(startPoint, endPoint);
+            endPoint = this.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
 
         const center: Vec2 = {

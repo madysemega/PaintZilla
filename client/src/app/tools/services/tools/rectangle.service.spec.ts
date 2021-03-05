@@ -148,7 +148,7 @@ describe('RectangleService', () => {
         expect(drawRectSpy).toHaveBeenCalled();
     });
 
-    it(' onKeyDown should not call drawRect when mouse down if key != Shift', () => {
+    it(' onKeyDown should not call drawRect when mouse clicked if key != Shift', () => {
         service.mouseDown = true;
         service.mouseDownCoord = { x: 0, y: 0 };
 

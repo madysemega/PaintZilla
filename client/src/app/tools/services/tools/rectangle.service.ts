@@ -138,7 +138,6 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
             this.startingPos.x = 0;
             this.startingPos.y = 0;
         }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.lastMouseCoords.x = 0;
         this.lastMouseCoords.y = 0;
         this.width = 0;
