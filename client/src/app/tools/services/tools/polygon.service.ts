@@ -72,6 +72,9 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         return { x: startPoint.x + (X_COMPONENT_POS ? COMP : -COMP), y: startPoint.y + (Y_COMPONENT_POS ? COMP : -COMP) };
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        const shouldRenderStroke = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
+        const shouldRenderFill = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
+
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         ctx.save();
         ctx.lineWidth = this.lineWidth;
@@ -79,7 +82,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRGBA();
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
-        const SIZE = this.squarePoint(CENTER_POINT, endPoint);
+        const SIZE = this.squarePoint(CENTER_POINT, endPoint) - (shouldRenderStroke ? this.lineWidth / 2 : 0);
 
         ctx.beginPath();
         ctx.moveTo(
@@ -93,10 +96,10 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
             );
         }
         ctx.closePath();
-        if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
+        if (shouldRenderFill) {
             ctx.fill();
         }
-        if (this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled) {
+        if (shouldRenderStroke) {
             ctx.stroke();
         }
         if (this.isToDrawPerim) {
