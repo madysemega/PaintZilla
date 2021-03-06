@@ -25,14 +25,6 @@ export class ColourService {
         this.secondaryColourChanged = new EventEmitter<Colour>(true);
     }
 
-    getPrimaryColour(): Colour {
-        return this.primaryColour;
-    }
-
-    getSecondaryColour(): Colour {
-        return this.secondaryColour;
-    }
-
     updatePrimaryColour(): void {
         this.primaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.primaryColour);
@@ -43,6 +35,14 @@ export class ColourService {
         this.secondaryColour = this.colourPickerService.getCurrentColor().clone();
         this.updatePreviousColours(this.secondaryColour);
         this.secondaryColourChanged.emit(this.secondaryColour);
+    }
+
+    getPrimaryColour(): Colour {
+        return this.primaryColour;
+    }
+
+    getSecondaryColour(): Colour {
+        return this.secondaryColour;
     }
 
     setPrimaryColour(colour: Colour): void {
@@ -71,19 +71,19 @@ export class ColourService {
         this.primaryColourSelected = true;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colourPickerService.setCurrentColour(this.getPrimaryColour());
+        this.colourPickerService.setCurrentColour(this.primaryColour);
     }
 
     selectSecondaryColour(): void {
         this.primaryColourSelected = false;
         this.showColourPicker = true;
         this.showColourPickerChange.emit(this.showColourPicker);
-        this.colourPickerService.setCurrentColour(this.getSecondaryColour());
+        this.colourPickerService.setCurrentColour(this.secondaryColour);
     }
 
     swapComponentColours(): void {
         this.swapColours();
-        this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.getPrimaryColour() : this.getSecondaryColour());
+        this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.primaryColour : this.secondaryColour);
     }
 
     private updatePreviousColours(colour: Colour): void {

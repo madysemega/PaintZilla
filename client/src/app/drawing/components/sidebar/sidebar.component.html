@@ -13,6 +13,15 @@
         >
             <mat-icon>add_box</mat-icon>
         </button>
+
+        <button
+            mat-icon-button
+            matTooltip="Sélectionner toute la surface de dessin (Ctrl+a)"
+            matTooltipPosition="right"
+            (click)="selectTheEntireCanvas()"
+        >
+        <mat-icon> select_all </mat-icon>
+        </button>
     </div>
 
     <mat-divider></mat-divider>
@@ -33,13 +42,14 @@
         <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
         <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'"></app-pencil-tool-configuration>
         <app-eraser-tool-configuration class="vertical" *ngIf="selectedToolName === 'eraser'"></app-eraser-tool-configuration>
+        <app-spray-tool-configuration class="vertical" *ngIf="selectedToolName === 'spray'"></app-spray-tool-configuration>
         <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
         <app-line-tool-configuration class="vertical" *ngIf="selectedToolName === 'line'"></app-line-tool-configuration>
-        <div>
-            <div class="colour-section">
-                <mat-label>Couleur</mat-label>
-                <app-colours class="vertical"></app-colours>
-            </div>
+        <app-polygon class="vertical" *ngIf="selectedToolName === 'polygon'"></app-polygon>
+        <div class="colour-section">
+            <mat-label>Couleur</mat-label>
+            <app-colours class="vertical"></app-colours>
         </div>
+        <app-history-controls class="center"></app-history-controls>
     </div>
 </div>

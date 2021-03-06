@@ -3,11 +3,16 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PolygonService } from '@app/tools/services/tools/polygon.service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -20,6 +25,13 @@ export class ToolSelectorService {
 
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
+    }
+
+    getActiveSelectionTool(): SelectionCreatorService | undefined {
+        if (this.getSelectedTool() instanceof SelectionCreatorService) {
+            return this.getSelectedTool() as SelectionCreatorService;
+        }
+        return undefined;
     }
 
     selectTool(name: string | undefined): boolean {
@@ -69,10 +81,14 @@ export class ToolSelectorService {
     }
     constructor(
         pencilService: PencilService,
+        sprayService: SprayService,
         eraserService: EraserService,
         ellipseService: EllipseService,
         rectangleService: RectangleService,
         lineService: LineService,
+        polygonService: PolygonService,
+        ellipseSelectionCreatorService: EllipseSelectionCreatorService,
+        rectangleSelectionCreatorService: RectangleSelectionCreatorService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
@@ -85,6 +101,12 @@ export class ToolSelectorService {
             icon: 'eraser',
             keyboardShortcut: 'e',
             tool: eraserService,
+        });
+        this.tools.set(sprayService.key, {
+            displayName: 'Aerosol',
+            icon: 'spray',
+            keyboardShortcut: 'a',
+            tool: sprayService,
         });
         this.tools.set(rectangleService.key, {
             displayName: 'Rectangle',
@@ -103,6 +125,25 @@ export class ToolSelectorService {
             icon: 'pencil-with-line',
             keyboardShortcut: 'l',
             tool: lineService,
+        });
+        this.tools.set(polygonService.key, {
+            displayName: 'Polygon',
+            icon: 'polygon-shape',
+            keyboardShortcut: '3',
+            tool: polygonService,
+        });
+        this.tools.set(rectangleSelectionCreatorService.key, {
+            displayName: 'Sélection par rectangle',
+            icon: 'rectangle-selection',
+            keyboardShortcut: 'r',
+            tool: rectangleSelectionCreatorService,
+        });
+
+        this.tools.set(ellipseSelectionCreatorService.key, {
+            displayName: 'Sélection par ellipse',
+            icon: 'ellipse-selection',
+            keyboardShortcut: 's',
+            tool: ellipseSelectionCreatorService,
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;

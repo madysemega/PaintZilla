@@ -42,9 +42,6 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.initialize();
 
-        colourService.primaryColourChanged.subscribe((colour: string) => (this.strokeColourProperty.colour = colour));
-        colourService.secondaryColourChanged.subscribe((colour: string) => (this.jointsColourProperty.colour = colour));
-
         this.isShiftDown = false;
 
         this.lineType = LineType.WITHOUT_JOINTS;
@@ -55,8 +52,8 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         this.lineShape = new LineShape([]);
 
         this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour().toStringRBGA());
-        this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour().toStringRBGA());
+        this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
+        this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour());
 
         this.lineShapeRenderer = new LineShapeRenderer(this.lineShape, [
             this.strokeWidthProperty,
@@ -66,11 +63,9 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
         ]);
         this.lineJointsRenderer = new LineJointsRenderer(this.lineShape, [this.jointsColourProperty]);
 
-        this.colourService.primaryColourChanged.subscribe((colour: Colour) => {
-            this.strokeColourProperty.colour = colour.toStringRBGA();
-        });
+        this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.strokeColourProperty.colour = colour));
+        this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour));
 
-        this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour.toStringRBGA()));
         this.isShiftDown = false;
 
         this.lineType = LineType.WITHOUT_JOINTS;
@@ -105,6 +100,8 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
             if (this.lineType === LineType.WITH_JOINTS) {
                 this.lineJointsRenderer.render(this.drawingService.previewCtx);
             }
+
+            this.historyService.isLocked = true;
         }
     }
 

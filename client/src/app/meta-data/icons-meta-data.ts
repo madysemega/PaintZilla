@@ -8,6 +8,10 @@ export class IconsMetaData {
                 path: '../assets/icons/pencil.svg',
             },
             {
+                name: 'spray',
+                path: '../assets/icons/spray.svg',
+            },
+            {
                 name: 'eraser',
                 path: '../assets/icons/eraser.svg',
             },
@@ -27,14 +31,27 @@ export class IconsMetaData {
                 name: 'ellipse-contoured-and-filled',
                 path: '../assets/icons/ellipse-contoured-and-filled.svg',
             },
+
+            {
+                name: 'ellipse-selection',
+                path: '../assets/icons/ellipse-selection.svg',
+            },
+
             {
                 name: 'rectangle-contoured',
                 path: '../assets/icons/rectangle-contoured.svg',
             },
+
             {
                 name: 'rectangle-filled',
                 path: '../assets/icons/rectangle-filled.svg',
             },
+
+            {
+                name: 'rectangle-selection',
+                path: '../assets/icons/rectangle-selection.svg',
+            },
+
             {
                 name: 'rectangle-contoured-and-filled',
                 path: '../assets/icons/rectangle-contoured-and-filled.svg',
@@ -54,6 +71,22 @@ export class IconsMetaData {
             {
                 name: 'plus-sign',
                 path: '../assets/icons/plus-sign.svg',
+            },
+            {
+                name: 'polygon-shape',
+                path: '../assets/icons/polygon-shape.svg',
+            },
+            {
+                name: 'polygon-contoured',
+                path: '../assets/icons/polygon-contoured.svg',
+            },
+            {
+                name: 'polygon-filled',
+                path: '../assets/icons/polygon-filled.svg',
+            },
+            {
+                name: 'polygon-contoured-and-filled',
+                path: '../assets/icons/polygon-contoured-and-filled.svg',
             },
         ];
     }
