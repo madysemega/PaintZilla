@@ -17,3 +17,41 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     opacity: 1 !important;
 }
 //end from
+
+// Orientation
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+// Alignment
+
+.center {
+    margin: auto;
+    text-align: center;
+}
+
+// Margins
+
+.margin-bottom-small {
+    margin-bottom: 24px;
+}
+
+.margin-top-small {
+    margin-top: 24px;
+    
+}
+
+.margin-right-small {
+    margin-right: 24px;
+}
+
+.margin-left-small {
+    margin-left: 24px;
+}
