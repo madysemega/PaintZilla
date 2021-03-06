@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { MaterialModule } from '@app/material.module';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -35,12 +37,14 @@ describe('DrawingComponent', () => {
         resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         TestBed.configureTestingModule({
+            imports: [MaterialModule],
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
                 { provide: ResizingService, useValue: resizingServiceStub },
                 { provide: ToolSelectorService, useValue: toolSelectorStub },
+                { provide: MatDialogRef, useValue: {} },
             ],
         }).compileComponents();
 

@@ -255,6 +255,6 @@ describe('SidebarComponent', () => {
 
     it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
         component.exportDrawing();
-        expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
+        expect(exportDrawingServiceSpy.openExportDrawingDialog).toHaveBeenCalled();
     });
 });
