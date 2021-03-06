@@ -37,24 +37,28 @@ export class HistoryService {
     }
 
     undo(): void {
-        const lastAction = this.past.pop();
+        if (this.canUndo()) {
+            const lastAction = this.past.pop();
 
-        if (lastAction != undefined) {
-            this.future.push(lastAction);
+            if (lastAction != undefined) {
+                this.future.push(lastAction);
 
-            this.undoEventObservers.forEach((observerCallback) => observerCallback());
+                this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
-            this.past.forEach((action) => action.apply());
+                this.past.forEach((action) => action.apply());
+            }
         }
     }
 
     redo(): void {
-        const lastUndoneAction = this.future.pop();
+        if (this.canRedo()) {
+            const lastUndoneAction = this.future.pop();
 
-        if (lastUndoneAction != undefined) {
-            this.past.push(lastUndoneAction);
+            if (lastUndoneAction != undefined) {
+                this.past.push(lastUndoneAction);
 
-            lastUndoneAction.apply();
+                lastUndoneAction.apply();
+            }
         }
     }
 

@@ -34,7 +34,7 @@ describe('ShapeToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService();
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],

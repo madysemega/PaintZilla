@@ -2,7 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { EllipseService } from './ellipse-service';
 
 // tslint:disable:no-any
@@ -15,6 +19,9 @@ describe('EllipseService', () => {
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+
+    let historyService: HistoryService;
+    let colourService: ColourService;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
@@ -30,9 +37,15 @@ describe('EllipseService', () => {
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        historyService = new HistoryService();
+        colourService = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HistoryService, useValue: historyService },
+                { provide: ColourService, useValue: colourService },
+            ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -535,5 +548,43 @@ describe('EllipseService', () => {
 
         service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
         expect(drawEllipseSpy).not.toHaveBeenCalled();
+    });
+
+    it('when primary colour changes, so should fill style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setPrimaryColour(COLOUR);
+
+        colourService.primaryColourChanged.subscribe(() => {
+            expect(service['fillStyleProperty'].colour).toEqual(COLOUR);
+        });
+    });
+
+    it('when secondary colour changes, so should stroke style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setSecondaryColour(COLOUR);
+
+        colourService.secondaryColourChanged.subscribe(() => {
+            expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
+        });
+    });
+
+    it('when tool is deselected, it should unlock the history service', () => {
+        historyService.isLocked = true;
+        service.onToolDeselect();
+        expect(historyService.isLocked).toBeFalse();
+    });
+
+    it('when line width changes, stroke width property should as well', () => {
+        const INITIAL_LINE_WIDTH = 1;
+        const NEW_LINE_WIDTH = 3;
+
+        service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
+
+        service.lineWidth = NEW_LINE_WIDTH;
+        service.onLineWidthChanged();
+
+        expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
     });
 });
