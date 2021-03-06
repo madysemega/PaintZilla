@@ -28,6 +28,7 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 import { SelectionComponent } from './tools/components/selection/selection/selection.component';
 
 @NgModule({
@@ -58,6 +59,7 @@ import { SelectionComponent } from './tools/components/selection/selection/selec
         EllipseSelectionComponent,
         SelectionComponent,
         HistoryControlsComponent,
+        ConfigurationPanelComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 
