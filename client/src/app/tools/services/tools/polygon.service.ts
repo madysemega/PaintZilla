@@ -67,17 +67,20 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     }
     getSquareEndPoint(startPoint: Vec2, endPoint: Vec2): Vec2 {
         const COMP = this.squarePoint(startPoint, endPoint);
-        return { x: startPoint.x + (COMP > 0 ? COMP : -COMP), y: startPoint.y + (COMP > 0 ? COMP : -COMP) };
+        const X_COMPONENT_POS: boolean = COMP * (endPoint.x - startPoint.x) >= 0;
+        const Y_COMPONENT_POS: boolean = COMP * (endPoint.y - startPoint.y) >= 0;
+        return { x: startPoint.x + (X_COMPONENT_POS ? COMP : -COMP), y: startPoint.y + (Y_COMPONENT_POS ? COMP : -COMP) };
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         ctx.save();
         ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.colourService.primaryColour.toStringRBGA();
-        ctx.strokeStyle = this.colourService.secondaryColour.toStringRBGA();
+        ctx.fillStyle = this.colourService.getPrimaryColour().toStringRGBA();
+        ctx.strokeStyle = this.colourService.getSecondaryColour().toStringRGBA();
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
-        const SIZE = this.squarePoint(startPoint, endPoint);
-        const CENTER_POINT: Vec2 = { x: Math.abs((startPoint.x + endPoint.x) / 2), y: Math.abs((startPoint.y + endPoint.y) / 2) };
+        // const SIZE = this.squarePoint(startPoint, endPoint);
+        const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
+        const SIZE = this.squarePoint(CENTER_POINT, endPoint);
 
         ctx.beginPath();
         ctx.moveTo(
@@ -98,7 +101,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
             ctx.stroke();
         }
         if (this.isToDrawPerim) {
-            this.drawPerimeter(ctx, CENTER_POINT, SIZE);
+            this.drawPerimeter(ctx, CENTER_POINT, Math.abs(SIZE));
         }
         ctx.restore();
     }

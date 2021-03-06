@@ -151,13 +151,21 @@ describe('PolygonService', () => {
         service.onMouseUp(mouseEvent);
         expect(drawPolygonSpy).not.toHaveBeenCalled();
     });
-    it(' getSquareEndPoint should return the small component distance', () => {
-        const START_POINT = { x: 3, y: 0 };
-        const ASYMMETRIC_POINT = { x: 0, y: 4 };
-        const LENGTH_DIFF = Math.abs(ASYMMETRIC_POINT.x - START_POINT.x);
-        const EXPECTED_VEC: Vec2 = { x: START_POINT.x + LENGTH_DIFF, y: START_POINT.y + LENGTH_DIFF };
-        const RESULT = service.getSquareEndPoint(START_POINT, ASYMMETRIC_POINT);
-        console.log('console log:', RESULT);
-        expect(RESULT).toEqual(EXPECTED_VEC);
+    it(` getSquareEndPoint should return a translation of startPoint by the smallest component
+    with the appropriate orientation`, () => {
+        const START_POINT_1 = { x: 3, y: 0 };
+        const ASYMMETRIC_POINT_1 = { x: 0, y: 4 };
+        const LENGTH_DIFF_1 = ASYMMETRIC_POINT_1.x - START_POINT_1.x;
+        const EXPECTED_VEC_1: Vec2 = { x: START_POINT_1.x + LENGTH_DIFF_1, y: START_POINT_1.y - LENGTH_DIFF_1 };
+        const RESULT_1 = service.getSquareEndPoint(START_POINT_1, ASYMMETRIC_POINT_1);
+
+        const START_POINT_2 = { x: 0, y: 3 };
+        const ASYMMETRIC_POINT_2 = { x: 4, y: 0 };
+        const LENGTH_DIFF_2 = ASYMMETRIC_POINT_2.y - START_POINT_2.y;
+        const EXPECTED_VEC_2: Vec2 = { x: START_POINT_2.x - LENGTH_DIFF_2, y: START_POINT_2.y + LENGTH_DIFF_2 };
+        const RESULT_2 = service.getSquareEndPoint(START_POINT_2, ASYMMETRIC_POINT_2);
+
+        expect(RESULT_1).toEqual(EXPECTED_VEC_1);
+        expect(RESULT_2).toEqual(EXPECTED_VEC_2);
     });
 });
