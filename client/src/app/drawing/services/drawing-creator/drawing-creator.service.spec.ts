@@ -127,6 +127,7 @@ describe('DrawingCreatorService', () => {
     it('createNewDrawing() should call emit if changes are discarded and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of(true));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        drawingServiceSpy.canvasIsEmpty = false;
         service.createNewDrawing();
         expect(drawingRestoredSpy.emit).toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
