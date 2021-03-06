@@ -54,8 +54,6 @@ export class DrawingService {
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
             this.restoreCanvasStyle();
-            this.clearCanvas(this.baseCtx);
-            this.clearCanvas(this.previewCtx);
         });
     }
 }

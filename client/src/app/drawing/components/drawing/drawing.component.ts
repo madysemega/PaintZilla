@@ -68,6 +68,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseUp(event: MouseEvent): void {
         if (this.resizingService.isResizing()) {
             this.wasResizing = true;
+            this.resizingService.disableResizer();
             this.resizingService.finalizeResizingEvent();
         }
     }
