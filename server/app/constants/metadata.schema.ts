@@ -5,4 +5,4 @@ const metadataSchema = new mongoose.Schema({
     name: { type: String, required: true },
     label: { type: [String], required: false },
 });
-export const METADATA = mongoose.model('MetaData', metadataSchema);
+export const METADATA = mongoose.model('Metadata', metadataSchema);
