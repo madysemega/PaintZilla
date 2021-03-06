@@ -1,0 +1,12 @@
+<app-shape-tool-configuration [toolService]="polygonTool"></app-shape-tool-configuration>
+
+<div class="vertical margin-top-small">
+    <mat-label class="margin-bottom-small">Nombre de côtés</mat-label>
+    <mat-slider thumbLabel
+                matTooltip="Nombre de côtés"
+                matTooltipPosition="right"
+                min="3" max="12"
+                step="1" value="3"
+                (change)="this.polygonTool.changeNbSides($event)">
+    </mat-slider>
+</div>

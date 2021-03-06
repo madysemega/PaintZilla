@@ -26,7 +26,7 @@ describe('EllipseToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService();
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub);
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MatButtonToggleModule, MatIconModule, MatSliderModule, MatDividerModule, MatTooltipModule],
