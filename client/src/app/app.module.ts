@@ -29,6 +29,7 @@ import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { SelectionComponent } from './tools/components/selection/selection/selection.component';
+import { PolygonComponent } from './tools/components/tool-configurations/polygon/polygon.component';
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import { SelectionComponent } from './tools/components/selection/selection/selec
         SprayToolConfigurationComponent,
         ColourPaletteComponent,
         LineToolConfigurationComponent,
+        PolygonComponent,
         OpacitySliderComponent,
         ColourSliderComponent,
         ColourPickerComponent,

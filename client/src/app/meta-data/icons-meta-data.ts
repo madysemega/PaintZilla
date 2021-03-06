@@ -72,6 +72,22 @@ export class IconsMetaData {
                 name: 'plus-sign',
                 path: '../assets/icons/plus-sign.svg',
             },
+            {
+                name: 'polygon-shape',
+                path: '../assets/icons/polygon-shape.svg',
+            },
+            {
+                name: 'polygon-contoured',
+                path: '../assets/icons/polygon-contoured.svg',
+            },
+            {
+                name: 'polygon-filled',
+                path: '../assets/icons/polygon-filled.svg',
+            },
+            {
+                name: 'polygon-contoured-and-filled',
+                path: '../assets/icons/polygon-contoured-and-filled.svg',
+            },
         ];
     }
 }

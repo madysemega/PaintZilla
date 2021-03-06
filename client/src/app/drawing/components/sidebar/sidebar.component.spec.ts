@@ -31,6 +31,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
@@ -48,6 +49,7 @@ describe('SidebarComponent', () => {
     let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
     let rectangleService: RectangleService;
+    let polygonService: PolygonService;
     let lineServiceStub: LineService;
 
     let pencilStoolStub: PencilService;
@@ -91,6 +93,7 @@ describe('SidebarComponent', () => {
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
+        polygonService = new PolygonService(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
@@ -136,6 +139,7 @@ describe('SidebarComponent', () => {
             ellipseToolStub,
             rectangleService,
             lineServiceStub,
+            polygonService,
             ellipseSelectionCreatorService,
             rectangleSelectionCreatorService,
         );
