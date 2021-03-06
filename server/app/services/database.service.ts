@@ -1,6 +1,4 @@
 import { injectable } from 'inversify';
 
 @injectable()
-export class DatabaseService {
-
-}
+export class DatabaseService {}

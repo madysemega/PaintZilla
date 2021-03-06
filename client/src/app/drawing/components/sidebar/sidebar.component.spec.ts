@@ -25,7 +25,7 @@ import { RectangleSelectionHandlerService } from '@app/tools/services/selection/
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-// import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+// import { ColourToolService } from '@server/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
