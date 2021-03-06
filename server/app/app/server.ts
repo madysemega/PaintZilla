@@ -1,7 +1,7 @@
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
+import { TYPES } from '../settings/types';
 import { Application } from './app';
-import { TYPES } from './types';
 
 @injectable()
 export class Server {

@@ -8,7 +8,7 @@ import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { DateController } from './controllers/date.controller';
 import { IndexController } from './controllers/index.controller';
-import { TYPES } from './types';
+import { TYPES } from '../settings/types';
 
 @injectable()
 export class Application {
