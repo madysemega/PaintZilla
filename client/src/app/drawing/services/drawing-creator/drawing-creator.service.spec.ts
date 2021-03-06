@@ -7,6 +7,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { EventEmitter } from 'events';
 import { of } from 'rxjs';
 
 // tslint:disable:no-any
@@ -14,6 +15,7 @@ describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
     let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
+    let drawingRestoredSpy: jasmine.SpyObj<EventEmitter>;
 
     let canvasTestHelper: CanvasTestHelper;
     let baseCtxStub: CanvasRenderingContext2D;
@@ -37,6 +39,8 @@ describe('DrawingCreatorService', () => {
         matDialogSpy.open.and.callFake(() => {
             return matDialogRefSpy;
         });
+
+        drawingRestoredSpy = jasmine.createSpyObj('EventEmitter<void>', ['emit']);
 
         TestBed.configureTestingModule({
             imports: [MatDialogModule],
@@ -120,32 +124,20 @@ describe('DrawingCreatorService', () => {
         expect(matDialogSpy.open).not.toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should call clear canvas and reset canvas dimensions if changes are discarded and canvas is not empty', () => {
-        const clearCanvasStub = spyOn(drawingServiceSpy, 'clearCanvas').and.stub();
-        const resetCanvasDimensionsStub = spyOn(resizingServiceSpy, 'resetCanvasDimensions').and.stub();
-        const updateCanvasSizeStub = spyOn(resizingServiceSpy, 'updateCanvasSize').and.stub();
-        spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
+    it('createNewDrawing() should call emit if changes are discarded and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of(true));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         service.createNewDrawing();
-        expect(clearCanvasStub).toHaveBeenCalled();
-        expect(resetCanvasDimensionsStub).toHaveBeenCalled();
-        expect(updateCanvasSizeStub).toHaveBeenCalled();
+        expect(drawingRestoredSpy.emit).toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
-    it('createNewDrawing() should not clear canvas and reset canvas dimensions if changes are not discarded and canvas is not empty', () => {
-        const clearCanvasStub = spyOn(drawingServiceSpy, 'clearCanvas').and.stub();
-        const resetCanvasDimensionsStub = spyOn(resizingServiceSpy, 'resetCanvasDimensions').and.stub();
-        const updateCanvasSizeStub = spyOn(resizingServiceSpy, 'updateCanvasSize').and.stub();
-        spyOn(drawingServiceSpy, 'restoreCanvasStyle').and.returnValue();
+    it('createNewDrawing() should not call emit if changes are not discarded and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of(false));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
         service.createNewDrawing();
-        expect(clearCanvasStub).not.toHaveBeenCalled();
-        expect(resetCanvasDimensionsStub).not.toHaveBeenCalled();
-        expect(updateCanvasSizeStub).not.toHaveBeenCalled();
+        expect(drawingRestoredSpy.emit).not.toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(false);
     });
 });
