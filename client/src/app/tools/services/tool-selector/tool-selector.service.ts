@@ -9,6 +9,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
@@ -85,6 +86,7 @@ export class ToolSelectorService {
         ellipseService: EllipseService,
         rectangleService: RectangleService,
         lineService: LineService,
+        polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
     ) {
@@ -123,6 +125,12 @@ export class ToolSelectorService {
             icon: 'pencil-with-line',
             keyboardShortcut: 'l',
             tool: lineService,
+        });
+        this.tools.set(polygonService.key, {
+            displayName: 'Polygon',
+            icon: 'polygon-shape',
+            keyboardShortcut: '3',
+            tool: polygonService,
         });
         this.tools.set(rectangleSelectionCreatorService.key, {
             displayName: 'Sélection par rectangle',

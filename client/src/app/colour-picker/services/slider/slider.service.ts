@@ -27,8 +27,8 @@ export class SliderService {
         const gradient = this.opacityCtx.createLinearGradient(0, 0, OpacitySliderConstants.SLIDER_WIDTH, 0);
         const color = this.colourPickerService.getCurrentColor().clone();
         color.setAlpha(0);
-        gradient.addColorStop(0, color.toStringRBGA());
-        gradient.addColorStop(1, color.toStringRBG());
+        gradient.addColorStop(0, color.toStringRGBA());
+        gradient.addColorStop(1, color.toStringRGB());
         this.opacityCtx.fillStyle = gradient;
         this.opacityCtx.fillRect(0, 0, OpacitySliderConstants.SLIDER_WIDTH, OpacitySliderConstants.SLIDER_HEIGHT);
         this.drawOpacityCursor();
@@ -69,7 +69,7 @@ export class SliderService {
             this.colourPickerService.getHue(),
             ColourSliderConstants.MAX_SATURATION,
             ColourSliderConstants.MAX_VALUE,
-        ).toStringRBG();
+        ).toStringRGB();
         this.colorCtx.fill(cursor);
         this.colorCtx.lineWidth = ColourSliderConstants.CURSOR_LINEWIDTH;
         this.colorCtx.strokeStyle = ColourSliderConstants.CURSOR_STYLE;
@@ -89,7 +89,7 @@ export class SliderService {
             this.colourPickerService.getHue(),
             PaletteConstants.MAX_SATURATION,
             PaletteConstants.MAX_VALUE,
-        ).toStringRBG();
+        ).toStringRGB();
         this.paletteCtx.fillRect(0, 0, PaletteConstants.SLIDER_WIDTH, PaletteConstants.SLIDER_HEIGHT);
         const xGradient = this.paletteCtx.createLinearGradient(0, 0, PaletteConstants.SLIDER_WIDTH, 0);
         xGradient.addColorStop(0, PaletteConstants.WHITE_OPAQUE);
@@ -108,7 +108,7 @@ export class SliderService {
         const cursorRadius = PaletteConstants.CURSOR_RADIUS;
         const paletteCursor = new Path2D();
         paletteCursor.arc(this.paletteSliderPosition.x, this.paletteSliderPosition.y, cursorRadius, 0, 2 * Math.PI);
-        this.paletteCtx.fillStyle = this.colourPickerService.getCurrentColor().toStringRBG();
+        this.paletteCtx.fillStyle = this.colourPickerService.getCurrentColor().toStringRGB();
         this.paletteCtx.fill(paletteCursor);
         this.paletteCtx.lineWidth = PaletteConstants.CURSOR_LINEWIDTH;
         this.paletteCtx.strokeStyle = PaletteConstants.CURSOR_STYLE;

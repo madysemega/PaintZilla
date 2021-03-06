@@ -30,6 +30,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ExportDrawingDialogComponent } from './components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
 import { SelectionComponent } from './tools/components/selection/selection/selection.component';
+import { PolygonComponent } from './tools/components/tool-configurations/polygon/polygon.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -50,6 +51,7 @@ import { SelectionComponent } from './tools/components/selection/selection/selec
         ColourPaletteComponent,
         LineToolConfigurationComponent,
         ExportDrawingDialogComponent,
+        PolygonComponent,
         OpacitySliderComponent,
         ColourSliderComponent,
         ColourPickerComponent,
