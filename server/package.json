@@ -52,6 +52,7 @@
         "mongodb": "^3.6.0",
         "mongoose": "^5.11.19",
         "morgan": "^1.10.0",
+        "object-hash": "^2.1.1",
         "prettier": "^2.0.5",
         "reflect-metadata": "^0.1.13",
         "serve-favicon": "~2.5.0",

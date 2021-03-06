@@ -1,3 +1,4 @@
+import { DatabaseController } from '@app/controllers/database.controller';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
@@ -7,7 +8,6 @@ import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { TYPES } from '../settings/types';
-import { DatabaseController } from '@app/controllers/database.controller';
 
 @injectable()
 export class Application {
