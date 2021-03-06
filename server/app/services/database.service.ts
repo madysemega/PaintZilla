@@ -9,7 +9,7 @@ export class DatabaseService {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     };
-    private client: MongoClient;
+    client: MongoClient;
     async start(url: string = Constants.DATABASE_URL): Promise<MongoClient | null> {
         try {
             const client = await mongoose.connect(url, this.options);
@@ -18,5 +18,9 @@ export class DatabaseService {
             throw new Error('Database connection error');
         }
         return this.client;
+    }
+
+    async closeConnection(): Promise<void> {
+        return this.client.close();
     }
 }
