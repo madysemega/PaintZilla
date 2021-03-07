@@ -1,9 +1,8 @@
+import { DatabaseService } from '@app/services/database.service';
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../settings/types';
 import { Application } from './app';
-import { DatabaseService } from '@app/services/database.service';
-
 @injectable()
 export class Server {
     private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
@@ -22,13 +21,15 @@ export class Server {
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
-        try {
-            await this.databaseService.start();
-            console.log('Database connection successful !');
-        } catch {
-            console.error('Database connection failed !');
-            process.exit(1);
-        }
+        await this.databaseService
+            .start()
+            .then(() => {
+                // Do something...
+            })
+            .catch((error) => {
+                console.log('FAILED TO CONNECT :( Details: ' + error);
+                process.exit(1);
+            });
     }
 
     private normalizePort(val: number | string): number | string | boolean {

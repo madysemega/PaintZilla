@@ -1,4 +1,4 @@
-import { DatabaseController } from '@app/controllers/database.controller';
+import { MetadataController } from '@app/controllers/metadata.controller';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
@@ -15,7 +15,7 @@ export class Application {
     private readonly swaggerOptions: swaggerJSDoc.Options;
     app: express.Application;
 
-    constructor(@inject(TYPES.DatabaseController) private databaseController: DatabaseController) {
+    constructor(@inject(TYPES.MetadataController) private metadataController: MetadataController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -46,7 +46,7 @@ export class Application {
     bindRoutes(): void {
         // Notre application utilise le routeur de notre API `Index`
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/api', this.databaseController.router);
+        this.app.use('/api', this.metadataController.router);
         this.errorHandling();
     }
 

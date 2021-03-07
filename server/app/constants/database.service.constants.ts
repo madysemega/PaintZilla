@@ -1,1 +1,1 @@
-export const DATABASE_URL = 'mongodb+srv://admin:admin@cluster0.8cbtv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+export const DATABASE_URL = 'mongodb+srv://mady:admin@cluster0.qpved.mongodb.net/log2990-201?retryWrites=true&w=majority';

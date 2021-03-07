@@ -1,7 +1,7 @@
 // @ts-ignore
-import mongoose from 'mongoose';
+// tslint:disable-next-line:no-require-imports
+import mongoose = require('mongoose');
 const metadataSchema = new mongoose.Schema({
-    id: { type: String, required: true },
     name: { type: String, required: true },
     label: { type: [String], required: false },
 });

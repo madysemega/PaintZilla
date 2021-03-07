@@ -1,26 +1,28 @@
 import * as Constants from '@app/constants/database.service.constants';
 import { injectable } from 'inversify';
-import { MongoClient, MongoClientOptions } from 'mongodb';
 // @ts-ignore
-import mongoose from 'mongoose';
+// tslint:disable-next-line:no-require-imports
+import mongoose = require('mongoose');
+import { ConnectOptions } from 'mongoose';
+
 @injectable()
 export class DatabaseService {
-    private options: MongoClientOptions = {
+    private options: ConnectOptions = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     };
-    client: MongoClient;
-    async start(url: string = Constants.DATABASE_URL): Promise<MongoClient | null> {
-        try {
-            const client = await mongoose.connect(url, this.options);
-            this.client = client;
-        } catch {
-            throw new Error('Database connection error');
-        }
-        return this.client;
+    async start(url: string = Constants.DATABASE_URL): Promise<void> {
+        await mongoose
+            .connect(url, this.options)
+            .then(() => {
+                console.log('Mongoose is connected ;)');
+            })
+            .catch(() => {
+                throw new Error('Database connection error');
+            });
     }
 
     async closeConnection(): Promise<void> {
-        return this.client.close();
+        await mongoose.connection.close();
     }
 }
