@@ -3,6 +3,7 @@ import { LocalDatabaseService } from '@app/services/local.database.service';
 import { TYPES } from '@app/settings/types';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
+import * as RegularExpressions from '@app/constants/regular.expressions';
 
 @injectable()
 export class DatabaseService {
@@ -27,5 +28,10 @@ export class DatabaseService {
 
     async closeConnection(): Promise<void> {
         await mongoose.connection.close();
+        await this.localDatabaseService.close();
+    }
+
+    isValidDrawing(drawing: string): boolean {
+        return RegularExpressions.BASE_64_REGEX.test(drawing);
     }
 }
