@@ -14,6 +14,7 @@ import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-co
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
@@ -31,6 +32,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
@@ -53,6 +55,7 @@ describe('SidebarComponent', () => {
     let lineServiceStub: LineService;
 
     let pencilStoolStub: PencilService;
+    let pipetteStoolStub: PipetteService;
     let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
@@ -90,6 +93,7 @@ describe('SidebarComponent', () => {
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
         sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
+        pipetteStoolStub = new PipetteService(drawingStub, colourServiceStub, historyServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
@@ -134,6 +138,7 @@ describe('SidebarComponent', () => {
 
         toolSelectorServiceStub = new ToolSelectorService(
             pencilStoolStub,
+            pipetteStoolStub,
             sprayStoolStub,
             eraserStoolStub,
             ellipseToolStub,
@@ -150,6 +155,7 @@ describe('SidebarComponent', () => {
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
                 PencilToolConfigurationComponent,
+                PipetteToolConfigurationComponent,
                 SprayToolConfigurationComponent,
                 EraserToolConfigurationComponent,
                 RectangleToolConfigurationComponent,
@@ -166,6 +172,7 @@ describe('SidebarComponent', () => {
                 { provide: EraserService },
                 { provide: LineService },
                 { provide: PencilService },
+                { provide: PipetteService },
                 { provide: SprayService },
                 { provide: RectangleService },
                 { provide: EllipseSelectionHandlerService },

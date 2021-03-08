@@ -54,6 +54,7 @@ describe('AppComponent', () => {
                 IndexService,
                 ResizingService,
                 PencilService,
+                PipetteService,
                 SprayService,
                 DrawingService,
                 DrawingCreatorService,
