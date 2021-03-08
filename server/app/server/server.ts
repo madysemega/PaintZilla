@@ -27,7 +27,7 @@ export class Server {
                 // Do something...
             })
             .catch((error) => {
-                console.log('FAILED TO CONNECT :( Details: ' + error);
+                console.log('FAILED TO CONNECT... Details: ' + error);
                 process.exit(1);
             });
     }

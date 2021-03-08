@@ -4,6 +4,7 @@ import { Container } from 'inversify';
 import { Application } from '../server/app';
 import { Server } from '../server/server';
 import { TYPES } from './types';
+import { LocalDatabaseService } from '@app/services/local.database.service';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
@@ -11,6 +12,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.Server).to(Server);
     container.bind(TYPES.Application).to(Application);
     container.bind<DatabaseService>(TYPES.DatabaseService).to(DatabaseService);
+    container.bind<LocalDatabaseService>(TYPES.LocalDatabaseService).to(LocalDatabaseService);
     container.bind<MetadataController>(TYPES.MetadataController).to(MetadataController);
     return container;
 };
