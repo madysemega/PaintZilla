@@ -1,10 +1,10 @@
 import { MetadataController } from '@app/controllers/metadata.controller';
 import { DatabaseService } from '@app/services/database.service';
+import { LocalDatabaseService } from '@app/services/local.database.service';
 import { Container } from 'inversify';
 import { Application } from '../server/app';
 import { Server } from '../server/server';
 import { TYPES } from './types';
-import { LocalDatabaseService } from '@app/services/local.database.service';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();

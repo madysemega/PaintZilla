@@ -9,7 +9,8 @@ export class Server {
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(@inject(TYPES.Application) private application: Application,
+    constructor(
+        @inject(TYPES.Application) private application: Application,
         @inject(TYPES.DatabaseService) private databaseService: DatabaseService,
     ) {}
 

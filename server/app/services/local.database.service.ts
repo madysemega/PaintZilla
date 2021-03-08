@@ -1,32 +1,42 @@
 import * as Constants from '@app/constants/database.service.constants';
+import { DrawingSchema } from '@app/constants/drawing.schema';
+import * as fileSystem from 'fs';
 import { injectable } from 'inversify';
-// @ts-ignore
-// tslint:disable-next-line:no-require-imports
-import mongoose = require('mongoose');
-import { ConnectOptions, Mongoose } from 'mongoose';
-
 @injectable()
 export class LocalDatabaseService {
-    private options: ConnectOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    };
-    localDatabase: Mongoose;
-    constructor() {
-        this.localDatabase = mongoose;
+    localDatabase: { dataset: DrawingSchema[] };
+    async start(): Promise<void> {
+        fileSystem.readFile(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8, (error, jsonString) => {
+            if (error) {
+                console.log('Error while reading json file from local database, details on ' + error);
+            } else {
+                try {
+                    const data = JSON.parse(jsonString);
+                    this.localDatabase = data;
+                    console.log('Connected successfully to database');
+                    this.close();
+                } catch (error) {
+                    console.log("Couldn't parse the json data, details on " + error);
+                }
+            }
+        });
     }
-    async start(url: string = Constants.LOCAL_HOST_URL): Promise<void> {
-        await this.localDatabase
-            .createConnection(url, this.options)
-            .then(() => {
-                console.log('Mongoose has successfully connected to distant and local databases');
-            })
-            .catch(() => {
-                throw new Error('Local database connection error');
-            });
+    async close(): Promise<void> {
+        const localDb = JSON.stringify(this.localDatabase);
+        fileSystem.writeFile(Constants.LOCAL_DATABASE_PATH, localDb, (error) => {
+            if (error) {
+                console.log('Error writing file', error);
+            } else {
+                console.log('Successfully wrote file');
+            }
+        });
     }
 
-    async closeConnection(): Promise<void> {
-        await mongoose.connection.close();
+    addDrawing(id: string, drawing: string): void {
+        if ()
+    }
+
+    isValidDrawing(drawing: string): boolean {
+
     }
 }
