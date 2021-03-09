@@ -24,20 +24,12 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
         this.extract(sourceCanvas, this.selectionCtx, false);
     }
 
-    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean) {
+    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean): void {
         const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };
-        
+
         destination.save();
         destination.beginPath();
-        destination.ellipse(
-            this.selection.width / 2,
-            this.selection.height / 2,
-            originalRadii.x,
-            originalRadii.y,
-            0,
-            0,
-            this.CIRCLE_MAX_ANGLE,
-        );
+        destination.ellipse(this.selection.width / 2, this.selection.height / 2, originalRadii.x, originalRadii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
         destination.clip();
 
         destination.imageSmoothingEnabled = false;
@@ -45,9 +37,7 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
         if (fillItWhite) {
             destination.fillStyle = 'white';
             destination.fill();
-        }
-
-        else {
+        } else {
             destination.drawImage(
                 source,
                 this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
@@ -58,7 +48,6 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
         destination.closePath();
         destination.restore();
     }
-
 
     whiteFillAtOriginalLocation(): void {
         const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };

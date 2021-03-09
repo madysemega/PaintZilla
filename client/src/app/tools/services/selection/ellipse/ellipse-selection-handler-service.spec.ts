@@ -244,7 +244,6 @@ describe('EllipseSelectionHandlerService', () => {
         expect(fillSpy).toHaveBeenCalled();
     });
 
-
     it('creating a memento then restoring to that memento should not change any property', () => {
         // tslint:disable-next-line: no-magic-numbers
         service.originalWidth = 10;

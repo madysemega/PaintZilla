@@ -23,7 +23,7 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
         this.extract(sourceCanvas, this.selectionCtx, false);
     }
 
-    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean) {
+    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean): void {
         destination.save();
         destination.beginPath();
         destination.rect(this.topLeftRelativeToMiddle.x, this.topLeftRelativeToMiddle.y, this.originalWidth, this.originalHeight);
@@ -34,16 +34,14 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
         if (fillItWhite) {
             destination.fillStyle = 'white';
             destination.fill();
-        }
-
-        else {
+        } else {
             destination.drawImage(
                 source,
                 this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
                 this.topLeftRelativeToMiddle.y - this.originalTopLeftOnBaseCanvas.y,
             );
         }
-        
+
         destination.closePath();
         destination.restore();
     }

@@ -35,7 +35,7 @@ export abstract class SelectionHandlerService {
 
     hasBeenManipulated: boolean;
     needWhitePostDrawing: boolean;
-    
+
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
@@ -75,13 +75,12 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
-
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
 
         this.makeWhiteBehindSelection();
-        
+
         const topLeft: Vec2 = {
             x: topLeftOnDestination.x - this.topLeftRelativeToMiddle.x + this.offset.x,
             y: topLeftOnDestination.y - this.topLeftRelativeToMiddle.y + this.offset.y,
@@ -98,8 +97,7 @@ export abstract class SelectionHandlerService {
             newlength = bottomRightOnSource.x - topLeftOnSource.x;
             this.currentHorizontalScaling = newlength / this.originalWidth;
             this.updateHorizontalOffset(newlength);
-        }
-        else {
+        } else {
             newlength = bottomRightOnSource.y - topLeftOnSource.y;
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
@@ -121,7 +119,12 @@ export abstract class SelectionHandlerService {
         destination.closePath();
     }
 
-    overwriteACanvasWithAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+    overwriteACanvasWithAnother(
+        source: HTMLCanvasElement,
+        destination: CanvasRenderingContext2D,
+        horizontalScaling: number,
+        verticalScaling: number,
+    ): void {
         this.drawingService.clearCanvas(destination);
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
@@ -136,9 +139,9 @@ export abstract class SelectionHandlerService {
         contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
         contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
     }
-    
-    makeWhiteBehindSelection(): void{
-        if(this.needWhitePostDrawing){
+
+    makeWhiteBehindSelection(): void {
+        if (this.needWhitePostDrawing) {
             this.whiteFillAtOriginalLocation();
         }
     }
@@ -189,7 +192,7 @@ export abstract class SelectionHandlerService {
 
         this.drawACanvasOnAnother(this.selection, memento.selectionCtx);
         this.drawACanvasOnAnother(this.originalSelection, memento.originalSelectionCtx);
-        
+
         return memento;
     }
 

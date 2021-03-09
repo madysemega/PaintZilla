@@ -16,7 +16,7 @@ describe('EllipseSelectionHelperService', () => {
     // let canvasPosition: Vec2;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
-    const CIRCLE_MAX_ANGLE: number = 360;
+    const CIRCLE_MAX_ANGLE = 360;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -69,8 +69,8 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('drawing a post selection ellipse should work even if radii components both =0', () => {
-        let center: Vec2 = { x: 0, y: 0 };
-        let radii: Vec2 = { x: 0, y: 0 };
+        const center: Vec2 = { x: 0, y: 0 };
+        const radii: Vec2 = { x: 0, y: 0 };
 
         const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
@@ -81,8 +81,8 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('drawing a post selection ellipse should use ellipse() from CanvasRenderingContext2D', () => {
-        let center: Vec2 = { x: 7, y: 9 };
-        let radii: Vec2 = { x: 7, y: 8 };
+        const center: Vec2 = { x: 7, y: 9 };
+        const radii: Vec2 = { x: 7, y: 8 };
 
         const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
@@ -93,9 +93,9 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('whiteFill should call whiteEllipseFill', () => {
-        let center: Vec2 = { x: 7, y: 9 };
-        let radii: Vec2 = { x: 7, y: 8 };
-        let vertices: Vec2[] = [radii, center];
+        const center: Vec2 = { x: 7, y: 9 };
+        const radii: Vec2 = { x: 7, y: 8 };
+        const vertices: Vec2[] = [radii, center];
         const whiteEllipseSpy: jasmine.Spy<any> = spyOn(service, 'whiteEllipseFill');
 
         service.whiteFill(vertices);
@@ -104,8 +104,8 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('whiteEllipseFill shoul call ellipse from CanvasRenderingContext2D from the baseCtx of the drawing service', () => {
-        let center: Vec2 = { x: 7, y: 9 };
-        let radii: Vec2 = { x: 7, y: 8 };
+        const center: Vec2 = { x: 7, y: 9 };
+        const radii: Vec2 = { x: 7, y: 8 };
         const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
@@ -115,26 +115,24 @@ describe('EllipseSelectionHelperService', () => {
     });
 
     it('whiteEllipseFill should substract 1 from the x component it is >= 1', () => {
-        let center: Vec2 = { x: 7, y: 9 };
-        let radii: Vec2 = { x: 0, y: 8 };
+        const center: Vec2 = { x: 7, y: 9 };
+        const radii: Vec2 = { x: 0, y: 8 };
         const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
         service.whiteEllipseFill(center, radii);
 
-        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, 0, radii.y-1, 0, 0, CIRCLE_MAX_ANGLE)
+        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, 0, radii.y - 1, 0, 0, CIRCLE_MAX_ANGLE);
     });
 
     it('whiteEllipseFill should substract 1 from the y component it is >= 1', () => {
-        let center: Vec2 = { x: 7, y: 9 };
-        let radii: Vec2 = { x: 7, y: 0 };
+        const center: Vec2 = { x: 7, y: 9 };
+        const radii: Vec2 = { x: 7, y: 0 };
         const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
         service.whiteEllipseFill(center, radii);
 
-        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, radii.x-1, 0, 0, 0, CIRCLE_MAX_ANGLE)
+        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, radii.x - 1, 0, 0, 0, CIRCLE_MAX_ANGLE);
     });
-
-    
 });

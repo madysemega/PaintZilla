@@ -8,7 +8,6 @@ export class HandlerMemento {
         this.originalSelection = document.createElement('canvas');
         this.originalSelectionCtx = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
 
-    
         this.selection.width = width;
         this.selection.height = height;
         this.originalSelection.width = width;
@@ -20,7 +19,7 @@ export class HandlerMemento {
 
     selectionCtx: CanvasRenderingContext2D;
     originalSelectionCtx: CanvasRenderingContext2D;
-    
+
     topLeftRelativeToMiddle: Vec2 = { x: 0, y: 0 };
     offset: Vec2 = { x: 0, y: 0 };
     originalWidth: number;
@@ -32,5 +31,4 @@ export class HandlerMemento {
     originalVertices: Vec2[] = [];
     currentHorizontalScaling: number;
     currentVerticalScaling: number;
-
 }
