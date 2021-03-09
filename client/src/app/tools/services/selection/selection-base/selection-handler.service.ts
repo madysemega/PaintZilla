@@ -18,135 +18,132 @@ export enum ResizingMode {
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    selectionCanvas: HTMLCanvasElement;
-    horizontalModificationCanvas: HTMLCanvasElement;
-    verticalModificationCanvas: HTMLCanvasElement;
-    originalCanvasCopy: HTMLCanvasElement;
+    selection: HTMLCanvasElement;
+    originalSelection: HTMLCanvasElement;
 
     selectionCtx: CanvasRenderingContext2D;
-    horizontalModificationCtx: CanvasRenderingContext2D;
-    verticalModificationCtx: CanvasRenderingContext2D;
-    originalCanvasCopyCtx: CanvasRenderingContext2D;
+    originalSelectionCtx: CanvasRenderingContext2D;
 
-    fixedTopLeft: Vec2 = { x: 0, y: 0 };
+    topLeftRelativeToMiddle: Vec2 = { x: 0, y: 0 };
     offset: Vec2 = { x: 0, y: 0 };
 
     originalWidth: number;
     originalHeight: number;
     originalCenter: Vec2 = { x: 0, y: 0 };
     originalVertices: Vec2[] = [];
-
-    hasBeenManipulated: boolean;
-    needWhiteEllipsePostDrawing: boolean;
     originalTopLeftOnBaseCanvas: Vec2 = { x: 0, y: 0 };
 
+    hasBeenManipulated: boolean;
+    needWhitePostDrawing: boolean;
+    
+    currentHorizontalScaling: number = 1;
+    currentVerticalScaling: number = 1;
+
     constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
-        this.selectionCanvas = document.createElement('canvas');
-        this.selectionCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D;
-        this.originalCanvasCopy = document.createElement('canvas');
-        this.originalCanvasCopyCtx = this.originalCanvasCopy.getContext('2d') as CanvasRenderingContext2D;
-        this.horizontalModificationCanvas = document.createElement('canvas');
-        this.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D;
-        this.verticalModificationCanvas = document.createElement('canvas');
-        this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D;
+        this.selection = document.createElement('canvas');
+        this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
+        this.originalSelection = document.createElement('canvas');
+        this.originalSelectionCtx = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
+    }
+
+    abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
+    abstract whiteFillAtOriginalLocation(): void;
+
+    makeWhiteBehindSelection(): void{
+        if(this.needWhitePostDrawing){
+            this.whiteFillAtOriginalLocation();
+        }
     }
 
     initAllProperties(vertices: Vec2[]): void {
         this.originalVertices = vertices;
         this.originalWidth = vertices[1].x - vertices[0].x;
         this.originalHeight = vertices[1].y - vertices[0].y;
-        this.fixedTopLeft.x = this.selectionCanvas.width / 2 - this.originalWidth / 2;
-        this.fixedTopLeft.y = this.selectionCanvas.height / 2 - this.originalHeight / 2;
+        this.topLeftRelativeToMiddle.x = this.selection.width / 2 - this.originalWidth / 2;
+        this.topLeftRelativeToMiddle.y = this.selection.height / 2 - this.originalHeight / 2;
         this.offset = { x: 0, y: 0 };
 
         this.originalTopLeftOnBaseCanvas = { x: vertices[0].x, y: vertices[0].y };
         this.originalCenter = { x: (vertices[0].x + vertices[1].x) / 2, y: (vertices[0].y + vertices[1].y) / 2 };
 
         this.hasBeenManipulated = false;
-        this.needWhiteEllipsePostDrawing = true;
-    }
+        this.needWhitePostDrawing = true;
 
-    abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
-    abstract drawWhitePostSelection(): void;
+        this.currentHorizontalScaling = 1;
+        this.currentVerticalScaling = 1;
+    }
 
     select(sourceCanvas: HTMLCanvasElement, vertices: Vec2[]): void {
         this.clearAndResetAllCanvas();
         this.initAllProperties(vertices);
         this.extractSelectionFromSource(sourceCanvas);
-        this.drawACanvasOnAnother(this.selectionCanvas, this.horizontalModificationCtx);
-        this.drawACanvasOnAnother(this.selectionCanvas, this.verticalModificationCtx);
-        this.drawACanvasOnAnother(this.selectionCanvas, this.originalCanvasCopyCtx);
+        this.drawACanvasOnAnother(this.selection, this.originalSelectionCtx);
     }
 
-    drawSelection(target: CanvasRenderingContext2D, topLeftOnTarget: Vec2): boolean {
-        console.log(this.selectionCanvas.width, this.selectionCanvas.height);
-        if (!this.hasSelectionBeenManipulated(topLeftOnTarget)) {
+    drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
+
+        if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
 
-        if (this.needWhiteEllipsePostDrawing) {
-            this.drawWhitePostSelection();
-        }
+       /* if (this.needWhitePostDrawing) {
+            this.whiteFillAtOriginalLocation();
+        }*/
+        this.makeWhiteBehindSelection();
+        
         const topLeft: Vec2 = {
-            x: topLeftOnTarget.x - this.fixedTopLeft.x + this.offset.x,
-            y: topLeftOnTarget.y - this.fixedTopLeft.y + this.offset.y,
+            x: topLeftOnDestination.x - this.topLeftRelativeToMiddle.x + this.offset.x,
+            y: topLeftOnDestination.y - this.topLeftRelativeToMiddle.y + this.offset.y,
         };
-        this.drawACanvasOnAnother(this.selectionCanvas, target, topLeft);
+        this.drawACanvasOnAnother(this.selection, destination, topLeft);
         return true;
     }
 
     resizeSelection(topLeftOnSource: Vec2, bottomRightOnSource: Vec2, isHorizontal: boolean): void {
-        let scaling;
         let newlength;
         this.hasBeenManipulated = true;
 
         if (isHorizontal) {
             newlength = bottomRightOnSource.x - topLeftOnSource.x;
-            scaling = newlength / this.originalWidth;
-            this.overwriteACanvasWithAnother(this.horizontalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
-            this.overwriteACanvasWithAnother(this.originalCanvasCopy, this.verticalModificationCtx, scaling, isHorizontal);
+            this.currentHorizontalScaling = newlength / this.originalWidth;
             this.updateHorizontalOffset(newlength);
-            return;
+        }
+        else {
+            newlength = bottomRightOnSource.y - topLeftOnSource.y;
+            this.currentVerticalScaling = newlength / this.originalHeight;
+            this.updateVerticalOffset(newlength);
         }
 
-        newlength = bottomRightOnSource.y - topLeftOnSource.y;
-        scaling = newlength / this.originalHeight;
-        this.overwriteACanvasWithAnother(this.verticalModificationCanvas, this.selectionCtx, scaling, isHorizontal);
-        this.overwriteACanvasWithAnother(this.originalCanvasCopy, this.horizontalModificationCtx, scaling, isHorizontal);
-        this.updateVerticalOffset(newlength);
+        this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
     }
 
-    transform(contextToTransform: CanvasRenderingContext2D, scaling: number, isHorizontal: boolean): void {
-        contextToTransform.translate(this.selectionCanvas.width / 2, this.selectionCanvas.height / 2);
-        if (isHorizontal) {
-            contextToTransform.transform(scaling, 0, 0, 1, 0, 0);
-        } else {
-            contextToTransform.transform(1, 0, 0, scaling, 0, 0);
-        }
-        contextToTransform.translate(-this.selectionCanvas.width / 2, -this.selectionCanvas.height / 2);
+    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
+        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
+        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
     }
 
-    drawACanvasOnAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, topLeftOnTarget?: Vec2): void {
+    drawACanvasOnAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, topLeftOnDestination?: Vec2): void {
         let definedPosition: Vec2;
-        if (topLeftOnTarget == undefined) {
+        if (topLeftOnDestination == undefined) {
             definedPosition = { x: 0, y: 0 };
         } else {
-            definedPosition = { x: topLeftOnTarget.x, y: topLeftOnTarget.y };
+            definedPosition = { x: topLeftOnDestination.x, y: topLeftOnDestination.y };
         }
-        target.beginPath();
-        target.imageSmoothingEnabled = false;
-        target.drawImage(source, definedPosition.x, definedPosition.y);
-        target.closePath();
+        destination.beginPath();
+        destination.imageSmoothingEnabled = false;
+        destination.drawImage(source, definedPosition.x, definedPosition.y);
+        destination.closePath();
     }
 
-    overwriteACanvasWithAnother(source: HTMLCanvasElement, target: CanvasRenderingContext2D, scaling: number, isHorizontalResizing: boolean): void {
-        this.drawingService.clearCanvas(target);
-        target.beginPath();
-        this.transform(target, scaling, isHorizontalResizing);
-        target.imageSmoothingEnabled = false;
-        target.drawImage(source, 0, 0);
-        target.closePath();
-        target.resetTransform();
+    overwriteACanvasWithAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+        this.drawingService.clearCanvas(destination);
+        destination.beginPath();
+        this.transform(destination, horizontalScaling, verticalScaling);
+        destination.imageSmoothingEnabled = false;
+        destination.drawImage(source, 0, 0);
+        destination.closePath();
+        destination.resetTransform();
     }
 
     updateHorizontalOffset(newWidth: number): void {
@@ -159,63 +156,59 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        this.selectionCanvas.width = this.drawingService.canvas.width;
-        this.selectionCanvas.height = this.drawingService.canvas.height;
-        this.originalCanvasCopy.width = this.drawingService.canvas.width;
-        this.originalCanvasCopy.height = this.drawingService.canvas.height;
-        this.horizontalModificationCanvas.width = this.drawingService.canvas.width;
-        this.horizontalModificationCanvas.height = this.drawingService.canvas.height;
-        this.verticalModificationCanvas.width = this.drawingService.canvas.width;
-        this.verticalModificationCanvas.height = this.drawingService.canvas.height; // =2000?
+        this.selection.width = this.drawingService.canvas.width;
+        this.selection.height = this.drawingService.canvas.height;
+        this.originalSelection.width = this.drawingService.canvas.width;
+        this.originalSelection.height = this.drawingService.canvas.height;
     }
 
-    hasSelectionBeenManipulated(topLeftOnTarget: Vec2): boolean {
+    hasSelectionBeenManipulated(topLeftOnDestination: Vec2): boolean {
         if (this.hasBeenManipulated) {
             return true;
         }
         return (this.hasBeenManipulated =
-            this.originalTopLeftOnBaseCanvas.x !== topLeftOnTarget.x || this.originalTopLeftOnBaseCanvas.y !== topLeftOnTarget.y);
+            this.originalTopLeftOnBaseCanvas.x !== topLeftOnDestination.x || this.originalTopLeftOnBaseCanvas.y !== topLeftOnDestination.y);
     }
 
     createMemento(): HandlerMemento {
         const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
 
-        memento.fixedTopLeft = { x: this.fixedTopLeft.x, y: this.fixedTopLeft.y };
+        memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };
 
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
 
         memento.hasBeenManipulated = true;
-        memento.needWhiteEllipsePostDrawing = true; //////
+        memento.needWhitePostDrawing = this.needWhitePostDrawing; //////
         memento.originalTopLeftOnBaseCanvas = { x: this.originalTopLeftOnBaseCanvas.x, y: this.originalTopLeftOnBaseCanvas.y };
         memento.originalCenter = { x: this.originalCenter.x, y: this.originalCenter.y };
         this.originalVertices.forEach((value) => {
             memento.originalVertices.push({ x: value.x, y: value.y });
         });
 
-        this.drawACanvasOnAnother(this.selectionCanvas, memento.selectionCtx);
-        this.drawACanvasOnAnother(this.horizontalModificationCanvas, memento.horizontalModificationCtx);
-        this.drawACanvasOnAnother(this.verticalModificationCanvas, memento.verticalModificationCtx);
-        this.drawACanvasOnAnother(this.originalCanvasCopy, memento.originalCanvasCopyCtx);
+        memento.currentHorizontalScaling = this.currentHorizontalScaling;
+        memento.currentVerticalScaling = this.currentVerticalScaling;
+
+        this.drawACanvasOnAnother(this.selection, memento.selectionCtx);
+        this.drawACanvasOnAnother(this.originalSelection, memento.originalSelectionCtx);
+        
         return memento;
     }
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
-        this.drawACanvasOnAnother(memento.selectionCanvas, this.selectionCtx);
-        this.drawACanvasOnAnother(memento.horizontalModificationCanvas, this.horizontalModificationCtx);
-        this.drawACanvasOnAnother(memento.verticalModificationCanvas, this.verticalModificationCtx);
-        this.drawACanvasOnAnother(memento.originalCanvasCopy, this.originalCanvasCopyCtx);
+        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
+        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
 
-        this.fixedTopLeft = { x: memento.fixedTopLeft.x, y: memento.fixedTopLeft.y };
+        this.topLeftRelativeToMiddle = { x: memento.topLeftRelativeToMiddle.x, y: memento.topLeftRelativeToMiddle.y };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
 
         this.originalWidth = memento.originalWidth;
         this.originalHeight = memento.originalHeight;
 
         this.hasBeenManipulated = true;
-        this.needWhiteEllipsePostDrawing = true; //////
+        this.needWhitePostDrawing = memento.needWhitePostDrawing; //////
         this.originalTopLeftOnBaseCanvas = { x: memento.originalTopLeftOnBaseCanvas.x, y: memento.originalTopLeftOnBaseCanvas.y };
 
         this.originalCenter = { x: memento.originalCenter.x, y: memento.originalCenter.y };
@@ -223,8 +216,8 @@ export abstract class SelectionHandlerService {
         memento.originalVertices.forEach((value) => {
             this.originalVertices.push({ x: value.x, y: value.y });
         });
-        // this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
 
-        // this.drawACanvasOnAnother(this.selectionCanvas, this.drawingService.baseCtx, {x:0, y:0});
+        this.currentHorizontalScaling = memento.currentHorizontalScaling;
+        this.currentVerticalScaling = memento.currentVerticalScaling;
     }
 }

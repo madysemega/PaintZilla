@@ -2,41 +2,35 @@ import { Vec2 } from './vec2';
 
 export class HandlerMemento {
     constructor(width: number, height: number) {
-        this.selectionCanvas = document.createElement('canvas');
-        this.selectionCtx = this.selectionCanvas.getContext('2d') as CanvasRenderingContext2D;
-        this.originalCanvasCopy = document.createElement('canvas');
-        this.originalCanvasCopyCtx = this.originalCanvasCopy.getContext('2d') as CanvasRenderingContext2D;
-        this.horizontalModificationCanvas = document.createElement('canvas');
-        this.horizontalModificationCtx = this.horizontalModificationCanvas.getContext('2d') as CanvasRenderingContext2D;
-        this.verticalModificationCanvas = document.createElement('canvas');
-        this.verticalModificationCtx = this.verticalModificationCanvas.getContext('2d') as CanvasRenderingContext2D;
+        this.selection = document.createElement('canvas');
+        this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
 
-        this.selectionCanvas.width = width;
-        this.selectionCanvas.height = height;
-        this.originalCanvasCopy.width = width;
-        this.originalCanvasCopy.height = height;
-        this.horizontalModificationCanvas.width = width;
-        this.horizontalModificationCanvas.height = height;
-        this.verticalModificationCanvas.width = width;
-        this.verticalModificationCanvas.height = height;
+        this.originalSelection = document.createElement('canvas');
+        this.originalSelectionCtx = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
+
+    
+        this.selection.width = width;
+        this.selection.height = height;
+        this.originalSelection.width = width;
+        this.originalSelection.height = height;
     }
 
-    selectionCanvas: HTMLCanvasElement;
-    horizontalModificationCanvas: HTMLCanvasElement;
-    verticalModificationCanvas: HTMLCanvasElement;
-    originalCanvasCopy: HTMLCanvasElement;
-    selectionCtx: CanvasRenderingContext2D;
-    horizontalModificationCtx: CanvasRenderingContext2D;
-    verticalModificationCtx: CanvasRenderingContext2D;
-    originalCanvasCopyCtx: CanvasRenderingContext2D;
+    selection: HTMLCanvasElement;
+    originalSelection: HTMLCanvasElement;
 
-    fixedTopLeft: Vec2 = { x: 0, y: 0 };
+    selectionCtx: CanvasRenderingContext2D;
+    originalSelectionCtx: CanvasRenderingContext2D;
+    
+    topLeftRelativeToMiddle: Vec2 = { x: 0, y: 0 };
     offset: Vec2 = { x: 0, y: 0 };
     originalWidth: number;
     originalHeight: number;
     hasBeenManipulated: boolean;
-    needWhiteEllipsePostDrawing: boolean;
+    needWhitePostDrawing: boolean;
     originalTopLeftOnBaseCanvas: Vec2 = { x: 0, y: 0 };
     originalCenter: Vec2 = { x: 0, y: 0 };
     originalVertices: Vec2[] = [];
+    currentHorizontalScaling: number;
+    currentVerticalScaling: number;
+
 }

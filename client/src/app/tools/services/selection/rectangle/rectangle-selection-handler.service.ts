@@ -20,21 +20,35 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     }
 
     extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
-        this.selectionCtx.save();
-        this.selectionCtx.beginPath();
-        this.selectionCtx.rect(this.fixedTopLeft.x, this.fixedTopLeft.y, this.originalWidth, this.originalHeight);
-        this.selectionCtx.clip();
-        this.selectionCtx.imageSmoothingEnabled = false;
-        this.selectionCtx.drawImage(
-            sourceCanvas,
-            this.fixedTopLeft.x - this.originalTopLeftOnBaseCanvas.x,
-            this.fixedTopLeft.y - this.originalTopLeftOnBaseCanvas.y,
-        );
-        this.selectionCtx.closePath();
-        this.selectionCtx.restore();
+        this.extract(sourceCanvas, this.selectionCtx, false);
     }
 
-    drawWhitePostSelection(): void {
+    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean) {
+        destination.save();
+        destination.beginPath();
+        destination.rect(this.topLeftRelativeToMiddle.x, this.topLeftRelativeToMiddle.y, this.originalWidth, this.originalHeight);
+        destination.clip();
+
+        destination.imageSmoothingEnabled = false;
+
+        if (fillItWhite) {
+            destination.fillStyle = 'white';
+            destination.fill();
+        }
+
+        else {
+            destination.drawImage(
+                source,
+                this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
+                this.topLeftRelativeToMiddle.y - this.originalTopLeftOnBaseCanvas.y,
+            );
+        }
+        
+        destination.closePath();
+        destination.restore();
+    }
+
+    whiteFillAtOriginalLocation(): void {
         this.selectionService.drawPostSelectionRectangle(this.originalTopLeftOnBaseCanvas, this.originalWidth, this.originalHeight);
     }
 }
