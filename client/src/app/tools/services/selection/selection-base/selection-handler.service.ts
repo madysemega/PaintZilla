@@ -49,12 +49,6 @@ export abstract class SelectionHandlerService {
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
 
-    makeWhiteBehindSelection(): void{
-        if(this.needWhitePostDrawing){
-            this.whiteFillAtOriginalLocation();
-        }
-    }
-
     initAllProperties(vertices: Vec2[]): void {
         this.originalVertices = vertices;
         this.originalWidth = vertices[1].x - vertices[0].x;
@@ -86,9 +80,6 @@ export abstract class SelectionHandlerService {
             return false;
         }
 
-       /* if (this.needWhitePostDrawing) {
-            this.whiteFillAtOriginalLocation();
-        }*/
         this.makeWhiteBehindSelection();
         
         const topLeft: Vec2 = {
@@ -117,12 +108,6 @@ export abstract class SelectionHandlerService {
         this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
     }
 
-    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
-        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
-        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
-        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
-    }
-
     drawACanvasOnAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, topLeftOnDestination?: Vec2): void {
         let definedPosition: Vec2;
         if (topLeftOnDestination == undefined) {
@@ -144,6 +129,18 @@ export abstract class SelectionHandlerService {
         destination.drawImage(source, 0, 0);
         destination.closePath();
         destination.resetTransform();
+    }
+
+    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
+        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
+        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
+    }
+    
+    makeWhiteBehindSelection(): void{
+        if(this.needWhitePostDrawing){
+            this.whiteFillAtOriginalLocation();
+        }
     }
 
     updateHorizontalOffset(newWidth: number): void {

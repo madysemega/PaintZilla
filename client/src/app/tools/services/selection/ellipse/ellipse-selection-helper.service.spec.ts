@@ -16,6 +16,7 @@ describe('EllipseSelectionHelperService', () => {
     // let canvasPosition: Vec2;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
+    const CIRCLE_MAX_ANGLE: number = 360;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -74,11 +75,6 @@ describe('EllipseSelectionHelperService', () => {
         const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
-        service.drawPostSelectionEllipse(center, radii);
-
-        center = { x: 10, y: 15 };
-        radii = { x: 27, y: 28 };
-
         service.drawSelectionEllipse(center, radii);
 
         expect(ctxEllipseSpy).toHaveBeenCalled();
@@ -91,13 +87,54 @@ describe('EllipseSelectionHelperService', () => {
         const ctx: CanvasRenderingContext2D = drawServiceSpy.previewCtx;
         const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
 
-        service.drawPostSelectionEllipse(center, radii);
-
-        center = { x: 10, y: 15 };
-        radii = { x: 27, y: 28 };
-
         service.drawSelectionEllipse(center, radii);
 
         expect(ctxEllipseSpy).toHaveBeenCalled();
     });
+
+    it('whiteFill should call whiteEllipseFill', () => {
+        let center: Vec2 = { x: 7, y: 9 };
+        let radii: Vec2 = { x: 7, y: 8 };
+        let vertices: Vec2[] = [radii, center];
+        const whiteEllipseSpy: jasmine.Spy<any> = spyOn(service, 'whiteEllipseFill');
+
+        service.whiteFill(vertices);
+
+        expect(whiteEllipseSpy).toHaveBeenCalled();
+    });
+
+    it('whiteEllipseFill shoul call ellipse from CanvasRenderingContext2D from the baseCtx of the drawing service', () => {
+        let center: Vec2 = { x: 7, y: 9 };
+        let radii: Vec2 = { x: 7, y: 8 };
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+
+        service.whiteEllipseFill(center, radii);
+
+        expect(ctxEllipseSpy).toHaveBeenCalled();
+    });
+
+    it('whiteEllipseFill should substract 1 from the x component it is >= 1', () => {
+        let center: Vec2 = { x: 7, y: 9 };
+        let radii: Vec2 = { x: 0, y: 8 };
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+
+        service.whiteEllipseFill(center, radii);
+
+        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, 0, radii.y-1, 0, 0, CIRCLE_MAX_ANGLE)
+    });
+
+    it('whiteEllipseFill should substract 1 from the y component it is >= 1', () => {
+        let center: Vec2 = { x: 7, y: 9 };
+        let radii: Vec2 = { x: 7, y: 0 };
+        const ctx: CanvasRenderingContext2D = drawServiceSpy.baseCtx;
+        const ctxEllipseSpy: jasmine.Spy<any> = spyOn(ctx, 'ellipse');
+
+        service.whiteEllipseFill(center, radii);
+
+        expect(ctxEllipseSpy).toHaveBeenCalledWith(center.x, center.y, radii.x-1, 0, 0, 0, CIRCLE_MAX_ANGLE)
+    });
+
+    
 });

@@ -12,6 +12,8 @@ describe('RectangleSelectionHandlerService', () => {
     let rectangleSelectionHelperService: jasmine.SpyObj<RectangleSelectionHelperService>;
 
     let drawImageSpy: jasmine.Spy<any>;
+    let fillSpy: jasmine.Spy<any>;
+
 
     beforeEach(() => {
         rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', [
@@ -26,6 +28,7 @@ describe('RectangleSelectionHandlerService', () => {
         service = TestBed.inject(RectangleSelectionHandlerService);
 
         drawImageSpy = spyOn<any>(service.selectionCtx, 'drawImage').and.callThrough();
+        fillSpy = spyOn<any>(service.selectionCtx, 'fill').and.callThrough();
     });
 
     it('should be created', () => {
@@ -40,8 +43,17 @@ describe('RectangleSelectionHandlerService', () => {
         expect(drawImageSpy).toHaveBeenCalled();
     });
 
-    it('drawWhitePostSelectionEllipse should call drawPostSelectionRectangle from RectangleSelectionHelperService', () => {
-        service.drawWhitePostSelection();
+    it('extracting should use fill if fillItWhite is true', () => {
+        const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
+        sourceCanvas.width = 500;
+        sourceCanvas.height = 764;
+        service.extract(sourceCanvas, service.selectionCtx, true);
+        expect(fillSpy).toHaveBeenCalled();
+    });
+
+
+    it('white fill should use drawPostSelectionRectangle from RectangleSelectionHelperService', () => {
+        service.whiteFillAtOriginalLocation();
         expect(rectangleSelectionHelperService.drawPostSelectionRectangle).toHaveBeenCalled();
     });
 });
