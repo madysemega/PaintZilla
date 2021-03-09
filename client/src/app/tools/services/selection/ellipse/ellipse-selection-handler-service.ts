@@ -21,31 +21,36 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
     }
 
     extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
-        const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };
-        this.selectionCtx.save();
-        this.selectionCtx.beginPath();
-        this.selectionCtx.ellipse(
-            this.selectionCanvas.width / 2,
-            this.selectionCanvas.height / 2,
-            originalRadii.x,
-            originalRadii.y,
-            0,
-            0,
-            this.CIRCLE_MAX_ANGLE,
-        );
-        this.selectionCtx.clip();
-        this.selectionCtx.imageSmoothingEnabled = false;
-        this.selectionCtx.drawImage(
-            sourceCanvas,
-            this.fixedTopLeft.x - this.originalTopLeftOnBaseCanvas.x,
-            this.fixedTopLeft.y - this.originalTopLeftOnBaseCanvas.y,
-        );
-        this.selectionCtx.closePath();
-        this.selectionCtx.restore();
+        this.extract(sourceCanvas, this.selectionCtx, false);
     }
 
-    drawWhitePostSelection(): void {
+    extract(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, fillItWhite: boolean): void {
         const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };
-        this.selectionService.drawPostSelectionEllipse(this.originalCenter, originalRadii);
+
+        destination.save();
+        destination.beginPath();
+        destination.ellipse(this.selection.width / 2, this.selection.height / 2, originalRadii.x, originalRadii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+        destination.clip();
+
+        destination.imageSmoothingEnabled = false;
+
+        if (fillItWhite) {
+            destination.fillStyle = 'white';
+            destination.fill();
+        } else {
+            destination.drawImage(
+                source,
+                this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
+                this.topLeftRelativeToMiddle.y - this.originalTopLeftOnBaseCanvas.y,
+            );
+        }
+
+        destination.closePath();
+        destination.restore();
+    }
+
+    whiteFillAtOriginalLocation(): void {
+        const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };
+        this.selectionService.whiteEllipseFill(this.originalCenter, originalRadii);
     }
 }
