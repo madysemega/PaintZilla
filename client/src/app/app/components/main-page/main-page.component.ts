@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
-import { IndexService } from '@app/tools/services/index/index.service';
-import { Message } from '@common/communication/message';
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-page',
@@ -11,30 +9,10 @@ import { map } from 'rxjs/operators';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    readonly title: string = 'LOG2990';
-    message: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    constructor(private resizingService: ResizingService, public dialog: MatDialog) {}
 
-    constructor(private basicService: IndexService, private resizingService: ResizingService) {}
-
-    sendTimeToServer(): void {
-        const newTimeMessage: Message = {
-            title: 'Hello from the client',
-            body: 'Time is : ' + new Date().toString(),
-        };
-        // Important de ne pas oublier "subscribe" ou l'appel ne sera jamais lancé puisque personne l'observe
-        this.basicService.basicPost(newTimeMessage).subscribe();
-    }
-
-    getMessagesFromServer(): void {
-        this.basicService
-            .basicGet()
-            // Cette étape transforme le Message en un seul string
-            .pipe(
-                map((message: Message) => {
-                    return `${message.title} ${message.body}`;
-                }),
-            )
-            .subscribe(this.message);
+    openCarousel(): void {
+        this.dialog.open(ImageNavigationComponent);
     }
 
     resetCanvasDimensions(): void {
