@@ -7,7 +7,7 @@ import { injectable } from 'inversify';
 // TO DO: error cases processing
 @injectable()
 export class LocalDatabaseService {
-    localDatabase: { dataset: DrawingSchema[] };
+    localDatabase: { drawings: DrawingSchema[] };
     async start(): Promise<void> {
         fileSystem.readFile(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8, (error, jsonString) => {
             if (error) {
@@ -36,7 +36,7 @@ export class LocalDatabaseService {
 
     addDrawing(id: string, drawing: string): boolean {
         if (this.isValidID(id)) {
-            this.localDatabase.dataset.push({ id, drawing });
+            this.localDatabase.drawings.push({ id, drawing });
             return true;
         }
         return false;
@@ -49,21 +49,21 @@ export class LocalDatabaseService {
     getDrawing(id: string): DrawingSchema | undefined {
         const index = this.getDrawingIndex(id);
         if (index !== Constants.NOT_FOUND) {
-            return this.localDatabase.dataset[index];
+            return this.localDatabase.drawings[index];
         }
         return undefined;
     }
 
     getDrawingIndex(id: string): number {
         const drawingToMatch = (element: DrawingSchema) => element.id === id;
-        const index = this.localDatabase.dataset.findIndex(drawingToMatch);
+        const index = this.localDatabase.drawings.findIndex(drawingToMatch);
         return index;
     }
 
     updateDrawing(id: string, drawing: string): boolean {
         const index = this.getDrawingIndex(id);
         if (index !== Constants.NOT_FOUND) {
-            this.localDatabase.dataset[id] = drawing;
+            this.localDatabase.drawings[id] = drawing;
             return true;
         }
         return false;
@@ -72,8 +72,8 @@ export class LocalDatabaseService {
     deleteDrawing(id: string): boolean {
         const drawingIndex = this.getDrawingIndex(id);
         if (drawingIndex !== Constants.NOT_FOUND) {
-            this.localDatabase.dataset.splice(drawingIndex, 1);
-            console.log(this.localDatabase.dataset.length);
+            this.localDatabase.drawings.splice(drawingIndex, 1);
+            console.log(this.localDatabase.drawings.length);
             return true;
         }
         return false;
