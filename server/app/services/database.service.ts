@@ -1,16 +1,16 @@
 import * as Constants from '@app/constants/database.service.constants';
-import { METADATA } from '@app/constants/metadata.schema';
+import { MetadataModel } from '@app/constants/metadata.schema';
 import * as RegularExpressions from '@app/constants/regular.expressions';
 import { LocalDatabaseService } from '@app/services/local.database.service';
 import { TYPES } from '@app/settings/types';
+import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
-
-export const MockData = {
-    name: 'Example',
-    drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
-    labels: ['string1', 'string2'],
-};
+// export const MockData = {
+//     name: 'Example',
+//     drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
+//     labels: ['string1', 'string2'],
+// };
 @injectable()
 export class DatabaseService {
     private options: mongoose.ConnectOptions = {
@@ -26,8 +26,11 @@ export class DatabaseService {
             .connect(url, this.options)
             .then(async () => {
                 await this.localDatabaseService.start();
-                await this.saveDrawing(MockData.name, MockData.drawing, MockData.labels);
-                await this.localDatabaseService.close();
+                await this.getDrawingsByLabelsOne(['string1', 'string2', 'string3']).then((drawings) => {
+                    for (const drawing of drawings) {
+                        console.log(drawing.id);
+                    }
+                });
             })
             .catch(() => {
                 throw new Error('Distant database connection error');
@@ -40,13 +43,10 @@ export class DatabaseService {
     }
 
     // TO DO: CREATE
-    async saveDrawing(name: string, drawing: string, labels: string[]): Promise<void> {
-        const nameIsValid: boolean = this.isValidName(name);
-        const drawingIsValid: boolean = this.isValidDrawing(drawing);
-        const labelsAreValid: boolean = this.areValidLabels(labels);
-        const canBeProcessed: boolean = nameIsValid && drawingIsValid && labelsAreValid;
+    async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<void> {
+        const canBeProcessed: boolean = this.drawingCanBeProcessed(name, drawing, labels);
         if (canBeProcessed) {
-            const metadata = new METADATA({ name, labels });
+            const metadata = new MetadataModel({ name, labels });
             await metadata.save().then(() => {
                 console.log('Metadata saved in database !');
             });
@@ -57,7 +57,41 @@ export class DatabaseService {
             console.log("Drawing can't be processed !");
         }
     }
+    drawingCanBeProcessed(name: string, drawing: string, labels: string[]): boolean {
+        const nameIsValid: boolean = this.isValidName(name);
+        const drawingIsValid: boolean = this.isValidDrawing(drawing);
+        const labelsAreValid: boolean = this.areValidLabels(labels);
+        return nameIsValid && drawingIsValid && labelsAreValid;
+    }
     // TO DO: READ
+    async getAllDrawings(): Promise<Drawing[]> {
+        const drawings = await MetadataModel.find({}).exec();
+        return await this.localDatabaseService.filterDrawings(drawings);
+    }
+
+    async getDrawingById(id: string): Promise<Drawing> {
+        const drawing = await MetadataModel.findById(id).exec();
+        if (drawing) {
+            return this.localDatabaseService.mapDrawingById(drawing);
+        } else {
+            return Constants.DRAWING_NOT_FOUND;
+        }
+    }
+
+    async getDrawingsByName(name: string): Promise<Drawing[]> {
+        const drawings = await MetadataModel.find({ name }).exec();
+        return await this.localDatabaseService.filterDrawings(drawings);
+    }
+
+    async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {
+        const drawings = await MetadataModel.find({ labels: { $in: labels } }).exec();
+        return await this.localDatabaseService.filterDrawings(drawings);
+    }
+
+    async getDrawingsByLabelsAll(labels: string[]): Promise<Drawing[]> {
+        const drawings = await MetadataModel.find({ labels: { $all: labels } }).exec();
+        return await this.localDatabaseService.filterDrawings(drawings);
+    }
     // TO DO: UPDATE
     // TO DO: DELETE
 

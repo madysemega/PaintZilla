@@ -1,8 +1,13 @@
 // @ts-ignore
 // tslint:disable-next-line:no-require-imports
 import mongoose = require('mongoose');
+export type Metadata = mongoose.Document & {
+    name: string;
+    labels: string[];
+};
 const metadataSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    label: { type: [String], required: false },
+    labels: { type: [String], required: false },
 });
-export const METADATA = mongoose.model('Metadata', metadataSchema);
+// tslint:disable-next-line:variable-name
+export const MetadataModel = mongoose.model<Metadata>('Metadata', metadataSchema);

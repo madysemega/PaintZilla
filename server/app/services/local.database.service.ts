@@ -1,9 +1,10 @@
 import * as Constants from '@app/constants/database.service.constants';
 import { DrawingSchema } from '@app/constants/drawing.schema';
+import { Metadata } from '@app/constants/metadata.schema';
 import * as RegularExpressions from '@app/constants/regular.expressions';
+import { Drawing } from '@common/models/drawing';
 import * as fileSystem from 'fs';
 import { injectable } from 'inversify';
-
 // TO DO: error cases processing
 @injectable()
 export class LocalDatabaseService {
@@ -77,5 +78,26 @@ export class LocalDatabaseService {
             return true;
         }
         return false;
+    }
+
+    async filterDrawings(metadatas: Metadata[]): Promise<Drawing[]> {
+        const result: Drawing[] = [];
+        for (const drawing of this.localDatabase.drawings) {
+            const data = metadatas.find((metadata: Metadata) => {
+                return metadata.id === drawing.id;
+            });
+            if (data) {
+                result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
+            }
+        }
+        return result;
+    }
+
+    async mapDrawingById(metadata: Metadata): Promise<Drawing> {
+        const drawing = this.getDrawing(metadata.id.toString());
+        if (drawing) {
+            return { id: drawing.id, name: metadata.name, drawing: drawing.drawing, labels: metadata.labels };
+        }
+        return Constants.DRAWING_NOT_FOUND;
     }
 }
