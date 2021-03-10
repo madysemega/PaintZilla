@@ -64,7 +64,7 @@ export class LocalDatabaseService {
     updateDrawing(id: string, drawing: string): boolean {
         const index = this.getDrawingIndex(id);
         if (index !== Constants.NOT_FOUND) {
-            this.localDatabase.drawings[id] = drawing;
+            this.localDatabase.drawings[index].drawing = drawing;
             return true;
         }
         return false;

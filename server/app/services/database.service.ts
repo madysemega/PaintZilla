@@ -6,11 +6,11 @@ import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
-// export const MockData = {
-//     name: 'Example',
-//     drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
-//     labels: ['string1', 'string2'],
-// };
+export const MockData = {
+    name: 'Example',
+    drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
+    labels: ['string1', 'string2'],
+};
 @injectable()
 export class DatabaseService {
     private options: mongoose.ConnectOptions = {
@@ -26,11 +26,6 @@ export class DatabaseService {
             .connect(url, this.options)
             .then(async () => {
                 await this.localDatabaseService.start();
-                await this.getDrawingsByLabelsOne(['string1', 'string2', 'string3']).then((drawings) => {
-                    for (const drawing of drawings) {
-                        console.log(drawing.id);
-                    }
-                });
             })
             .catch(() => {
                 throw new Error('Distant database connection error');
@@ -93,7 +88,41 @@ export class DatabaseService {
         return await this.localDatabaseService.filterDrawings(drawings);
     }
     // TO DO: UPDATE
+    async updateDrawingName(id: string, name: string): Promise<Drawing> {
+        const drawing = await MetadataModel.findByIdAndUpdate(id, { name }).exec();
+        if (drawing) {
+            return this.getDrawingById(id);
+        }
+        return Constants.DRAWING_NOT_FOUND;
+    }
+
+    async updateDrawingLabels(id: string, labels: string[]): Promise<Drawing> {
+        const drawing = await MetadataModel.findByIdAndUpdate(id, { labels }).exec();
+        if (drawing) {
+            return this.getDrawingById(id);
+        }
+        return Constants.DRAWING_NOT_FOUND;
+    }
+
+    async updateDrawing(id: string, drawing: string): Promise<Drawing> {
+        const item = await MetadataModel.findById(id).exec();
+        if (item && this.isValidDrawing(drawing)) {
+            this.localDatabaseService.updateDrawing(id, drawing);
+            return this.getDrawingById(id);
+        } else {
+            return Constants.DRAWING_NOT_FOUND;
+        }
+    }
+
     // TO DO: DELETE
+
+    async deleteDrawing(id: string): Promise<boolean> {
+        const item = await MetadataModel.findByIdAndDelete(id).exec();
+        if (item) {
+            return this.localDatabaseService.deleteDrawing(id);
+        }
+        return false;
+    }
 
     isValidName(name: string): boolean {
         return RegularExpressions.NAME_REGEX.test(name);
