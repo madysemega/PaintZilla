@@ -5,6 +5,9 @@
     align-items: center;
     min-height: 100vh;
     height: auto;
+
+    color: white;
+    background-color: rgb(0, 56, 105);
 }
 
 .button {
@@ -14,7 +17,7 @@
 
 .team-name {
     margin-top: 0.25em;
-    margin-bottom: 0.25em;
+    margin-bottom: 1.00em;
 }
 
 .header-item {
@@ -24,6 +27,8 @@
 
 .footer-item {
     text-align: center;
+
+    margin: 42px;
 }
 
 .server-message {

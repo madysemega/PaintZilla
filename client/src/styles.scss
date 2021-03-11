@@ -37,6 +37,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     text-align: center;
 }
 
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
 // Margins
 
 .margin-bottom-small {
@@ -45,7 +53,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .margin-top-small {
     margin-top: 24px;
-    
 }
 
 .margin-right-small {

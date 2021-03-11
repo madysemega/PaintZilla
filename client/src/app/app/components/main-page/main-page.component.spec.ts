@@ -1,9 +1,13 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { MaterialModule } from '@app/material.module';
 import { IndexService } from '@app/tools/services/index/index.service';
 import { of } from 'rxjs';
 import { MainPageComponent } from './main-page.component';
@@ -16,18 +20,23 @@ describe('MainPageComponent', () => {
     let indexServiceSpy: SpyObj<IndexService>;
     let historyServiceStub: HistoryService;
     let resizingServiceStub: ResizingService;
+    let dialogServiceStub: jasmine.SpyObj<MatDialog>;
+
     beforeEach(async(() => {
         indexServiceSpy = jasmine.createSpyObj('IndexService', ['basicGet', 'basicPost']);
         indexServiceSpy.basicGet.and.returnValue(of({ title: '', body: '' }));
         indexServiceSpy.basicPost.and.returnValue(of());
         historyServiceStub = new HistoryService();
         resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
+        dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
+
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule],
+            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule],
             declarations: [MainPageComponent],
             providers: [
                 { provide: IndexService, useValue: indexServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceStub },
+                { provide: MatDialog, useValue: dialogServiceStub },
             ],
         }).compileComponents();
         resizingServiceStub = TestBed.inject(ResizingService);
@@ -43,23 +52,14 @@ describe('MainPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("should have as title 'LOG2990'", () => {
-        expect(component.title).toEqual('LOG2990');
-    });
-
-    it('should call basicGet when calling getMessagesFromServer', () => {
-        component.getMessagesFromServer();
-        expect(indexServiceSpy.basicGet).toHaveBeenCalled();
-    });
-
-    it('should call basicPost when calling sendTimeToServer', () => {
-        component.sendTimeToServer();
-        expect(indexServiceSpy.basicPost).toHaveBeenCalled();
-    });
-
     it('resetCanvasDimensions(): should call resizingService.resetCanvasDimensions()', () => {
         const resetStub = spyOn(resizingServiceStub, 'resetCanvasDimensions').and.stub();
         component.resetCanvasDimensions();
         expect(resetStub).toHaveBeenCalled();
+    });
+
+    it('openCarousel() should open the carousel', () => {
+        component.openCarousel();
+        expect(dialogServiceStub.open).toHaveBeenCalledWith(ImageNavigationComponent);
     });
 });

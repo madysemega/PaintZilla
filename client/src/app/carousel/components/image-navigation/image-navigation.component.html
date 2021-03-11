@@ -1,0 +1,22 @@
+<div class="vertical">
+    <h3>Sélectionnez une image</h3>
+
+    <div>
+        <app-image-carousel></app-image-carousel>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div>
+        <mat-label class="margin-bottom-small">Filtre</mat-label>
+        <mat-chip-list>
+            <mat-chip *ngFor="let label of labels">{{ label }}</mat-chip>
+        </mat-chip-list>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div>
+        <button mat-raised-button color="primary" matDialogClose class="right">Fermer</button>
+    </div>
+</div>
