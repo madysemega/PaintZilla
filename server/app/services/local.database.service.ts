@@ -10,29 +10,22 @@ import { injectable } from 'inversify';
 export class LocalDatabaseService {
     localDatabase: { drawings: DrawingSchema[] };
     start(): void {
-        fileSystem.readFile(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8, (error, jsonString) => {
-            if (error) {
-                console.log('Error while reading json file from local database, details on ' + error);
-            } else {
-                try {
-                    const data = JSON.parse(jsonString);
-                    this.localDatabase = data;
-                    console.log('Connected successfully to database');
-                } catch (error) {
-                    console.log("Couldn't parse the json data, details on " + error);
-                }
-            }
-        });
+        try {
+            const str = fileSystem.readFileSync(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8);
+            const data = JSON.parse(str);
+            this.localDatabase = data;
+            console.log('Server drawings were charged successfully');
+        } catch (error) {
+            console.log("Couldn't parse the json data, details on " + error);
+        }
     }
-    async close(): Promise<void> {
-        const localDb = JSON.stringify(this.localDatabase);
-        fileSystem.writeFile(Constants.LOCAL_DATABASE_PATH, localDb, (error) => {
-            if (error) {
-                console.log('Error writing file', error);
-            } else {
-                console.log('Successfully wrote file');
-            }
-        });
+    updateServerDrawings(): void {
+        try {
+            const localDb = JSON.stringify(this.localDatabase);
+            fileSystem.writeFileSync(Constants.LOCAL_DATABASE_PATH, localDb);
+        } catch (error) {
+            console.log('An error occured in LocalDatabaseService.close(), details ' + error);
+        }
     }
 
     addDrawing(id: string, drawing: string): boolean {
@@ -74,7 +67,6 @@ export class LocalDatabaseService {
         const drawingIndex = this.getDrawingIndex(id);
         if (drawingIndex !== Constants.NOT_FOUND) {
             this.localDatabase.drawings.splice(drawingIndex, 1);
-            console.log(this.localDatabase.drawings.length);
             return true;
         }
         return false;
@@ -91,16 +83,8 @@ export class LocalDatabaseService {
                     result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
                 }
             }
-            if (result) {
-                console.log('OK for result');
-                for (const res of result) {
-                    console.log(res.id);
-                }
-            } else {
-                console.log('An error occured');
-            }
         } catch (err) {
-            console.log('Error in filterDrawings, details ' + err);
+            throw new Error('Error in filterDrawings, details ' + err);
         }
         return result;
     }

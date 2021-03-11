@@ -17,8 +17,7 @@ export class DatabaseService {
         await this.distantDatabase
             .connect(url, this.options)
             .then(() => {
-                this.localDatabaseService.start();
-                console.log(this.localDatabaseService.localDatabase);
+                console.log('Connected successfully to Mongodb Atlas');
             })
             .catch(() => {
                 throw new Error('Distant database connection error');
@@ -27,6 +26,5 @@ export class DatabaseService {
 
     async closeConnection(): Promise<void> {
         await mongoose.connection.close();
-        await this.localDatabaseService.close();
     }
 }

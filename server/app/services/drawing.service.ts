@@ -14,7 +14,9 @@ import * as mongoose from 'mongoose';
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
-    constructor(@inject(TYPES.DatabaseService) private databaseService: DatabaseService) {}
+    constructor(@inject(TYPES.DatabaseService) private databaseService: DatabaseService) {
+        this.databaseService.localDatabaseService.start();
+    }
 
     // TO DO: CREATE
     async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<void> {
@@ -28,7 +30,7 @@ export class DrawingService {
                 console.log('Drawing saved in database !');
             }
         } else {
-            console.log("Drawing can't be processed !");
+            throw new Error("Drawing can't be processed, invalid data");
         }
     }
     drawingCanBeProcessed(name: string, drawing: string, labels: string[]): boolean {
@@ -40,19 +42,7 @@ export class DrawingService {
     // TO DO: READ
     async getAllDrawings(): Promise<Drawing[]> {
         const metadatas = await MetadataModel.find({}).exec();
-        let res: Drawing[] = [];
-        try {
-            res = this.databaseService.localDatabaseService.filterDrawings(metadatas);
-        } catch (err) {
-            console.log('An error occured ' + err);
-        }
-        if (res) {
-            console.log('OK');
-            return res;
-        } else {
-            console.log('NOT OK');
-            return [];
-        }
+        return this.databaseService.localDatabaseService.filterDrawings(metadatas);
     }
 
     async getDrawingById(id: string): Promise<Drawing> {
