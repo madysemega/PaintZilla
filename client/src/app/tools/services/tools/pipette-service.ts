@@ -6,12 +6,8 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
-import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
-import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
-import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
-import { VerticesRenderer } from '@app/shapes/renderers/vertices-renderer';
 import { VerticesShape } from '@app/shapes/vertices-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
@@ -24,8 +20,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private colourProperty: StrokeStyleProperty;
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
-    private renderer: VerticesRenderer;
-
+    couleur: Uint8ClampedArray;
+    outputCouleur: string;
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.key = 'pipette';
@@ -36,13 +32,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
         this.shape = new VerticesShape([]);
-
-        this.renderer = new VerticesRenderer(this.shape, [
-            this.strokeWidthProperty,
-            new LineJoinProperty('round'),
-            new LineCapProperty('round'),
-            this.colourProperty,
-        ]);
     }
 
     onLineWidthChanged(): void {
@@ -63,10 +52,9 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.clearVertices();
-
             this.mouseDownCoord = this.getPositionFromMouse(event);
-
             this.history.isLocked = true;
+            
         }
     }
 
@@ -74,22 +62,23 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.shape.vertices.push(mousePosition);
-
-            this.history.do(new UserActionRenderShape([this.renderer.clone()], this.drawingService.baseCtx));
+            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
+
         this.mouseDown = false;
         this.clearVertices();
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.shape.vertices.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
-            this.renderer.render(this.drawingService.previewCtx);
-        }
+            this.couleur =  this.drawingService.baseCtx.getImageData(mousePosition.x, mousePosition.y, 1, 1).data;
+            var R = Colour.toHex(this.couleur[0]);
+            var G = Colour.toHex(this.couleur[1]);
+            var B = Colour.toHex(this.couleur[2]);
+            this.outputCouleur =  '#' + R + G + B;
     }
 
     private clearVertices(): void {
