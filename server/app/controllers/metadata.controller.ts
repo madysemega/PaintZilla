@@ -110,5 +110,20 @@ export class MetadataController {
                     next(error);
                 });
         });
+
+        this.router.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
+            await this.databaseService
+                .deleteDrawing(req.body.id)
+                .then((status: boolean) => {
+                    if (status) {
+                        res.status(HttpStatusCode.Ok);
+                    } else {
+                        res.status(HttpStatusCode.NotModified);
+                    }
+                })
+                .catch((error) => {
+                    next(error);
+                });
+        });
     }
 }
