@@ -1,7 +1,7 @@
 import * as Constants from '@app/constants/database.service.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
 import * as RegularExpressions from '@app/constants/regular.expressions';
-import { LocalDatabaseService } from '@app/services/local.database.service';
+import { DatabaseService } from '@app/services/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
@@ -14,7 +14,7 @@ import * as mongoose from 'mongoose';
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
-    constructor(@inject(TYPES.LocalDatabaseService) private localDatabaseService: LocalDatabaseService) {}
+    constructor(@inject(TYPES.DatabaseService) private databaseService: DatabaseService) {}
 
     // TO DO: CREATE
     async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<void> {
@@ -24,7 +24,7 @@ export class DrawingService {
             await metadata.save().then(() => {
                 console.log('Metadata saved in database !');
             });
-            if (this.localDatabaseService.addDrawing(metadata.id, drawing)) {
+            if (this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing)) {
                 console.log('Drawing saved in database !');
             }
         } else {
@@ -42,7 +42,7 @@ export class DrawingService {
         const metadatas = await MetadataModel.find({}).exec();
         let res: Drawing[] = [];
         try {
-            res = this.localDatabaseService.filterDrawings(metadatas);
+            res = this.databaseService.localDatabaseService.filterDrawings(metadatas);
         } catch (err) {
             console.log('An error occured ' + err);
         }
@@ -58,7 +58,7 @@ export class DrawingService {
     async getDrawingById(id: string): Promise<Drawing> {
         const drawing = await MetadataModel.findById(id).exec();
         if (drawing) {
-            return this.localDatabaseService.mapDrawingById(drawing);
+            return this.databaseService.localDatabaseService.mapDrawingById(drawing);
         } else {
             return Constants.DRAWING_NOT_FOUND;
         }
@@ -66,17 +66,17 @@ export class DrawingService {
 
     async getDrawingsByName(name: string): Promise<Drawing[]> {
         const drawings = await MetadataModel.find({ name }).exec();
-        return await this.localDatabaseService.filterDrawings(drawings);
+        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {
         const drawings = await MetadataModel.find({ labels: { $in: labels } }).exec();
-        return await this.localDatabaseService.filterDrawings(drawings);
+        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     async getDrawingsByLabelsAll(labels: string[]): Promise<Drawing[]> {
         const drawings = await MetadataModel.find({ labels: { $all: labels } }).exec();
-        return await this.localDatabaseService.filterDrawings(drawings);
+        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
     // TO DO: UPDATE
     async updateDrawingName(id: string, name: string): Promise<Drawing> {
@@ -98,7 +98,7 @@ export class DrawingService {
     async updateDrawing(id: string, drawing: string): Promise<Drawing> {
         const item = await MetadataModel.findById(id).exec();
         if (item && this.isValidDrawing(drawing)) {
-            this.localDatabaseService.updateDrawing(id, drawing);
+            this.databaseService.localDatabaseService.updateDrawing(id, drawing);
             return this.getDrawingById(id);
         } else {
             return Constants.DRAWING_NOT_FOUND;
@@ -110,7 +110,7 @@ export class DrawingService {
     async deleteDrawing(id: string): Promise<boolean> {
         const item = await MetadataModel.findByIdAndDelete(id).exec();
         if (item) {
-            return this.localDatabaseService.deleteDrawing(id);
+            return this.databaseService.localDatabaseService.deleteDrawing(id);
         }
         return false;
     }
