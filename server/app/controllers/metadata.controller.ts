@@ -77,5 +77,38 @@ export class MetadataController {
                     return next(error);
                 });
         });
+
+        this.router.put('/update/:id', async (req: Request, res: Response, next: NextFunction) => {
+            await this.databaseService
+                .updateDrawingName(req.body.id, req.body.name)
+                .then((drawing: Drawing) => {
+                    res.send(drawing);
+                })
+                .catch((error: Error) => {
+                    next(error);
+                });
+        });
+
+        this.router.put('/update-labels/:id', async (req: Request, res: Response, next: NextFunction) => {
+            await this.databaseService
+                .updateDrawingLabels(req.body.id, req.body.labels)
+                .then((drawing: Drawing) => {
+                    res.send(drawing);
+                })
+                .catch((error: Error) => {
+                    next(error);
+                });
+        });
+
+        this.router.put('/update-drawing/:id', async (req: Request, res: Response, next: NextFunction) => {
+            await this.databaseService
+                .updateDrawing(req.body.id, req.body.name)
+                .then((drawing: Drawing) => {
+                    res.send(drawing);
+                })
+                .catch((error: Error) => {
+                    next(error);
+                });
+        });
     }
 }
