@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CarouselCardInformation } from '@app/carousel/data/carousel-card-information';
 
@@ -7,14 +7,16 @@ import { CarouselCardInformation } from '@app/carousel/data/carousel-card-inform
     templateUrl: './image-details.component.html',
     styleUrls: ['./image-details.component.scss'],
 })
-export class ImageDetailsComponent implements OnInit {
-    @Input() data: CarouselCardInformation;
+export class ImageDetailsComponent {
+    @Input() data: CarouselCardInformation = {
+        name: '',
+        image: '',
+        labels: [],
+    };
 
     constructor(private domSanitizer: DomSanitizer) {}
 
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.image);
     }
-
-    ngOnInit(): void {}
 }

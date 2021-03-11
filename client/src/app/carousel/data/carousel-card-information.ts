@@ -2,5 +2,5 @@ export type CarouselCardInformation = {
     name: string;
     image: string;
 
-    labels: Array<string>;
+    labels: string[];
 };
