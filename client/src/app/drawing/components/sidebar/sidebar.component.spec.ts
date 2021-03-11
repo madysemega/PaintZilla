@@ -9,6 +9,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
@@ -56,6 +57,7 @@ describe('SidebarComponent', () => {
     let pencilStoolStub: PencilService;
     let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
+    let exportDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -96,6 +98,7 @@ describe('SidebarComponent', () => {
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
         polygonService = new PolygonService(drawingStub, colourServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
+        exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -162,6 +165,7 @@ describe('SidebarComponent', () => {
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: ExportDrawingService, useValue: exportDrawingServiceSpy },
                 { provide: ColourService },
                 { provide: EllipseService },
                 { provide: EraserService },
@@ -254,5 +258,10 @@ describe('SidebarComponent', () => {
     it('createNewDrawing should call DrawingCreatorService createNewDrawing method', () => {
         component.createNewDrawing();
         expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
+    });
+
+    it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
+        component.exportDrawing();
+        expect(exportDrawingServiceSpy.openExportDrawingDialog).toHaveBeenCalled();
     });
 });

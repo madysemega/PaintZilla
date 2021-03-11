@@ -13,11 +13,12 @@ export class ResizingService {
     rightResizerEnabled: boolean = false;
     downResizerEnabled: boolean = false;
     rightDownResizerEnabled: boolean = false;
-    canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    canvasResize: Vec2;
     image: ImageData;
 
     constructor(public drawingService: DrawingService, private historyService: HistoryService) {
         this.historyService.onUndo(() => this.resetCanvasDimensions());
+        this.canvasResize = this.drawingService.canvasResize;
     }
 
     isResizing(): boolean {
@@ -36,7 +37,6 @@ export class ResizingService {
         }
 
         this.drawingService.updateCanvasStyle();
-        this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.restorePreviewImageData();
     }
 
@@ -67,9 +67,9 @@ export class ResizingService {
         this.rightResizerEnabled = false;
         this.rightDownResizerEnabled = false;
         this.downResizerEnabled = false;
+        this.updateCanvasSize();
         this.drawingService.restoreCanvasStyle();
         this.restoreBaseImageData();
-        this.updateCanvasSize();
     }
 
     finalizeResizingEvent(): void {

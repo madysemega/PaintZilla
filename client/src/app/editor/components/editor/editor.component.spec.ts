@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
@@ -7,6 +8,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { MaterialModule } from '@app/material.module';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -18,7 +20,6 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { EditorComponent } from './editor.component';
-
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
 describe('EditorComponent', () => {
@@ -55,12 +56,16 @@ describe('EditorComponent', () => {
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
         drawingStub = new DrawingService(historyServiceStub);
         toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut']);
-        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown']);
+        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
+
+        drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
+            return true;
+        });
 
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [],
+            imports: [MaterialModule],
             declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
@@ -74,6 +79,7 @@ describe('EditorComponent', () => {
                 { provide: LineService },
                 { provide: RectangleService },
                 { provide: ResizingService },
+                { provide: MatDialogRef, useValue: {} },
             ],
         })
             .overrideModule(MatIconModule, {

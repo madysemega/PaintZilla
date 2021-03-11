@@ -6,19 +6,30 @@
         <button
             mat-icon-button
             aria-label="Créer un nouveau dessin"
-            matTooltip="Créer un nouveau dessin"
+            matTooltip="Créer un nouveau dessin (Ctrl+o)"
             matTooltipPosition="right"
             (click)="createNewDrawing()"
-            [disabled]="this.drawingService.canvasIsEmpty">
+            [disabled]="this.drawingService.canvasIsEmpty"
+        >
             <mat-icon>add_box</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            aria-label="Exporter le dessin"
+            matTooltip="Exporter le dessin (Ctrl+e)"
+            matTooltipPosition="right"
+            (click)="this.exportDrawing()"
+        >
+            <mat-icon>ios_share</mat-icon>
         </button>
 
         <button
             mat-icon-button
             matTooltip="Sélectionner toute la surface de dessin (Ctrl+a)"
             matTooltipPosition="right"
-            (click)="selectTheEntireCanvas()">
-        <mat-icon> select_all </mat-icon>
+            (click)="selectTheEntireCanvas()"
+        >
+            <mat-icon> select_all </mat-icon>
         </button>
     </div>
 
@@ -31,7 +42,8 @@
             (click)="selectTool(toolName)"
             mat-icon-button
             [matTooltip]="getTooltipInfo(toolName)"
-            matTooltipPosition="right">
+            matTooltipPosition="right"
+        >
             <mat-icon [svgIcon]="getIconName(toolName)"></mat-icon>
         </button>
     </div>
