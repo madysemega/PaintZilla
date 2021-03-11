@@ -30,6 +30,7 @@ describe('DrawingService', () => {
         service.previewCtx = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
         service.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
         service.canvas.style.background = Constants.CTX_COLOR;
+        service.canvasSize = { x: 1000, y: 1000 };
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
         restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();

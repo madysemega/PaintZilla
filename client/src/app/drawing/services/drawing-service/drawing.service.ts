@@ -52,7 +52,7 @@ export class DrawingService {
 
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
-            this.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+            this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
             this.restoreCanvasStyle();
         });
     }
