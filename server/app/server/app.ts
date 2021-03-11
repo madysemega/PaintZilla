@@ -47,7 +47,7 @@ export class Application {
         // Notre application utilise le routeur de notre API `Index`
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api', this.metadataController.router);
-        this.errorHandling();
+        // this.errorHandling();
     }
 
     private errorHandling(): void {

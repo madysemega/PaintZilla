@@ -24,13 +24,13 @@ export class MetadataController {
         });
 
         this.router.get('/get-all', async (req: Request, res: Response, next: NextFunction) => {
-            await this.databaseService
+             this.databaseService
                 .getAllDrawings()
                 .then((drawings: Drawing[]) => {
-                    res.send(drawings);
+                    res.json(drawings);
                 })
                 .catch((error: Error) => {
-                    return next(error);
+                    res.status(HttpStatusCode.NotFound).send(error.message);
                 });
         });
 

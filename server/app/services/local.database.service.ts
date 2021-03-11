@@ -9,7 +9,7 @@ import { injectable } from 'inversify';
 @injectable()
 export class LocalDatabaseService {
     localDatabase: { drawings: DrawingSchema[] };
-    async start(): Promise<void> {
+    start(): void {
         fileSystem.readFile(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8, (error, jsonString) => {
             if (error) {
                 console.log('Error while reading json file from local database, details on ' + error);
@@ -80,15 +80,27 @@ export class LocalDatabaseService {
         return false;
     }
 
-    async filterDrawings(metadatas: Metadata[]): Promise<Drawing[]> {
+    filterDrawings(metadatas: Metadata[]): Drawing[] {
         const result: Drawing[] = [];
-        for (const drawing of this.localDatabase.drawings) {
-            const data = metadatas.find((metadata: Metadata) => {
-                return metadata.id === drawing.id;
-            });
-            if (data) {
-                result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
+        try {
+            for (const drawing of this.localDatabase.drawings) {
+                const data = metadatas.find((metadata: Metadata) => {
+                    return metadata.id === drawing.id;
+                });
+                if (data) {
+                    result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
+                }
             }
+            if (result) {
+                console.log('OK for result');
+                for (const res of result) {
+                    console.log(res.id);
+                }
+            } else {
+                console.log('An error occured');
+            }
+        } catch (err) {
+            console.log('Error in filterDrawings, details ' + err);
         }
         return result;
     }

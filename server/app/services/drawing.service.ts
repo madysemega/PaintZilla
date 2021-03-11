@@ -12,29 +12,9 @@ import * as mongoose from 'mongoose';
 //     labels: ['string1', 'string2'],
 // };
 @injectable()
-export class DatabaseService {
-    private options: mongoose.ConnectOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    };
+export class DrawingService {
     distantDatabase: mongoose.Mongoose;
-    constructor(@inject(TYPES.LocalDatabaseService) private localDatabaseService: LocalDatabaseService) {
-        this.distantDatabase = mongoose;
-        this.localDatabaseService.start();
-        console.log(this.localDatabaseService.localDatabase);
-    }
-    async start(url: string = Constants.DATABASE_URL): Promise<void> {
-        await this.distantDatabase
-            .connect(url, this.options)
-            .catch(() => {
-                throw new Error('Distant database connection error');
-            });
-    }
-
-    async closeConnection(): Promise<void> {
-        await mongoose.connection.close();
-        await this.localDatabaseService.close();
-    }
+    constructor(@inject(TYPES.LocalDatabaseService) private localDatabaseService: LocalDatabaseService) {}
 
     // TO DO: CREATE
     async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<void> {
