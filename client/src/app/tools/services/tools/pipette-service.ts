@@ -21,6 +21,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
     couleur: Uint8ClampedArray;
+    cerclePreview: ImageData;
     outputCouleur: string;
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
@@ -87,7 +88,12 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             var G = Colour.toHex(this.couleur[1]);
             var B = Colour.toHex(this.couleur[2]);
             this.outputCouleur =  '#' + R + G + B;
-    }
+            if(this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y)
+                {
+            this.cerclePreview =  this.drawingService.baseCtx.getImageData(mousePosition.x-20, mousePosition.y-20, 40 , 40);
+            this.drawingService.baseCtx.putImageData(this.cerclePreview, 10, 10);
+                }
+            }
 
     private clearVertices(): void {
         this.shape.clear();
