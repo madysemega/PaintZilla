@@ -82,8 +82,8 @@ describe('ExportDrawingDialogComponent', () => {
 
     it('ngAfterViewInit should set the previewCanvas size to half the image size', () => {
         component.ngAfterViewInit();
-        const hasCorrectWidth: boolean = component.previewCanvas.nativeElement.width === component.previewCanvas.nativeElement.width;
-        const hasCorrectHeight: boolean = component.previewCanvas.nativeElement.height === component.previewCanvas.nativeElement.height;
+        const hasCorrectWidth: boolean = component.previewCanvas.nativeElement.width === drawingServiceSpy.canvasSize.x / 2.0;
+        const hasCorrectHeight: boolean = component.previewCanvas.nativeElement.height === drawingServiceSpy.canvasSize.y / 2.0;
         expect(hasCorrectHeight && hasCorrectWidth).toEqual(true);
     });
 
