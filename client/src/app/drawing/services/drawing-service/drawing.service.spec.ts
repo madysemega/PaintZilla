@@ -12,7 +12,7 @@ describe('DrawingService', () => {
     let historyServiceStub: HistoryService;
 
     let restoreCanvasStyleStub: jasmine.Spy<any>;
-    let clearCanvasStub: jasmine.Spy<any>;
+    // let clearCanvasStub: jasmine.Spy<any>;
 
     const WIDTH_1 = 5;
     const WIDTH_2 = 10;
@@ -33,7 +33,7 @@ describe('DrawingService', () => {
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
         restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
-        clearCanvasStub = spyOn(service, 'clearCanvas').and.callThrough();
+        // clearCanvasStub = spyOn(service, 'clearCanvas').and.callThrough();
     });
 
     it('should be created', () => {
@@ -64,30 +64,27 @@ describe('DrawingService', () => {
         expect(service.isCanvasEmpty()).toBeFalse();
     });
 
-    it('fillCanvas(): context fillStyle should be set to #ffffff', () => {
-        service.fillCanvas(service.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, '#ffffff');
-        expect(service.baseCtx.fillStyle).toEqual(Constants.CTX_COLOR);
+    it('fillCanvas(): context fillStyle should be set to rgba(255, 255, 255, 1)', () => {
+        service.fillCanvas(service.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.HEX_WHITE);
+        expect(service.baseCtx.fillStyle).toEqual(Constants.HEX_WHITE);
     });
 
-    it('updateCanvasStyle(): background should be updated for canvas and previewCanvas and z index should be updated for canvas', () => {
+    it('updateCanvasStyle(): z index should be updated for canvas', () => {
         service.updateCanvasStyle();
         expect(service.canvas.style.zIndex).toEqual(Constants.SUPERIOR_Z_INDEX);
-        expect(service.canvas.style.background).toEqual(Constants.PREVIEW_CTX_COLOR);
-        expect(service.previewCanvas.style.background).toEqual(Constants.RGB_WHITE);
     });
 
-    it('restoreCanvasStyle(): background should be updated for canvas and previewCanvas and z index should be updated for canvas', () => {
+    it('restoreCanvasStyle(): background should be updated for canvas and z index should be updated for canvas', () => {
         service.restoreCanvasStyle();
         expect(service.canvas.style.zIndex).toEqual(Constants.INFERIOR_Z_INDEX);
-        expect(service.canvas.style.background).toEqual(Constants.RGB_WHITE);
-        expect(service.previewCanvas.style.background).toEqual(Constants.PREVIEW_CTX_COLOR);
+        expect(service.baseCtx.fillStyle).toEqual(Constants.HEX_WHITE);
     });
 
-    it('history service undo should restore canvas style and clear canvas', () => {
+    it('history service undo should restore canvas style and fill canvas', () => {
         historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
+        const fillStub = spyOn(service, 'fillCanvas').and.stub();
         historyServiceStub.undo();
-
         expect(restoreCanvasStyleStub).toHaveBeenCalled();
-        expect(clearCanvasStub).toHaveBeenCalledTimes(2);
+        expect(fillStub).toHaveBeenCalled();
     });
 });

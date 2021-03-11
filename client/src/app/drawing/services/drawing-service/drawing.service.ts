@@ -47,12 +47,12 @@ export class DrawingService {
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
-        this.fillCanvas(this.previewCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
+            this.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
             this.restoreCanvasStyle();
         });
     }
