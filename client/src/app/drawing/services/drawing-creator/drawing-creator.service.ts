@@ -29,4 +29,8 @@ export class DrawingCreatorService {
             });
         }
     }
+
+    noDialogsOpen(): boolean {
+        return this.dialog.openDialogs.length === 0;
+    }
 }

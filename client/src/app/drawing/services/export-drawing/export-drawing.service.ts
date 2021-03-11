@@ -22,4 +22,8 @@ export class ExportDrawingService {
             this.dialogRef = this.dialog.open(ExportDrawingDialogComponent, { disableClose: true });
         }
     }
+
+    noDialogsOpen(): boolean {
+        return this.dialog.openDialogs.length === 0;
+    }
 }
