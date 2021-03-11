@@ -36,10 +36,8 @@ export class EditorComponent implements AfterViewInit {
         const isCtrl: boolean = event.ctrlKey;
         const isA: boolean = event.key === 'a';
 
-        if (isCtrl) {
-            if (isA) {
-                this.toolSelector.selectTool('rectangle-selection');
-            }
+        if (isCtrl && isA) {
+            this.toolSelector.selectTool('rectangle-selection');
         }
 
         this.toolSelector.getSelectedTool().onKeyDown(event);

@@ -14,8 +14,10 @@ import { SelectionHelperService } from './selection-helper.service';
 })
 export abstract class SelectionCreatorService extends Tool implements ISelectableTool, IDeselectableTool {
     readonly MINIMUM_SELECTION_WIDTH: number = 5;
+
     startPoint: Vec2 = { x: 0, y: 0 };
-    private lastMousePosition: Vec2 = { x: 0, y: 0 };
+    lastMousePosition: Vec2 = { x: 0, y: 0 };
+
     isShiftDown: boolean;
 
     constructor(

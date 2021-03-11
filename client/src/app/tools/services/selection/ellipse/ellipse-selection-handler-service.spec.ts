@@ -11,7 +11,7 @@ import { EllipseSelectionHelperService } from './ellipse-selection-helper.servic
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
-describe('SelectionRendererService', () => {
+describe('EllipseSelectionHandlerService', () => {
     let service: EllipseSelectionHandlerService;
     let canvasTestHelper: CanvasTestHelper;
     let canvasPosition: Vec2;
@@ -24,14 +24,15 @@ describe('SelectionRendererService', () => {
 
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
     let hasSelectionBeenManipulatedSpy: jasmine.Spy<any>;
-    let drawWhitePostSelectionSpy: jasmine.Spy<any>;
+    let whiteFillAtOriginalLocation: jasmine.Spy<any>;
     let updateHorizontalOffsetSpy: jasmine.Spy<any>;
     let updateVerticalOffsetSpy: jasmine.Spy<any>;
+    let fillSpy: jasmine.Spy<any>;
     // let drawImageSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
-        drawServiceSpy.canvasSize = { x: 0, y: 0 };
+        drawServiceSpy.canvasSize = { x: 500, y: 500 };
 
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
@@ -45,6 +46,8 @@ describe('SelectionRendererService', () => {
             'setIsSelectionBeingManipulated',
             'drawPerimeter',
             'getSquareAjustedPerimeter',
+            'whiteFill',
+            'whiteEllipseFill',
         ]);
         selectionServiceMock = jasmine.createSpyObj('SelectionService', [
             'isClickOutsideSelection',
@@ -80,9 +83,10 @@ describe('SelectionRendererService', () => {
 
         clearAndResetAllCanvasSpy = spyOn<any>(service, 'clearAndResetAllCanvas').and.callThrough();
         hasSelectionBeenManipulatedSpy = spyOn<any>(service, 'hasSelectionBeenManipulated').and.callThrough();
-        drawWhitePostSelectionSpy = spyOn<any>(service, 'drawWhitePostSelection').and.callThrough();
+        whiteFillAtOriginalLocation = spyOn<any>(service, 'whiteFillAtOriginalLocation').and.callThrough();
         updateHorizontalOffsetSpy = spyOn<any>(service, 'updateHorizontalOffset').and.callThrough();
         updateVerticalOffsetSpy = spyOn<any>(service, 'updateVerticalOffset').and.callThrough();
+        fillSpy = spyOn<any>(service.selectionCtx, 'fill').and.callThrough();
         // drawImageSpy = spyOn<any>(service, 'drawImage').and.callThrough();
 
         // Configuration du spy du service
@@ -133,14 +137,14 @@ describe('SelectionRendererService', () => {
         expect(output).toEqual(true);
     });
 
-    it('drawSelection should call drawWhitePostSelection if needWhiteEllipsePostDrawing is true', () => {
+    it('drawSelection should call whiteFillAtOriginalLocation if needWhiteEllipsePostDrawing is true', () => {
         const topLeftOnTarget: Vec2 = { x: 1, y: 2 };
         const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
         const ctx: CanvasRenderingContext2D = sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
-        service.needWhiteEllipsePostDrawing = true;
+        service.needWhitePostDrawing = true;
         hasSelectionBeenManipulatedSpy.and.returnValue(true);
         service.drawSelection(ctx, topLeftOnTarget);
-        expect(drawWhitePostSelectionSpy).toHaveBeenCalled();
+        expect(whiteFillAtOriginalLocation).toHaveBeenCalled();
     });
 
     it('resizeSelection should calculate the new length based on \
@@ -167,7 +171,7 @@ describe('SelectionRendererService', () => {
         expect(updateVerticalOffsetSpy).toHaveBeenCalledWith(newlength);
     });
 
-    it('transform should have a vertical scaling of 1 is isHorizontal is true', () => {
+    /*it('transform should have a vertical scaling of 1 is isHorizontal is true', () => {
         const isHorizontal = true;
         const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
         const ctx: CanvasRenderingContext2D = sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
@@ -188,7 +192,7 @@ describe('SelectionRendererService', () => {
         const scaling = 1.3;
         service.transform(ctx, 1.3, isHorizontal);
         expect(ctxTransformSpy).toHaveBeenCalledWith(1, 0, 0, scaling, 0, 0);
-    });
+    });*/
 
     it('drawACanvasOnAnother should call drawImage with the origin as position param if topLeft is not provided in param', () => {
         const origin: Vec2 = { x: 0, y: 0 };
@@ -232,12 +236,20 @@ describe('SelectionRendererService', () => {
         expect(output).toEqual(true);
     });
 
+    it('extracting should use fill if fillItWhite is true', () => {
+        const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
+        sourceCanvas.width = 500;
+        sourceCanvas.height = 764;
+        service.extract(sourceCanvas, service.selectionCtx, true);
+        expect(fillSpy).toHaveBeenCalled();
+    });
+
     it('creating a memento then restoring to that memento should not change any property', () => {
         // tslint:disable-next-line: no-magic-numbers
         service.originalWidth = 10;
         // tslint:disable-next-line: no-magic-numbers
         service.originalHeight = 10;
-        service.fixedTopLeft = { x: 10, y: 10 };
+        service.topLeftRelativeToMiddle = { x: 10, y: 10 };
         service.offset = { x: 10, y: 10 };
         service.originalTopLeftOnBaseCanvas = { x: 10, y: 10 };
         service.originalCenter = { x: 10, y: 10 };
@@ -246,27 +258,14 @@ describe('SelectionRendererService', () => {
             { x: 5, y: 7 },
         ];
         service.hasBeenManipulated = true;
-        service.needWhiteEllipsePostDrawing = true;
+        service.needWhitePostDrawing = true;
 
-        service.selectionCanvas.width = drawServiceSpy.canvas.width;
-        service.selectionCanvas.height = drawServiceSpy.canvas.height;
-        service.originalCanvasCopy.width = drawServiceSpy.canvas.width;
-        service.originalCanvasCopy.height = drawServiceSpy.canvas.height;
-        service.horizontalModificationCanvas.width = drawServiceSpy.canvas.width;
-        service.horizontalModificationCanvas.height = drawServiceSpy.canvas.height;
-        service.verticalModificationCanvas.width = drawServiceSpy.canvas.width;
-        service.verticalModificationCanvas.height = drawServiceSpy.canvas.height;
+        service.selection.width = drawServiceSpy.canvas.width;
+        service.selection.height = drawServiceSpy.canvas.height;
+        service.originalSelection.width = drawServiceSpy.canvas.width;
+        service.originalSelection.height = drawServiceSpy.canvas.height;
 
         const memento: HandlerMemento = service.createMemento();
-
-        memento.selectionCanvas.width = drawServiceSpy.canvas.width;
-        memento.selectionCanvas.height = drawServiceSpy.canvas.height;
-        memento.originalCanvasCopy.width = drawServiceSpy.canvas.width;
-        memento.originalCanvasCopy.height = drawServiceSpy.canvas.height;
-        memento.horizontalModificationCanvas.width = drawServiceSpy.canvas.width;
-        memento.horizontalModificationCanvas.height = drawServiceSpy.canvas.height;
-        memento.verticalModificationCanvas.width = drawServiceSpy.canvas.width;
-        memento.verticalModificationCanvas.height = drawServiceSpy.canvas.height;
 
         const dummyVertices: Vec2[] = [
             { x: 50, y: 30 },
@@ -278,7 +277,7 @@ describe('SelectionRendererService', () => {
 
         expect(service.originalWidth).toEqual(10);
         expect(service.originalHeight).toEqual(10);
-        expect(service.fixedTopLeft).toEqual({ x: 10, y: 10 });
+        expect(service.topLeftRelativeToMiddle).toEqual({ x: 10, y: 10 });
         expect(service.offset).toEqual({ x: 10, y: 10 });
         expect(service.originalTopLeftOnBaseCanvas).toEqual({ x: 10, y: 10 });
         expect(service.originalCenter).toEqual({ x: 10, y: 10 });
@@ -287,6 +286,6 @@ describe('SelectionRendererService', () => {
             { x: 5, y: 7 },
         ]);
         expect(service.hasBeenManipulated).toEqual(true);
-        expect(service.needWhiteEllipsePostDrawing).toEqual(true);
+        expect(service.needWhitePostDrawing).toEqual(true);
     });
 });
