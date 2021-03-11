@@ -129,7 +129,7 @@ describe('DrawingCreatorService', () => {
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
         service.createNewDrawing();
-        expect(drawingRestoredSpy.emit).toHaveBeenCalled();
+        expect(drawingRestoredSpy.emit).not.toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
