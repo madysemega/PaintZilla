@@ -53,8 +53,6 @@ describe('PipetteService', () => {
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        drawVerticesSpy = spyOn<any>(service['renderer'], 'render').and.callThrough();
-
         // Configuration du spy du service
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
