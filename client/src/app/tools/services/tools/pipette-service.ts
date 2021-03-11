@@ -49,12 +49,14 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (event.button === MouseButton.Left){
         this.mouseDown = event.button === MouseButton.Left;
-        if (this.mouseDown) {
-            this.clearVertices();
-            this.mouseDownCoord = this.getPositionFromMouse(event);
             this.history.isLocked = true;
-            
+            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
+        } else if(event.button===MouseButton.Right){
+            this.mouseDown = event.button === MouseButton.Right;
+            this.history.isLocked = true;
+            this.colourService.setSecondaryColour(Colour.hexToRgb(this.outputCouleur));
         }
     }
 
@@ -62,7 +64,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.shape.vertices.push(mousePosition);
-            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
