@@ -34,7 +34,7 @@ describe('DrawingComponent', () => {
         historyServiceStub.onUndo.and.stub();
         toolStub = new ToolStub({} as DrawingService);
         drawingStub = new DrawingService(historyServiceStub);
-        resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
+        resizingServiceStub = new ResizingService(drawingStub, historyServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         TestBed.configureTestingModule({
             imports: [MaterialModule],
@@ -55,8 +55,6 @@ describe('DrawingComponent', () => {
         fixture = TestBed.createComponent(DrawingComponent);
         component = fixture.componentInstance;
         component.toolSelector.selectedTool = { displayName: 'Rectangle', icon: 'rectangle-contoured', keyboardShortcut: '1', tool: toolStub };
-        resizingServiceStub.canvasResize.x = Constants.DEFAULT_WIDTH;
-        resizingServiceStub.canvasResize.y = Constants.DEFAULT_HEIGHT;
         resizingServiceStub.rightDownResizerEnabled = false;
         resizingServiceStub.rightResizerEnabled = false;
         resizingServiceStub.downResizerEnabled = false;
