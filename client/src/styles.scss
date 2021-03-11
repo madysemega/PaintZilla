@@ -18,6 +18,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 //end from
 
+// Orientation
+
 .vertical {
     display: flex;
     flex-direction: column;
@@ -28,6 +30,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     flex-direction: row;
 }
 
+// Alignment
+
+.center {
+    margin: auto;
+    text-align: center;
+}
+
 .left {
     float: left;
 }
@@ -36,6 +45,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     float: right;
 }
 
+// Margins
+
 .margin-bottom-small {
-    margin-bottom: 12px;
+    margin-bottom: 24px;
+}
+
+.margin-top-small {
+    margin-top: 24px;
+}
+
+.margin-right-small {
+    margin-right: 24px;
+}
+
+.margin-left-small {
+    margin-left: 24px;
 }

@@ -1,6 +1,4 @@
-<mat-slider thumbLabel [matTooltip]="info" [matTooltipPosition] = "position" step="1" min="1" max="50" [value]="lineWidth" (valueChange)="changeWidth($event)"></mat-slider>
-<mat-divider></mat-divider>
-
-
-
-
+<div class="vertical">
+    <mat-label class="margin-bottom-small">Épaisseur du trait</mat-label>
+    <mat-slider thumbLabel [matTooltip]="info" [matTooltipPosition] = "position" step="1" min="1" max="50" [value]="lineWidth" (valueChange)="changeWidth($event)"></mat-slider>
+</div>

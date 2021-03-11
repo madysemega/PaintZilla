@@ -4,16 +4,6 @@
     margin-right: 5px;
 }
 
-.vertical {
-    display: flex;
-    flex-direction: column;
-}
-
-.center {
-    margin: auto;
-    text-align: center;
-}
-
 .selected {
     background: rgb(223, 223, 223);
 }
@@ -21,12 +11,4 @@
 .navbar-section {
     margin-top: 12px;
     margin-bottom: 12px;
-}
-
-.colour-section {
-    border-bottom: 1px solid #bbb;
-    position: relative;
-    margin-top: 10px;
-    height: 150px;
-    padding: auto;
 }
