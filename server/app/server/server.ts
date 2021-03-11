@@ -22,15 +22,10 @@ export class Server {
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
-        await this.databaseService
-            .start()
-            .then(() => {
-                // Do something...
-            })
-            .catch((error) => {
-                console.log('FAILED TO CONNECT... Details: ' + error);
-                process.exit(1);
-            });
+        await this.databaseService.start().catch((error) => {
+            console.log('FAILED TO CONNECT... Details: ' + error);
+            process.exit(1);
+        });
     }
 
     private normalizePort(val: number | string): number | string | boolean {

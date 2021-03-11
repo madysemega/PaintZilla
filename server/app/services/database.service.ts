@@ -6,11 +6,11 @@ import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
-export const MockData = {
-    name: 'Example',
-    drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
-    labels: ['string1', 'string2'],
-};
+// export const MockData = {
+//     name: 'Example',
+//     drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
+//     labels: ['string1', 'string2'],
+// };
 @injectable()
 export class DatabaseService {
     private options: mongoose.ConnectOptions = {
