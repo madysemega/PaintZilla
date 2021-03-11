@@ -10,8 +10,7 @@
     <div>
         <mat-label class="margin-bottom-small">Filtre</mat-label>
         <mat-chip-list>
-            <mat-chip>Paysages</mat-chip>
-            <mat-chip>La Joconde de Samuel</mat-chip>
+            <mat-chip *ngFor="let label of labels">{{ label }}</mat-chip>
         </mat-chip-list>
     </div>
 
