@@ -89,6 +89,17 @@ export class LocalDatabaseService {
         return result;
     }
 
+    filterByLabels(metadatas: Metadata[]): string[] {
+        let result: string[] = [];
+        const drawings = this.filterDrawings(metadatas);
+        for (const drawing of drawings) {
+            result = result.concat(drawing.labels.filter((label: string) => {
+                return result.findIndex(item => label === item) === Constants.NOT_FOUND;
+            }));
+        }
+        return result;
+    }
+
     async mapDrawingById(metadata: Metadata): Promise<Drawing> {
         const drawing = this.getDrawing(metadata.id.toString());
         if (drawing) {

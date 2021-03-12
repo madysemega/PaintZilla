@@ -6,11 +6,6 @@ import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
-// export const MockData = {
-//     name: 'Example',
-//     drawing: 'VGhpcyBpcyBzaW1wbGUgQVNDSUkgQmFzZTY0IGZvciBTdGFja092ZXJmbG93IGV4YW1wbGUu',
-//     labels: ['string1', 'string2'],
-// };
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
@@ -19,28 +14,21 @@ export class DrawingService {
     }
 
     // TO DO: CREATE
-    async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<Drawing> {
-        const canBeProcessed: boolean = this.drawingCanBeProcessed(name, drawing, labels);
-        if (canBeProcessed) {
-            const metadata = new MetadataModel({ name, labels });
-            await metadata.save().then(() => {
-                console.log('Metadata saved in database !');
-            });
-            if (this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing)) {
-                return this.getDrawingById(metadata.id);
-                console.log('Drawing saved in local database !');
-            }
-        } else {
-            throw new Error("Drawing can't be processed, invalid data");
+    async saveDrawing(name: string = Constants.DEFAULT_NAME, drawing: string, labels: string[] = []): Promise<Drawing> {
+        this.checkName(name);
+        this.checkDrawing(drawing);
+        this.checkLabels(labels);
+        const metadata = new MetadataModel({ name, labels });
+        await metadata.save().then(() => {
+            console.log('Metadata saved in database !');
+        });
+        if (this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing)) {
+            console.log('Drawing saved in local database !');
+            return this.getDrawingById(metadata.id);
         }
         return Constants.DRAWING_NOT_FOUND;
     }
-    drawingCanBeProcessed(name: string, drawing: string, labels: string[]): boolean {
-        const nameIsValid: boolean = this.isValidName(name);
-        const drawingIsValid: boolean = this.isValidDrawing(drawing);
-        const labelsAreValid: boolean = this.areValidLabels(labels);
-        return nameIsValid && drawingIsValid && labelsAreValid;
-    }
+
     // TO DO: READ
     async getAllDrawings(): Promise<Drawing[]> {
         const metadatas = await MetadataModel.find({}).exec();
@@ -48,6 +36,7 @@ export class DrawingService {
     }
 
     async getDrawingById(id: string): Promise<Drawing> {
+        this.checkId(id);
         const drawing = await MetadataModel.findById(id).exec();
         if (drawing) {
             return this.databaseService.localDatabaseService.mapDrawingById(drawing);
@@ -57,21 +46,46 @@ export class DrawingService {
     }
 
     async getDrawingsByName(name: string): Promise<Drawing[]> {
+        this.checkName(name);
         const drawings = await MetadataModel.find({ name }).exec();
         return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
+    async getAllLabels(): Promise<string[]>{
+        const metadatas = await MetadataModel.find({}).exec();
+        if (metadatas) {
+            return this.databaseService.localDatabaseService.filterByLabels(metadatas);
+        }
+        throw new Error('Could not get labels from getAllLabels');
+    }
+
     async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {
+        this.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $in: labels } }).exec();
         return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     async getDrawingsByLabelsAll(labels: string[]): Promise<Drawing[]> {
+        this.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $all: labels } }).exec();
         return await this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
+
     // TO DO: UPDATE
+    async updateDrawing(id: string, drawing: Drawing): Promise<Drawing> {
+        this.checkId(id);
+        this.checkAll(drawing);
+        const updatedMetadata = await MetadataModel.findByIdAndUpdate(id, { name: drawing.name, labels: drawing.labels }).exec();
+        if (updatedMetadata) {
+            this.databaseService.localDatabaseService.updateDrawing(id, drawing.drawing);
+            return this.getDrawingById(id);
+        }
+        return Constants.DRAWING_NOT_FOUND;
+    }
+
     async updateDrawingName(id: string, name: string): Promise<Drawing> {
+        this.checkId(id);
+        this.checkName(name);
         const drawing = await MetadataModel.findByIdAndUpdate(id, { name }).exec();
         if (drawing) {
             return this.getDrawingById(id);
@@ -80,6 +94,8 @@ export class DrawingService {
     }
 
     async updateDrawingLabels(id: string, labels: string[]): Promise<Drawing> {
+        this.checkId(id);
+        this.checkLabels(labels);
         const drawing = await MetadataModel.findByIdAndUpdate(id, { labels }).exec();
         if (drawing) {
             return this.getDrawingById(id);
@@ -87,7 +103,9 @@ export class DrawingService {
         return Constants.DRAWING_NOT_FOUND;
     }
 
-    async updateDrawing(id: string, drawing: string): Promise<Drawing> {
+    async updateDrawingContent(id: string, drawing: string): Promise<Drawing> {
+        this.checkId(id);
+        this.checkDrawing(drawing);
         const item = await MetadataModel.findById(id).exec();
         if (item && this.isValidDrawing(drawing)) {
             this.databaseService.localDatabaseService.updateDrawing(id, drawing);
@@ -100,11 +118,47 @@ export class DrawingService {
     // TO DO: DELETE
 
     async deleteDrawing(id: string): Promise<boolean> {
+        this.checkId(id);
         const item = await MetadataModel.findByIdAndDelete(id).exec();
         if (item) {
             return this.databaseService.localDatabaseService.deleteDrawing(id);
         }
         return false;
+    }
+
+    checkId(id: string): void {
+        if (!this.isValidId(id)) {
+            throw new Error('Invalid id provided');
+        }
+    }
+
+    checkName(name: string): void {
+        if (!this.isValidName(name)) {
+            throw new Error('Invalid name provided');
+        }
+    }
+
+    checkDrawing(drawing: string): void {
+        if (!this.isValidDrawing(drawing)) {
+            throw new Error('Invalid drawing provided');
+        }
+    }
+
+    checkLabels(labels: string[]): void {
+        if (!this.areValidLabels(labels)) {
+            throw new Error('Invalid label(s) provided');
+        }
+    }
+
+    checkAll(drawing: Drawing): void {
+        this.checkId(drawing.id);
+        this.checkName(drawing.name);
+        this.checkDrawing(drawing.drawing);
+        this.checkLabels(drawing.labels);
+    }
+
+    isValidId(id: string): boolean {
+        return RegularExpressions.MONGO_ID_REGEX.test(id);
     }
 
     isValidName(name: string): boolean {

@@ -4,5 +4,5 @@ export const TYPES = {
     DatabaseService: Symbol('DatabaseService'),
     DrawingService: Symbol('DrawingService'),
     LocalDatabaseService: Symbol('LocalDatabaseService'),
-    MetadataController: Symbol('MetadataController'),
+    DrawingController: Symbol('DrawingController'),
 };

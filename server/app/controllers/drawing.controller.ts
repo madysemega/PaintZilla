@@ -5,13 +5,14 @@ import { Drawing } from '@common/models/drawing';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 @injectable()
-export class MetadataController {
+export class DrawingController {
     router: Router;
     constructor(@inject(TYPES.DrawingService) private drawingService: DrawingService) {
         this.router = Router();
         this.configureRouter();
     }
     private configureRouter(): void {
+
         this.router.post('/drawing', async (req: Request, res: Response, next: NextFunction) => {
            await this.drawingService
                 .saveDrawing(req.body.name, req.body.drawing, req.body.labels)
@@ -19,7 +20,7 @@ export class MetadataController {
                     res.status(HttpStatusCode.Created).send(drawing);
                 })
                 .catch((error) => {
-                    res.status(HttpStatusCode.NotAcceptable).send('An error occurred while saving the drawing ' + error.message);
+                    res.status(HttpStatusCode.NotAcceptable).send('An error occurred while saving the drawing... ' + error.message);
                 });
         });
 
@@ -31,6 +32,17 @@ export class MetadataController {
                 })
                 .catch((error: Error) => {
                     res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                });
+        });
+
+        this.router.get('/drawing/labels', async (req: Request, res: Response, next: NextFunction) => {
+            await this.drawingService
+                .getAllLabels()
+                .then((labels: string[]) => {
+                    res.send(labels);
+                })
+                .catch((error: Error) => {
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get labels ' + error.message);
                 });
         });
 
@@ -78,6 +90,22 @@ export class MetadataController {
                 });
         });
 
+        this.router.put('/drawing/:id', async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                await this.drawingService
+                    .updateDrawing(req.params.id, req.body)
+                    .then((drawing: Drawing) => {
+                        res.send(drawing);
+                    })
+                    .catch((error: Error) => {
+                        res.status(HttpStatusCode.NotModified).send('An error occured while trying to update drawing ' + error.message);
+                    });
+            } catch (error) {
+                res.status(HttpStatusCode.NotAcceptable).send("Request body couldn't be parsed, " + error.message);
+            }
+
+        });
+
         this.router.put('/drawing/name/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .updateDrawingName(req.params.id, req.body.name)
@@ -102,7 +130,7 @@ export class MetadataController {
 
         this.router.put('/drawing/content/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawing(req.params.id, req.body.drawing)
+                .updateDrawingContent(req.params.id, req.body.drawing)
                 .then((drawing: Drawing) => {
                     res.send(drawing);
                 })

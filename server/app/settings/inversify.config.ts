@@ -1,4 +1,4 @@
-import { MetadataController } from '@app/controllers/metadata.controller';
+import { DrawingController } from '@app/controllers/drawing.controller';
 import { DatabaseService } from '@app/services/database.service';
 import { LocalDatabaseService } from '@app/services/local.database.service';
 import { Container } from 'inversify';
@@ -15,6 +15,6 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind<DatabaseService>(TYPES.DatabaseService).to(DatabaseService);
     container.bind<DrawingService>(TYPES.DrawingService).to(DrawingService);
     container.bind<LocalDatabaseService>(TYPES.LocalDatabaseService).to(LocalDatabaseService);
-    container.bind<MetadataController>(TYPES.MetadataController).to(MetadataController);
+    container.bind<DrawingController>(TYPES.DrawingController).to(DrawingController);
     return container;
 };
