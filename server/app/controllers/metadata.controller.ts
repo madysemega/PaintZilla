@@ -12,117 +12,113 @@ export class MetadataController {
         this.configureRouter();
     }
     private configureRouter(): void {
-        this.router.post('/create', async (req: Request, res: Response, next: NextFunction) => {
-            await this.drawingService
+        this.router.post('/drawing', async (req: Request, res: Response, next: NextFunction) => {
+           await this.drawingService
                 .saveDrawing(req.body.name, req.body.drawing, req.body.labels)
-                .then(() => {
-                    res.status(HttpStatusCode.Created);
+                .then((drawing: Drawing) => {
+                    res.status(HttpStatusCode.Created).send(drawing);
                 })
                 .catch((error) => {
-                    return next(error);
+                    res.status(HttpStatusCode.NotAcceptable).send('An error occurred while saving the drawing ' + error.message);
                 });
         });
 
-        this.router.get('/get-all', async (req: Request, res: Response, next: NextFunction) => {
-             this.drawingService
+        this.router.get('/drawing', async (req: Request, res: Response, next: NextFunction) => {
+             await this.drawingService
                 .getAllDrawings()
-                .then((drawings: Drawing[]) => {
-                    res.json(drawings);
-                })
-                .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send(error.message);
-                });
-        });
-
-        this.router.get('/get/:id', async (req: Request, res: Response, next: NextFunction) => {
-            await this.drawingService
-                .getDrawingById(req.body.id)
-                .then((drawing: Drawing) => {
-                    res.send(drawing);
-                })
-                .catch((error: Error) => {
-                    return next(error);
-                });
-        });
-
-        this.router.get('/get/:name', async (req: Request, res: Response, next: NextFunction) => {
-            await this.drawingService
-                .getDrawingsByName(req.body.name)
                 .then((drawings: Drawing[]) => {
                     res.send(drawings);
                 })
                 .catch((error: Error) => {
-                    return next(error);
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
                 });
         });
 
-        this.router.get('/get-labels-all', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/drawing/:id', async (req: Request, res: Response, next: NextFunction) => {
+            await this.drawingService
+                .getDrawingById(req.params.id)
+                .then((drawing: Drawing) => {
+                    res.send(drawing);
+                })
+                .catch((error: Error) => {
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                });
+        });
+
+        this.router.get('/drawing/name/:name', async (req: Request, res: Response, next: NextFunction) => {
+            await this.drawingService
+                .getDrawingsByName(req.params.name)
+                .then((drawings: Drawing[]) => {
+                    res.send(drawings);
+                })
+                .catch((error: Error) => {
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                });
+        });
+
+        this.router.get('/drawing/labels/all-labels', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .getDrawingsByLabelsAll(req.body.labels)
                 .then((drawings: Drawing[]) => {
                     res.send(drawings);
                 })
                 .catch((error: Error) => {
-                    return next(error);
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings, ' + error.message);
                 });
         });
 
-        this.router.get('/get-labels-one', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/drawing/labels/one-label', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .getDrawingsByLabelsOne(req.body.labels)
                 .then((drawings: Drawing[]) => {
                     res.send(drawings);
                 })
                 .catch((error: Error) => {
-                    return next(error);
+                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
                 });
         });
 
-        this.router.put('/update/:id', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.put('/drawing/name/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawingName(req.body.id, req.body.name)
+                .updateDrawingName(req.params.id, req.body.name)
                 .then((drawing: Drawing) => {
                     res.send(drawing);
                 })
                 .catch((error: Error) => {
-                    next(error);
+                    res.status(HttpStatusCode.NotModified).send('An error occured while trying to update drawing ' + error.message);
                 });
         });
 
-        this.router.put('/update-labels/:id', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.put('/drawing/labels/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawingLabels(req.body.id, req.body.labels)
+                .updateDrawingLabels(req.params.id, req.body.labels)
                 .then((drawing: Drawing) => {
                     res.send(drawing);
                 })
                 .catch((error: Error) => {
-                    next(error);
+                    res.status(HttpStatusCode.NotModified).send('An error occured while trying to update drawing ' + error.message);
                 });
         });
 
-        this.router.put('/update-drawing/:id', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.put('/drawing/content/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawing(req.body.id, req.body.name)
+                .updateDrawing(req.params.id, req.body.drawing)
                 .then((drawing: Drawing) => {
                     res.send(drawing);
                 })
                 .catch((error: Error) => {
-                    next(error);
+                    res.status(HttpStatusCode.NotModified).send('An error occured while trying to update drawing ' + error.message);
                 });
         });
 
-        this.router.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.delete('/drawing/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .deleteDrawing(req.body.id)
+                .deleteDrawing(req.params.id)
                 .then((status: boolean) => {
-                    if (status) {
-                        res.status(HttpStatusCode.Ok);
-                    } else {
-                        res.status(HttpStatusCode.NotModified);
-                    }
+                    res.status(HttpStatusCode.Ok).send(status);
                 })
                 .catch((error) => {
-                    next(error);
+                    res.status(HttpStatusCode.NotModified).send('An error occurred while trying to delete drawing ' + error.message);
                 });
         });
     }

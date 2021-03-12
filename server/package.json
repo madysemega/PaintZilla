@@ -5,6 +5,7 @@
     "private": true,
     "scripts": {
         "start": "nodemon",
+        "debug": "node inspect",
         "build": "tsc --project tsconfig.json",
         "format": "prettier --config ../.prettierrc.yaml --write \"app/**/*\"",
         "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish",

@@ -19,7 +19,7 @@ export class DrawingService {
     }
 
     // TO DO: CREATE
-    async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<void> {
+    async saveDrawing(name: string, drawing: string, labels: string[] = []): Promise<Drawing> {
         const canBeProcessed: boolean = this.drawingCanBeProcessed(name, drawing, labels);
         if (canBeProcessed) {
             const metadata = new MetadataModel({ name, labels });
@@ -27,11 +27,13 @@ export class DrawingService {
                 console.log('Metadata saved in database !');
             });
             if (this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing)) {
-                console.log('Drawing saved in database !');
+                return this.getDrawingById(metadata.id);
+                console.log('Drawing saved in local database !');
             }
         } else {
             throw new Error("Drawing can't be processed, invalid data");
         }
+        return Constants.DRAWING_NOT_FOUND;
     }
     drawingCanBeProcessed(name: string, drawing: string, labels: string[]): boolean {
         const nameIsValid: boolean = this.isValidName(name);
