@@ -56,4 +56,21 @@ export class ServerService {
         Validator.checkName(name);
         return this.httpClient.put<Drawing>(Constants.API_URL + `/name/${id}`, name, Constants.TEXT_HTTP_OPTIONS);
     }
+
+    updateDrawingLabels(id: string, labels: string[]): Observable<Drawing> {
+        Validator.checkId(id);
+        Validator.checkLabels(labels);
+        return this.httpClient.put<Drawing>(Constants.API_URL + `/labels/${id}`, labels.toString(), Constants.TEXT_HTTP_OPTIONS);
+    }
+
+    updateDrawingContent(id: string, content: string): Observable<Drawing> {
+        Validator.checkId(id);
+        Validator.checkDrawing(content);
+        return this.httpClient.put<Drawing>(Constants.API_URL + `/content/${id}`, content, Constants.TEXT_HTTP_OPTIONS);
+    }
+
+    deleteDrawing(id: string): Observable<void> {
+        Validator.checkId(id);
+        return this.httpClient.delete<void>(Constants.API_URL + `/${id}`);
+    }
 }

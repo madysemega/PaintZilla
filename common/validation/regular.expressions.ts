@@ -6,4 +6,3 @@ export const BASE_64_REGEX = /(data:image\/[^;]+;base64,[^"]+)/;
 export const NAME_REGEX = /^[a-zA-Z0-9\d\-_\s]+$/i;
 // ref: https://stackoverflow.com/questions/14639378/regex-to-validate-only-alphanumeric-no-spaces-and-only-40-characters
 export const LABEL_REGEX = /^[a-zA-Z0-9\-_]{1,15}$/;
-

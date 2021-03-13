@@ -80,9 +80,18 @@ export class DrawingComponent implements AfterViewInit {
             //         console.log(drawing.labels);
             //     });
 
-            this.serverService.updateDrawingName('604cbb0915caca825063f761', 'updated name').subscribe((drawing: Drawing) => {
-                console.log(drawing.name);
-            });
+            // this.serverService.updateDrawingName('604cbb0915caca825063f761', 'updated name').subscribe((drawing: Drawing) => {
+            //     console.log(drawing.name);
+            // });
+
+            // this.serverService.updateDrawingContent('604cbb0915caca825063f761',
+            // this.drawingService.currentDrawing).subscribe((drawing: Drawing) => {
+            //     console.log(drawing.labels);
+            // });
+
+            // this.serverService.deleteDrawing('604cbb0915caca825063f761').subscribe(() => {
+            //     console.log('deleted');
+            // });
         }
     }
 

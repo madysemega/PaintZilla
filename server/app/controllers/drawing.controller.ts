@@ -140,7 +140,7 @@ export class DrawingController {
             await this.drawingService
                 .deleteDrawing(req.params.id)
                 .then(() => {
-                    res.status(HttpStatusCode.Ok).sendStatus(HttpStatusCode.Ok);
+                    res.status(HttpStatusCode.Ok).end();
                 })
                 .catch((error) => {
                     res.status(HttpStatusCode.NotModified).send('An error occurred while trying to delete drawing ' + error.message);
