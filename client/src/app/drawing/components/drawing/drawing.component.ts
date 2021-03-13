@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import { ServerService } from '@app/commons/service/server.service';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { Drawing } from '@common/models/drawing';
 
 @Component({
     selector: 'app-drawing',
@@ -28,7 +26,6 @@ export class DrawingComponent implements AfterViewInit {
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
         public resizingService: ResizingService,
-        public serverService: ServerService,
     ) {
         this.wasResizing = false;
     }
@@ -58,40 +55,6 @@ export class DrawingComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
-            // this.serverService.getDrawingsByName('Mady').subscribe((drawings: Drawing[]) => {
-            //     for (const drawing of drawings) {
-            //         console.log(drawing.name);
-            //     }
-            // });
-            // this.serverService.getDrawingsByLabelsOneMatch(['label3']).subscribe((drawings: Drawing[]) => {
-            //     for (const drawing of drawings) {
-            //         console.log(drawing.name);
-            //     }
-            // });
-
-            // this.serverService
-            //     .updateDrawing('604cbb0915caca825063f761', {
-            //         id: '604cbb0915caca825063f761',
-            //         name: 'Ydam',
-            //         drawing: this.drawingService.currentDrawing,
-            //         labels: ['label3', 'label4'],
-            //     })
-            //     .subscribe((drawing: Drawing) => {
-            //         console.log(drawing.labels);
-            //     });
-
-            // this.serverService.updateDrawingName('604cbb0915caca825063f761', 'updated name').subscribe((drawing: Drawing) => {
-            //     console.log(drawing.name);
-            // });
-
-            // this.serverService.updateDrawingContent('604cbb0915caca825063f761',
-            // this.drawingService.currentDrawing).subscribe((drawing: Drawing) => {
-            //     console.log(drawing.labels);
-            // });
-
-            // this.serverService.deleteDrawing('604cbb0915caca825063f761').subscribe(() => {
-            //     console.log('deleted');
-            // });
         }
     }
 
