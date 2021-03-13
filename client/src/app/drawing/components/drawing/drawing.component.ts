@@ -22,11 +22,7 @@ export class DrawingComponent implements AfterViewInit {
 
     wasResizing: boolean;
 
-    constructor(
-        private drawingService: DrawingService,
-        public toolSelector: ToolSelectorService,
-        public resizingService: ResizingService,
-    ) {
+    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
         this.wasResizing = false;
     }
 
