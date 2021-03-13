@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
-import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+// import { Drawing } from '@common/models/drawing';
 
 @Component({
     selector: 'app-drawing',
@@ -27,14 +27,8 @@ export class DrawingComponent implements AfterViewInit {
         private drawingService: DrawingService,
         public toolSelector: ToolSelectorService,
         public resizingService: ResizingService,
-        private drawingCreatorService: DrawingCreatorService,
     ) {
         this.wasResizing = false;
-        this.drawingCreatorService.drawingRestored.subscribe(() => {
-            // this.resizingService.resetCanvasDimensions();
-            // this.resizingService.updateCanvasSize();
-            this.drawingService.restoreCanvasStyle();
-        });
     }
 
     ngAfterViewInit(): void {
@@ -45,7 +39,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
-        this.drawingService.restoreCanvasStyle();
+        this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+        this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
     }
 
     @HostListener('document:mousemove', ['$event'])

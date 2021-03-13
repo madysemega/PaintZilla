@@ -1,11 +1,11 @@
 import * as Constants from '@app/constants/database.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
-import * as RegularExpressions from '@common/validation/regular.expressions';
 import { DatabaseService } from '@app/services/database/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
+import { Validator } from '@common/validation/validator';
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
@@ -16,9 +16,9 @@ export class DrawingService {
 
     // TO DO: CREATE
     async saveDrawing(name: string = Constants.DEFAULT_NAME, drawing: string, labels: string[] = []): Promise<Drawing> {
-        this.checkName(name);
-        this.checkDrawing(drawing);
-        this.checkLabels(labels);
+        Validator.checkName(name);
+        Validator.checkDrawing(drawing);
+        Validator.checkLabels(labels);
         const metadata = new MetadataModel({ name, labels });
         await metadata
             .save()
@@ -38,7 +38,7 @@ export class DrawingService {
     }
 
     async getDrawingById(id: string): Promise<Drawing> {
-        this.checkId(id);
+        Validator.checkId(id);
         const metadata = await MetadataModel.findById(id).exec();
         if (metadata) {
             return this.databaseService.localDatabaseService.mapDrawingById(metadata);
@@ -47,7 +47,7 @@ export class DrawingService {
     }
 
     async getDrawingsByName(name: string): Promise<Drawing[]> {
-        this.checkName(name);
+        Validator.checkName(name);
         const drawings = await MetadataModel.find({ name }).exec();
         return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
@@ -61,21 +61,21 @@ export class DrawingService {
     }
 
     async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {
-        this.checkLabels(labels);
+        Validator.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $in: labels } }).exec();
         return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     async getDrawingsByLabelsAll(labels: string[]): Promise<Drawing[]> {
-        this.checkLabels(labels);
+        Validator.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $all: labels } }).exec();
         return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     // TO DO: UPDATE
     async updateDrawing(id: string, drawing: Drawing): Promise<Drawing> {
-        this.checkId(id);
-        this.checkAll(drawing);
+        Validator.checkId(id);
+        Validator.checkAll(drawing);
         const metadata = await MetadataModel.findByIdAndUpdate(id, { name: drawing.name, labels: drawing.labels }).exec();
         if (metadata) {
             this.databaseService.localDatabaseService.updateDrawing(id, drawing.drawing);
@@ -85,8 +85,8 @@ export class DrawingService {
     }
 
     async updateDrawingName(id: string, name: string): Promise<Drawing> {
-        this.checkId(id);
-        this.checkName(name);
+        Validator.checkId(id);
+        Validator.checkName(name);
         const drawing = await MetadataModel.findByIdAndUpdate(id, { name }).exec();
         if (drawing) {
             return this.getDrawingById(id);
@@ -95,8 +95,8 @@ export class DrawingService {
     }
 
     async updateDrawingLabels(id: string, labels: string[]): Promise<Drawing> {
-        this.checkId(id);
-        this.checkLabels(labels);
+        Validator.checkId(id);
+        Validator.checkLabels(labels);
         const metadata = await MetadataModel.findByIdAndUpdate(id, { labels }).exec();
         if (metadata) {
             return this.getDrawingById(id);
@@ -105,8 +105,8 @@ export class DrawingService {
     }
 
     async updateDrawingContent(id: string, drawing: string): Promise<Drawing> {
-        this.checkId(id);
-        this.checkDrawing(drawing);
+        Validator.checkId(id);
+        Validator.checkDrawing(drawing);
         const metadata = await MetadataModel.findById(id).exec();
         if (metadata) {
             this.databaseService.localDatabaseService.updateDrawing(id, drawing);
@@ -118,60 +118,13 @@ export class DrawingService {
     // TO DO: DELETE
 
     async deleteDrawing(id: string): Promise<void> {
-        this.checkId(id);
+        Validator.checkId(id);
         const item = await MetadataModel.findByIdAndDelete(id).exec();
         if (item) {
             this.databaseService.localDatabaseService.deleteDrawing(id);
         } else {
             throw new Error('Could not deleted drawing with provided id');
         }
-    }
-
-    checkId(id: string): void {
-        if (!this.isValidId(id)) {
-            throw new Error('Invalid id provided');
-        }
-    }
-
-    checkName(name: string): void {
-        if (!this.isValidName(name)) {
-            throw new Error('Invalid name provided');
-        }
-    }
-
-    checkDrawing(drawing: string): void {
-        if (!this.isValidDrawing(drawing)) {
-            throw new Error('Invalid drawing provided');
-        }
-    }
-
-    checkLabels(labels: string[]): void {
-        if (!this.areValidLabels(labels)) {
-            throw new Error('Invalid label(s) provided');
-        }
-    }
-
-    checkAll(drawing: Drawing): void {
-        this.checkId(drawing.id);
-        this.checkName(drawing.name);
-        this.checkDrawing(drawing.drawing);
-        this.checkLabels(drawing.labels);
-    }
-
-    isValidId(id: string): boolean {
-        return RegularExpressions.MONGO_ID_REGEX.test(id);
-    }
-
-    isValidName(name: string): boolean {
-        return RegularExpressions.NAME_REGEX.test(name);
-    }
-
-    isValidDrawing(drawing: string): boolean {
-        return RegularExpressions.BASE_64_REGEX.test(drawing);
-    }
-
-    areValidLabels(labels: string[]): boolean {
-        return labels.every((label: string) => RegularExpressions.LABEL_REGEX.test(label));
     }
 
     private configureServerDisabling(): void {

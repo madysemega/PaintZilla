@@ -2,9 +2,9 @@ import { DrawingService } from '@app/services/drawing/drawing.service';
 import { TYPES } from '@app/settings/types';
 import { HttpStatusCode } from '@common/communication/HttpStatusCode';
 import { Drawing } from '@common/models/drawing';
+import * as Parser from 'body-parser';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import * as Parser from 'body-parser';
 @injectable()
 export class DrawingController {
     router: Router;
