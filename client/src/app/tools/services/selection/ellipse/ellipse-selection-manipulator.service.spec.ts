@@ -33,15 +33,11 @@ describe('EllipseSelectionManipulatorService', () => {
 
     let stopManipulationSpy: jasmine.Spy<any>;
     let resizeSelectionSpy: jasmine.Spy<any>;
-    // let registerMousePosSpy : jasmine.Spy<any>;
     let computeDiagonalEquation: jasmine.Spy<any>;
     let moveSelectionSpy: jasmine.Spy<any>;
     let moveIfPressLongEnoughSpy: jasmine.Spy<any>;
     let singleMoveSpy: jasmine.Spy<any>;
     let getMousePosOnDiagonalSpy: jasmine.Spy<any>;
-    // let drawSelectionSpy: jasmine.Spy<any>;
-
-    // let isClickOutsideSelectionSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -103,13 +99,11 @@ describe('EllipseSelectionManipulatorService', () => {
 
         stopManipulationSpy = spyOn<any>(service, 'stopManipulation').and.callThrough();
         resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
-        // registerMousePosSpy = spyOn<any>(service, 'registerMousePos').and.callThrough();
         computeDiagonalEquation = spyOn<any>(service, 'computeDiagonalEquation').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
         moveIfPressLongEnoughSpy = spyOn<any>(service, 'moveIfPressLongEnough').and.callThrough();
         singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
         getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
-        // drawSelectionSpy = spyOn<any>(selectionHandlerMock, 'drawSelection').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal

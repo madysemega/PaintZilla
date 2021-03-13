@@ -188,15 +188,12 @@ describe('ResizingService', () => {
         service.resizeCanvas(testMouseEvent);
         expect(updateStyleStub).toHaveBeenCalled();
     });
-    it('resizeCanvas(): restorePreviewImageData() and drawingService.clearCanvas() should be called', () => {
+    it('resizeCanvas(): restorePreviewImageData() should be called', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
-        spyOn(service.drawingService, 'clearCanvas').and.returnValue();
         spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(service, 'canBeResizedHorizontally').and.returnValue(true);
         spyOn(service, 'canBeResizedVertically').and.returnValue(true);
         service.resizeCanvas(testMouseEvent);
-        expect(service.drawingService.clearCanvas).toHaveBeenCalled();
-        expect(service.drawingService.clearCanvas).toHaveBeenCalledWith(service.drawingService.baseCtx);
         expect(service.restorePreviewImageData).toHaveBeenCalled();
         expect(drawingServiceStub.updateCanvasStyle).toHaveBeenCalled();
     });

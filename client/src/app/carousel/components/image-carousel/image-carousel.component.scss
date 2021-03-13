@@ -1,0 +1,26 @@
+
+mat-card {
+    margin: 12px;
+}
+
+[carousel-wrapper] {
+    position: relative;
+}
+
+[carousel-images] {
+    margin-left: 64px;
+    margin-right: 64px;
+}
+
+[rotate-left], [rotate-right] {
+    position: absolute;
+    top: 50%;
+}
+
+[rotate-left] {
+    left: 0px;
+}
+
+[rotate-right] {
+    right: 0px;
+}

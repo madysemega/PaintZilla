@@ -32,7 +32,7 @@ export class EllipseSelectionHelperService extends SelectionHelperService {
         ctx.restore();
     }
 
-    drawPostSelectionEllipse(center: Vec2, radii: Vec2): void {
+    whiteEllipseFill(center: Vec2, radii: Vec2): void {
         const ctx: CanvasRenderingContext2D = this.drawingService.baseCtx;
         const radiiCopy = { x: radii.x, y: radii.y };
         ctx.save();
@@ -45,5 +45,16 @@ export class EllipseSelectionHelperService extends SelectionHelperService {
         ctx.fill();
         ctx.closePath();
         ctx.restore();
+    }
+
+    whiteFill(vertices: Vec2[]): void {
+        const topLeft: Vec2 = vertices[0];
+        const bottomRight: Vec2 = vertices[1];
+
+        const center: Vec2 = { x: 0, y: 0 };
+        const radii: Vec2 = { x: 0, y: 0 };
+
+        this.getEllipseParam(topLeft, bottomRight, center, radii);
+        this.whiteEllipseFill(center, radii);
     }
 }
