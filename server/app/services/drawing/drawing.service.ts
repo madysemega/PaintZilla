@@ -57,7 +57,7 @@ export class DrawingService {
         if (metadatas) {
             return this.databaseService.localDatabaseService.filterByLabels(metadatas);
         }
-        throw new Error('Could not get labels from getAllLabels');
+        throw new Error('Could not get metadatas from getAllLabels');
     }
 
     async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {

@@ -77,7 +77,10 @@ export class LocalDatabaseService {
         } catch (err) {
             throw new Error('Error in filterDrawings, details ' + err);
         }
-        return result;
+        if (result.length) {
+            return result;
+        }
+        throw new Error('Could not find any drawing matching with provided metadatas');
     }
 
     filterByLabels(metadatas: Metadata[]): string[] {
@@ -90,7 +93,10 @@ export class LocalDatabaseService {
                 }),
             );
         }
-        return result;
+        if (result.length) {
+            return result;
+        }
+        throw new Error('Could not find any drawing matching with provided labels');
     }
 
     async mapDrawingById(metadata: Metadata): Promise<Drawing> {

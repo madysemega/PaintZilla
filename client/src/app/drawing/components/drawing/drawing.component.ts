@@ -1,11 +1,14 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ServerService } from '@app/commons/services/server.service';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+// import { Drawing } from '@common/models/drawing';
+
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
@@ -21,7 +24,12 @@ export class DrawingComponent implements AfterViewInit {
 
     wasResizing: boolean;
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
+    constructor(
+        private drawingService: DrawingService,
+        public toolSelector: ToolSelectorService,
+        public resizingService: ResizingService,
+        private serverService: ServerService,
+    ) {
         this.wasResizing = false;
     }
 
@@ -50,6 +58,9 @@ export class DrawingComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseDown(event);
+            this.serverService.deleteDrawing('604c563a4c06b98048cc0568').subscribe(() => {
+                console.log('Deleted successfully');
+            });
         }
     }
 

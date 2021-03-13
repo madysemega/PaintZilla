@@ -4,6 +4,7 @@ import { HttpStatusCode } from '@common/communication/HttpStatusCode';
 import { Drawing } from '@common/models/drawing';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
+import * as Parser from 'body-parser';
 @injectable()
 export class DrawingController {
     router: Router;
@@ -30,7 +31,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
                 });
         });
 
@@ -41,7 +42,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(labels);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get labels ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get labels ' + error.message);
                 });
         });
 
@@ -52,7 +53,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawing);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
                 });
         });
 
@@ -63,29 +64,29 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
                 });
         });
 
-        this.router.get('/drawings/labels/all-labels', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/drawings/labels/all-labels/', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .getDrawingsByLabelsAll(req.body.labels)
+                .getDrawingsByLabelsAll(req.query.drawing.split(','))
                 .then((drawings: Drawing[]) => {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings, ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings, ' + error.message);
                 });
         });
 
         this.router.get('/drawings/labels/one-label', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .getDrawingsByLabelsOne(req.body.labels)
+                .getDrawingsByLabelsOne(req.query.drawing.split(','))
                 .then((drawings: Drawing[]) => {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occured while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
                 });
         });
 
@@ -100,9 +101,11 @@ export class DrawingController {
                 });
         });
 
+        this.router.use(Parser.text());
+
         this.router.put('/drawings/name/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawingName(req.params.id, req.body.name)
+                .updateDrawingName(req.params.id, req.body)
                 .then((drawing: Drawing) => {
                     res.status(HttpStatusCode.Ok).send(drawing);
                 })
@@ -113,7 +116,7 @@ export class DrawingController {
 
         this.router.put('/drawings/labels/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawingLabels(req.params.id, req.body.labels)
+                .updateDrawingLabels(req.params.id, req.body.split(','))
                 .then((drawing: Drawing) => {
                     res.status(HttpStatusCode.Ok).send(drawing);
                 })
@@ -124,7 +127,7 @@ export class DrawingController {
 
         this.router.put('/drawings/content/:id', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
-                .updateDrawingContent(req.params.id, req.body.drawing)
+                .updateDrawingContent(req.params.id, req.body)
                 .then((drawing: Drawing) => {
                     res.status(HttpStatusCode.Ok).send(drawing);
                 })
@@ -137,7 +140,7 @@ export class DrawingController {
             await this.drawingService
                 .deleteDrawing(req.params.id)
                 .then(() => {
-                    res.status(HttpStatusCode.Ok).send('Drawing deleted successfully');
+                    res.status(HttpStatusCode.Ok).sendStatus(HttpStatusCode.Ok);
                 })
                 .catch((error) => {
                     res.status(HttpStatusCode.NotModified).send('An error occurred while trying to delete drawing ' + error.message);

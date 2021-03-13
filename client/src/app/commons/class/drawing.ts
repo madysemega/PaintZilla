@@ -1,5 +1,5 @@
-export interface ClientDrawingModel {
-  name: string;
-  drawing: string;
-  labels: string[];
+export interface DrawingModel {
+    name: string;
+    drawing: string;
+    labels: string[];
 }
