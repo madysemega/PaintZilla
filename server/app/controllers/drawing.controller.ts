@@ -68,7 +68,7 @@ export class DrawingController {
                 });
         });
 
-        this.router.get('/drawings/labels/all-labels/', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/drawings/labels/all-labels', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .getDrawingsByLabelsAll(req.query.drawing.split(','))
                 .then((drawings: Drawing[]) => {
