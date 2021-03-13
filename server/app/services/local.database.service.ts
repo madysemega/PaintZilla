@@ -1,7 +1,6 @@
 import * as Constants from '@app/constants/database.service.constants';
 import { DrawingSchema } from '@app/constants/drawing.schema';
 import { Metadata } from '@app/constants/metadata.schema';
-import * as RegularExpressions from '@app/constants/regular.expressions';
 import { Drawing } from '@common/models/drawing';
 import * as fileSystem from 'fs';
 import { injectable } from 'inversify';
@@ -23,21 +22,14 @@ export class LocalDatabaseService {
         try {
             const localDb = JSON.stringify(this.localDatabase);
             fileSystem.writeFileSync(Constants.LOCAL_DATABASE_PATH, localDb);
+            console.log('All drawings were successfully updated');
         } catch (error) {
-            console.log('An error occured in LocalDatabaseService.close(), details ' + error);
+            throw new Error('An error occured in LocalDatabaseService.close() ' + error.message);
         }
     }
 
-    addDrawing(id: string, drawing: string): boolean {
-        if (this.isValidID(id)) {
-            this.localDatabase.drawings.push({ id, drawing });
-            return true;
-        }
-        return false;
-    }
-
-    isValidID(id: string): boolean {
-        return RegularExpressions.MONGO_ID_REGEX.test(id);
+    addDrawing(id: string, drawing: string): void {
+        this.localDatabase.drawings.push({ id, drawing });
     }
 
     getDrawing(id: string): DrawingSchema | undefined {
@@ -54,22 +46,22 @@ export class LocalDatabaseService {
         return index;
     }
 
-    updateDrawing(id: string, drawing: string): boolean {
+    updateDrawing(id: string, drawing: string): void {
         const index = this.getDrawingIndex(id);
         if (index !== Constants.NOT_FOUND) {
             this.localDatabase.drawings[index].drawing = drawing;
-            return true;
+        } else {
+            throw new Error('Could not update drawing with provided id');
         }
-        return false;
     }
 
-    deleteDrawing(id: string): boolean {
+    deleteDrawing(id: string): void {
         const drawingIndex = this.getDrawingIndex(id);
         if (drawingIndex !== Constants.NOT_FOUND) {
             this.localDatabase.drawings.splice(drawingIndex, 1);
-            return true;
+        } else {
+            throw new Error('Could not find any drawing to delete with provided id');
         }
-        return false;
     }
 
     filterDrawings(metadatas: Metadata[]): Drawing[] {
@@ -93,9 +85,11 @@ export class LocalDatabaseService {
         let result: string[] = [];
         const drawings = this.filterDrawings(metadatas);
         for (const drawing of drawings) {
-            result = result.concat(drawing.labels.filter((label: string) => {
-                return result.findIndex(item => label === item) === Constants.NOT_FOUND;
-            }));
+            result = result.concat(
+                drawing.labels.filter((label: string) => {
+                    return result.findIndex((item) => label === item) === Constants.NOT_FOUND;
+                }),
+            );
         }
         return result;
     }

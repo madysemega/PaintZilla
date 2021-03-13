@@ -11,6 +11,7 @@ export class DrawingService {
     distantDatabase: mongoose.Mongoose;
     constructor(@inject(TYPES.DatabaseService) private databaseService: DatabaseService) {
         this.databaseService.localDatabaseService.start();
+        this.configureServerDisabling();
     }
 
     // TO DO: CREATE
@@ -19,14 +20,15 @@ export class DrawingService {
         this.checkDrawing(drawing);
         this.checkLabels(labels);
         const metadata = new MetadataModel({ name, labels });
-        await metadata.save().then(() => {
-            console.log('Metadata saved in database !');
-        });
-        if (this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing)) {
-            console.log('Drawing saved in local database !');
-            return this.getDrawingById(metadata.id);
-        }
-        return Constants.DRAWING_NOT_FOUND;
+        await metadata
+            .save()
+            .then(() => {
+                this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing);
+            })
+            .catch(() => {
+                throw new Error('Could not save drawing in Mongodb Atlas database');
+            });
+        return this.getDrawingById(metadata.id);
     }
 
     // TO DO: READ
@@ -37,21 +39,20 @@ export class DrawingService {
 
     async getDrawingById(id: string): Promise<Drawing> {
         this.checkId(id);
-        const drawing = await MetadataModel.findById(id).exec();
-        if (drawing) {
-            return this.databaseService.localDatabaseService.mapDrawingById(drawing);
-        } else {
-            return Constants.DRAWING_NOT_FOUND;
+        const metadata = await MetadataModel.findById(id).exec();
+        if (metadata) {
+            return this.databaseService.localDatabaseService.mapDrawingById(metadata);
         }
+        throw new Error('Metadata not found with the provided id.');
     }
 
     async getDrawingsByName(name: string): Promise<Drawing[]> {
         this.checkName(name);
         const drawings = await MetadataModel.find({ name }).exec();
-        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
+        return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
-    async getAllLabels(): Promise<string[]>{
+    async getAllLabels(): Promise<string[]> {
         const metadatas = await MetadataModel.find({}).exec();
         if (metadatas) {
             return this.databaseService.localDatabaseService.filterByLabels(metadatas);
@@ -62,25 +63,25 @@ export class DrawingService {
     async getDrawingsByLabelsOne(labels: string[]): Promise<Drawing[]> {
         this.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $in: labels } }).exec();
-        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
+        return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     async getDrawingsByLabelsAll(labels: string[]): Promise<Drawing[]> {
         this.checkLabels(labels);
         const drawings = await MetadataModel.find({ labels: { $all: labels } }).exec();
-        return await this.databaseService.localDatabaseService.filterDrawings(drawings);
+        return this.databaseService.localDatabaseService.filterDrawings(drawings);
     }
 
     // TO DO: UPDATE
     async updateDrawing(id: string, drawing: Drawing): Promise<Drawing> {
         this.checkId(id);
         this.checkAll(drawing);
-        const updatedMetadata = await MetadataModel.findByIdAndUpdate(id, { name: drawing.name, labels: drawing.labels }).exec();
-        if (updatedMetadata) {
+        const metadata = await MetadataModel.findByIdAndUpdate(id, { name: drawing.name, labels: drawing.labels }).exec();
+        if (metadata) {
             this.databaseService.localDatabaseService.updateDrawing(id, drawing.drawing);
             return this.getDrawingById(id);
         }
-        return Constants.DRAWING_NOT_FOUND;
+        throw new Error('Metadata not found with the provided id.');
     }
 
     async updateDrawingName(id: string, name: string): Promise<Drawing> {
@@ -90,40 +91,40 @@ export class DrawingService {
         if (drawing) {
             return this.getDrawingById(id);
         }
-        return Constants.DRAWING_NOT_FOUND;
+        throw new Error('Metadata not found with the provided id.');
     }
 
     async updateDrawingLabels(id: string, labels: string[]): Promise<Drawing> {
         this.checkId(id);
         this.checkLabels(labels);
-        const drawing = await MetadataModel.findByIdAndUpdate(id, { labels }).exec();
-        if (drawing) {
+        const metadata = await MetadataModel.findByIdAndUpdate(id, { labels }).exec();
+        if (metadata) {
             return this.getDrawingById(id);
         }
-        return Constants.DRAWING_NOT_FOUND;
+        throw new Error('Metadata not found with the provided id.');
     }
 
     async updateDrawingContent(id: string, drawing: string): Promise<Drawing> {
         this.checkId(id);
         this.checkDrawing(drawing);
-        const item = await MetadataModel.findById(id).exec();
-        if (item && this.isValidDrawing(drawing)) {
+        const metadata = await MetadataModel.findById(id).exec();
+        if (metadata) {
             this.databaseService.localDatabaseService.updateDrawing(id, drawing);
             return this.getDrawingById(id);
-        } else {
-            return Constants.DRAWING_NOT_FOUND;
         }
+        throw new Error('Metadata not found with the provided id.');
     }
 
     // TO DO: DELETE
 
-    async deleteDrawing(id: string): Promise<boolean> {
+    async deleteDrawing(id: string): Promise<void> {
         this.checkId(id);
         const item = await MetadataModel.findByIdAndDelete(id).exec();
         if (item) {
-            return this.databaseService.localDatabaseService.deleteDrawing(id);
+            this.databaseService.localDatabaseService.deleteDrawing(id);
+        } else {
+            throw new Error('Could not deleted drawing with provided id');
         }
-        return false;
     }
 
     checkId(id: string): void {
@@ -171,5 +172,15 @@ export class DrawingService {
 
     areValidLabels(labels: string[]): boolean {
         return labels.every((label: string) => RegularExpressions.LABEL_REGEX.test(label));
+    }
+
+    private configureServerDisabling(): void {
+        process.on('SIGINT', () => {
+            try {
+                this.databaseService.localDatabaseService.updateServerDrawings();
+            } catch (error) {
+                console.log('An error occurred while closing the server', error.message);
+            }
+        });
     }
 }
