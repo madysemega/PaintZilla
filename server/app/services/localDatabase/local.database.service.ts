@@ -4,7 +4,6 @@ import { Metadata } from '@app/constants/metadata.schema';
 import { Drawing } from '@common/models/drawing';
 import * as fileSystem from 'fs';
 import { injectable } from 'inversify';
-// TO DO: error cases processing
 @injectable()
 export class LocalDatabaseService {
     localDatabase: { drawings: DrawingSchema[] };

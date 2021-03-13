@@ -1,7 +1,7 @@
 import * as Constants from '@app/constants/database.service.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
 import * as RegularExpressions from '@app/constants/regular.expressions';
-import { DatabaseService } from '@app/services/database.service';
+import { DatabaseService } from '@app/services/database/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { inject, injectable } from 'inversify';
