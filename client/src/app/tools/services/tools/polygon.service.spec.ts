@@ -7,6 +7,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { PolygonService } from './polygon.service';
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 describe('PolygonService', () => {
     let service: PolygonService;
     // const ORIGIN_COORDINATES: Vec2 = { x: 0, y: 0 };
@@ -26,6 +27,9 @@ describe('PolygonService', () => {
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
+
+    // let fillRenderSpy: jasmine.Spy<any>;
+    // let strokeRenderSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -50,7 +54,9 @@ describe('PolygonService', () => {
         baseCtxFillSpy = spyOn<any>(baseCtxStub, 'fill').and.callThrough();
         drawPerimeterSpy = spyOn<any>(service, 'drawPerimeter').and.callThrough();
 
-        // tslint:disable: no-string-literal
+        // fillRenderSpy = spyOn<any>(service['fillRenderer'], 'render').and.callThrough();
+        // strokeRenderSpy = spyOn<any>(service['strokeRenderer'], 'render').and.callThrough();
+
         service['drawingService'].baseCtx = baseCtxStub;
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;

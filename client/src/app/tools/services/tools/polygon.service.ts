@@ -28,8 +28,8 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
 
     private strokeRenderer: PolygonStrokeRenderer;
     private fillRenderer: PolygonFillRenderer;
-    startPoint: Vec2;
-    lastMousePosition: Vec2;
+    startPoint: Vec2 = { x: 0, y: 0 };
+    lastMousePosition: Vec2 = { x: 0, y: 0 };
     numberSides: number;
     isToDrawPerim: boolean;
     private shape: PolygonShape;
@@ -127,7 +127,6 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         return { x: startPoint.x + (X_COMPONENT_POS ? COMP : -COMP), y: startPoint.y + (Y_COMPONENT_POS ? COMP : -COMP) };
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
-        console.log('draw called');
         const shouldRenderStroke = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
         const shouldRenderFill = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
