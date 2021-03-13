@@ -1,4 +1,4 @@
-import * as Constants from '@app/constants/database.service.constants';
+import * as Constants from '@app/constants/database.constants';
 import { DrawingSchema } from '@app/constants/drawing.schema';
 import { Metadata } from '@app/constants/metadata.schema';
 import { Drawing } from '@common/models/drawing';

@@ -1,4 +1,4 @@
-import * as Constants from '@app/constants/database.service.constants';
+import * as Constants from '@app/constants/database.constants';
 import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
 import { TYPES } from '@app/settings/types';
 import { inject, injectable } from 'inversify';

@@ -1,6 +1,6 @@
-import * as Constants from '@app/constants/database.service.constants';
+import * as Constants from '@app/constants/database.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
-import * as RegularExpressions from '@app/constants/regular.expressions';
+import * as RegularExpressions from '@common/validation/regular.expressions';
 import { DatabaseService } from '@app/services/database/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';

@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-// import { ServerService } from '@app/commons/services/server.service';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
@@ -24,7 +23,6 @@ export class DrawingComponent implements AfterViewInit {
 
     constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
         this.wasResizing = false;
-        // this.serverService.getAllDrawings(); // Appel obsolète
     }
 
     ngAfterViewInit(): void {
