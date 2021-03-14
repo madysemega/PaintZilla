@@ -31,12 +31,12 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
 
     startPoint: Vec2 = { x: 0, y: 0 };
     lastMousePosition: Vec2 = { x: 0, y: 0 };
-    
+
     numberSides: number;
     isToDrawPerim: boolean;
 
     private shape: PolygonShape;
-    
+
     strokeWidthProperty: StrokeWidthProperty;
     colourProperty: StrokeStyleProperty;
     strokeStyleProperty: StrokeStyleProperty;
@@ -161,7 +161,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.shape.topLeft.x = endPoint.x - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
         this.shape.topLeft.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
         this.shape.numberSides = this.numberSides;
-        
+
         if (shouldRenderFill) {
             this.fillRenderer.render(ctx);
         }
