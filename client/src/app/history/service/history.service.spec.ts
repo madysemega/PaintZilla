@@ -59,7 +59,7 @@ describe('HistoryService', () => {
         expect(callbackCalled).toBeTruthy();
     });
 
-    it('undo should not call all callbacks registered with onUndo if there are no registered user actions', () => {
+    it('undo should not call any callback registered with onUndo if there are no registered user actions', () => {
         let callbackCalled = false;
         service.onUndo(() => (callbackCalled = true));
         service.undo();
