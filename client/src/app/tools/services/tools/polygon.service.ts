@@ -157,7 +157,6 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
-        console.log(this.lineWidth);
         ctx.ellipse(
             center.x,
             center.y,
