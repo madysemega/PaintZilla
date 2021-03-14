@@ -89,7 +89,6 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
             this.isToDrawPerim = false;
-            this.drawPolygon(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
             const renderersToRegister = new Array<ShapeRenderer<PolygonShape>>();
 
             if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
@@ -107,7 +106,6 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawPolygon(this.drawingService.previewCtx, this.startPoint, this.lastMousePosition);
         }
     }
@@ -127,20 +125,24 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         return { x: startPoint.x + (X_COMPONENT_POS ? COMP : -COMP), y: startPoint.y + (Y_COMPONENT_POS ? COMP : -COMP) };
     }
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         const shouldRenderStroke = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
         const shouldRenderFill = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
         const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
-        const SIZE = this.squarePoint(CENTER_POINT, endPoint) - (shouldRenderStroke ? this.lineWidth / 2 : 0);
-        this.shape.bottomRight = startPoint;
-        this.shape.topLeft = endPoint;
+        const HALF_STROKE_WIDTH = this.strokeWidthProperty.strokeWidth / 2;
+        const SIZE = this.squarePoint(CENTER_POINT, endPoint) - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.x = startPoint.x + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.y = startPoint.y + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.topLeft.x = endPoint.x - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.topLeft.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
         this.shape.numberSides = this.numberSides;
         if (shouldRenderFill) {
             this.fillRenderer.render(ctx);
         }
         if (shouldRenderStroke) {
+            this.strokeRenderer.lineWidth = this.strokeWidthProperty.strokeWidth;
             this.strokeRenderer.render(ctx);
-            this.strokeRenderer.lineWidth = this.lineWidth;
         }
         if (this.isToDrawPerim) {
             this.drawPerimeter(ctx, CENTER_POINT, Math.abs(SIZE));
@@ -148,13 +150,23 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     }
 
     drawPerimeter(ctx: CanvasRenderingContext2D, center: Vec2, size: number): void {
+        const shouldRenderFill = this.shapeType === ShapeType.Filled;
         const DASH_NUMBER = 8;
         ctx.save();
         ctx.beginPath();
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
-        ctx.ellipse(center.x, center.y, size + this.lineWidth, size + this.lineWidth, 0, 0, this.CIRCLE_MAX_ANGLE);
+        console.log(this.lineWidth);
+        ctx.ellipse(
+            center.x,
+            center.y,
+            size + (shouldRenderFill ? 0 : this.lineWidth),
+            size + (shouldRenderFill ? 0 : this.lineWidth),
+            0,
+            0,
+            this.CIRCLE_MAX_ANGLE,
+        );
         ctx.stroke();
         ctx.restore();
     }
