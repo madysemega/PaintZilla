@@ -22,8 +22,8 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     constructor(
         drawingService: DrawingService,
-        protected selectionManipulatorService: SelectionManipulatorService,
-        protected selectionService: SelectionHelperService,
+        protected selectionManipulator: SelectionManipulatorService,
+        protected selectionHelper: SelectionHelperService,
     ) {
         super(drawingService);
     }
@@ -37,7 +37,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         this.registerMousePosition(mousePosition, true);
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.onMouseDown(event);
+            this.selectionManipulator.onMouseDown(event);
         }
     }
 
@@ -46,7 +46,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         this.adjustPositionToStayInCanvas(mousePosition);
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.onMouseMove(event);
+            this.selectionManipulator.onMouseMove(event);
             return;
         }
 
@@ -62,7 +62,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         this.adjustPositionToStayInCanvas(mousePosition);
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.onMouseUp(event);
+            this.selectionManipulator.onMouseUp(event);
             this.mouseDown = false;
             return;
         }
@@ -83,7 +83,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         }
 
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.onKeyDown(event);
+            this.selectionManipulator.onKeyDown(event);
             return;
         }
 
@@ -99,7 +99,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     onKeyUp(event: KeyboardEvent): void {
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.onKeyUp(event);
+            this.selectionManipulator.onKeyUp(event);
             return;
         }
 
@@ -124,7 +124,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     createSelection(startPoint: Vec2, endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAdjustedPerimeter(startPoint, endPoint);
+            endPoint = this.selectionHelper.getSquareAdjustedPerimeter(startPoint, endPoint);
         }
 
         this.convertToTopLeftAndBottomRight(startPoint, endPoint);
@@ -133,17 +133,17 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         vertices.push(startPoint);
         vertices.push(endPoint);
 
-        this.selectionService.setIsSelectionBeingManipulated(true);
-        this.selectionManipulatorService.initialize(vertices);
+        this.selectionHelper.setIsSelectionBeingManipulated(true);
+        this.selectionManipulator.initialize(vertices);
     }
 
     stopManipulatingSelection(): void {
         if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulatorService.stopManipulation(true);
-            this.selectionService.setIsSelectionBeingManipulated(false);
+            this.selectionManipulator.stopManipulation(true);
+            this.selectionHelper.setIsSelectionBeingManipulated(false);
             return;
         }
-        this.selectionManipulatorService.stopManipulation(false);
+        this.selectionManipulator.stopManipulation(false);
     }
 
     convertToTopLeftAndBottomRight(startPoint: Vec2, endPoint: Vec2): void {
@@ -173,7 +173,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     isSelectionBeingManipulated(): boolean {
-        return this.selectionService.isSelectionBeingManipulated.getValue();
+        return this.selectionHelper.isSelectionBeingManipulated.getValue();
     }
 
     adjustPositionToStayInCanvas(mousePos: Vec2): void {

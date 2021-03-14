@@ -16,8 +16,8 @@ export enum ResizingMode {
     providedIn: 'root',
 })
 export class EllipseSelectionHandlerService extends SelectionHandlerService {
-    constructor(drawingService: DrawingService, protected selectionService: EllipseSelectionHelperService) {
-        super(drawingService, selectionService);
+    constructor(drawingService: DrawingService, protected selectionHelper: EllipseSelectionHelperService) {
+        super(drawingService, selectionHelper);
     }
 
     extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
@@ -51,6 +51,6 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
 
     whiteFillAtOriginalLocation(): void {
         const originalRadii: Vec2 = { x: this.originalWidth / 2, y: this.originalHeight / 2 };
-        this.selectionService.whiteEllipseFill(this.originalCenter, originalRadii);
+        this.selectionHelper.whiteEllipseFill(this.originalCenter, originalRadii);
     }
 }

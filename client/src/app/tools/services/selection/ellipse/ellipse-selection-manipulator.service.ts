@@ -12,19 +12,19 @@ import { EllipseSelectionHelperService } from './ellipse-selection-helper.servic
 export class EllipseSelectionManipulatorService extends SelectionManipulatorService {
     constructor(
         drawingService: DrawingService,
-        protected selectionService: EllipseSelectionHelperService,
+        protected selectionHelper: EllipseSelectionHelperService,
         selectionHandler: EllipseSelectionHandlerService,
         historyService: HistoryService,
     ) {
-        super(drawingService, selectionService, selectionHandler, historyService);
+        super(drawingService, selectionHelper, selectionHandler, historyService);
     }
 
     drawSelectionOutline(): void {
         const center: Vec2 = { x: 0, y: 0 };
         const radii = { x: 0, y: 0 };
 
-        this.selectionService.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
-        this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
+        this.selectionHelper.getEllipseParam(this.topLeft, this.bottomRight, center, radii);
+        this.selectionHelper.drawSelectionEllipse(center, radii);
+        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
 }

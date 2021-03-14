@@ -11,10 +11,10 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 export class EllipseSelectionCreatorService extends SelectionCreatorService {
     constructor(
         drawingService: DrawingService,
-        selectionManipulatorService: EllipseSelectionManipulatorService,
-        public selectionService: EllipseSelectionHelperService,
+        selectionManipulator: EllipseSelectionManipulatorService,
+        public selectionHelper: EllipseSelectionHelperService,
     ) {
-        super(drawingService, selectionManipulatorService, selectionService);
+        super(drawingService, selectionManipulator, selectionHelper);
         this.key = 'ellipse-selection';
     }
 
@@ -22,10 +22,10 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
         const center: Vec2 = { x: 0, y: 0 };
         const radii = { x: 0, y: 0 };
         if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAdjustedPerimeter(this.startPoint, endPoint);
+            endPoint = this.selectionHelper.getSquareAdjustedPerimeter(this.startPoint, endPoint);
         }
-        this.selectionService.getEllipseParam(this.startPoint, endPoint, center, radii);
-        this.selectionService.drawSelectionEllipse(center, radii);
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
+        this.selectionHelper.getEllipseParam(this.startPoint, endPoint, center, radii);
+        this.selectionHelper.drawSelectionEllipse(center, radii);
+        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
 }
