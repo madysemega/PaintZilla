@@ -23,7 +23,7 @@ export class EllipseFillRenderer extends ShapeRenderer<BoxShape> {
 
         ctx.beginPath();
         ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, FULL_CIRCLE_DEG);
-        ctx.stroke();
+        ctx.fill();
     }
 
     clone(): ShapeRenderer<BoxShape> {
