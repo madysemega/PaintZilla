@@ -43,7 +43,7 @@ export class ImageCarouselComponent {
                 labels: ['Comic'],
             },
         ];
-        
+
         this.centerIndex = 1;
 
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
