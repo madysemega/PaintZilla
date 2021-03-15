@@ -21,7 +21,7 @@ describe('PipetteService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-    let drawVerticesSpy: jasmine.Spy<any>;
+
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
@@ -82,53 +82,22 @@ describe('PipetteService', () => {
         expect(service.mouseDown).toEqual(true);
     });
 
-    it(' mouseDown should set mouseDown property to false on right click', () => {
-        const mouseEventRClick = {
-            offsetX: 25,
-            offsetY: 25,
-            button: 1, // TODO: Avoir ceci dans un enum accessible
-        } as MouseEvent;
-        service.onMouseDown(mouseEventRClick);
-        expect(service.mouseDown).toEqual(false);
-    });
-
     it(' onMouseUp should call register a new user action if mouse was already down', () => {
-        const historyRegisterSpy = spyOn(historyServiceStub, 'register');
 
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.onMouseUp(mouseEvent);
-        expect(historyRegisterSpy).toHaveBeenCalled();
+        expect(service.mouseDown).toBeFalse();
     });
 
-    it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
-        service.mouseDown = false;
-        service.mouseDownCoord = { x: 0, y: 0 };
-
-        service.onMouseUp(mouseEvent);
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = true;
-        service.onMouseDown(mouseEvent);
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawVerticesSpy).toHaveBeenCalled();
-    });
 
     it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
-
         service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
+        expect(service.cerclePreview).toBeDefined();
     });
 
     it('when stroke width changes, it should be reflected in the stroke width property', () => {
@@ -153,20 +122,4 @@ describe('PipetteService', () => {
         });
     });
 
-    // Exemple de test d'intégration qui est quand même utile
-    it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseDown(mouseEvent);
-        service.mouseInCanvas = true;
-        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseUp(mouseEvent);
-
-        // Premier pixel seulement
-        const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        expect(imageData.data[0]).toEqual(0); // R
-        expect(imageData.data[1]).toEqual(0); // G
-        expect(imageData.data[2]).toEqual(0); // B
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[3]).not.toEqual(0); // A
-    });
 });
