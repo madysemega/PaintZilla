@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CarouselCardInformation } from '@app/carousel/data/carousel-card-information';
 import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
 
@@ -48,6 +48,19 @@ export class ImageCarouselComponent {
 
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
         this.refreshImages(neighbouringIndices);
+    }
+
+    @HostListener('window:keyup', ['$event'])
+    onKeyPress(event: KeyboardEvent): void {
+        switch (event.key) {
+            case 'ArrowRight':
+                this.rotateRight();
+                break;
+
+            case 'ArrowLeft':
+                this.rotateLeft();
+                break;
+        }
     }
 
     rotateRight(): void {
