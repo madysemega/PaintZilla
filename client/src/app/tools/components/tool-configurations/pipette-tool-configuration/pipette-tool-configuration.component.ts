@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 
 @Component({
@@ -8,4 +8,5 @@ import { PipetteService } from '@app/tools/services/tools/pipette-service';
 })
 export class PipetteToolConfigurationComponent {
     constructor(public pipetteService: PipetteService) {}
+    @ViewChild('zoomctx', { static: false }) zoomctx: ElementRef<HTMLCanvasElement>;
 }

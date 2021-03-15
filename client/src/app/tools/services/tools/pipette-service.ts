@@ -20,6 +20,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private colourProperty: StrokeStyleProperty;
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
+    zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
     outputCouleur: string;
@@ -91,10 +92,10 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             if(this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y)
                 {
             this.cerclePreview =  this.drawingService.baseCtx.getImageData(mousePosition.x-20, mousePosition.y-20, 40 , 40);
-            this.drawingService.baseCtx.putImageData(this.cerclePreview, 10, 10);
+            this.zoomctx.putImageData(this.cerclePreview, 0, 0);
+            this.zoomctx.drawImage(this.drawingService.canvas,  0,0, 40, 40, 0, 0, 200, 200);
                 }
             }
-
     private clearVertices(): void {
         this.shape.clear();
     }
