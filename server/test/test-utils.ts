@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 import * as sinon from 'sinon';
-import { containerBootstrapper } from '../app/inversify.config';
+import { containerBootstrapper } from '../app/settings/inversify.config';
 
 let sandbox: sinon.SinonSandbox | undefined;
 let container: Container | undefined;

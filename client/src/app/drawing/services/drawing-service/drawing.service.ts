@@ -50,6 +50,10 @@ export class DrawingService {
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
+    get currentDrawing(): string {
+        return this.canvas.toDataURL('image/jpeg', 1.0);
+    }
+
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
             this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);

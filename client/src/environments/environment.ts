@@ -3,7 +3,6 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { IEnvironment } from './IEnvironment';
-
 export const environment: IEnvironment = {
     production: false,
 };
