@@ -39,7 +39,7 @@ export class HistoryService {
     undo(): void {
         if (this.canUndo()) {
             const lastAction = this.past.pop() as IUserAction;
-            
+
             this.future.push(lastAction);
 
             this.undoEventObservers.forEach((observerCallback) => observerCallback());
