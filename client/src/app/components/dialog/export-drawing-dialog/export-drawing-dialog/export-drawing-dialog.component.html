@@ -10,9 +10,9 @@
 <div>
     <mat-form-field appearance="fill">
         <mat-label>Format du dessin</mat-label>
-        <mat-select (selectionChange)="updateImageFormat($event)">
+        <mat-select (selectionChange)="updateImageFormat($event)" [(value)]="imageFormat">
             <mat-option value="png">PNG</mat-option>
-            <mat-option value="jpg">JPG</mat-option>
+            <mat-option value="jpeg">JPG</mat-option>
         </mat-select>
     </mat-form-field>
 </div>
@@ -20,7 +20,7 @@
 <div>
     <mat-form-field appearance="fill">
         <mat-label>Filtre</mat-label>
-        <mat-select (selectionChange)="updatePreviewImage($event)">
+        <mat-select (selectionChange)="updatePreviewImage($event)" [(value)]="filter">
             <mat-option value="grayscale(100%)">Noir et blanc</mat-option>
             <mat-option value="invert(100%)">Inversé</mat-option>
             <mat-option value="hue-rotate(90deg)">Rotation des couleurs</mat-option>
