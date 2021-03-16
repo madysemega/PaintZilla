@@ -1,8 +1,11 @@
 import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -18,14 +21,25 @@ export class EditorComponent implements AfterViewInit {
         private colourService: ColourService,
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
+        private keyboardService: KeyboardService,
+        private dialog: MatDialog,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+g',
+            invoke: () => {
+                this.dialog.open(ImageNavigationComponent);
+            },
+            context: 'editor',
         });
     }
 
     ngAfterViewInit(): void {
         this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        this.keyboardService.context = 'editor';
     }
 
     @HostListener('document:keydown', ['$event'])
