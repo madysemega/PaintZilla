@@ -3,15 +3,21 @@ import { MatSliderChange } from '@angular/material/slider';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { PolygonService } from './polygon.service';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 describe('PolygonService', () => {
     let service: PolygonService;
-    // const ORIGIN_COORDINATES: Vec2 = { x: 0, y: 0 };
-    // const NON_NULL_COORDINATES: Vec2 = { x: 3, y: 4 };
+    let historyService: HistoryService;
+    let colourService: ColourService;
+
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
@@ -28,13 +34,21 @@ describe('PolygonService', () => {
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
-    // let fillRenderSpy: jasmine.Spy<any>;
+    let fillRenderSpy: jasmine.Spy<any>;
     // let strokeRenderSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
+        colourService = new ColourService({} as ColourPickerService);
+        historyService = new HistoryService();
 
-        TestBed.configureTestingModule({ providers: [{ provide: DrawingService, useValue: drawServiceSpy }] });
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HistoryService, useValue: historyService },
+                { provide: ColourService, useValue: colourService },
+            ],
+        });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
@@ -54,7 +68,7 @@ describe('PolygonService', () => {
         baseCtxFillSpy = spyOn<any>(baseCtxStub, 'fill').and.callThrough();
         drawPerimeterSpy = spyOn<any>(service, 'drawPerimeter').and.callThrough();
 
-        // fillRenderSpy = spyOn<any>(service['fillRenderer'], 'render').and.callThrough();
+        fillRenderSpy = spyOn<any>(service['fillRenderer'], 'render').and.callThrough();
         // strokeRenderSpy = spyOn<any>(service['strokeRenderer'], 'render').and.callThrough();
 
         service['drawingService'].baseCtx = baseCtxStub;
@@ -72,13 +86,21 @@ describe('PolygonService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('onMouseDown calls drawPerimeter', () => {
+    it('onMouseMove calls drawPerimeter', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawPerimeterSpy).toHaveBeenCalled();
+    });
+    it('drawPerimeter is not called is isToDrawPerimeter is false', () => {
+        service.mouseDownCoord = { x: 0, y: 0 };
+        service.mouseDown = true;
+        service.isToDrawPerim = false;
+        service.onMouseMove(mouseEvent);
+        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
+        expect(drawPerimeterSpy).not.toHaveBeenCalled();
     });
     it(' onMouseUp should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
@@ -173,5 +195,68 @@ describe('PolygonService', () => {
 
         expect(RESULT_1).toEqual(EXPECTED_VEC_1);
         expect(RESULT_2).toEqual(EXPECTED_VEC_2);
+    });
+    it('when tool is deselected, it should unlock the history service', () => {
+        historyService.isLocked = true;
+        service.onToolDeselect();
+        expect(historyService.isLocked).toBeFalse();
+    });
+    it('when line width changes, stroke width property should as well', () => {
+        const INITIAL_LINE_WIDTH = 1;
+        const NEW_LINE_WIDTH = 3;
+
+        service['strokeWidthProperty'].strokeWidth = INITIAL_LINE_WIDTH;
+
+        service.lineWidth = NEW_LINE_WIDTH;
+        service.onLineWidthChanged();
+
+        expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
+    });
+    it('when finalizing contoured shape, registered user action should contain a contour renderer', () => {
+        service.shapeType = ShapeType.Contoured;
+
+        service['mouseDown'] = true;
+        service.onMouseUp({} as MouseEvent);
+
+        const generatedUserAction = historyService['past'][0] as UserActionRenderShape;
+
+        const isGeneratedRendererOfTypeStroke =
+            generatedUserAction['renderers'].find((renderer) => typeof renderer === typeof service['strokeRenderer']) != undefined;
+
+        expect(isGeneratedRendererOfTypeStroke).toBeTrue();
+    });
+    it('when shape is drawn and type is filled, fillRenderer should be invoked', () => {
+        service.shapeType = ShapeType.Filled;
+        const START_POINT: Vec2 = {
+            x: 0,
+            y: 0,
+        };
+
+        const END_POINT: Vec2 = {
+            x: 3,
+            y: 4,
+        };
+        service['drawPolygon'].call(service, baseCtxStub, START_POINT, END_POINT);
+
+        expect(fillRenderSpy).toHaveBeenCalled();
+    });
+    it('when primary colour changes, so should fill style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setPrimaryColour(COLOUR);
+
+        colourService.primaryColourChanged.subscribe(() => {
+            expect(service['fillStyleProperty'].colour).toEqual(COLOUR);
+        });
+    });
+
+    it('when secondary colour changes, so should stroke style', () => {
+        const COLOUR = Colour.hexToRgb('424242');
+
+        colourService.setSecondaryColour(COLOUR);
+
+        colourService.secondaryColourChanged.subscribe(() => {
+            expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
+        });
     });
 });
