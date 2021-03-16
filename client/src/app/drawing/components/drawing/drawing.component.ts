@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
@@ -22,8 +23,22 @@ export class DrawingComponent implements AfterViewInit {
 
     wasResizing: boolean;
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
+    constructor(
+        private drawingService: DrawingService,
+        public toolSelector: ToolSelectorService,
+        public resizingService: ResizingService,
+        private drawingCreatorService: DrawingCreatorService,
+    ) {
         this.wasResizing = false;
+        this.drawingCreatorService.drawingRestored.subscribe(() => {
+            this.resizingService.canvasResize.x = Constants.DEFAULT_WIDTH;
+            this.resizingService.canvasResize.y = Constants.DEFAULT_HEIGHT;
+            this.drawingService.canvas.width = Constants.DEFAULT_WIDTH;
+            this.drawingService.canvas.height = Constants.DEFAULT_HEIGHT;
+            this.drawingService.previewCanvas.width = Constants.DEFAULT_WIDTH;
+            this.drawingService.previewCanvas.height = Constants.DEFAULT_HEIGHT;
+            this.drawingService.restoreCanvasToDefault();
+        });
     }
 
     ngAfterViewInit(): void {

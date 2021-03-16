@@ -2,6 +2,7 @@ import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
+import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
@@ -18,6 +19,7 @@ export class EditorComponent implements AfterViewInit {
         private colourService: ColourService,
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
+        private saveDrawingService: SaveDrawingService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -30,7 +32,7 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen()) {
+        if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen() && this.saveDrawingService.noDialogsOpen()) {
             this.toolSelector.getSelectedTool().onKeyDown(event);
             const isCtrl: boolean = event.ctrlKey;
             const isA: boolean = event.key === 'a';
@@ -38,15 +40,15 @@ export class EditorComponent implements AfterViewInit {
             if (isCtrl && isA) {
                 this.toolSelector.selectTool('rectangle-selection');
             }
-        } else {
-            this.drawingCreatorService.onKeyDown(event);
-            this.exportDrawingService.onKeyDown(event);
         }
+        this.drawingCreatorService.onKeyDown(event);
+        this.exportDrawingService.onKeyDown(event);
+        this.saveDrawingService.onKeyDown(event);
     }
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
-        if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen()) {
+        if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen() && this.saveDrawingService.noDialogsOpen()) {
             const isCtrl: boolean = event.ctrlKey;
             const isZ: boolean = event.key.toUpperCase() === 'Z';
             const isShift: boolean = event.shiftKey;
@@ -63,6 +65,9 @@ export class EditorComponent implements AfterViewInit {
             this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
             this.toolSelector.getSelectedTool().onKeyUp(event);
         }
+        this.drawingCreatorService.onKeyDown(event);
+        this.exportDrawingService.onKeyDown(event);
+        this.saveDrawingService.onKeyDown(event);
     }
 
     @HostListener('document:mousedown', ['$event'])
