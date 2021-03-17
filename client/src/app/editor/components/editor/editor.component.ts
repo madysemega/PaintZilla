@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { ActivatedRoute } from '@angular/router';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
@@ -11,12 +12,13 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
 })
-export class EditorComponent implements AfterViewInit {
-    @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
 
+export class EditorComponent implements AfterViewInit, OnInit {
+    @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
     showColourPicker: boolean;
 
     constructor(
+        private route: ActivatedRoute,
         public toolSelector: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
         private colourService: ColourService,
@@ -29,6 +31,15 @@ export class EditorComponent implements AfterViewInit {
 
         this.toolSelector.onToolChanged(() => {
             this.configurationPanelDrawer.open();
+        });
+    }
+
+    ngOnInit(): void {
+        this.route.params.subscribe((parameters) => {
+            const imageId = parameters['imageId'];
+            if(imageId) {
+                console.log(`Loading image with id: ${imageId}`);
+            }
         });
     }
 
