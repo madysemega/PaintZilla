@@ -13,6 +13,8 @@ import { PipetteService } from './pipette-service';
 describe('PipetteService', () => {
     let service: PipetteService;
     let mouseEvent: MouseEvent;
+    let mouseEventRight: MouseEvent;
+    let mouseEventOther: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let historyServiceStub: HistoryService;
@@ -62,6 +64,16 @@ describe('PipetteService', () => {
             clientY: 100,
             button: 0,
         } as MouseEvent;
+        mouseEventRight = {
+            clientX: 100,
+            clientY: 100,
+            button: 2,
+        } as MouseEvent;
+        mouseEventOther = {
+            clientX: 100,
+            clientY: 100,
+            button: 1,
+        } as MouseEvent;
     });
 
     it('should be created', () => {
@@ -81,12 +93,36 @@ describe('PipetteService', () => {
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
+    it(' mouseDown should set mouseDownRight property to true on right click', () => {
+        service.outputCouleur = "";
+        service.onMouseDown(mouseEventRight);
+        expect(service.mouseRightDown).toEqual(true);
+    });
+    it(' mouseDown should not set mouseDownRight property to true on other click', () => {
+        service.outputCouleur = "";
+        service.onMouseDown(mouseEventOther);
+        expect(service.mouseRightDown).toEqual(false);
+    });
+    it(' on tool deselect should deselect tool', () => {
+        service.onToolDeselect();
+        expect(service.history.isLocked).toEqual(false);
+    });
+
 
     it(' onMouseUp should call register a new user action if mouse was already down', () => {
 
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
+
+        service.onMouseUp(mouseEvent);
+        expect(service.mouseDown).toBeFalse();
+    });
+    it(' onMouseUp should call register a new user action if mouse was already down', () => {
+
+        service.mouseInCanvas = true;
+        service.mouseDownCoord = { x: 0, y: 0 };
+        service.mouseDown = false;
 
         service.onMouseUp(mouseEvent);
         expect(service.mouseDown).toBeFalse();
@@ -102,6 +138,16 @@ describe('PipetteService', () => {
         drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
         expect(service.cerclePreview).toBeDefined();
+    });
+    it(' onMouseMove should not define cerclePreview if canvas is small', () => {
+        service.mouseDownCoord = { x: 0, y: 0 };
+        service.mouseDown = false;
+        drawServiceSpy.canvasSize={ x: 0, y: 0 };
+        service.outputCouleur = "";
+        service.zoomctx = baseCtxStub;
+        drawServiceSpy.baseCtx = baseCtxStub;
+        service.onMouseMove(mouseEvent);
+        expect(service.cerclePreview).not.toBeDefined();
     });
 
     it('when stroke width changes, it should be reflected in the stroke width property', () => {

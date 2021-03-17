@@ -25,7 +25,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
     outputCouleur: string;
-    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
         this.key = 'pipette';
 
