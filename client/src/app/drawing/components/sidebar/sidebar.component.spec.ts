@@ -4,10 +4,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
@@ -58,6 +60,7 @@ describe('SidebarComponent', () => {
     let pipetteStoolStub: PipetteService;
     let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
+    let exportDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -97,8 +100,9 @@ describe('SidebarComponent', () => {
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
-        polygonService = new PolygonService(drawingStub, colourServiceStub);
+        polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
+        exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -150,7 +154,7 @@ describe('SidebarComponent', () => {
         );
 
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule],
+            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
@@ -167,6 +171,7 @@ describe('SidebarComponent', () => {
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: ExportDrawingService, useValue: exportDrawingServiceSpy },
                 { provide: ColourService },
                 { provide: EllipseService },
                 { provide: EraserService },
@@ -260,5 +265,10 @@ describe('SidebarComponent', () => {
     it('createNewDrawing should call DrawingCreatorService createNewDrawing method', () => {
         component.createNewDrawing();
         expect(drawingCreatorServiceSpy.createNewDrawing).toHaveBeenCalled();
+    });
+
+    it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
+        component.exportDrawing();
+        expect(exportDrawingServiceSpy.openExportDrawingDialog).toHaveBeenCalled();
     });
 });

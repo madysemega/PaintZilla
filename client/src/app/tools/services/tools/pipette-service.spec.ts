@@ -83,23 +83,23 @@ describe('PipetteService', () => {
     it(' mouseDown should set mouseDownCoord to correct position', () => {
         const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.mouseInCanvas = true;
-        service.outputCouleur = "";
+        service.outputCouleur = '';
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
 
     it(' mouseDown should set mouseDown property to true on left click', () => {
-        service.outputCouleur = "";
+        service.outputCouleur = '';
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
     it(' mouseDown should set mouseDownRight property to true on right click', () => {
-        service.outputCouleur = "";
+        service.outputCouleur = '';
         service.onMouseDown(mouseEventRight);
         expect(service.mouseRightDown).toEqual(true);
     });
     it(' mouseDown should not set mouseDownRight property to true on other click', () => {
-        service.outputCouleur = "";
+        service.outputCouleur = '';
         service.onMouseDown(mouseEventOther);
         expect(service.mouseRightDown).toEqual(false);
     });
@@ -108,9 +108,7 @@ describe('PipetteService', () => {
         expect(service.history.isLocked).toEqual(false);
     });
 
-
     it(' onMouseUp should call register a new user action if mouse was already down', () => {
-
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
@@ -119,7 +117,6 @@ describe('PipetteService', () => {
         expect(service.mouseDown).toBeFalse();
     });
     it(' onMouseUp should call register a new user action if mouse was already down', () => {
-
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
@@ -128,12 +125,11 @@ describe('PipetteService', () => {
         expect(service.mouseDown).toBeFalse();
     });
 
-
     it(' onMouseMove should define cerclePreview', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
-        drawServiceSpy.canvasSize={ x: 100, y: 100 };
-        service.outputCouleur = "";
+        drawServiceSpy.canvasSize = { x: 100, y: 100 };
+        service.outputCouleur = '';
         service.zoomctx = baseCtxStub;
         drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
@@ -142,8 +138,8 @@ describe('PipetteService', () => {
     it(' onMouseMove should not define cerclePreview if canvas is small', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
-        drawServiceSpy.canvasSize={ x: 0, y: 0 };
-        service.outputCouleur = "";
+        drawServiceSpy.canvasSize = { x: 0, y: 0 };
+        service.outputCouleur = '';
         service.zoomctx = baseCtxStub;
         drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
@@ -171,5 +167,4 @@ describe('PipetteService', () => {
             expect(service['colourProperty'].colour).toEqual(GIVEN_COLOUR);
         });
     });
-
 });

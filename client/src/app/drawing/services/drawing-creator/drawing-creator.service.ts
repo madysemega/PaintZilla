@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
-
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingCreatorService {
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
-
-    constructor(public drawingService: DrawingService, private resizingService: ResizingService, public dialog: MatDialog) {}
+    drawingRestored: EventEmitter<void> = new EventEmitter<void>();
+    constructor(public drawingService: DrawingService, public resizingService: ResizingService, public dialog: MatDialog) {}
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
@@ -24,13 +23,14 @@ export class DrawingCreatorService {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true });
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {
                 if (changesAreDiscarded) {
-                    this.drawingService.clearCanvas(this.drawingService.baseCtx);
-                    this.resizingService.resetCanvasDimensions();
-                    this.resizingService.updateCanvasSize();
-                    this.drawingService.restoreCanvasStyle();
+                    this.drawingRestored.emit();
                     this.drawingService.canvasIsEmpty = true;
                 }
             });
         }
+    }
+
+    noDialogsOpen(): boolean {
+        return this.dialog.openDialogs.length === 0;
     }
 }

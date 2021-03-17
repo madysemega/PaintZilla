@@ -21,6 +21,9 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
     mouseRightDown: boolean = false;
+    zoom20: number = 20;
+    zoom40: number = 40;
+    zoom200: number = 200;
     zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
@@ -31,7 +34,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
         this.colourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
         this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
         this.shape = new VerticesShape([]);
@@ -54,15 +56,14 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         this.mouseRightDown = event.button === MouseButton.Right;
-        if (this.mouseDown){
-        this.clearVertices();
+        if (this.mouseDown) {
+            this.clearVertices();
 
-        this.mouseDownCoord = this.getPositionFromMouse(event);
+            this.mouseDownCoord = this.getPositionFromMouse(event);
 
-        this.history.isLocked = true;
-        this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
-        
-        } else if(this.mouseRightDown){
+            this.history.isLocked = true;
+            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
+        } else if (this.mouseRightDown) {
             this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
@@ -83,21 +84,25 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     onMouseMove(event: MouseEvent): void {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.shape.vertices.push(mousePosition);
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-            this.couleur =  this.drawingService.baseCtx.getImageData(mousePosition.x, mousePosition.y, 1, 1).data;
-            var R = Colour.toHex(this.couleur[0]);
-            var G = Colour.toHex(this.couleur[1]);
-            var B = Colour.toHex(this.couleur[2]);
-            this.outputCouleur =  '#' + R + G + B;
-            if(this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y)
-                {
-            this.cerclePreview =  this.drawingService.baseCtx.getImageData(mousePosition.x-20, mousePosition.y-20, 40 , 40);
+        const mousePosition = this.getPositionFromMouse(event);
+        this.shape.vertices.push(mousePosition);
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.couleur = this.drawingService.baseCtx.getImageData(mousePosition.x, mousePosition.y, 1, 1).data;
+        const R = Colour.toHex(this.couleur[0]);
+        const G = Colour.toHex(this.couleur[1]);
+        const B = Colour.toHex(this.couleur[2]);
+        this.outputCouleur = '#' + R + G + B;
+        if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
+            this.cerclePreview = this.drawingService.baseCtx.getImageData(
+                mousePosition.x - this.zoom20,
+                mousePosition.y - this.zoom20,
+                this.zoom40,
+                this.zoom40,
+            );
             this.zoomctx.putImageData(this.cerclePreview, 0, 0);
-            this.zoomctx.drawImage(this.drawingService.canvas,  0,0, 40, 40, 0, 0, 200, 200);
-                }
-            }
+            this.zoomctx.drawImage(this.drawingService.canvas, 0, 0, this.zoom40, this.zoom40, 0, 0, this.zoom200, this.zoom200);
+        }
+    }
     private clearVertices(): void {
         this.shape.clear();
     }

@@ -14,6 +14,7 @@ export class DrawingService {
     previewCanvas: HTMLCanvasElement;
     canvasIsEmpty: boolean = true;
     canvasSize: Vec2;
+    canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
     setCursorType(type: CursorType): void {
         if (this.previewCanvas) {
@@ -35,31 +36,24 @@ export class DrawingService {
         return this.canvasIsEmpty;
     }
 
-    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): void {
-        ctx.beginPath();
-        ctx.rect(0, 0, width, height);
-        ctx.fillStyle = Constants.CTX_COLOR;
-        ctx.fill();
-        ctx.closePath();
+    fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number, colour: string): void {
+        ctx.fillStyle = colour;
+        ctx.fillRect(0, 0, width, height);
     }
 
     updateCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
-        this.canvas.style.background = Constants.PREVIEW_CTX_COLOR;
-        this.previewCanvas.style.background = Constants.CTX_COLOR;
     }
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
-        this.canvas.style.background = Constants.CTX_COLOR;
-        this.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
+        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
+            this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
             this.restoreCanvasStyle();
-            this.clearCanvas(this.baseCtx);
-            this.clearCanvas(this.previewCtx);
         });
     }
 }
