@@ -51,7 +51,7 @@ export class DrawingService {
     }
 
     get currentDrawing(): string {
-        return this.canvas.toDataURL('image/jpeg', 1.0);
+        return this.canvas.toDataURL('image/png', 1.0);
     }
 
     constructor(historyService: HistoryService) {
