@@ -20,6 +20,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private colourProperty: StrokeStyleProperty;
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
+    mouseRightDown: boolean = false;
     zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
@@ -51,16 +52,17 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (event.button === MouseButton.Left){
         this.mouseDown = event.button === MouseButton.Left;
+        this.mouseRightDown = event.button === MouseButton.Right;
+        if (this.mouseDown){
         this.clearVertices();
 
         this.mouseDownCoord = this.getPositionFromMouse(event);
 
         this.history.isLocked = true;
-            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
-        } else if(event.button===MouseButton.Right){
-            this.mouseDown = event.button === MouseButton.Right;
+        this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
+        
+        } else if(this.mouseRightDown){
             this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);

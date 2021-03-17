@@ -21,8 +21,6 @@ describe('PipetteService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-
-
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
@@ -73,11 +71,13 @@ describe('PipetteService', () => {
     it(' mouseDown should set mouseDownCoord to correct position', () => {
         const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.mouseInCanvas = true;
+        service.outputCouleur = "";
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
 
     it(' mouseDown should set mouseDown property to true on left click', () => {
+        service.outputCouleur = "";
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
@@ -93,9 +93,13 @@ describe('PipetteService', () => {
     });
 
 
-    it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
+    it(' onMouseMove should define cerclePreview', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
+        drawServiceSpy.canvasSize={ x: 100, y: 100 };
+        service.outputCouleur = "";
+        service.zoomctx = baseCtxStub;
+        drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
         expect(service.cerclePreview).toBeDefined();
     });
