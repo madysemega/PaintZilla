@@ -3,6 +3,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
@@ -14,7 +15,7 @@ import { EllipseSelectionCreatorService } from './ellipse-selection-creator.serv
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 // tslint:disable:max-file-line-count
-describe('EllipseSelectionToolService', () => {
+describe('EllipseSelectionCreatorService', () => {
     let service: EllipseSelectionCreatorService;
 
     let mouseEvent: MouseEvent;
@@ -49,6 +50,7 @@ describe('EllipseSelectionToolService', () => {
             'initialize',
             'stopManipulation',
         ]);
+
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
             'drawSelectionEllipse',
@@ -88,6 +90,7 @@ describe('EllipseSelectionToolService', () => {
         canvas = canvasTestHelper.canvas;
         canvasPosition = { x: 50, y: 40 };
 
+        ellipseSelectionManipulatorMock.historyService = TestBed.inject(HistoryService);
         service = TestBed.inject(EllipseSelectionCreatorService);
 
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
