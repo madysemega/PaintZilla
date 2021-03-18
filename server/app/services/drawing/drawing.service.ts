@@ -3,7 +3,7 @@ import { MetadataModel } from '@app/constants/metadata.schema';
 import { DatabaseService } from '@app/services/database/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
-import { Validator } from '@common/validation/validator';
+import { Validator } from '@common/validation/validator/validator';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
 @injectable()
