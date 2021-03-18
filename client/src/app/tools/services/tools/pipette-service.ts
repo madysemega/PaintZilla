@@ -22,7 +22,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private shape: VerticesShape;
     mouseRightDown: boolean = false;
     zoom20: number = 20;
-    zoom40: number = 40;
+    zoom40: number = 30;
     zoom200: number = 200;
     zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
@@ -86,21 +86,26 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
+        let zoom22:number = 18;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.couleur = this.drawingService.baseCtx.getImageData(mousePosition.x, mousePosition.y, 1, 1).data;
+        this.couleur = this.drawingService.baseCtx.getImageData(mousePosition.x-3, mousePosition.y-3, 1, 1).data;
         const R = Colour.toHex(this.couleur[0]);
         const G = Colour.toHex(this.couleur[1]);
         const B = Colour.toHex(this.couleur[2]);
         this.outputCouleur = '#' + R + G + B;
         if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
             this.cerclePreview = this.drawingService.baseCtx.getImageData(
-                mousePosition.x - this.zoom20,
-                mousePosition.y - this.zoom20,
+                mousePosition.x - zoom22,
+                mousePosition.y - zoom22,
                 this.zoom40,
                 this.zoom40,
             );
-            this.zoomctx.putImageData(this.cerclePreview, 0, 0);
-            this.zoomctx.drawImage(this.drawingService.canvas, 0, 0, this.zoom40, this.zoom40, 0, 0, this.zoom200, this.zoom200);
+            this.drawingService.baseCtx.putImageData(this.cerclePreview, 0, 0);
+            this.drawingService.baseCtx.drawImage(this.drawingService.canvas, 0, 0, this.zoom40, this.zoom40, 0, 0, this.zoom200, this.zoom200);
+            this.drawingService.baseCtx.beginPath();
+            this.drawingService.baseCtx.arc(this.zoom200/2, this.zoom200/2, this.zoom200/2, 0, 2*Math.PI);
+            this.drawingService.baseCtx.strokeRect(this.zoom200/2, this.zoom200/2, 5, 5);
+            this.drawingService.baseCtx.stroke();
         }
     }
     private clearVertices(): void {
