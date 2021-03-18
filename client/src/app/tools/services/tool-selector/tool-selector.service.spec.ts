@@ -25,6 +25,10 @@ describe('ToolSelectorService', () => {
         service.selectTool('pencil');
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as MetaWrappedTool).tool);
     });
+    it("should change tool to pipette when selectTool('pipette') is called", () => {
+        service.selectTool('pipette');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pipette') as MetaWrappedTool).tool);
+    });
     it("should change tool to spray when selectTool('spray') is called", () => {
         service.selectTool('spray');
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('spray') as MetaWrappedTool).tool);
@@ -66,6 +70,12 @@ describe('ToolSelectorService', () => {
     it("fromKeyboardShortcut should map 'c' to 'pencil'", () => {
         const expectedToolName = 'pencil';
         const toolName = service.fromKeyboardShortcut('c');
+        expect(toolName).toBe(expectedToolName);
+    });
+
+    it("fromKeyboardShortcut should map 'i' to 'pipette'", () => {
+        const expectedToolName = 'pipette';
+        const toolName = service.fromKeyboardShortcut('i');
         expect(toolName).toBe(expectedToolName);
     });
     it("fromKeyboardShortcut should map 'a' to 'spray'", () => {

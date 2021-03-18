@@ -20,6 +20,7 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    isInCanevas: boolean;
 
     wasResizing: boolean;
 
@@ -94,6 +95,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
+            this.isInCanevas = false;
         }
     }
 
@@ -101,6 +103,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseEnter(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
+            this.isInCanevas = true;
         }
     }
 

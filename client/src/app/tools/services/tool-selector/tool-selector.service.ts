@@ -9,6 +9,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
@@ -92,6 +93,7 @@ export class ToolSelectorService {
     }
     constructor(
         pencilService: PencilService,
+        pipetteService: PipetteService,
         sprayService: SprayService,
         eraserService: EraserService,
         ellipseService: EllipseService,
@@ -112,6 +114,12 @@ export class ToolSelectorService {
             icon: 'eraser',
             keyboardShortcut: 'e',
             tool: eraserService,
+        });
+        this.tools.set(pipetteService.key, {
+            displayName: 'Pipette',
+            icon: 'pipette',
+            keyboardShortcut: 'i',
+            tool: pipetteService,
         });
         this.tools.set(sprayService.key, {
             displayName: 'Aerosol',
