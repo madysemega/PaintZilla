@@ -6,3 +6,8 @@ canvas {
     left: 0;
     top: 100;
 }
+#zoomCanvas {
+    image-rendering: pixelated;
+    z-index: 0;
+    border-style: dotted;
+}

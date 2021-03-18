@@ -22,7 +22,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private shape: VerticesShape;
     mouseRightDown: boolean = false;
     zoom20: number = 20;
-    zoom40: number = 30;
+    zoom4: number = 10;
     zoom200: number = 200;
     number3: number = 3;
     number5: number = 5;
@@ -33,7 +33,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
         this.key = 'pipette';
-
         this.colourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
         this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
@@ -88,7 +87,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
-        const zoom22 = 18;
+        const zoom5 = 7;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.couleur = this.drawingService.baseCtx.getImageData(mousePosition.x - this.number3, mousePosition.y - this.number3, 1, 1).data;
         const R = Colour.toHex(this.couleur[0]);
@@ -97,13 +96,15 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.outputCouleur = '#' + R + G + B;
         if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
             this.cerclePreview = this.drawingService.baseCtx.getImageData(
-                mousePosition.x - zoom22,
-                mousePosition.y - zoom22,
-                this.zoom40,
-                this.zoom40,
+                mousePosition.x - zoom5,
+                mousePosition.y - zoom5,
+                this.zoom4,
+                this.zoom4,
             );
+            this.zoomctx.fillStyle = "white";
+            this.zoomctx.fillRect(0,0, this.zoom200, this.zoom200);
             this.zoomctx.putImageData(this.cerclePreview, 0, 0);
-            this.zoomctx.drawImage(this.zoomctx.canvas, 0, 0, this.zoom40, this.zoom40, 0, 0, this.zoom200, this.zoom200);
+            this.zoomctx.drawImage(this.zoomctx.canvas, 0, 0, this.zoom4, this.zoom4, 0, 0, this.zoom200, this.zoom200);
             this.zoomctx.beginPath();
             this.zoomctx.arc(this.zoom200 / 2, this.zoom200 / 2, this.zoom200 / 2, 0, 2 * Math.PI);
             this.zoomctx.strokeRect(this.zoom200 / 2, this.zoom200 / 2, this.number5, this.number5);
