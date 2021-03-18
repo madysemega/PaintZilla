@@ -87,7 +87,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
-        const zoom5 = 7;
+        const zoom5 = 8;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.couleur = this.drawingService.baseCtx.getImageData(mousePosition.x - this.number3, mousePosition.y - this.number3, 1, 1).data;
         const R = Colour.toHex(this.couleur[0]);
