@@ -23,7 +23,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     mouseRightDown: boolean = false;
     zoom20: number = 20;
     zoom4: number = 10;
-    number6: number=6;
+    number6: number = 6;
     zoom200: number = 200;
     number3: number = 3;
     number20: number = 20;
