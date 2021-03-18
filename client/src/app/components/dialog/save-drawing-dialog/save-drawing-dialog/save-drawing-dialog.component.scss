@@ -2,6 +2,10 @@
     width: 100%;
 }
 
-mat-spinner[hidden] {
-    display: none;
+.red-snackbar {
+    background: red;
+}
+
+.blue-snackbar {
+    background: blue;
 }

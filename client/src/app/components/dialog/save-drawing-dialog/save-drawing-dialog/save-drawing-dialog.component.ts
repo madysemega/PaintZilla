@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ServerService } from '@app/commons/service/server.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { Drawing } from '@common/models/drawing';
 import * as RegularExpressions from '@common/validation/regular.expressions';
-
 @Component({
     selector: 'app-save-drawing-dialog',
     templateUrl: './save-drawing-dialog.component.html',
@@ -25,6 +25,7 @@ export class SaveDrawingDialogComponent implements OnInit {
         public matDialogRef: MatDialogRef<SaveDrawingDialogComponent>,
         private serverService: ServerService,
         private drawingService: DrawingService,
+        private snackBar: MatSnackBar,
     ) {}
     ngOnInit(): void {
         this.formGroup = new FormGroup({
@@ -38,7 +39,7 @@ export class SaveDrawingDialogComponent implements OnInit {
         const label = event.value;
 
         if (this.formGroup.controls.labelForm.valid && label != '') {
-            let labelNotPresent: boolean = true;
+            let labelNotPresent = true;
             this.labels.forEach((label: string) => {
                 if (label === event.value) {
                     labelNotPresent = false;
@@ -71,10 +72,18 @@ export class SaveDrawingDialogComponent implements OnInit {
             this.currentlySaving = true;
             this.serverService.createDrawing(this.imageName, image, this.labels).subscribe(
                 (drawing: Drawing) => {
-                    console.log(drawing.id);
+                    this.snackBar.open('Le dessin a bien été sauvegardé', 'Ok', {
+                        duration: 4000,
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
+                    });
                 },
                 (error: HttpErrorResponse) => {
-                    console.log('Erreur: ' + error.message);
+                    this.snackBar.open("Le dessin n'a pas bien été sauvegardé. Erreur: " + error.message, 'Ok', {
+                        duration: 4000,
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
+                    });
                 },
             );
             this.currentlySaving = false;

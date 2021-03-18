@@ -35,7 +35,6 @@
 
 <div>
     <mat-dialog-actions>
-        <mat-spinner [diameter]="30" [hidden]="!this.currentlySaving"></mat-spinner>
         <button mat-button (click)="saveImage()" [disabled]="this.currentlySaving">Confirmer</button>
         <button mat-button mat-dialog-close>Annuler</button>
     </mat-dialog-actions>
