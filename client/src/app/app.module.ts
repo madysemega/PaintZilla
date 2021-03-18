@@ -35,6 +35,7 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ExportDrawingDialogComponent } from './components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
+import { FilterLabelComponent } from './carousel/components/filter-label/filter-label.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -69,6 +70,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         ImageCarouselComponent,
         ImageDetailsComponent,
         ConfigurationPanelComponent,
+        FilterLabelComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 

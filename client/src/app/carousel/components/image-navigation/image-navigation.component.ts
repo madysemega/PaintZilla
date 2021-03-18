@@ -8,6 +8,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ImageNavigationComponent {
     labels: string[] = ['La Joconde de Samuel', 'Paysage', 'Comic'];
-
+    retainedLabels: string[] = [];
     constructor(public dialogRef: MatDialogRef<ImageNavigationComponent>) {}
+    addFilter(label: string): void {
+        this.retainedLabels.push(label);
+        console.log(this.retainedLabels);
+    }
 }
