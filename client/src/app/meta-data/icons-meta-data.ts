@@ -86,7 +86,7 @@ export class IconsMetaData {
             },
             {
                 name: 'polygon-contoured-and-filled',
-                path: '../assets/icons/polygon-contoured-and-filled.svg',
+                path: './assets/icons/polygon-contoured-and-filled.svg',
             },
         ];
     }
