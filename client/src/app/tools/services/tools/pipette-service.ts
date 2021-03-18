@@ -23,6 +23,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     mouseRightDown: boolean = false;
     zoom20: number = 20;
     zoom4: number = 10;
+    number6: number=6;
     zoom200: number = 200;
     number3: number = 3;
     number20: number = 20;
@@ -102,9 +103,11 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.zoomctx.imageSmoothingEnabled = false;
             this.zoomctx.drawImage(this.zoomctx.canvas, this.zoom200 / 2, this.zoom200 / 2, this.zoom4, this.zoom4, 0, 0, this.zoom200, this.zoom200);
             this.zoomctx.beginPath();
+            this.zoomctx.lineWidth = this.number3;
             this.zoomctx.arc(this.zoom200 / 2, this.zoom200 / 2, this.zoom200 / 2, 0, 2 * Math.PI);
             this.zoomctx.clip();
             this.zoomctx.strokeRect(this.zoom200 / 2, this.zoom200 / 2, this.number20, this.number20);
+            this.zoomctx.lineWidth = this.number6;
             this.zoomctx.stroke();
         }
     }
