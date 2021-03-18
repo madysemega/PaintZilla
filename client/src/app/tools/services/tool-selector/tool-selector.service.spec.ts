@@ -120,10 +120,10 @@ describe('ToolSelectorService', () => {
     });
 
     it('should call onToolSelect on new tool when changing to valid tool if new tool implements ISelectableTool', () => {
-        service.selectTool('pencil');
-        const onToolSelectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolSelect');
+        service.selectTool('spray');
+        const onToolSelectSpy = spyOn(service.getRegisteredTools().get('pencil')?.tool as LineService, 'onToolSelect');
 
-        service.selectTool('line');
+        service.selectTool('pencil');
 
         expect(onToolSelectSpy).toHaveBeenCalledTimes(1);
     });

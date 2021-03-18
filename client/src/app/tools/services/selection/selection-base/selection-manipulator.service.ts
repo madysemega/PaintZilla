@@ -46,7 +46,7 @@ export abstract class SelectionManipulatorService extends Tool {
         protected drawingService: DrawingService,
         protected selectionHelper: SelectionHelperService,
         protected selectionHandler: SelectionHandlerService,
-        protected historyService: HistoryService,
+        public historyService: HistoryService,
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
@@ -213,6 +213,7 @@ export abstract class SelectionManipulatorService extends Tool {
                 this.historyService.register(userAction);
             }
         }
+        this.historyService.isLocked = false;
         this.subscriptions.forEach((sub) => {
             sub.unsubscribe();
         });
