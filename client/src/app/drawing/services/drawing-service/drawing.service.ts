@@ -50,6 +50,16 @@ export class DrawingService {
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
+    setImageFromBase64(imageSrc: string): void {
+        this.clearCanvas(this.previewCtx);
+        this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
+
+        const image = new Image();
+        image.src = imageSrc;
+
+        this.baseCtx.drawImage(image, 0, 0);
+    }
+
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => {
             this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);

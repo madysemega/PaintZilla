@@ -12,7 +12,9 @@ describe('DrawingService', () => {
     let historyServiceStub: HistoryService;
 
     let restoreCanvasStyleStub: jasmine.Spy<any>;
-    // let clearCanvasStub: jasmine.Spy<any>;
+    let clearCanvasStub: jasmine.Spy<any>;
+    let fillCanvasSpy: jasmine.Spy<any>;
+    let baseCtxDrawImageSpy: jasmine.Spy<any>;
 
     const WIDTH_1 = 5;
     const WIDTH_2 = 10;
@@ -34,7 +36,9 @@ describe('DrawingService', () => {
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
         restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
-        // clearCanvasStub = spyOn(service, 'clearCanvas').and.callThrough();
+        clearCanvasStub = spyOn(service, 'clearCanvas').and.stub();
+        fillCanvasSpy = spyOn(service, 'fillCanvas').and.callThrough();
+        baseCtxDrawImageSpy = spyOn(service.baseCtx, 'drawImage').and.stub();
     });
 
     it('should be created', () => {
@@ -83,9 +87,34 @@ describe('DrawingService', () => {
 
     it('history service undo should restore canvas style and fill canvas', () => {
         historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
-        const fillStub = spyOn(service, 'fillCanvas').and.stub();
         historyServiceStub.undo();
         expect(restoreCanvasStyleStub).toHaveBeenCalled();
-        expect(fillStub).toHaveBeenCalled();
+        expect(fillCanvasSpy).toHaveBeenCalled();
+    });
+
+    it('setImageFromBase64() should clear the preview canvas', () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+        
+        service.setImageFromBase64(IMAGE_SRC_BASE_64);
+        expect(clearCanvasStub).toHaveBeenCalledWith(service.previewCtx);
+    });
+
+    it('setImageFromBase64() should fill the base canvas with default colour', () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+
+        service.setImageFromBase64(IMAGE_SRC_BASE_64);
+        expect(fillCanvasSpy).toHaveBeenCalledWith(
+            service.baseCtx,
+            service.canvasSize.x,
+            service.canvasSize.y,
+            Constants.CTX_COLOR
+        );
+    });
+
+    it('setImageFromBase64() should draw the image the base canvas', () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+
+        service.setImageFromBase64(IMAGE_SRC_BASE_64);
+        expect(baseCtxDrawImageSpy).toHaveBeenCalled();
     });
 });
