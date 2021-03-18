@@ -38,27 +38,23 @@ export class HistoryService {
 
     undo(): void {
         if (this.canUndo()) {
-            const lastAction = this.past.pop();
+            const lastAction = this.past.pop() as IUserAction;
 
-            if (lastAction != undefined) {
-                this.future.push(lastAction);
+            this.future.push(lastAction);
 
-                this.undoEventObservers.forEach((observerCallback) => observerCallback());
+            this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
-                this.past.forEach((action) => action.apply());
-            }
+            this.past.forEach((action) => action.apply());
         }
     }
 
     redo(): void {
         if (this.canRedo()) {
-            const lastUndoneAction = this.future.pop();
+            const lastUndoneAction = this.future.pop() as IUserAction;
 
-            if (lastUndoneAction != undefined) {
-                this.past.push(lastUndoneAction);
+            this.past.push(lastUndoneAction);
 
-                lastUndoneAction.apply();
-            }
+            lastUndoneAction.apply();
         }
     }
 

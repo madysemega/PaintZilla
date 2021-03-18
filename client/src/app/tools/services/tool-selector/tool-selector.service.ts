@@ -24,6 +24,12 @@ export class ToolSelectorService {
     selectedTool: MetaWrappedTool;
     name: BehaviorSubject<string> = new BehaviorSubject<string>('pencil');
 
+    private onToolChangedObservers: (() => void)[];
+
+    onToolChanged(callback: () => void): void {
+        this.onToolChangedObservers.push(callback);
+    }
+
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
     }
@@ -42,11 +48,16 @@ export class ToolSelectorService {
             if ('onToolDeselect' in this.selectedTool.tool) {
                 (this.selectedTool.tool as IDeselectableTool).onToolDeselect();
             }
+
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
+
             if ('onToolSelect' in this.selectedTool.tool) {
                 (this.selectedTool.tool as ISelectableTool).onToolSelect();
             }
+
             this.name.next(name);
+            this.onToolChangedObservers.forEach((observer) => observer());
+
             return true;
         }
         return false;
@@ -155,5 +166,6 @@ export class ToolSelectorService {
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
+        this.onToolChangedObservers = new Array<() => void>();
     }
 }

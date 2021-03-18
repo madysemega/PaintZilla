@@ -9,6 +9,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 // tslint:disable:max-line-length
+// tslint:disable:no-string-literal
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
@@ -123,7 +124,7 @@ describe('ToolSelectorService', () => {
 
     it('should call onToolDeselect on current tool when changing to valid tool if current tool implements IDeselectableTool', () => {
         service.selectTool('line');
-        const onToolDeselectSpy = spyOn(service.selectedTool.tool as LineService, 'onToolDeselect');
+        const onToolDeselectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolDeselect');
         service.selectTool('pencil');
         expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
     });
@@ -138,16 +139,21 @@ describe('ToolSelectorService', () => {
     });
 
     it('should not crash when selecting a tool which does not implement ISelectableTool', () => {
-        // tslint:disable-next-line: no-string-literal
         service['tools'].set('not-selectable', { tool: {} as Tool } as MetaWrappedTool);
         service.selectTool('not-selectable');
         expect(service.selectedTool).toBeTruthy();
     });
 
     it('should not crash when deselecting a tool which does not implement IDeselectableTool', () => {
-        // tslint:disable-next-line: no-string-literal
         service['tools'].set('not-deselectable', { tool: {} as Tool } as MetaWrappedTool);
         service.selectTool('not-deselectable');
         expect(service.selectedTool).toBeTruthy();
+    });
+
+    it('changing tool should call callbacks registered for onToolChanged event', () => {
+        let callbackCalled = false;
+        service.onToolChanged(() => (callbackCalled = true));
+        service.selectTool('ellipse');
+        expect(callbackCalled).toBeTrue();
     });
 });
