@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawingService } from '../drawing-service/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { DrawingLoaderService } from './drawing-loader.service';
-
 
 describe('DrawingLoaderService', () => {
     let service: DrawingLoaderService;
@@ -12,9 +11,7 @@ describe('DrawingLoaderService', () => {
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['setImageFromBase64']);
 
         TestBed.configureTestingModule({
-            providers: [
-                { provide: DrawingService, useValue: drawingServiceSpy },
-            ]
+            providers: [{ provide: DrawingService, useValue: drawingServiceSpy }],
         });
         service = TestBed.inject(DrawingLoaderService);
     });

@@ -94,7 +94,7 @@ describe('DrawingService', () => {
 
     it('setImageFromBase64() should clear the preview canvas', () => {
         const IMAGE_SRC_BASE_64 = '1234567890';
-        
+
         service.setImageFromBase64(IMAGE_SRC_BASE_64);
         expect(clearCanvasStub).toHaveBeenCalledWith(service.previewCtx);
     });
@@ -103,12 +103,7 @@ describe('DrawingService', () => {
         const IMAGE_SRC_BASE_64 = '1234567890';
 
         service.setImageFromBase64(IMAGE_SRC_BASE_64);
-        expect(fillCanvasSpy).toHaveBeenCalledWith(
-            service.baseCtx,
-            service.canvasSize.x,
-            service.canvasSize.y,
-            Constants.CTX_COLOR
-        );
+        expect(fillCanvasSpy).toHaveBeenCalledWith(service.baseCtx, service.canvasSize.x, service.canvasSize.y, Constants.CTX_COLOR);
     });
 
     it('setImageFromBase64() should draw the image the base canvas', () => {

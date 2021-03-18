@@ -15,9 +15,7 @@ describe('ImageDetailsComponent', () => {
         TestBed.configureTestingModule({
             imports: [MaterialModule],
             declarations: [ImageDetailsComponent],
-            providers: [
-                { provide: Router, useValue: routerSpy },
-            ],
+            providers: [{ provide: Router, useValue: routerSpy }],
         }).compileComponents();
     }));
 
@@ -33,7 +31,7 @@ describe('ImageDetailsComponent', () => {
 
     it('loadImage() should navigate to /editor/:imageId', () => {
         const IMAGE_ID = '1234567890';
-        
+
         component.data.id = IMAGE_ID;
         component.loadImage();
 
