@@ -25,7 +25,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     zoom4: number = 10;
     zoom200: number = 200;
     number3: number = 3;
-    number5: number = 5;
+    number20: number = 20;
     zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
@@ -99,10 +99,11 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.zoomctx.fillStyle = 'white';
             this.zoomctx.fillRect(0, 0, this.zoom200, this.zoom200);
             this.zoomctx.putImageData(this.cerclePreview, 0, 0);
+            this.zoomctx.imageSmoothingEnabled=false;
             this.zoomctx.drawImage(this.zoomctx.canvas, 0, 0, this.zoom4, this.zoom4, 0, 0, this.zoom200, this.zoom200);
             this.zoomctx.beginPath();
             this.zoomctx.arc(this.zoom200 / 2, this.zoom200 / 2, this.zoom200 / 2, 0, 2 * Math.PI);
-            this.zoomctx.strokeRect(this.zoom200 / 2, this.zoom200 / 2, this.number5, this.number5);
+            this.zoomctx.strokeRect(this.zoom200 / 2, this.zoom200 / 2, this.number20, this.number20);
             this.zoomctx.stroke();
         }
     }
