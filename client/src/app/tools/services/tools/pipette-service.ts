@@ -98,11 +98,12 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.cerclePreview = this.drawingService.baseCtx.getImageData(mousePosition.x - zoom5, mousePosition.y - zoom5, this.zoom4, this.zoom4);
             this.zoomctx.fillStyle = 'white';
             this.zoomctx.fillRect(0, 0, this.zoom200, this.zoom200);
-            this.zoomctx.putImageData(this.cerclePreview, 0, 0);
-            this.zoomctx.imageSmoothingEnabled=false;
-            this.zoomctx.drawImage(this.zoomctx.canvas, 0, 0, this.zoom4, this.zoom4, 0, 0, this.zoom200, this.zoom200);
+            this.zoomctx.putImageData(this.cerclePreview, this.zoom200 / 2, this.zoom200 / 2);
+            this.zoomctx.imageSmoothingEnabled = false;
+            this.zoomctx.drawImage(this.zoomctx.canvas, this.zoom200 / 2, this.zoom200 / 2, this.zoom4, this.zoom4, 0, 0, this.zoom200, this.zoom200);
             this.zoomctx.beginPath();
             this.zoomctx.arc(this.zoom200 / 2, this.zoom200 / 2, this.zoom200 / 2, 0, 2 * Math.PI);
+            this.zoomctx.clip();
             this.zoomctx.strokeRect(this.zoom200 / 2, this.zoom200 / 2, this.number20, this.number20);
             this.zoomctx.stroke();
         }
