@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -12,8 +13,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
 })
-
-export class EditorComponent implements AfterViewInit, OnInit {
+export class EditorComponent implements AfterViewInit {
     @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
     showColourPicker: boolean;
 
@@ -24,6 +24,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
         private colourService: ColourService,
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
+        private drawingLoader: DrawingLoaderService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -34,17 +35,14 @@ export class EditorComponent implements AfterViewInit, OnInit {
         });
     }
 
-    ngOnInit(): void {
-        this.route.params.subscribe((parameters) => {
-            const imageId = parameters['imageId'];
-            if(imageId) {
-                console.log(`Loading image with id: ${imageId}`);
-            }
-        });
-    }
-
     ngAfterViewInit(): void {
         this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        this.route.params.subscribe((parameters) => {
+            const imageId = parameters.imageId;
+            if (imageId) {
+                this.drawingLoader.loadFromServer(imageId);
+            }
+        });
     }
 
     @HostListener('document:keydown', ['$event'])

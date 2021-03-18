@@ -6,7 +6,7 @@ import { EditorComponent } from './editor/components/editor/editor.component';
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: MainPageComponent },
-    { path: 'editor/:imageId', component: EditorComponent},
+    { path: 'editor/:imageId', component: EditorComponent },
     { path: 'editor', component: EditorComponent },
     { path: '**', redirectTo: '/home' },
 ];

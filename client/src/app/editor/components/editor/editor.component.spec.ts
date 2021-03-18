@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { RouterTestingModule } from '@angular/router/testing';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
@@ -65,7 +66,7 @@ describe('EditorComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([])],
             declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
