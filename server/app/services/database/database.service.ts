@@ -1,7 +1,5 @@
 import * as Constants from '@app/constants/database.constants';
-import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
-import { TYPES } from '@app/settings/types';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import * as mongoose from 'mongoose';
 @injectable()
 export class DatabaseService {
@@ -10,7 +8,7 @@ export class DatabaseService {
         useUnifiedTopology: true,
     };
     distantDatabase: mongoose.Mongoose;
-    constructor(@inject(TYPES.LocalDatabaseService) public localDatabaseService: LocalDatabaseService) {
+    constructor() {
         this.distantDatabase = mongoose;
     }
     async start(url: string = Constants.DATABASE_URL): Promise<void> {
