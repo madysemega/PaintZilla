@@ -132,6 +132,12 @@ describe('SaveDrawingDialogComponent', () => {
         expect(labelIsInsideList).toEqual(false);
     });
 
+    it('removeLabel should remove a label that is in the list', () => {
+        const spliceSpy = spyOn(component.labels, 'splice').and.callThrough();
+        component.removeLabel('tree');
+        expect(spliceSpy).not.toHaveBeenCalled();
+    });
+
     it('setName should set the name if it has alphanumeric characters and spaces', () => {
         const event = ({
             target: { value: 'tree 123' },
@@ -163,6 +169,15 @@ describe('SaveDrawingDialogComponent', () => {
         });
         component.saveImage();
         expect(serverServiceSpy.createDrawing).toHaveBeenCalled();
+    });
+
+    it('saveImage should not call serverService.createDrawing if the drawing has no name', () => {
+        component.imageName = '';
+        serverServiceSpy.createDrawing.and.callFake(() => {
+            return of({ id: '123', name: 'tree', drawing: 'AAA', labels: ['tree'] });
+        });
+        component.saveImage();
+        expect(serverServiceSpy.createDrawing).not.toHaveBeenCalled();
     });
 
     it('saveImage should open a snackbar if the drawing was successfully saved', () => {

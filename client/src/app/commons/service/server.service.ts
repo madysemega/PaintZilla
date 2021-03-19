@@ -11,9 +11,7 @@ export class ServerService {
     constructor(private httpClient: HttpClient) {}
 
     createDrawing(name: string = Constants.DEFAULT_NAME, drawing: string, labels: string[] = []): Observable<Drawing> {
-        Validator.checkName(name);
         Validator.checkDrawing(drawing);
-        Validator.checkLabels(labels);
         return this.httpClient.post<Drawing>(Constants.API_URL, { name, drawing, labels }, Constants.JSON_HTTP_OPTIONS);
     }
 

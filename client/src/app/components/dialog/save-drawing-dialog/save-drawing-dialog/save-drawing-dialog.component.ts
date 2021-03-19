@@ -40,12 +40,7 @@ export class SaveDrawingDialogComponent implements OnInit {
         const labelName = event.value;
 
         if (this.formGroup.controls.labelForm.valid && labelName !== '') {
-            let labelNotPresent = true;
-            this.labels.forEach((label: string) => {
-                if (label === event.value) {
-                    labelNotPresent = false;
-                }
-            });
+            const labelNotPresent = this.labels.indexOf(labelName) === -1;
             if (labelNotPresent) this.labels.push(labelName);
 
             input.value = '';
@@ -77,16 +72,16 @@ export class SaveDrawingDialogComponent implements OnInit {
                     this.openSnackBar("Le dessin n'a pas bien été sauvegardé. Erreur: " + error.message);
                 },
             );
-            this.currentlySaving = false;
-            this.matDialogRef.close();
         }
     }
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: 4000,
+            duration: 6000,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
+        this.currentlySaving = false;
+        this.matDialogRef.close();
     }
 }

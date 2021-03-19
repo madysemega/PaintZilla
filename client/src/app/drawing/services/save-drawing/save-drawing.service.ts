@@ -7,7 +7,6 @@ import { SaveDrawingDialogComponent } from '@app/components/dialog/save-drawing-
 })
 export class SaveDrawingService {
     dialogRef: MatDialogRef<SaveDrawingDialogComponent>;
-
     constructor(public dialog: MatDialog) {}
 
     onKeyDown(event: KeyboardEvent): void {
