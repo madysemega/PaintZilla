@@ -77,11 +77,10 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'white';
         ctx.lineCap = 'square';
-        ctx.lineJoin = 'round';
-
+        ctx.lineJoin = 'miter';
         ctx.beginPath();
         for (const point of this.vertices) {
-            ctx.lineTo(point.x, point.y);
+            ctx.rect(point.x, point.y, 0, 0);
         }
         ctx.stroke();
 
