@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
@@ -63,10 +64,15 @@ export class DrawingService {
         this.resizeDrawingSurface(this.initialSize.x, this.initialSize.y);
     }
 
-    resetDrawingSurface(): void {
+    resetDrawingSurfaceColour(): void {
+        this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
+    }
+
+    async resetDrawingSurface(): Promise<void> {
         this.resetDrawingSurfaceDimensions();
-        this.fillCanvas(this.baseCtx, this.initialSize.x, this.initialSize.y, Constants.CTX_COLOR);
-        setTimeout(() => this.drawInitialImage());
+        await sleep();
+        this.resetDrawingSurfaceColour();
+        this.drawInitialImage();
     }
 
     drawInitialImage(): void {
@@ -75,7 +81,7 @@ export class DrawingService {
         }
     }
 
-    setImageFromBase64(imageSrc: string): void {
+    async setImageFromBase64(imageSrc: string): Promise<void> {
         const image = new Image();
         image.src = imageSrc;
 

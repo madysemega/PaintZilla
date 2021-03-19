@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { ResizingType } from '@app/drawing/enums/resizing-type';
@@ -73,10 +74,14 @@ export class ResizingService {
 
     finalizeResizingEvent(): void {
         this.historyService.do(
-            new UserActionResizeDrawingSurface(this.canvasResize.x, this.canvasResize.y, (width: number, height: number) => {
-                this.activateResizer(ResizingType.RIGHTDOWN);
-                this.resizeCanvas({ offsetX: width, offsetY: height } as MouseEvent);
-                this.disableResizer();
+            new UserActionResizeDrawingSurface(this.canvasResize.x, this.canvasResize.y, async (width: number, height: number) => {
+                this.saveCurrentImage();
+
+                this.drawingService.resizeDrawingSurface(width, height);
+                await sleep();
+
+                this.drawingService.resetDrawingSurfaceColour();
+                this.restoreBaseImageData();
             }),
         );
     }

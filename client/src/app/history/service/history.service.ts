@@ -65,4 +65,10 @@ export class HistoryService {
     canRedo(): boolean {
         return this.future.length > 0 && !this.isLocked;
     }
+
+    clear(): void {
+        this.past.length = 0;
+        this.future.length = 0;
+        this.isLocked = false;
+    }
 }

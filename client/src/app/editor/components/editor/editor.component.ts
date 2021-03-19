@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -25,6 +26,7 @@ export class EditorComponent implements AfterViewInit {
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
         private drawingLoader: DrawingLoaderService,
+        private drawingService: DrawingService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -41,8 +43,11 @@ export class EditorComponent implements AfterViewInit {
             const imageId = parameters.imageId;
             if (imageId) {
                 this.drawingLoader.loadFromServer(imageId);
+            } else {
+                this.drawingService.initialImage = undefined;
             }
         });
+        this.historyService.clear();
     }
 
     @HostListener('document:keydown', ['$event'])
