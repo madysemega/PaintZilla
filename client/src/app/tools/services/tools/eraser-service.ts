@@ -71,7 +71,7 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         return width;
     }
 
-    drawRightwardRectangle(ctx: CanvasRenderingContext2D, topLeft: Vec2, bottomRight: Vec2, width: number): void {
+    drawRightwardPolygon(ctx: CanvasRenderingContext2D, topLeft: Vec2, bottomRight: Vec2, width: number): void {
         const HALF_LINE_WIDTH = width / 2;
 
         ctx.beginPath();
@@ -85,7 +85,7 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         ctx.fill();
     }
 
-    drawLeftwardRectangle(ctx: CanvasRenderingContext2D, topRight: Vec2, bottomLeft: Vec2, width: number): void {
+    drawLeftwardPolygon(ctx: CanvasRenderingContext2D, topRight: Vec2, bottomLeft: Vec2, width: number): void {
         const HALF_LINE_WIDTH = width / 2;
 
         ctx.beginPath();
@@ -120,13 +120,13 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
                 const isMovementDownward = point.y > previousPoint.y;
 
                 if (isMovementRightward && isMovementDownward) {
-                    this.drawRightwardRectangle(ctx, previousPoint, point, this.lineWidth);
+                    this.drawRightwardPolygon(ctx, previousPoint, point, this.lineWidth);
                 } else if (!isMovementRightward && isMovementDownward) {
-                    this.drawLeftwardRectangle(ctx, previousPoint, point, this.lineWidth);
+                    this.drawLeftwardPolygon(ctx, previousPoint, point, this.lineWidth);
                 } else if (!isMovementRightward && !isMovementDownward) {
-                    this.drawRightwardRectangle(ctx, point, previousPoint, this.lineWidth);
+                    this.drawRightwardPolygon(ctx, point, previousPoint, this.lineWidth);
                 } else {
-                    this.drawLeftwardRectangle(ctx, point, previousPoint, this.lineWidth);
+                    this.drawLeftwardPolygon(ctx, point, previousPoint, this.lineWidth);
                 }
             }
         });
