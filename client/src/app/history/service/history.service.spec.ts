@@ -24,23 +24,23 @@ describe('HistoryService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('undo should call all past user actions but the last if there are some', () => {
+    it('undo should call all past user actions but the last if there are some', async () => {
         userActions.forEach((userAction) => service.register(userAction));
         userActions.forEach((userAction) => expect(userAction.apply).not.toHaveBeenCalled());
-        service.undo();
+        await service.undo();
         userActions.slice(0, userActions.length - 1).forEach((userAction) => expect(userAction.apply).toHaveBeenCalled());
     });
 
-    it('redo should call last undone user action if there is one', () => {
+    it('redo should call last undone user action if there is one', async () => {
         userActions.forEach((userAction) => service.register(userAction));
         userActions.forEach((userAction) => expect(userAction.apply).not.toHaveBeenCalled());
-        service.undo();
+        await service.undo();
         service.redo();
         expect(userActions[userActions.length - 1].apply).toHaveBeenCalled();
     });
 
-    it('redo should not call last undone user action if there is none', () => {
-        service.undo();
+    it('redo should not call last undone user action if there is none', async () => {
+        await service.undo();
         service.redo();
         expect(userActions[0].apply).not.toHaveBeenCalled();
     });
@@ -51,18 +51,18 @@ describe('HistoryService', () => {
         expect(service['past'][0]).toBe(userActions[0]);
     });
 
-    it('undo should call all callbacks registered with onUndo if there are registered user actions', () => {
+    it('undo should call all callbacks registered with onUndo if there are registered user actions', async () => {
         let callbackCalled = false;
         userActions.forEach((userAction) => service.register(userAction));
         service.onUndo(() => (callbackCalled = true));
-        service.undo();
+        await service.undo();
         expect(callbackCalled).toBeTruthy();
     });
 
-    it('undo should not call any callback registered with onUndo if there are no registered user actions', () => {
+    it('undo should not call any callback registered with onUndo if there are no registered user actions', async () => {
         let callbackCalled = false;
         service.onUndo(() => (callbackCalled = true));
-        service.undo();
+        await service.undo();
         expect(callbackCalled).toBeFalsy();
     });
 
@@ -88,15 +88,15 @@ describe('HistoryService', () => {
         expect(service.canUndo()).toBeFalse();
     });
 
-    it('should be redoable if unlocked  and user actions have been undone', () => {
+    it('should be redoable if unlocked  and user actions have been undone', async () => {
         service.isLocked = false;
         userActions.forEach((userAction) => service.register(userAction));
-        service.undo();
+        await service.undo();
 
         expect(service.canRedo()).toBeTrue();
     });
 
-    it('should not be redoable if locked or no user action has been undone', () => {
+    it('should not be redoable if locked or no user action has been undone', async () => {
         // unlocked & no action undone
         service.isLocked = false;
         expect(service.canRedo()).toBeFalse();
@@ -107,8 +107,32 @@ describe('HistoryService', () => {
 
         // locked & action undone
         userActions.forEach((userAction) => service.register(userAction));
-        service.undo();
+        await service.undo();
         service.isLocked = true;
         expect(service.canRedo()).toBeFalse();
+    });
+
+    it('clear() should remove all past user actions', () => {
+        service.isLocked = true;
+        userActions.forEach((userAction) => service.register(userAction));
+        service.clear();
+
+        expect(service['past'].length).toEqual(0);
+    });
+
+    it('clear() should remove all future user actions', () => {
+        service.isLocked = true;
+        userActions.forEach((userAction) => service.register(userAction));
+        service.clear();
+
+        expect(service['future'].length).toEqual(0);
+    });
+
+    it('clear() should unlock history service', () => {
+        service.isLocked = true;
+        userActions.forEach((userAction) => service.register(userAction));
+        service.clear();
+
+        expect(service.isLocked).toBeFalse();
     });
 });

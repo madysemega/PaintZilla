@@ -32,9 +32,15 @@ export class DrawingComponent implements AfterViewInit {
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(() => {
-            // this.resizingService.resetCanvasDimensions();
-            // this.resizingService.updateCanvasSize();
             this.drawingService.restoreCanvasStyle();
+        });
+
+        this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
+            this.canvasSize.x = newDimensions.x;
+            this.canvasSize.y = newDimensions.y;
+
+            this.drawingService.canvasResize.x = newDimensions.x;
+            this.drawingService.canvasResize.y = newDimensions.y;
         });
     }
 
@@ -46,6 +52,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
     }
 
