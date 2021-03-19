@@ -116,23 +116,23 @@ describe('HistoryService', () => {
         service.isLocked = true;
         userActions.forEach((userAction) => service.register(userAction));
         service.clear();
-        
+
         expect(service['past'].length).toEqual(0);
     });
-    
+
     it('clear() should remove all future user actions', () => {
         service.isLocked = true;
         userActions.forEach((userAction) => service.register(userAction));
         service.clear();
-        
+
         expect(service['future'].length).toEqual(0);
     });
-    
+
     it('clear() should unlock history service', () => {
         service.isLocked = true;
         userActions.forEach((userAction) => service.register(userAction));
         service.clear();
-        
+
         expect(service.isLocked).toBeFalse();
     });
 });
