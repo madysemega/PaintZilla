@@ -68,17 +68,13 @@ export class LocalDatabaseService {
 
     filterDrawings(metadatas: Metadata[]): Drawing[] {
         const result: Drawing[] = [];
-        try {
-            for (const drawing of this.localDatabase.drawings) {
-                const data = metadatas.find((metadata: Metadata) => {
-                    return metadata.id === drawing.id;
-                });
-                if (data) {
-                    result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
-                }
+        for (const drawing of this.localDatabase.drawings) {
+            const data = metadatas.find((metadata: Metadata) => {
+                return metadata.id === drawing.id;
+            });
+            if (data) {
+                result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
             }
-        } catch (err) {
-            throw new Error('Error in filterDrawings, details ' + err);
         }
         if (result.length) {
             return result;
