@@ -40,6 +40,7 @@ export class SaveDrawingDialogComponent implements OnInit {
         const labelName = event.value;
 
         if (this.formGroup.controls.labelForm.valid && labelName !== '') {
+            // tslint:disable-next-line: no-magic-numbers
             const labelNotPresent = this.labels.indexOf(labelName) === -1;
             if (labelNotPresent) this.labels.push(labelName);
 

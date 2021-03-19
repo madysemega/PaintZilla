@@ -15,6 +15,7 @@ describe('SaveDrawingDialogComponent', () => {
     let component: SaveDrawingDialogComponent;
     let fixture: ComponentFixture<SaveDrawingDialogComponent>;
 
+    // tslint:disable:no-any
     let drawingServiceSpy: jasmine.SpyObj<any>;
     let serverServiceSpy: jasmine.SpyObj<any>;
 
@@ -60,7 +61,8 @@ describe('SaveDrawingDialogComponent', () => {
             value: 'tree',
         };
         component.addLabel(event);
-        let labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
         expect(labelIsInsideList).toBe(true);
     });
 
@@ -71,7 +73,8 @@ describe('SaveDrawingDialogComponent', () => {
         };
         component.formGroup.controls.labelForm.setValue(event.value);
         component.addLabel(event);
-        let labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
         expect(labelIsInsideList).toBe(false);
     });
 
@@ -82,7 +85,8 @@ describe('SaveDrawingDialogComponent', () => {
         };
         component.formGroup.controls.labelForm.setValue(event.value);
         component.addLabel(event);
-        let labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
         expect(labelIsInsideList).toBe(false);
     });
 
@@ -93,7 +97,8 @@ describe('SaveDrawingDialogComponent', () => {
         };
         component.formGroup.controls.labelForm.setValue(event.value);
         component.addLabel(event);
-        let labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
         expect(labelIsInsideList).toBe(false);
     });
 
@@ -104,7 +109,8 @@ describe('SaveDrawingDialogComponent', () => {
         };
         component.formGroup.controls.labelForm.setValue(event.value);
         component.addLabel(event);
-        let labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
         expect(labelIsInsideList).toBe(false);
     });
 
@@ -128,7 +134,8 @@ describe('SaveDrawingDialogComponent', () => {
     it('removeLabel should remove a label that is in the list', () => {
         component.labels.push('tree');
         component.removeLabel('tree');
-        let labelIsInsideList: boolean = component.labels.indexOf('tree') !== -1;
+        // tslint:disable-next-line: no-magic-numbers
+        const labelIsInsideList: boolean = component.labels.indexOf('tree') !== -1;
         expect(labelIsInsideList).toEqual(false);
     });
 
@@ -181,7 +188,7 @@ describe('SaveDrawingDialogComponent', () => {
     });
 
     it('saveImage should open a snackbar if the drawing was successfully saved', () => {
-        const message: string = 'Le dessin a bien été sauvegardé';
+        const message = 'Le dessin a bien été sauvegardé';
         component.imageName = 'tree';
         serverServiceSpy.createDrawing.and.callFake(() => {
             return of({ id: '123', name: 'tree', drawing: 'AAA', labels: ['tree'] });
@@ -192,7 +199,7 @@ describe('SaveDrawingDialogComponent', () => {
     });
 
     it('saveImage should open a snackbar with error message if the drawing was not successfully saved', () => {
-        const errorMessage: string = "Le dessin n'a pas bien été sauvegardé. Erreur: ";
+        const errorMessage = "Le dessin n'a pas bien été sauvegardé. Erreur: ";
         const error: HttpErrorResponse = new HttpErrorResponse({
             error: '',
             status: 404,

@@ -4,6 +4,7 @@ import { SaveDrawingService } from './save-drawing.service';
 
 describe('SaveDrawingService', () => {
     let service: SaveDrawingService;
+    // tslint:disable:no-any
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let matDialogSpy: jasmine.SpyObj<any>;
 

@@ -11,9 +11,10 @@ export class DiscardChangesDialogComponent {
     constructor(public matDialogRef: MatDialogRef<DiscardChangesDialogComponent>, private saveDrawingService: SaveDrawingService) {}
 
     openSaveDialog(): void {
+        const waitTimeMs = 100;
         this.matDialogRef.close();
         setTimeout(() => {
             this.saveDrawingService.openSaveDrawingDialog();
-        }, 100);
+        }, waitTimeMs);
     }
 }

@@ -21,7 +21,6 @@
                 </mat-chip>
                 <input
                     matInput
-                    placeholder="Nouvelle étiquette"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="addLabel($event)"
