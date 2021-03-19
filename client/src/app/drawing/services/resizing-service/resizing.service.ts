@@ -17,7 +17,6 @@ export class ResizingService {
     image: ImageData;
 
     constructor(public drawingService: DrawingService, private historyService: HistoryService) {
-        this.historyService.onUndo(() => this.resetCanvasDimensions());
         this.canvasResize = this.drawingService.canvasResize;
     }
 
