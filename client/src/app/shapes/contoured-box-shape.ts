@@ -8,10 +8,6 @@ export class ContouredBoxShape extends BoxShape {
     }
 
     clone(): Shape {
-        return new ContouredBoxShape(
-            { x: this.topLeft.x, y: this.topLeft.y },
-            { x: this.bottomRight.x, y: this.bottomRight.y },
-            this.contourWidth
-        );
+        return new ContouredBoxShape({ x: this.topLeft.x, y: this.topLeft.y }, { x: this.bottomRight.x, y: this.bottomRight.y }, this.contourWidth);
     }
 }

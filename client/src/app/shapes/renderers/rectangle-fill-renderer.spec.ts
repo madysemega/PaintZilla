@@ -1,6 +1,6 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { ContouredBoxShape } from '../contoured-box-shape';
 import { RectangleFillRenderer } from './rectangle-fill-renderer';
 
 // tslint:disable:no-any

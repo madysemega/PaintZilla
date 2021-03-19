@@ -1,5 +1,5 @@
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { ContouredBoxShape } from '../contoured-box-shape';
 import { ShapeRenderer } from './shape-renderer';
 
 export class RectangleFillRenderer extends ShapeRenderer<ContouredBoxShape> {
@@ -15,7 +15,7 @@ export class RectangleFillRenderer extends ShapeRenderer<ContouredBoxShape> {
             this.shape.topLeft.x + HALF_CONTOUR_WIDTH,
             this.shape.topLeft.y + HALF_CONTOUR_WIDTH,
             this.shape.width - this.shape.contourWidth,
-            this.shape.height - this.shape.contourWidth
+            this.shape.height - this.shape.contourWidth,
         );
         ctx.fill();
     }
