@@ -15,6 +15,9 @@ describe('EraserService', () => {
     let drawVerticesSpy: jasmine.Spy<any>;
     let drawPointSpy: jasmine.Spy<any>;
 
+    let drawRightwardRectangleSpy: jasmine.Spy<any>;
+    let drawLeftwardRectangleSpy: jasmine.Spy<any>;
+
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
@@ -41,6 +44,9 @@ describe('EraserService', () => {
 
         drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
         drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
+
+        drawRightwardRectangleSpy = spyOn<any>(service, 'drawRightwardRectangle').and.callThrough();
+        drawLeftwardRectangleSpy = spyOn<any>(service, 'drawLeftwardRectangle').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -165,5 +171,81 @@ describe('EraserService', () => {
         expect(imageData.data[2]).toEqual(255); // B
         // tslint:disable-next-line:no-magic-numbers
         expect(imageData.data[3]).not.toEqual(0); // A
+    });
+
+    it('drawRightwardRectangle() should draw a rightward rectangle', () => {
+        const HALF_WIDTH = 3;
+        const TOP_LEFT = { x: 3, y: 5 };
+        const BOTTOM_RIGHT = { x: 28, y: 56 };
+
+        const baseCtxMoveToSpy = spyOn(drawServiceSpy.baseCtx, 'moveTo').and.callThrough();
+        const baseCtxLineToSpy = spyOn(drawServiceSpy.baseCtx, 'lineTo').and.callThrough();
+
+        service.drawRightwardRectangle(drawServiceSpy.baseCtx, TOP_LEFT, BOTTOM_RIGHT, 2 * HALF_WIDTH);
+
+        expect(baseCtxMoveToSpy).toHaveBeenCalledWith(TOP_LEFT.x - HALF_WIDTH, TOP_LEFT.y - HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_LEFT.x + HALF_WIDTH, TOP_LEFT.y - HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x + HALF_WIDTH, BOTTOM_RIGHT.y - HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x + HALF_WIDTH, BOTTOM_RIGHT.y + HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x - HALF_WIDTH, BOTTOM_RIGHT.y + HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_LEFT.x - HALF_WIDTH, TOP_LEFT.y + HALF_WIDTH);
+    });
+
+    it('drawLeftwardRectangle() should draw a leftward rectangle', () => {
+        const HALF_WIDTH = 3;
+        const TOP_RIGHT = { x: 3, y: 5 };
+        const BOTTOM_LEFT = { x: 28, y: 56 };
+
+        const baseCtxMoveToSpy = spyOn(drawServiceSpy.baseCtx, 'moveTo').and.callThrough();
+        const baseCtxLineToSpy = spyOn(drawServiceSpy.baseCtx, 'lineTo').and.callThrough();
+
+        service.drawLeftwardRectangle(drawServiceSpy.baseCtx, TOP_RIGHT, BOTTOM_LEFT, 2 * HALF_WIDTH);
+
+        expect(baseCtxMoveToSpy).toHaveBeenCalledWith(TOP_RIGHT.x + HALF_WIDTH, TOP_RIGHT.y - HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_RIGHT.x + HALF_WIDTH, TOP_RIGHT.y + HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x + HALF_WIDTH, BOTTOM_LEFT.y + HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x - HALF_WIDTH, BOTTOM_LEFT.y + HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x - HALF_WIDTH, BOTTOM_LEFT.y - HALF_WIDTH);
+        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_RIGHT.x - HALF_WIDTH, TOP_RIGHT.y - HALF_WIDTH);
+    });
+
+    it('drawVertices() should draw (only) a rightward rectangle if movement is down-right', () => {
+        service['vertices'].push({ x: 0, y: 0 });
+        service['vertices'].push({ x: 34, y: 42 });
+
+        service.drawVertices(drawServiceSpy.baseCtx);
+
+        expect(drawRightwardRectangleSpy).toHaveBeenCalled();
+        expect(drawLeftwardRectangleSpy).not.toHaveBeenCalled();
+    });
+
+    it('drawVertices() should draw (only) a rightward rectangle if movement is up-left', () => {
+        service['vertices'].push({ x: 34, y: 42 });
+        service['vertices'].push({ x: 0, y: 0 });
+
+        service.drawVertices(drawServiceSpy.baseCtx);
+
+        expect(drawRightwardRectangleSpy).toHaveBeenCalled();
+        expect(drawLeftwardRectangleSpy).not.toHaveBeenCalled();
+    });
+
+    it('drawVertices() should draw (only) a leftward rectangle if movement is down-left', () => {
+        service['vertices'].push({ x: 34, y: 0 });
+        service['vertices'].push({ x: 0, y: 42 });
+
+        service.drawVertices(drawServiceSpy.baseCtx);
+
+        expect(drawLeftwardRectangleSpy).toHaveBeenCalled();
+        expect(drawRightwardRectangleSpy).not.toHaveBeenCalled();
+    });
+
+    it('drawVertices() should draw (only) a leftward rectangle if movement is up-right', () => {
+        service['vertices'].push({ x: 0, y: 42 });
+        service['vertices'].push({ x: 34, y: 0 });
+
+        service.drawVertices(drawServiceSpy.baseCtx);
+
+        expect(drawLeftwardRectangleSpy).toHaveBeenCalled();
+        expect(drawRightwardRectangleSpy).not.toHaveBeenCalled();
     });
 });
