@@ -9,6 +9,7 @@ export class LocalDatabaseMock {
     updateDrawing(id: string, drawing: string): void {}
     deleteDrawing(id: string): void {}
     filterDrawings(metadatas: Metadata[]): void {}
+
     filterByLabels(metadatas: Metadata[]): void {}
     async mapDrawingById(metadata: Metadata): Promise<void> {}
 }

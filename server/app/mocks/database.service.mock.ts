@@ -17,7 +17,7 @@ export class DatabaseServiceMock {
         this.localDatabaseService = new LocalDatabaseMock();
     }
 
-    async start(url: string): Promise<void> {
+    async start(): Promise<void> {
         this.mongoUri = await this.mongoServer.getUri();
         await this.distantDatabase
             .connect(this.mongoUri, this.options)

@@ -67,4 +67,8 @@ export class Server {
         // tslint:disable-next-line:no-console
         console.log(`Listening on ${bind}`);
     }
+
+    static configureServerDisabling(updateServerDrawings: () => void): void {
+        process.on('SIGINT', updateServerDrawings);
+    }
 }

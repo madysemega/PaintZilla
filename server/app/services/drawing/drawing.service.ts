@@ -6,12 +6,19 @@ import { Drawing } from '@common/models/drawing';
 import { Validator } from '@common/validation/validator/validator';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
+import { Server } from '@app/server/server';
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
     constructor(@inject(TYPES.DatabaseService) private databaseService: DatabaseService) {
         this.databaseService.localDatabaseService.start();
-        this.configureServerDisabling();
+        Server.configureServerDisabling(() => {
+            try {
+                this.databaseService.localDatabaseService.updateServerDrawings();
+            } catch (error) {
+                console.log('An error occurred while closing the server', error.message);
+            }
+        });
     }
 
     // TO DO: CREATE
@@ -24,9 +31,6 @@ export class DrawingService {
             .save()
             .then(() => {
                 this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing);
-            })
-            .catch(() => {
-                throw new Error('Could not save drawing in Mongodb Atlas database');
             });
         return this.getDrawingById(metadata.id);
     }
@@ -125,15 +129,5 @@ export class DrawingService {
         } else {
             throw new Error('Could not deleted drawing with provided id');
         }
-    }
-
-    private configureServerDisabling(): void {
-        process.on('SIGINT', () => {
-            try {
-                this.databaseService.localDatabaseService.updateServerDrawings();
-            } catch (error) {
-                console.log('An error occurred while closing the server', error.message);
-            }
-        });
     }
 }

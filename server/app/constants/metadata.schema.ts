@@ -1,7 +1,7 @@
 // @ts-ignore
 // tslint:disable-next-line:no-require-imports
 import mongoose = require('mongoose');
-export class Metadata extends mongoose.Document {
+export type Metadata = mongoose.Document & {
     name: string;
     labels: string[];
 };
