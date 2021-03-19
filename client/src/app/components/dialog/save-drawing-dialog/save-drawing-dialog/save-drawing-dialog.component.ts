@@ -1,4 +1,4 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ENTER } from '@angular/cdk/keycodes';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -19,7 +19,7 @@ export class SaveDrawingDialogComponent implements OnInit {
     imageName: string;
     formGroup: FormGroup;
     labels: string[] = [];
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+    readonly separatorKeysCodes: number[] = [ENTER];
 
     constructor(
         public matDialogRef: MatDialogRef<SaveDrawingDialogComponent>,
@@ -62,7 +62,7 @@ export class SaveDrawingDialogComponent implements OnInit {
     }
 
     saveImage(): void {
-        if (this.imageName !== '') {
+        if (this.imageName) {
             const image: string = this.drawingService.currentDrawing;
             this.currentlySaving = true;
             this.serverService.createDrawing(this.imageName, image, this.labels).subscribe(

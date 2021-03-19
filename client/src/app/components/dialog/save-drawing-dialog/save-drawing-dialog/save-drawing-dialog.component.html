@@ -14,6 +14,7 @@
             <li>Ne pas contenir de caractères spéciaux ou d'espaces</li>
         </ul>
         <mat-form-field appearance="fill" class="labels">
+            <mat-label>Étiquette</mat-label>
             <mat-chip-list #chipList>
                 <mat-chip *ngFor="let label of labels" [selectable]="true" [removable]="true" (removed)="removeLabel(label)">
                     {{ label }}
