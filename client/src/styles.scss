@@ -77,3 +77,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  }
 .margin-left-small {
     margin-left: 24px;
 }
+
+// Scroll bars
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(18, 37, 59, 0.212);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(18, 37, 59, 0.932);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #283463;
+}

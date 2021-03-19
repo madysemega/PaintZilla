@@ -28,8 +28,10 @@ mat-drawer {
 
 .panel-toggler {
     position: absolute;
-    bottom: 7px;
+    top: 0px;
     left: 7px;
+
+    background-color: rgb(31, 53, 78);
 }
 
 .drawing {
