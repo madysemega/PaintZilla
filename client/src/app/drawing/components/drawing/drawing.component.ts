@@ -39,6 +39,15 @@ export class DrawingComponent implements AfterViewInit {
             this.drawingService.previewCanvas.width = Constants.DEFAULT_WIDTH;
             this.drawingService.previewCanvas.height = Constants.DEFAULT_HEIGHT;
             this.drawingService.restoreCanvasToDefault();
+            this.drawingService.restoreCanvasStyle();
+        });
+
+        this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
+            this.canvasSize.x = newDimensions.x;
+            this.canvasSize.y = newDimensions.y;
+
+            this.drawingService.canvasResize.x = newDimensions.x;
+            this.drawingService.canvasResize.y = newDimensions.y;
         });
     }
 
@@ -52,6 +61,9 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvasSize = this.canvasSize;
         this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
         this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
+        this.drawingService.restoreCanvasStyle();
     }
 
     @HostListener('document:mousemove', ['$event'])

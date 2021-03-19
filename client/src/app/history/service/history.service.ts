@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { IUserAction } from '@app/history/user-actions/user-action';
 
 @Injectable({
@@ -36,7 +37,7 @@ export class HistoryService {
         this.isLocked = false;
     }
 
-    undo(): void {
+    async undo(): Promise<void> {
         if (this.canUndo()) {
             const lastAction = this.past.pop() as IUserAction;
 
@@ -44,7 +45,10 @@ export class HistoryService {
 
             this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
-            this.past.forEach((action) => action.apply());
+            for (const action of this.past) {
+                await sleep();
+                action.apply();
+            }
         }
     }
 
@@ -64,5 +68,11 @@ export class HistoryService {
 
     canRedo(): boolean {
         return this.future.length > 0 && !this.isLocked;
+    }
+
+    clear(): void {
+        this.past.length = 0;
+        this.future.length = 0;
+        this.isLocked = false;
     }
 }
