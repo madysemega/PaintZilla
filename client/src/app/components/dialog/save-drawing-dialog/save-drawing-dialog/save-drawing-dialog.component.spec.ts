@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ServerService } from '@app/commons/service/server.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
+import { throwError } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { SaveDrawingDialogComponent } from './save-drawing-dialog.component';
 
@@ -183,11 +184,9 @@ describe('SaveDrawingDialogComponent', () => {
             statusText: '',
         });
         component.imageName = 'tree';
-        serverServiceSpy.createDrawing.and.callFake(() => {
-            return of(error);
-        });
-        const openSnackBarSpy = spyOn(component, 'openSnackBar').and.callThrough();
+        serverServiceSpy.createDrawing.and.returnValue(throwError(error));
+        const openSnackBarSpy = spyOn(component, 'openSnackBar').and.stub();
         component.saveImage();
-        expect(openSnackBarSpy).toHaveBeenCalledWith(errorMessage);
+        expect(openSnackBarSpy).toHaveBeenCalledWith('' + errorMessage + error.message);
     });
 });
