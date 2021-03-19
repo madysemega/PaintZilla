@@ -11,8 +11,6 @@ describe('DrawingService', () => {
     let canvasTestHelper: CanvasTestHelper;
     let historyServiceStub: HistoryService;
 
-    let restoreCanvasStyleStub: jasmine.Spy<any>;
-    let fillCanvasSpy: jasmine.Spy<any>;
     let baseCtxDrawImageSpy: jasmine.Spy<any>;
     let resetDrawingSurfaceSpy: jasmine.Spy<any>;
 
@@ -35,8 +33,6 @@ describe('DrawingService', () => {
         service.canvasSize = { x: 1000, y: 1000 };
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
-        restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
-        fillCanvasSpy = spyOn(service, 'fillCanvas').and.callThrough();
         baseCtxDrawImageSpy = spyOn(service.baseCtx, 'drawImage').and.stub();
         resetDrawingSurfaceSpy = spyOn(service, 'resetDrawingSurface').and.callThrough();
     });
@@ -83,13 +79,6 @@ describe('DrawingService', () => {
         service.restoreCanvasStyle();
         expect(service.canvas.style.zIndex).toEqual(Constants.INFERIOR_Z_INDEX);
         expect(service.baseCtx.fillStyle).toEqual(Constants.HEX_WHITE);
-    });
-
-    it('history service undo should restore canvas style and fill canvas', () => {
-        historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
-        historyServiceStub.undo();
-        expect(restoreCanvasStyleStub).toHaveBeenCalled();
-        expect(fillCanvasSpy).toHaveBeenCalled();
     });
 
     it('setImageFromBase64() should reset the drawing surface', () => {
