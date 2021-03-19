@@ -1,16 +1,17 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { BoxShape } from '@app/shapes/box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { ContouredBoxShape } from '../contoured-box-shape';
 import { EllipseFillRenderer } from './ellipse-fill-renderer';
 
 // tslint:disable:no-any
 describe('EllipseFillRenderer', () => {
     const INITIAL_TOP_LEFT = { x: 0, y: 0 };
     const INITIAL_BOTTOM_RIGHT = { x: 32, y: 32 };
+    const CONTOUR_WIDTH = 6;
 
     let renderer: EllipseFillRenderer;
-    let shape: BoxShape;
+    let shape: ContouredBoxShape;
     let properties: ShapeProperty[];
 
     let canvasTestHelper: CanvasTestHelper;
@@ -21,7 +22,7 @@ describe('EllipseFillRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
-        shape = new BoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT);
+        shape = new ContouredBoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT, CONTOUR_WIDTH);
         renderer = new EllipseFillRenderer(shape, properties);
 
         canvasTestHelper = new CanvasTestHelper();
@@ -43,6 +44,7 @@ describe('EllipseFillRenderer', () => {
 
     it('should call ellipse with shape position/radii when render() is called', () => {
         const FULL_CIRCLE_DEG = 360;
+        const HALF_CONTOUR_WIDTH = CONTOUR_WIDTH / 2;
 
         const center: Vec2 = {
             x: (shape.topLeft.x + shape.bottomRight.x) / 2,
@@ -50,8 +52,8 @@ describe('EllipseFillRenderer', () => {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(shape.topLeft.x - shape.bottomRight.x) / 2,
-            y: Math.abs(shape.topLeft.y - shape.bottomRight.y) / 2,
+            x: Math.abs(shape.topLeft.x - shape.bottomRight.x) / 2 - HALF_CONTOUR_WIDTH,
+            y: Math.abs(shape.topLeft.y - shape.bottomRight.y) / 2 - HALF_CONTOUR_WIDTH,
         };
 
         renderer.render(ctxStub);
