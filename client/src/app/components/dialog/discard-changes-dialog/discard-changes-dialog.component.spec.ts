@@ -6,11 +6,14 @@ import { DiscardChangesDialogComponent } from './discard-changes-dialog.componen
 describe('DiscardChangesDialogComponent', () => {
     let component: DiscardChangesDialogComponent;
     let fixture: ComponentFixture<DiscardChangesDialogComponent>;
+    let matDialogRefSpy: jasmine.SpyObj<any>;
+
     beforeEach(async(() => {
+        matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['close']);
         TestBed.configureTestingModule({
             imports: [MaterialModule],
             declarations: [DiscardChangesDialogComponent],
-            providers: [{ provide: MatDialogRef, useValue: {} }],
+            providers: [{ provide: MatDialogRef, useValue: matDialogRefSpy }],
         }).compileComponents();
     }));
 
@@ -22,5 +25,10 @@ describe('DiscardChangesDialogComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('openSaveDialog should close the current dialog', () => {
+        component.openSaveDialog();
+        expect(matDialogRefSpy.close).toHaveBeenCalled();
     });
 });
