@@ -45,6 +45,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
     }
 

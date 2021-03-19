@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
@@ -15,6 +15,11 @@ export class DrawingService {
     canvasIsEmpty: boolean = true;
     canvasSize: Vec2;
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+
+    onDrawingSurfaceResize: EventEmitter<Vec2>;
+
+    initialSize: Vec2;
+    initialImage: CanvasImageSource | undefined;
 
     setCursorType(type: CursorType): void {
         if (this.previewCanvas) {
@@ -50,20 +55,42 @@ export class DrawingService {
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
-    setImageFromBase64(imageSrc: string): void {
-        this.clearCanvas(this.previewCtx);
-        this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
+    resizeDrawingSurface(newWidth: number, newHeight: number): void {
+        this.onDrawingSurfaceResize.emit({ x: newWidth, y: newHeight });
+    }
 
+    resetDrawingSurfaceDimensions(): void {
+        this.resizeDrawingSurface(this.initialSize.x, this.initialSize.y);
+    }
+
+    resetDrawingSurface(): void {
+        this.resetDrawingSurfaceDimensions();
+        this.fillCanvas(this.baseCtx, this.initialSize.x, this.initialSize.y, Constants.CTX_COLOR);
+        setTimeout(() => this.drawInitialImage());
+    }
+
+    drawInitialImage(): void {
+        if (this.initialImage != undefined) {
+            this.baseCtx.drawImage(this.initialImage, 0, 0);
+        }
+    }
+
+    setImageFromBase64(imageSrc: string): void {
         const image = new Image();
         image.src = imageSrc;
 
-        this.baseCtx.drawImage(image, 0, 0);
+        this.initialSize.x = image.width;
+        this.initialSize.y = image.height;
+        this.initialImage = image;
+
+        this.resetDrawingSurface();
     }
 
     constructor(historyService: HistoryService) {
-        historyService.onUndo(() => {
-            this.fillCanvas(this.baseCtx, this.canvasSize.x, this.canvasSize.y, Constants.CTX_COLOR);
-            this.restoreCanvasStyle();
-        });
+        historyService.onUndo(() => this.resetDrawingSurface());
+
+        this.onDrawingSurfaceResize = new EventEmitter();
+        this.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+        this.initialImage = undefined;
     }
 }

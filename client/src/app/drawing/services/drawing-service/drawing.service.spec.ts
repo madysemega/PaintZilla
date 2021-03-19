@@ -12,9 +12,9 @@ describe('DrawingService', () => {
     let historyServiceStub: HistoryService;
 
     let restoreCanvasStyleStub: jasmine.Spy<any>;
-    let clearCanvasStub: jasmine.Spy<any>;
     let fillCanvasSpy: jasmine.Spy<any>;
     let baseCtxDrawImageSpy: jasmine.Spy<any>;
+    let resetDrawingSurfaceSpy: jasmine.Spy<any>;
 
     const WIDTH_1 = 5;
     const WIDTH_2 = 10;
@@ -36,9 +36,9 @@ describe('DrawingService', () => {
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
         restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
-        clearCanvasStub = spyOn(service, 'clearCanvas').and.stub();
         fillCanvasSpy = spyOn(service, 'fillCanvas').and.callThrough();
         baseCtxDrawImageSpy = spyOn(service.baseCtx, 'drawImage').and.stub();
+        resetDrawingSurfaceSpy = spyOn(service, 'resetDrawingSurface').and.callThrough();
     });
 
     it('should be created', () => {
@@ -92,24 +92,24 @@ describe('DrawingService', () => {
         expect(fillCanvasSpy).toHaveBeenCalled();
     });
 
-    it('setImageFromBase64() should clear the preview canvas', () => {
+    it('setImageFromBase64() should reset the drawing surface', () => {
         const IMAGE_SRC_BASE_64 = '1234567890';
 
         service.setImageFromBase64(IMAGE_SRC_BASE_64);
-        expect(clearCanvasStub).toHaveBeenCalledWith(service.previewCtx);
+        expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
     });
 
-    it('setImageFromBase64() should fill the base canvas with default colour', () => {
-        const IMAGE_SRC_BASE_64 = '1234567890';
+    it('drawInitialImage() should draw the initial image if there is one', () => {
+        service.initialImage = new Image();
 
-        service.setImageFromBase64(IMAGE_SRC_BASE_64);
-        expect(fillCanvasSpy).toHaveBeenCalledWith(service.baseCtx, service.canvasSize.x, service.canvasSize.y, Constants.CTX_COLOR);
-    });
-
-    it('setImageFromBase64() should draw the image the base canvas', () => {
-        const IMAGE_SRC_BASE_64 = '1234567890';
-
-        service.setImageFromBase64(IMAGE_SRC_BASE_64);
+        service.drawInitialImage();
         expect(baseCtxDrawImageSpy).toHaveBeenCalled();
+    });
+
+    it('drawInitialImage() should not draw the initial image if there is none', () => {
+        service.initialImage = undefined;
+
+        service.drawInitialImage();
+        expect(baseCtxDrawImageSpy).not.toHaveBeenCalled();
     });
 });
