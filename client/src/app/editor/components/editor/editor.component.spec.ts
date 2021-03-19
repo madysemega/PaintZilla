@@ -55,7 +55,7 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo']);
         drawingStub = new DrawingService(historyServiceStub);
-        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut']);
+        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'onToolChanged', 'fromKeyboardShortcut']);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {

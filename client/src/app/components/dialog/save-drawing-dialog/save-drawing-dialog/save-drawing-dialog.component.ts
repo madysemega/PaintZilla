@@ -27,6 +27,7 @@ export class SaveDrawingDialogComponent implements OnInit {
         private drawingService: DrawingService,
         private snackBar: MatSnackBar,
     ) {}
+
     ngOnInit(): void {
         this.formGroup = new FormGroup({
             nameForm: new FormControl('', [Validators.required, Validators.pattern(RegularExpressions.NAME_REGEX)]),
@@ -36,20 +37,18 @@ export class SaveDrawingDialogComponent implements OnInit {
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
-        const label = event.value;
+        const labelName = event.value;
 
-        if (this.formGroup.controls.labelForm.valid && label != '') {
+        if (this.formGroup.controls.labelForm.valid && labelName !== '') {
             let labelNotPresent = true;
             this.labels.forEach((label: string) => {
                 if (label === event.value) {
                     labelNotPresent = false;
                 }
             });
-            if (labelNotPresent) this.labels.push(label);
+            if (labelNotPresent) this.labels.push(labelName);
 
-            if (input) {
-                input.value = '';
-            }
+            input.value = '';
         }
     }
 
@@ -67,27 +66,27 @@ export class SaveDrawingDialogComponent implements OnInit {
     }
 
     saveImage(): void {
-        if (this.imageName) {
+        if (this.imageName !== '') {
             const image: string = this.drawingService.currentDrawing;
             this.currentlySaving = true;
             this.serverService.createDrawing(this.imageName, image, this.labels).subscribe(
                 (drawing: Drawing) => {
-                    this.snackBar.open('Le dessin a bien été sauvegardé', 'Ok', {
-                        duration: 4000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
+                    this.openSnackBar('Le dessin a bien été sauvegardé');
                 },
                 (error: HttpErrorResponse) => {
-                    this.snackBar.open("Le dessin n'a pas bien été sauvegardé. Erreur: " + error.message, 'Ok', {
-                        duration: 4000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
+                    this.openSnackBar("Le dessin n'a pas bien été sauvegardé. Erreur: " + error.message);
                 },
             );
             this.currentlySaving = false;
             this.matDialogRef.close();
         }
+    }
+
+    openSnackBar(message: string): void {
+        this.snackBar.open(message, 'Ok', {
+            duration: 4000,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
+        });
     }
 }

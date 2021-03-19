@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
@@ -12,7 +13,10 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements AfterViewInit {
+    @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
+
     showColourPicker: boolean;
+
     constructor(
         public toolSelector: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
@@ -23,6 +27,10 @@ export class EditorComponent implements AfterViewInit {
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
+        });
+
+        this.toolSelector.onToolChanged(() => {
+            this.configurationPanelDrawer.open();
         });
     }
 
