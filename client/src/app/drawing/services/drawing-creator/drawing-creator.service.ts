@@ -20,7 +20,7 @@ export class DrawingCreatorService {
 
     createNewDrawing(): void {
         if (!this.drawingService.isCanvasEmpty() && this.dialog.openDialogs.length === 0) {
-            this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true });
+            this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
             this.dialogRef.afterClosed().subscribe((changesAreDiscarded) => {
                 if (changesAreDiscarded) {
                     this.drawingRestored.emit();

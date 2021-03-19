@@ -1,16 +1,14 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="626.000000pt" height="400.000000pt" viewBox="0 0 626.000000 400.000000"
- preserveAspectRatio="xMidYMid meet">
-<metadata>
-Created by potrace 1.16, written by Peter Selinger 2001-2019
-</metadata>
-<g transform="translate(0.000000,400.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M162 1983 l3 -1848 2949 -3 c2175 -1 2952 1 2962 9 12 10 14 311 12
-1848 l-3 1836 -2963 3 -2962 2 2 -1847z m5693 2 l0 -1620 -2732 -3 -2733 -2 0
-1625 0 1625 2733 -2 2732 -3 0 -1620z"/>
-</g>
-</svg>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="38.55356979370117" height="24.19047737121582" version="1.1" sodipodi:docname="ellipse-filled.svg" inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)" style=""><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+  <defs id="defs12"/>
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="3.959798" inkscape:cx="51.220398" inkscape:cy="4.1470055" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="986" inkscape:window-x="-11" inkscape:window-y="49" inkscape:window-maximized="1"/>
+  <metadata id="metadata15">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title/>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  
+<g class="currentLayer" style=""><title>Layer 1</title><path fill="" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" stroke-dasharray="none" stroke-linejoin="miter" stroke-linecap="butt" stroke-dashoffset="" fill-rule="nonzero" opacity="1" marker-start="" marker-mid="" marker-end="" id="svg_5" d="M5.202708426358853,15.823629868790647 " style="color: rgb(0, 0, 0);"/><rect fill="none" stroke="#000000" stroke-dashoffset="" fill-rule="nonzero" id="svg_20" x="1.0370371341705322" y="5" width="21.703702926635742" height="14" style="color: rgb(0, 0, 0);" class=""/><rect fill="none" stroke="#000000" stroke-dashoffset="" fill-rule="nonzero" x="1.777777970378866" y="5.000001202684665" width="21.506463246730473" height="13.999999072108352" style="color: rgb(0, 0, 0);" class="" id="svg_2"/><rect fill="#ffffff" stroke-dashoffset="" fill-rule="nonzero" id="svg_1" x="3.3333346247673035" y="5.790122863692204" width="17.888891220092773" height="11.432099524098476" style="color: rgb(0, 0, 0);" class=""/></g></svg>
