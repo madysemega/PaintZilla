@@ -2,3 +2,7 @@
     border-style: solid;
     border-width: 1px;
 }
+
+::ng-deep .mat-option{
+    background-color: rgba(18, 37, 59, 0.932) !important;
+}
