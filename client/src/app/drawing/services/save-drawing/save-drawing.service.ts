@@ -18,7 +18,7 @@ export class SaveDrawingService {
 
     openSaveDrawingDialog(): void {
         if (this.dialog.openDialogs.length === 0) {
-            this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true });
+            this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
         }
     }
 
