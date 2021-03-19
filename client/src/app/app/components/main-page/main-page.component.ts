@@ -12,7 +12,7 @@ export class MainPageComponent {
     constructor(private resizingService: ResizingService, public dialog: MatDialog) {}
 
     openCarousel(): void {
-        this.dialog.open(ImageNavigationComponent);
+        this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });        
     }
 
     resetCanvasDimensions(): void {
