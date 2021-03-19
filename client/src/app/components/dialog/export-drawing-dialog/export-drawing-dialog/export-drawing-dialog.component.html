@@ -1,43 +1,53 @@
 <h2 mat-dialog-title>Exporter le dessin</h2>
-<form autocomplete="off">
-    <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Nom du dessin</mat-label>
-            <input matInput #nameInput (keyup)="changeName($event)" />
-        </mat-form-field>
+<div class="modal-container">
+    <div class="drawing-div">
+        <div class="drawing-info-div">
+            <form autocomplete="off">
+                <div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Nom du dessin</mat-label>
+                        <input matInput #nameInput (keyup)="changeName($event)" />
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Format du dessin</mat-label>
+                        <mat-select (selectionChange)="updateImageFormat($event)" [(value)]="imageFormat">
+                            <mat-option value="png">PNG</mat-option>
+                            <mat-option value="jpeg">JPG</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Filtre</mat-label>
+                        <mat-select (selectionChange)="updatePreviewImage($event)" [(value)]="filter">
+                            <mat-option value="grayscale(100%)">Noir et blanc</mat-option>
+                            <mat-option value="invert(100%)">Inversé</mat-option>
+                            <mat-option value="hue-rotate(90deg)">Rotation des couleurs</mat-option>
+                            <mat-option value="blur(5px)">Brouillé</mat-option>
+                            <mat-option value="sepia(1)">Sepia</mat-option>
+                            <mat-option value="none">Aucun filtre</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-canvas-div">
+            <canvas #previewCanvas></canvas>
+            <canvas #imageCanvas hidden></canvas>
+        </div>
     </div>
 
     <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Format du dessin</mat-label>
-            <mat-select (selectionChange)="updateImageFormat($event)" [(value)]="imageFormat">
-                <mat-option value="png">PNG</mat-option>
-                <mat-option value="jpeg">JPG</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <mat-dialog-actions>
+            <a #downloadLink id="download" download="this.imageName + this.imageFormat"
+                ><button mat-button (click)="downloadImage()">Exporter</button></a
+            >
+            <button mat-button mat-dialog-close>Annuler</button>
+        </mat-dialog-actions>
     </div>
-
-    <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Filtre</mat-label>
-            <mat-select (selectionChange)="updatePreviewImage($event)" [(value)]="filter">
-                <mat-option value="grayscale(100%)">Noir et blanc</mat-option>
-                <mat-option value="invert(100%)">Inversé</mat-option>
-                <mat-option value="hue-rotate(90deg)">Rotation des couleurs</mat-option>
-                <mat-option value="blur(5px)">Brouillé</mat-option>
-                <mat-option value="sepia(1)">Sepia</mat-option>
-                <mat-option value="none">Aucun filtre</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-</form>
-
-<canvas #previewCanvas></canvas>
-<canvas #imageCanvas hidden></canvas>
-
-<div>
-    <mat-dialog-actions>
-        <a #downloadLink id="download" download="this.imageName + this.imageFormat"><button mat-button (click)="downloadImage()">Exporter</button></a>
-        <button mat-button mat-dialog-close>Annuler</button>
-    </mat-dialog-actions>
 </div>
