@@ -14,10 +14,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  }
     background-color: rgba(228, 37, 37, 0.733) !important;
   }
 
-.mat-accent .mat-slider-track-fill {
-    background-color: rgb(230, 255, 6);
-}  
-
 .mat-slider-thumb {
     transform: scale(0) !important;
 }
@@ -27,12 +23,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  }
 }
 //end from
 
+.mat-accent .mat-slider-track-fill {
+    background-color: rgb(230, 255, 6);
+}  
+
 .custom-modalbox{
     mat-dialog-container {
         background-color: rgba(18, 37, 59, 0.932);
     }
 }
-  
 
 // Orientation
 
