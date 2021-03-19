@@ -1,12 +1,12 @@
 import * as Constants from '@app/constants/database.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
+import { Server } from '@app/server/server';
 import { DatabaseService } from '@app/services/database/database.service';
 import { TYPES } from '@app/settings/types';
 import { Drawing } from '@common/models/drawing';
 import { Validator } from '@common/validation/validator/validator';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
-import { Server } from '@app/server/server';
 @injectable()
 export class DrawingService {
     distantDatabase: mongoose.Mongoose;
@@ -27,11 +27,9 @@ export class DrawingService {
         Validator.checkDrawing(drawing);
         Validator.checkLabels(labels);
         const metadata = new MetadataModel({ name, labels });
-        await metadata
-            .save()
-            .then(() => {
-                this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing);
-            });
+        await metadata.save().then(() => {
+            this.databaseService.localDatabaseService.addDrawing(metadata.id, drawing);
+        });
         return this.getDrawingById(metadata.id);
     }
 

@@ -1,6 +1,6 @@
+import { LocalDatabaseMock } from '@app/mocks/local.database.service.mock';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as mongoose from 'mongoose';
-import { LocalDatabaseMock } from '@app/mocks/local.database.service.mock';
 export class DatabaseServiceMock {
     mongoServer: MongoMemoryServer;
     mongoUri: string;

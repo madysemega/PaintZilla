@@ -7,6 +7,9 @@ import { injectable } from 'inversify';
 @injectable()
 export class LocalDatabaseService {
     localDatabase: { drawings: DrawingSchema[] };
+    constructor() {
+        this.localDatabase = { drawings: [] };
+    }
     start(): void {
         try {
             const str = fileSystem.readFileSync(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8);
@@ -14,7 +17,7 @@ export class LocalDatabaseService {
             this.localDatabase = data;
             console.log('Server drawings were charged successfully');
         } catch (error) {
-            console.log("Couldn't parse the json data, details on " + error);
+            throw new Error(error.message);
         }
     }
     updateServerDrawings(): void {

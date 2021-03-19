@@ -6,4 +6,3 @@ export class ValidatorMock {
     static checkDrawing(drawing: string): void {}
     static checkLabels(labels: string[]): void {}
 }
-
