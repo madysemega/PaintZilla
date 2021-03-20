@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import * as Constants from '@app/commons/constants/server.service.spec.constants';
+import * as Constants from '@app/server-communication/constants/server.service.spec.constants';
 import { Drawing } from '@common/models/drawing';
 import { Validator } from '@common/validation/validator/validator';
 import { Subject, Subscriber } from 'rxjs';
