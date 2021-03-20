@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { IUserAction } from '@app/history/user-actions/user-action';
 
 @Injectable({
@@ -36,29 +37,28 @@ export class HistoryService {
         this.isLocked = false;
     }
 
-    undo(): void {
+    async undo(): Promise<void> {
         if (this.canUndo()) {
-            const lastAction = this.past.pop();
+            const lastAction = this.past.pop() as IUserAction;
 
-            if (lastAction != undefined) {
-                this.future.push(lastAction);
+            this.future.push(lastAction);
 
-                this.undoEventObservers.forEach((observerCallback) => observerCallback());
+            this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
-                this.past.forEach((action) => action.apply());
+            for (const action of this.past) {
+                await sleep();
+                action.apply();
             }
         }
     }
 
     redo(): void {
         if (this.canRedo()) {
-            const lastUndoneAction = this.future.pop();
+            const lastUndoneAction = this.future.pop() as IUserAction;
 
-            if (lastUndoneAction != undefined) {
-                this.past.push(lastUndoneAction);
+            this.past.push(lastUndoneAction);
 
-                lastUndoneAction.apply();
-            }
+            lastUndoneAction.apply();
         }
     }
 
@@ -68,5 +68,11 @@ export class HistoryService {
 
     canRedo(): boolean {
         return this.future.length > 0 && !this.isLocked;
+    }
+
+    clear(): void {
+        this.past.length = 0;
+        this.future.length = 0;
+        this.isLocked = false;
     }
 }

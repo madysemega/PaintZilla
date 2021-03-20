@@ -39,7 +39,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
+    constructor(protected drawingService: DrawingService, protected selectionHelper: SelectionHelperService) {
         this.selection = document.createElement('canvas');
         this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
         this.originalSelection = document.createElement('canvas');

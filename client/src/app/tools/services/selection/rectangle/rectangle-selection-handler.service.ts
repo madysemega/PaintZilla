@@ -15,8 +15,8 @@ export enum ResizingMode {
     providedIn: 'root',
 })
 export class RectangleSelectionHandlerService extends SelectionHandlerService {
-    constructor(drawingService: DrawingService, protected selectionService: RectangleSelectionHelperService) {
-        super(drawingService, selectionService);
+    constructor(drawingService: DrawingService, protected selectionHelper: RectangleSelectionHelperService) {
+        super(drawingService, selectionHelper);
     }
 
     extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
@@ -47,6 +47,6 @@ export class RectangleSelectionHandlerService extends SelectionHandlerService {
     }
 
     whiteFillAtOriginalLocation(): void {
-        this.selectionService.drawPostSelectionRectangle(this.originalTopLeftOnBaseCanvas, this.originalWidth, this.originalHeight);
+        this.selectionHelper.drawPostSelectionRectangle(this.originalTopLeftOnBaseCanvas, this.originalWidth, this.originalHeight);
     }
 }

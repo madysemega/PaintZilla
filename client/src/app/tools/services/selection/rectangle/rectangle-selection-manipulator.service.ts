@@ -11,14 +11,14 @@ import { RectangleSelectionHelperService } from './rectangle-selection-helper.se
 export class RectangleSelectionManipulatorService extends SelectionManipulatorService {
     constructor(
         drawingService: DrawingService,
-        protected selectionService: RectangleSelectionHelperService,
+        protected selectionHelper: RectangleSelectionHelperService,
         selectionHandler: RectangleSelectionHandlerService,
         historyService: HistoryService,
     ) {
-        super(drawingService, selectionService, selectionHandler, historyService);
+        super(drawingService, selectionHelper, selectionHandler, historyService);
     }
 
     drawSelectionOutline(): void {
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
+        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
 }

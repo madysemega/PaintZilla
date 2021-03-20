@@ -1,6 +1,6 @@
 export type CarouselCardInformation = {
+    id: string;
     name: string;
-    image: string;
-
+    drawing: string;
     labels: string[];
 };

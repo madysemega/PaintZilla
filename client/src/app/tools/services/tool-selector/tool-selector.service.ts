@@ -9,6 +9,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
@@ -22,6 +23,12 @@ export class ToolSelectorService {
     private tools: Map<string, MetaWrappedTool> = new Map<string, MetaWrappedTool>();
     selectedTool: MetaWrappedTool;
     name: BehaviorSubject<string> = new BehaviorSubject<string>('pencil');
+
+    private onToolChangedObservers: (() => void)[];
+
+    onToolChanged(callback: () => void): void {
+        this.onToolChangedObservers.push(callback);
+    }
 
     getSelectedTool(): Tool {
         return this.selectedTool.tool;
@@ -41,11 +48,16 @@ export class ToolSelectorService {
             if ('onToolDeselect' in this.selectedTool.tool) {
                 (this.selectedTool.tool as IDeselectableTool).onToolDeselect();
             }
+
             this.selectedTool = this.tools.get(name) as MetaWrappedTool;
+
             if ('onToolSelect' in this.selectedTool.tool) {
                 (this.selectedTool.tool as ISelectableTool).onToolSelect();
             }
+
             this.name.next(name);
+            this.onToolChangedObservers.forEach((observer) => observer());
+
             return true;
         }
         return false;
@@ -81,6 +93,7 @@ export class ToolSelectorService {
     }
     constructor(
         pencilService: PencilService,
+        pipetteService: PipetteService,
         sprayService: SprayService,
         eraserService: EraserService,
         ellipseService: EllipseService,
@@ -101,6 +114,12 @@ export class ToolSelectorService {
             icon: 'eraser',
             keyboardShortcut: 'e',
             tool: eraserService,
+        });
+        this.tools.set(pipetteService.key, {
+            displayName: 'Pipette',
+            icon: 'pipette',
+            keyboardShortcut: 'i',
+            tool: pipetteService,
         });
         this.tools.set(sprayService.key, {
             displayName: 'Aerosol',
@@ -147,5 +166,6 @@ export class ToolSelectorService {
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
+        this.onToolChangedObservers = new Array<() => void>();
     }
 }

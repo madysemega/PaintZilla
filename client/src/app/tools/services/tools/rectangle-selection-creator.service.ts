@@ -11,18 +11,18 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 export class RectangleSelectionCreatorService extends SelectionCreatorService {
     constructor(
         public drawingService: DrawingService,
-        selectionManipulatorService: RectangleSelectionManipulatorService,
-        protected selectionService: RectangleSelectionHelperService,
+        selectionManipulator: RectangleSelectionManipulatorService,
+        protected selectionHelper: RectangleSelectionHelperService,
     ) {
-        super(drawingService, selectionManipulatorService, selectionService);
+        super(drawingService, selectionManipulator, selectionHelper);
         this.key = 'rectangle-selection';
     }
 
     drawSelectionOutline(endPoint: Vec2): void {
         if (this.isShiftDown) {
-            endPoint = this.selectionService.getSquareAdjustedPerimeter(this.startPoint, endPoint);
+            endPoint = this.selectionHelper.getSquareAdjustedPerimeter(this.startPoint, endPoint);
         }
-        this.selectionService.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
+        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
 
     onKeyDown(event: KeyboardEvent): void {

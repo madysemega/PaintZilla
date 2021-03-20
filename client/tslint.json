@@ -16,6 +16,7 @@
         "use-lifecycle-interface": true,
         "use-pipe-transform-interface": true,
         "component-class-suffix": true,
-        "directive-class-suffix": true
+        "directive-class-suffix": true,
+        "only-arrow-functions": [true, "allow-declarations"]
     }
 }

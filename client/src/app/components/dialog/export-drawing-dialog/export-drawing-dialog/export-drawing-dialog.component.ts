@@ -17,7 +17,8 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     ctx: CanvasRenderingContext2D;
     previewCtx: CanvasRenderingContext2D;
     imageName: string | undefined;
-    imageFormat: string | undefined;
+    imageFormat: string | undefined = 'png';
+    filter: string = 'none';
 
     constructor(
         public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>,
@@ -48,6 +49,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     }
 
     updatePreviewImage(event: MatSelectChange): void {
+        this.filter = event.value;
         this.ctx.filter = event.value;
         this.ctx.drawImage(this.drawingService.canvas, 0, 0);
 

@@ -10,6 +10,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { BoxShape } from '@app/shapes/box-shape';
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
@@ -24,7 +25,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
     providedIn: 'root',
 })
 export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private shape: BoxShape;
+    private shape: ContouredBoxShape;
     private strokeRenderer: EllipseStrokeRenderer;
     private fillRenderer: EllipseFillRenderer;
 
@@ -48,7 +49,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     private initializeShape(): void {
-        this.shape = new BoxShape({ x: 0, y: 0 }, { x: 0, y: 0 });
+        this.shape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
     }
 
     private initializeProperties(): void {
@@ -76,6 +77,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     onLineWidthChanged(): void {
         if (this.strokeWidthProperty) {
             this.strokeWidthProperty.strokeWidth = this.lineWidth;
+            this.shape.contourWidth = this.lineWidth;
         }
     }
 

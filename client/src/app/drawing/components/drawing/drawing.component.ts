@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { Tool } from '@app/tools/classes/tool';
@@ -19,11 +20,28 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    isInCanevas: boolean;
 
     wasResizing: boolean;
 
-    constructor(private drawingService: DrawingService, public toolSelector: ToolSelectorService, public resizingService: ResizingService) {
+    constructor(
+        private drawingService: DrawingService,
+        public toolSelector: ToolSelectorService,
+        public resizingService: ResizingService,
+        private drawingCreatorService: DrawingCreatorService,
+    ) {
         this.wasResizing = false;
+        this.drawingCreatorService.drawingRestored.subscribe(() => {
+            this.drawingService.restoreCanvasStyle();
+        });
+
+        this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
+            this.canvasSize.x = newDimensions.x;
+            this.canvasSize.y = newDimensions.y;
+
+            this.drawingService.canvasResize.x = newDimensions.x;
+            this.drawingService.canvasResize.y = newDimensions.y;
+        });
     }
 
     ngAfterViewInit(): void {
@@ -34,8 +52,9 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
-        this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
-        this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
+        this.drawingService.restoreCanvasStyle();
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -84,6 +103,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
+            this.isInCanevas = false;
         }
     }
 
@@ -91,6 +111,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseEnter(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
+            this.isInCanevas = true;
         }
     }
 

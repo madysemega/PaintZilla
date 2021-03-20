@@ -10,6 +10,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { BoxShape } from '@app/shapes/box-shape';
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
@@ -30,7 +31,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     shiftDown: boolean;
     lastMouseCoords: Vec2;
 
-    private shape: BoxShape;
+    private shape: ContouredBoxShape;
     private strokeRenderer: RectangleStrokeRenderer;
     private fillRenderer: RectangleFillRenderer;
 
@@ -59,7 +60,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.fillStyleProperty.colour = colour));
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.strokeStyleProperty.colour = colour));
 
-        this.shape = new BoxShape({ x: 0, y: 0 }, { x: 0, y: 0 });
+        this.shape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
         this.strokeRenderer = new RectangleStrokeRenderer(this.shape, [this.strokeStyleProperty, this.strokeWidthProperty]);
         this.fillRenderer = new RectangleFillRenderer(this.shape, [this.fillStyleProperty]);
     }
@@ -67,6 +68,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     onLineWidthChanged(): void {
         if (this.strokeWidthProperty) {
             this.strokeWidthProperty.strokeWidth = this.lineWidth;
+            this.shape.contourWidth = this.lineWidth;
         }
     }
 

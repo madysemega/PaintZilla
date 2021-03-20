@@ -44,9 +44,9 @@ export abstract class SelectionManipulatorService extends Tool {
 
     constructor(
         protected drawingService: DrawingService,
-        protected selectionService: SelectionHelperService,
+        protected selectionHelper: SelectionHelperService,
         protected selectionHandler: SelectionHandlerService,
-        protected historyService: HistoryService,
+        public historyService: HistoryService,
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
@@ -89,7 +89,7 @@ export abstract class SelectionManipulatorService extends Tool {
             this.resizeSelection(mousePosition, this.resizingMode);
             return;
         }
-        this.moveSelection(this.selectionService.convertToMovement(mousePosition, this.mouseDownLastPos), true);
+        this.moveSelection(this.selectionHelper.convertToMovement(mousePosition, this.mouseDownLastPos), true);
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -201,7 +201,7 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     stopManipulation(needDrawSelection: boolean): void {
-        this.selectionService.setIsSelectionBeingManipulated(false);
+        this.selectionHelper.setIsSelectionBeingManipulated(false);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
@@ -213,6 +213,7 @@ export abstract class SelectionManipulatorService extends Tool {
                 this.historyService.register(userAction);
             }
         }
+        this.historyService.isLocked = false;
         this.subscriptions.forEach((sub) => {
             sub.unsubscribe();
         });
@@ -228,10 +229,10 @@ export abstract class SelectionManipulatorService extends Tool {
 
     addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean): void {
         if (isMouseMovement) {
-            this.selectionService.add(this.mouseDownLastPos, mouseMovement);
+            this.selectionHelper.add(this.mouseDownLastPos, mouseMovement);
         }
-        this.selectionService.add(this.topLeft, mouseMovement);
-        this.selectionService.add(this.bottomRight, mouseMovement);
+        this.selectionHelper.add(this.topLeft, mouseMovement);
+        this.selectionHelper.add(this.bottomRight, mouseMovement);
     }
 
     moveIfPressLongEnough(movement: Vec2, arrowIndex: number): void {
@@ -295,7 +296,7 @@ export abstract class SelectionManipulatorService extends Tool {
         const mousePosition = this.getPositionFromMouse(event);
         const positions: Vec2[] = [];
         positions.push(mousePosition, this.topLeft, this.bottomRight);
-        return this.selectionService.isClickOutsideSelection(positions, this.isReversedX, this.isReversedY);
+        return this.selectionHelper.isClickOutsideSelection(positions, this.isReversedX, this.isReversedY);
     }
 
     isAnArrowKeyPressed(): boolean {
