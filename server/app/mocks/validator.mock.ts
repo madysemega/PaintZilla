@@ -1,4 +1,5 @@
 import { Drawing } from '@common/models/drawing';
+// tslint:disable:no-empty
 export class ValidatorMock {
     static checkAll(drawing: Drawing): void {}
     static checkId(id: string): void {}

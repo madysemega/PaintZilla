@@ -1,5 +1,6 @@
 // import { DrawingSchema } from '@app/constants/drawing.schema';
 import { Metadata } from '@app/constants/metadata.schema';
+// tslint:disable:no-empty
 export class LocalDatabaseMock {
     start(): void {}
     updateServerDrawings(): void {}
