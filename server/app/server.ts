@@ -1,18 +1,21 @@
-import { DatabaseService } from '@app/services/database/database.service';
+import { DatabaseService } from '@app/services/database.service';
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../settings/types';
 import { Application } from './app';
+import { TYPES } from './types';
 @injectable()
 export class Server {
-    private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
-    private readonly baseDix: number = 10;
-    private server: http.Server;
-
     constructor(
         @inject(TYPES.Application) private application: Application,
         @inject(TYPES.DatabaseService) private databaseService: DatabaseService,
     ) {}
+    private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
+    private readonly baseDix: number = 10;
+    private server: http.Server;
+
+    static configureServerDisabling(updateServerDrawings: () => void): void {
+        process.on('SIGINT', updateServerDrawings);
+    }
 
     async init(): Promise<void> {
         this.application.app.set('port', this.appPort);

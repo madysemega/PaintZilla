@@ -7,6 +7,9 @@ import { injectable } from 'inversify';
 @injectable()
 export class LocalDatabaseService {
     localDatabase: { drawings: DrawingSchema[] };
+    constructor() {
+        this.localDatabase = { drawings: [] };
+    }
     start(): void {
         try {
             const str = fileSystem.readFileSync(Constants.LOCAL_DATABASE_PATH, Constants.UTF_8);
@@ -14,7 +17,7 @@ export class LocalDatabaseService {
             this.localDatabase = data;
             console.log('Server drawings were charged successfully');
         } catch (error) {
-            console.log("Couldn't parse the json data, details on " + error);
+            throw new Error(error.message);
         }
     }
     updateServerDrawings(): void {
@@ -65,17 +68,13 @@ export class LocalDatabaseService {
 
     filterDrawings(metadatas: Metadata[]): Drawing[] {
         const result: Drawing[] = [];
-        try {
-            for (const drawing of this.localDatabase.drawings) {
-                const data = metadatas.find((metadata: Metadata) => {
-                    return metadata.id === drawing.id;
-                });
-                if (data) {
-                    result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
-                }
+        for (const drawing of this.localDatabase.drawings) {
+            const data = metadatas.find((metadata: Metadata) => {
+                return metadata.id === drawing.id;
+            });
+            if (data) {
+                result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
             }
-        } catch (err) {
-            throw new Error('Error in filterDrawings, details ' + err);
         }
         if (result.length) {
             return result;
@@ -104,6 +103,6 @@ export class LocalDatabaseService {
         if (drawing) {
             return { id: drawing.id, name: metadata.name, drawing: drawing.drawing, labels: metadata.labels };
         }
-        return Constants.DRAWING_NOT_FOUND;
+        throw new Error('Could not map any drawing with provided IDs');
     }
 }

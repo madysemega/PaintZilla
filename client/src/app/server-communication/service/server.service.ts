@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as Constants from '@app/commons/constants/server.service.constants';
+import * as Constants from '@app/server-communication/constants/server.service.constants';
 import { Drawing } from '@common/models/drawing';
-import { Validator } from '@common/validation/validator';
+import { Validator } from '@common/validation/validator/validator';
 import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root',

@@ -1,5 +1,5 @@
-import { Drawing } from '../models/drawing';
-import * as RegularExpressions from './regular.expressions';
+import { Drawing } from '../../models/drawing';
+import * as RegularExpressions from '../regular.expressions';
 
 export class Validator {
     static checkId(id: string): void {

@@ -5,8 +5,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ServerService } from '@app/commons/service/server.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ServerService } from '@app/server-communication/service/server.service';
 import { Drawing } from '@common/models/drawing';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({

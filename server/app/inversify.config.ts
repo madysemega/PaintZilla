@@ -1,10 +1,10 @@
 import { DrawingController } from '@app/controllers/drawing.controller';
-import { DatabaseService } from '@app/services/database/database.service';
-import { DrawingService } from '@app/services/drawing/drawing.service';
-import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
+import { DatabaseService } from '@app/services/database.service';
+import { DrawingService } from '@app/services/drawing.service';
+import { LocalDatabaseService } from '@app/services/local.database.service';
 import { Container } from 'inversify';
-import { Application } from '../server/app';
-import { Server } from '../server/server';
+import { Application } from './app';
+import { Server } from './server';
 import { TYPES } from './types';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {

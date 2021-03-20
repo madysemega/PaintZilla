@@ -7,7 +7,7 @@ import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
-import { TYPES } from '../settings/types';
+import { TYPES } from './types';
 
 @injectable()
 export class Application {

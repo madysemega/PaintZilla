@@ -1,6 +1,6 @@
 import * as Constants from '@app/constants/database.constants';
-import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
-import { TYPES } from '@app/settings/types';
+import { LocalDatabaseService } from '@app/services/local.database.service';
+import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
 @injectable()

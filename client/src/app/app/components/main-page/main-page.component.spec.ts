@@ -60,6 +60,6 @@ describe('MainPageComponent', () => {
 
     it('openCarousel() should open the carousel', () => {
         component.openCarousel();
-        expect(dialogServiceStub.open).toHaveBeenCalledWith(ImageNavigationComponent);
+        expect(dialogServiceStub.open).toHaveBeenCalledWith(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
     });
 });
