@@ -103,6 +103,6 @@ export class LocalDatabaseService {
         if (drawing) {
             return { id: drawing.id, name: metadata.name, drawing: drawing.drawing, labels: metadata.labels };
         }
-        return Constants.DRAWING_NOT_FOUND;
+        throw new Error('Could not map any drawing with provided IDs');
     }
 }

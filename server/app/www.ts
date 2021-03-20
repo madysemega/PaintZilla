@@ -1,8 +1,8 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
-import { Server } from './server/server';
-import { containerBootstrapper } from './settings/inversify.config';
-import { TYPES } from './settings/types';
+import { Server } from './server';
+import { containerBootstrapper } from './inversify.config';
+import { TYPES } from './types';
 
 void (async () => {
     const container: Container = await containerBootstrapper();

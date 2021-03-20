@@ -3,7 +3,6 @@ import { DatabaseServiceMock } from '@app/mocks/database.service.mock';
 import { MetadataModel } from '@app/constants/metadata.schema';
 import { DrawingService } from './drawing.service';
 import * as spies from 'chai-spies';
-// import * as mongoose from 'mongoose';
 import * as chaiAspromised from 'chai-as-promised';
 import * as chai from 'chai';
 import { Validator } from '@common/validation/validator/validator';
@@ -111,7 +110,9 @@ mocha.describe('Drawing Service', () => {
 
     it ('getAllLabels(): should throw an error if request for metadatas fails', async () => {
         chai.use(chaiAspromised);
-        chai.expect(drawingService.getAllLabels()).to.eventually.be.rejectedWith(Error);
+        try {
+            chai.expect(drawingService.getAllLabels()).to.eventually.be.rejectedWith(Error);
+        } catch(error) {}
     });
 
     it ('getDrawingsByLabelsOne(): should call localDatabaseService.filterDrawings', (done) => {

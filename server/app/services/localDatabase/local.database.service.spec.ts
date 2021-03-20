@@ -1,12 +1,14 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
+import { MetadataModel } from '@app/constants/metadata.schema';
 import * as filesystem from 'fs';
-import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
+import { LocalDatabaseService } from './local.database.service';
 import * as chaiAspromised from 'chai-as-promised';
 chai.use(spies);
 mocha.describe('Local database service', () => {
     let databaseService: LocalDatabaseService;
+
     beforeEach(async () => {
         databaseService = new LocalDatabaseService();
     });
@@ -44,7 +46,7 @@ mocha.describe('Local database service', () => {
         chai.expect(filesystem.writeFileSync).to.have.been.called;
     });
 
-    it('updateServerDrawings(): should throw an error if file correctly written', () => {
+    it('updateServerDrawings(): should throw an error if file is not correctly written', () => {
         chai.use(chaiAspromised);
         chai.expect(databaseService.updateServerDrawings).to.throw(Error);
     });
@@ -93,7 +95,7 @@ mocha.describe('Local database service', () => {
 
     it('updateDrawing(): should throw an error index of provided id is not found', () => {
         chai.use(chaiAspromised);
-        chai.expect(databaseService.updateDrawing).to.throw(Error);
+        chai.expect(databaseService.updateDrawing.bind(databaseService, 'id', 'string')).to.throw('Could not update drawing with provided id');
     });
 
     it('deleteDrawing(): should delete drawing with provided id from drawings array', () => {
@@ -105,14 +107,52 @@ mocha.describe('Local database service', () => {
 
     it('deleteDrawing(): should throw an error index of provided id is not found', () => {
         chai.use(chaiAspromised);
-        chai.expect(databaseService.deleteDrawing).to.throw(Error);
+        chai.expect(databaseService.deleteDrawing.bind(databaseService, 'id')).to.throw('Could not find any drawing to delete with provided id');
     });
 
     it('filterDrawings(): should return an array with existing drawings', () => {
-        const metadatas: Metadata = [{id: '1', labels: []}, {id: '2', labels: []}];
-        databaseService.localDatabase.drawings.push({id: '1', drawing: 's'});
+        const firstDrawing = new MetadataModel({name: 'default', labels: []});
+        const secondDrawing = new MetadataModel({name: 'default', labels: []});
+        const metadatas = [firstDrawing, secondDrawing];
+        databaseService.localDatabase.drawings.push({id: firstDrawing.id, drawing: 's'});
         const result = databaseService.filterDrawings(metadatas);
-        const expected = [{id: '1', labels: []}];
+        const expected = [{id: firstDrawing.id, name: 'default', drawing: 's', labels: []}];
         chai.expect(result).to.deep.equal(expected);
+    });
+
+    it('filterDrawings(): should throw an error if no matching drawing was found', () => {
+        chai.use(chaiAspromised);
+        chai.expect(databaseService.filterDrawings.bind(databaseService, [new MetadataModel({name: 'default', labels: ['lab1', 'lab2']})]))
+            .to.throw('Could not find any drawing matching with provided metadatas');
+    });
+
+    it('filterByLabels(): should return an array containing all labels which drawings are on localDatabase', () => {
+        const firstDrawing = new MetadataModel({name: 'default', labels: ['lab1', 'lab2']});
+        const secondDrawing = new MetadataModel({name: 'default', labels: ['lab3', 'lab4']});
+        const metadatas = [firstDrawing, secondDrawing];
+        databaseService.localDatabase.drawings.push({id: firstDrawing.id, drawing: 's'});
+        const result = databaseService.filterByLabels(metadatas);
+        const expected = firstDrawing.labels;
+        chai.expect(result).to.deep.equal(expected);
+    });
+
+    it('filterByLabels(): should throw an error if no matching drawing was found', () => {
+        chai.use(chaiAspromised);
+        chai.expect(databaseService.filterByLabels.bind(databaseService, [new MetadataModel({name: 'default', labels: ['lab1', 'lab2']})]))
+            .to.throw('Could not find any drawing matching with provided metadatas');
+    });
+
+    it('mapDrawingById(): should return an drawing corresponding to the metadata passed as parameter', async () => {
+        const firstDrawing = new MetadataModel({name: 'default', labels: ['lab1', 'lab2']});
+        databaseService.localDatabase.drawings.push({id: firstDrawing.id, drawing: 's'});
+        const result = await databaseService.mapDrawingById(firstDrawing);
+        const expected = {id: firstDrawing.id, name: 'default', drawing: 's', labels: ['lab1', 'lab2']};
+        chai.expect(result).to.deep.equal(expected);
+    });
+
+    it('mapDrawingById(): should throw an error if no matching drawing was found', () => {
+        chai.use(chaiAspromised);
+        const firstDrawing = new MetadataModel({name: 'default', labels: ['lab1', 'lab2']});
+        chai.expect(databaseService.mapDrawingById(firstDrawing)).to.eventually.be.rejectedWith(Error);
     });
 })
