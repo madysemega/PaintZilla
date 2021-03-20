@@ -8,5 +8,5 @@ void (async () => {
     const container: Container = await containerBootstrapper();
     const server: Server = container.get<Server>(TYPES.Server);
 
-    server.init();
+    await server.init();
 })();

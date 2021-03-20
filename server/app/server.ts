@@ -1,24 +1,33 @@
+import { DatabaseService } from '@app/services/database.service';
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
 import { Application } from './app';
 import { TYPES } from './types';
-
 @injectable()
 export class Server {
+    constructor(
+        @inject(TYPES.Application) private application: Application,
+        @inject(TYPES.DatabaseService) private databaseService: DatabaseService,
+    ) {}
     private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(@inject(TYPES.Application) private application: Application) {}
+    static configureServerDisabling(updateServerDrawings: () => void): void {
+        process.on('SIGINT', updateServerDrawings);
+    }
 
-    init(): void {
+    async init(): Promise<void> {
         this.application.app.set('port', this.appPort);
 
         this.server = http.createServer(this.application.app);
-
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+        await this.databaseService.start().catch((error) => {
+            console.log('FAILED TO CONNECT... Details: ' + error);
+            process.exit(1);
+        });
     }
 
     private normalizePort(val: number | string): number | string | boolean {
