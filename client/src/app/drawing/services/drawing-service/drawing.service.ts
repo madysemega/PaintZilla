@@ -56,6 +56,15 @@ export class DrawingService {
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
     }
 
+    restoreCanvasToDefault(): void {
+        this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
+        this.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+    }
+
+    get currentDrawing(): string {
+        return this.canvas.toDataURL('image/jpeg', 1.0);
+    }
+
     resizeDrawingSurface(newWidth: number, newHeight: number): void {
         this.onDrawingSurfaceResize.emit({ x: newWidth, y: newHeight });
     }

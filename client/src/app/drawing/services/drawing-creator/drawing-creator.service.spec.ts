@@ -139,4 +139,9 @@ describe('DrawingCreatorService', () => {
         expect(service.drawingRestored.emit).not.toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(false);
     });
+
+    it('noDialogsOpen should return true if there are no dialogs', () => {
+        const noDialogsOpen: boolean = service.noDialogsOpen();
+        expect(noDialogsOpen).toEqual(true);
+    });
 });
