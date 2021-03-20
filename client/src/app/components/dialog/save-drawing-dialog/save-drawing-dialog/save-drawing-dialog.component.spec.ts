@@ -90,18 +90,6 @@ describe('SaveDrawingDialogComponent', () => {
         expect(labelIsInsideList).toBe(false);
     });
 
-    it('addLabel should not add a label if it has special characters', () => {
-        const event: MatChipInputEvent = {
-            input: htmlInput,
-            value: 'tr$$',
-        };
-        component.formGroup.controls.labelForm.setValue(event.value);
-        component.addLabel(event);
-        // tslint:disable-next-line: no-magic-numbers
-        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
-        expect(labelIsInsideList).toBe(false);
-    });
-
     it('addLabel should not add a label that is already present in the list', () => {
         component.labels.push('tree');
         const event: MatChipInputEvent = {
