@@ -22,7 +22,9 @@ export class FilterLabelComponent implements OnInit {
     removable: boolean = true;
     selectable: boolean = true;
     @Output()
-    filterEvent: EventEmitter<string> = new EventEmitter<string>();
+    filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
+    @Output()
+    filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -35,12 +37,12 @@ export class FilterLabelComponent implements OnInit {
     }
     ngOnInit(): void {}
     addFilter(event: MatChipInputEvent): void {
+        console.log('marche');
         const LABEL = event.value.trim();
-        console.log('called');
         if (LABEL)
             if (this.retainedLabels.indexOf(LABEL) < 0) {
                 this.retainedLabels.push(LABEL);
-                this.filterEvent.emit(LABEL);
+                this.filterAddEvent.emit(LABEL);
             }
         if (event.input) event.input.value = '';
         this.labelCtrl.setValue(null);
@@ -48,12 +50,17 @@ export class FilterLabelComponent implements OnInit {
     removeFilter(label: string): void {
         const INDEX: number = this.retainedLabels.indexOf(label);
         this.retainedLabels.splice(INDEX, 1);
-        console.log('called remove');
+        this.filterRemoveEvent.emit(INDEX);
     }
     selected(event: MatAutocompleteSelectedEvent): void {
-        this.retainedLabels.push(event.option.viewValue);
-        this.labelInput.nativeElement.value = '';
-        this.labelCtrl.setValue(null);
+        const LABEL = event.option.viewValue;
+        if (LABEL)
+            if (this.retainedLabels.indexOf(LABEL) < 0) {
+                this.retainedLabels.push(event.option.viewValue);
+                this.filterAddEvent.emit(event.option.viewValue);
+                this.labelInput.nativeElement.value = '';
+                this.labelCtrl.setValue(null);
+            }
     }
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();

@@ -1,12 +1,6 @@
-<div>
-    <mat-label class="margin-bottom-small">Filtre</mat-label>
-    <mat-chip-list #chipList aria-label="labelSelection">
-        <mat-chip *ngFor="let label of availableLabels">{{ label }}</mat-chip>
-    </mat-chip-list>
-</div>
 <mat-form-field>
   <mat-label>Selected label</mat-label>
-  <mat-chip-list>
+  <mat-chip-list #chipList aria-label="Label selection">
       <mat-chip
         *ngFor="let label of retainedLabels"
         [selectable]="selectable"

@@ -1,8 +1,8 @@
 <div carousel-wrapper>
     <div carousel-images class="horizontal">
-        <mat-card><app-image-details [data]="leftImage"></app-image-details></mat-card>
-        <mat-card><app-image-details [data]="centerImage"></app-image-details></mat-card>
-        <mat-card><app-image-details [data]="rightImage"></app-image-details></mat-card>
+        <mat-card *ngIf="showLeft"><app-image-details [data]="leftImage"></app-image-details></mat-card>
+        <mat-card *ngIf="showCenter"><app-image-details [data]="centerImage"></app-image-details></mat-card>
+        <mat-card *ngIf="showRight"><app-image-details [data]="rightImage"></app-image-details></mat-card>
     </div>
 
     <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()">

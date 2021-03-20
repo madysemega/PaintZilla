@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CarouselCardInformation } from '@app/carousel/data/carousel-card-information';
 import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
 
@@ -7,15 +7,17 @@ import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
     templateUrl: './image-carousel.component.html',
     styleUrls: ['./image-carousel.component.scss'],
 })
-export class ImageCarouselComponent {
+export class ImageCarouselComponent implements OnChanges {
     images: CarouselCardInformation[];
-
+    retainedImages: CarouselCardInformation[] = [];
     leftImage: CarouselCardInformation;
     rightImage: CarouselCardInformation;
     centerImage: CarouselCardInformation;
-
+    showLeft: boolean = false;
+    showRight: boolean = false;
+    showCenter: boolean = false;
     private centerIndex: number;
-
+    @Input() retainedLabels: string[] = [];
     constructor() {
         this.images = [
             {
@@ -43,7 +45,7 @@ export class ImageCarouselComponent {
                 labels: ['Comic'],
             },
         ];
-
+        this.getRetainedImages();
         this.centerIndex = 1;
 
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
@@ -61,11 +63,24 @@ export class ImageCarouselComponent {
     }
 
     private refreshImages(neighbouringIndices: NeighbouringIndices): void {
-        this.leftImage = this.images[neighbouringIndices.left];
-        this.centerImage = this.images[neighbouringIndices.center];
-        this.rightImage = this.images[neighbouringIndices.right];
+        console.log('taille est', this.retainedImages.length);
+        this.showLeft = false;
+        this.showRight = false;
+        this.showCenter = false;
+        if (this.retainedImages !== []) {
+            this.leftImage = this.retainedImages[neighbouringIndices.left];
+            this.showLeft = true;
+            if (this.retainedImages.length > 1) {
+                this.showCenter = true;
+                this.centerImage = this.retainedImages[neighbouringIndices.center];
+            }
+            if (this.retainedImages.length > 2) {
+                this.showRight = true;
+                this.rightImage = this.retainedImages[neighbouringIndices.right];
+            }
 
-        this.centerIndex = neighbouringIndices.center;
+            this.centerIndex = neighbouringIndices.center;
+        }
     }
 
     private getNeighbouringIndices(index: number): NeighbouringIndices {
@@ -77,6 +92,32 @@ export class ImageCarouselComponent {
     }
 
     private getRotatedIndex(index: number): number {
-        return (index < 0 ? this.images.length : 0) + (index % this.images.length);
+        return (index < 0 ? this.retainedImages.length : 0) + (index % this.retainedImages.length);
+    }
+
+    private getRetainedImages(): void {
+        this.retainedImages = [];
+        if (this.retainedLabels.length === 0) {
+            this.retainedImages = this.images;
+            console.log('chula', this.retainedImages.length);
+            this.refreshImages(this.getNeighbouringIndices(1));
+            console.log('chulaencore', this.retainedImages);
+            return;
+        } else {
+            console.log(this.retainedImages);
+            for (const IMAGE of this.images) {
+                if (IMAGE.labels.some((r) => this.retainedLabels.indexOf(r) >= 0)) this.retainedImages.push(IMAGE);
+            }
+            console.log(this.retainedImages);
+            this.refreshImages(this.getNeighbouringIndices(1));
+        }
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log('allo');
+        if (changes.retainedLabels) {
+            console.log(changes.retainedLabels);
+            this.getRetainedImages();
+            this.refreshImages(this.getNeighbouringIndices(1));
+        }
     }
 }

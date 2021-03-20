@@ -12,6 +12,10 @@ export class ImageNavigationComponent {
     constructor(public dialogRef: MatDialogRef<ImageNavigationComponent>) {}
     addFilter(label: string): void {
         this.retainedLabels.push(label);
-        console.log(this.retainedLabels);
+        this.retainedLabels = this.retainedLabels.slice();
+    }
+    removeFilter(index: number): void {
+        this.retainedLabels.splice(index, 1);
+        this.retainedLabels = this.retainedLabels.slice();
     }
 }
