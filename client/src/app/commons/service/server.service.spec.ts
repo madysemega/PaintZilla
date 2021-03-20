@@ -5,7 +5,7 @@ import { Drawing } from '@common/models/drawing';
 import { Validator } from '@common/validation/validator/validator';
 import { Subject, Subscriber } from 'rxjs';
 import { ServerService } from './server.service';
-
+// tslint:disable:max-file-line-count
 export const MOCK_DRAWING: Drawing = {
     id: Constants.DEFAULT_ID,
     drawing: Constants.DEFAULT_DRAWING,

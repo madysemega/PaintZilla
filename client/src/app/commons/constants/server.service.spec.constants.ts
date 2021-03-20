@@ -8,4 +8,3 @@ export const DEFAULT_LABELS = ['label1', 'label2'];
 export const CREATE_ERROR = new HttpErrorResponse({ status: 406 });
 export const GET_ERROR = new HttpErrorResponse({ status: 404 });
 export const PUT_ERROR = new HttpErrorResponse({ status: 304 });
-
