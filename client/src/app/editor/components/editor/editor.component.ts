@@ -38,7 +38,9 @@ export class EditorComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        setTimeout(() => {
+            this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        });
         this.route.params.subscribe((parameters) => {
             const imageId = parameters.imageId;
             if (imageId) {
