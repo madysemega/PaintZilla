@@ -138,8 +138,11 @@ mocha.describe('Local database service', () => {
 
     it('filterByLabels(): should throw an error if no matching drawing was found', () => {
         chai.use(chaiAspromised);
+        chai.spy.on(databaseService, 'filterDrawings', () => {
+            return [];
+        });
         chai.expect(databaseService.filterByLabels.bind(databaseService, [new MetadataModel({name: 'default', labels: ['lab1', 'lab2']})]))
-            .to.throw('Could not find any drawing matching with provided metadatas');
+            .to.throw('Could not find any drawing matching with provided labels');
     });
 
     it('mapDrawingById(): should return an drawing corresponding to the metadata passed as parameter', async () => {
