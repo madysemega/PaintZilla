@@ -5,16 +5,19 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { SprayRenderer } from '@app/shapes/renderers/spray-renderer';
 import { SprayShape } from '@app/shapes/spray-shape';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class SprayService extends ResizableTool implements ISelectableTool {
+export class SprayService extends ResizableTool implements ISelectableTool, IDeselectableTool {
     private shape: SprayShape;
     private renderer: SprayRenderer;
 
@@ -26,7 +29,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
     private lastMousePosition: Vec2;
     private sprayTimer: ReturnType<typeof setTimeout>;
 
-    constructor(drawingService: DrawingService, private colourService: ColourService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.key = 'spray';
 
@@ -45,6 +48,10 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    onToolDeselect(): void {
+        this.history.isLocked = false;
+    }
+
     onSpray(): void {
         this.spray(this.lastMousePosition);
         this.previewPaint();
@@ -56,6 +63,8 @@ export class SprayService extends ResizableTool implements ISelectableTool {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
+
+            this.history.isLocked = true;
 
             this.onSpray();
             this.sprayTimer = setInterval(() => this.onSpray(), (1 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
@@ -69,7 +78,9 @@ export class SprayService extends ResizableTool implements ISelectableTool {
             this.clearVertices();
         }
 
-        this.mouseDown = false;
+        if(event.button === MouseButton.Left) {
+            this.mouseDown = false;
+        }
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -99,7 +110,7 @@ export class SprayService extends ResizableTool implements ISelectableTool {
 
     private finalizePaint(): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.renderPaint(this.drawingService.baseCtx);
+        this.history.do(new UserActionRenderShape([this.renderer.clone()], this.drawingService.baseCtx));
     }
 
     clearVertices(): void {
