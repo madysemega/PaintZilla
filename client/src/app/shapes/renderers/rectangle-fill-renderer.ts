@@ -1,6 +1,5 @@
-
+import { BoxShape } from '@app/shapes/box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { BoxShape } from '../box-shape';
 import { ShapeRenderer } from './shape-renderer';
 
 export class RectangleFillRenderer extends ShapeRenderer<BoxShape> {
