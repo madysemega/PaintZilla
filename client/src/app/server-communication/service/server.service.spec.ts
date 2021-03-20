@@ -54,9 +54,7 @@ describe('RequestsService', () => {
 
     it('createDrawing(): should call all external methods', () => {
         service.createDrawing(MOCK_DRAWING.name, MOCK_DRAWING.drawing, MOCK_DRAWING.labels);
-        expect(Validator.checkName).toHaveBeenCalledWith(MOCK_DRAWING.name);
         expect(Validator.checkDrawing).toHaveBeenCalledWith(MOCK_DRAWING.drawing);
-        expect(Validator.checkLabels).toHaveBeenCalledWith(MOCK_DRAWING.labels);
         expect(httpClientSpy.post).toHaveBeenCalled();
     });
 

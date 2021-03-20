@@ -4,8 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ServerService } from '@app/commons/service/server.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
@@ -94,18 +94,6 @@ describe('SaveDrawingDialogComponent', () => {
         const event: MatChipInputEvent = {
             input: htmlInput,
             value: 'tr$$',
-        };
-        component.formGroup.controls.labelForm.setValue(event.value);
-        component.addLabel(event);
-        // tslint:disable-next-line: no-magic-numbers
-        const labelIsInsideList: boolean = component.labels.indexOf(event.value) !== -1;
-        expect(labelIsInsideList).toBe(false);
-    });
-
-    it('addLabel should not add a label if it has spaces', () => {
-        const event: MatChipInputEvent = {
-            input: htmlInput,
-            value: 't r e e',
         };
         component.formGroup.controls.labelForm.setValue(event.value);
         component.addLabel(event);

@@ -12,7 +12,7 @@ export class DiscardChangesDialogComponent {
 
     openSaveDialog(): void {
         const waitTimeMs = 100;
-        this.matDialogRef.close();
+        this.matDialogRef.close(true);
         setTimeout(() => {
             this.saveDrawingService.openSaveDrawingDialog();
         }, waitTimeMs);
