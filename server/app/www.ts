@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
-import { Server } from './server';
 import { containerBootstrapper } from './inversify.config';
+import { Server } from './server';
 import { TYPES } from './types';
 
 void (async () => {

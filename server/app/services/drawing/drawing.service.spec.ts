@@ -110,9 +110,7 @@ mocha.describe('Drawing Service', () => {
 
     it ('getAllLabels(): should throw an error if request for metadatas fails', async () => {
         chai.use(chaiAspromised);
-        try {
-            chai.expect(drawingService.getAllLabels()).to.eventually.be.rejectedWith(Error);
-        } catch(error) {}
+        chai.expect(drawingService.getAllLabels()).to.eventually.be.rejectedWith(Error);
     });
 
     it ('getDrawingsByLabelsOne(): should call localDatabaseService.filterDrawings', (done) => {

@@ -5,4 +5,4 @@ export const DEFAULT_ID = '6050b1361d47453b245399d2';
 export const DEFAULT_NAME = 'Mady';
 export const DEFAULT_LABELS = ['label1', 'label2'];
 
-export const DRAWING: Drawing = {id: DEFAULT_ID, drawing: DEFAULT_DRAWING, name: DEFAULT_NAME, labels: DEFAULT_LABELS};
+export const DRAWING: Drawing = { id: DEFAULT_ID, drawing: DEFAULT_DRAWING, name: DEFAULT_NAME, labels: DEFAULT_LABELS };

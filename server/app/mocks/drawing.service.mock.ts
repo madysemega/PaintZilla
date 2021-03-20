@@ -1,9 +1,9 @@
-import { Drawing } from '@common/models/drawing';
 import * as Constants from '@app/constants/drawing.service.spec.constants';
+import { Drawing } from '@common/models/drawing';
 export class DrawingServiceMock {
     drawings: Drawing[];
 
-    constructor(){
+    constructor() {
         this.drawings = [];
     }
 

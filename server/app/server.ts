@@ -1,8 +1,8 @@
 import { DatabaseService } from '@app/services/database/database.service';
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
-import { TYPES } from './types';
 import { Application } from './app';
+import { TYPES } from './types';
 @injectable()
 export class Server {
     constructor(

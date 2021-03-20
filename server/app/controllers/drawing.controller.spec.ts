@@ -106,4 +106,54 @@ mocha.describe('Drawing controller', () => {
         drawingService.getDrawingsByLabelsOne.rejects(new Error(''));
         supertest(app).get('api/drawings/labels/one-label').expect(HttpStatusCode.NotFound);
     });
+
+    it('PUT api/drawings/:id: should return Ok status on successful put/api/drawings/:id request', async () => {
+        drawingService.updateDrawing.resolves(Constants.DRAWING);
+        supertest(app).put('api/drawings/id').send(JSON.stringify(Constants.DRAWING)).expect(HttpStatusCode.Ok);
+    });
+
+    it('PUT api/drawings/:id: should return an error as a message on service fail', async () => {
+        drawingService.updateDrawing.rejects(new Error(''));
+        supertest(app).put('api/drawings/id').expect(HttpStatusCode.NotModified);
+    });
+
+    it('PUT api/drawings/name/:id: should return Ok status on successful put/api/drawings/name/:id request', async () => {
+        drawingService.updateDrawingName.resolves(Constants.DRAWING);
+        supertest(app).put('api/drawings/name/id').send(Constants.DRAWING.name).expect(HttpStatusCode.Ok);
+    });
+
+    it('PUT api/drawings/name/:id: should return an error as a message on service fail', async () => {
+        drawingService.updateDrawingName.rejects(new Error(''));
+        supertest(app).put('api/drawings/name/id').send(Constants.DRAWING.name).expect(HttpStatusCode.NotModified);
+    });
+
+    it('PUT api/drawings/labels/:id: should return Ok status on successful put/api/drawings/labels/:id request', async () => {
+        drawingService.updateDrawingLabels.resolves(Constants.DRAWING);
+        supertest(app).put('api/drawings/labels/id').send([].toString()).expect(HttpStatusCode.Ok);
+    });
+
+    it('PUT api/drawings/labels/:id: should return an error as a message on service fail', async () => {
+        drawingService.updateDrawingLabels.rejects(new Error(''));
+        supertest(app).put('api/drawings/labels/id').send([].toString()).expect(HttpStatusCode.NotModified);
+    });
+
+    it('PUT api/drawings/content/:id: should return Ok status on successful put/api/drawings/content/:id request', async () => {
+        drawingService.updateDrawingContent.resolves(Constants.DRAWING);
+        supertest(app).put('api/drawings/content/id').send(Constants.DRAWING.drawing).expect(HttpStatusCode.Ok);
+    });
+
+    it('PUT api/drawings/content/:id: should return an error as a message on service fail', async () => {
+        drawingService.updateDrawingContent.rejects(new Error(''));
+        supertest(app).put('api/drawings/content/id').send(Constants.DRAWING.drawing).expect(HttpStatusCode.NotModified);
+    });
+
+    it('DELETE api/drawings/:id: should return Ok status on successful put/api/drawings/content/:id request', async () => {
+        drawingService.deleteDrawing.resolves(Constants.DRAWING);
+        supertest(app).delete('api/drawings/id').expect(HttpStatusCode.Ok);
+    });
+
+    it('DELETE api/drawings/:id: should return an error as a message on service fail', async () => {
+        drawingService.deleteDrawing.rejects(new Error(''));
+        supertest(app).delete('api/drawings/id').expect(HttpStatusCode.NotModified);
+    });
 });
