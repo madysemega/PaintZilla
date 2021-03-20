@@ -1,16 +1,15 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
-import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { BoxShape } from '../box-shape';
 import { RectangleFillRenderer } from './rectangle-fill-renderer';
 
 // tslint:disable:no-any
 describe('RectangleFillRenderer', () => {
     const INITIAL_TOP_LEFT = { x: 0, y: 0 };
     const INITIAL_BOTTOM_RIGHT = { x: 32, y: 32 };
-    const CONTOUR_WIDTH = 6;
 
     let renderer: RectangleFillRenderer;
-    let shape: ContouredBoxShape;
+    let shape: BoxShape;
     let properties: ShapeProperty[];
 
     let canvasTestHelper: CanvasTestHelper;
@@ -21,7 +20,7 @@ describe('RectangleFillRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
-        shape = new ContouredBoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT, CONTOUR_WIDTH);
+        shape = new BoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT);
         renderer = new RectangleFillRenderer(shape, properties);
 
         canvasTestHelper = new CanvasTestHelper();
@@ -42,14 +41,7 @@ describe('RectangleFillRenderer', () => {
     });
 
     it('should call rect with shape position/dimensions when render() is called', () => {
-        const HALF_CONTOUR_WIDTH = CONTOUR_WIDTH / 2;
-
         renderer.render(ctxStub);
-        expect(ctxRectSpy).toHaveBeenCalledWith(
-            shape.topLeft.x + HALF_CONTOUR_WIDTH,
-            shape.topLeft.y + HALF_CONTOUR_WIDTH,
-            shape.width - CONTOUR_WIDTH,
-            shape.height - CONTOUR_WIDTH,
-        );
+        expect(ctxRectSpy).toHaveBeenCalledWith(shape.topLeft.x, shape.topLeft.y, shape.width, shape.height);
     });
 });
