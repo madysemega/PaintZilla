@@ -1,4 +1,4 @@
-import { DrawingService } from '@app/services/drawing/drawing.service';
+import { DrawingService } from '@app/services/drawing.service';
 import { TYPES } from '@app/types';
 import { HttpStatusCode } from '@common/communication/HttpStatusCode';
 import { Drawing } from '@common/models/drawing';

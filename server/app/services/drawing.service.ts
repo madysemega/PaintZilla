@@ -1,7 +1,7 @@
 import * as Constants from '@app/constants/database.constants';
 import { MetadataModel } from '@app/constants/metadata.schema';
 import { Server } from '@app/server';
-import { DatabaseService } from '@app/services/database/database.service';
+import { DatabaseService } from '@app/services/database.service';
 import { TYPES } from '@app/types';
 import { Drawing } from '@common/models/drawing';
 import { Validator } from '@common/validation/validator/validator';

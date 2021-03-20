@@ -6,7 +6,7 @@ import * as chai from 'chai';
 import { Stubbed, testingContainer } from '../../test/test-utils';
 import { Drawing } from '@common/models/drawing';
 import { Application } from '@app/app';
-import { DrawingService } from '@app/services/drawing/drawing.service';
+import { DrawingService } from '@app/services/drawing.service';
 import * as Constants from '@app/constants/drawing.service.spec.contants';
 import { HttpStatusCode } from '@common/communication/HttpStatusCode';
 export const MOCK_DRAWING = { name: Constants.DRAWING.name, drawing: Constants.DRAWING.drawing, labels: Constants.DRAWING.labels};

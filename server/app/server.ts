@@ -1,4 +1,4 @@
-import { DatabaseService } from '@app/services/database/database.service';
+import { DatabaseService } from '@app/services/database.service';
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
 import { Application } from './app';

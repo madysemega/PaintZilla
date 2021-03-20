@@ -5,7 +5,7 @@ import * as mocha from 'mocha';
 import * as chaiAsPromised from 'chai-as-promised';
 import { DatabaseService } from './database.service';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { LocalDatabaseService } from '@app/services/localDatabase/local.database.service';
+import { LocalDatabaseService } from '@app/services/local.database.service';
 chai.use(chaiAsPromised);
 export const READY_STATE_DISCONNECTED = 0;
 export const READY_STATE_CONNECTED = 1;
