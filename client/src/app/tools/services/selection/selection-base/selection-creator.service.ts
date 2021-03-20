@@ -38,6 +38,8 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.onMouseDown(event);
+        } else {
+            this.selectionManipulator.historyService.isLocked = true;
         }
     }
 

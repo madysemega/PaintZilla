@@ -1,7 +1,7 @@
 import { IUserAction } from './user-action';
 
 export class UserActionResizeDrawingSurface implements IUserAction {
-    apply(): void {
+    async apply(): Promise<void> {
         this.onResizeCallback(this.width, this.height);
     }
 

@@ -5,11 +5,11 @@
         <mat-card *ngIf="showRight"><app-image-details [data]="rightImage"></app-image-details></mat-card>
     </div>
 
-    <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()">
+    <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()" *ngIf="images.length > 3">
         <mat-icon>navigate_before</mat-icon>
     </button>
 
-    <button rotate-right mat-icon-button matTooltip="Image suivante" (click)="rotateRight()">
+    <button rotate-right mat-icon-button matTooltip="Image suivante" (click)="rotateRight()" *ngIf="images.length > 3">
         <mat-icon>navigate_next</mat-icon>
     </button>
 </div>

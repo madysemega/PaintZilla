@@ -71,19 +71,65 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
         return width;
     }
 
+    drawRightwardPolygon(ctx: CanvasRenderingContext2D, topLeft: Vec2, bottomRight: Vec2, width: number): void {
+        const HALF_LINE_WIDTH = width / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(topLeft.x - HALF_LINE_WIDTH, topLeft.y - HALF_LINE_WIDTH);
+        ctx.lineTo(topLeft.x + HALF_LINE_WIDTH, topLeft.y - HALF_LINE_WIDTH);
+        ctx.lineTo(bottomRight.x + HALF_LINE_WIDTH, bottomRight.y - HALF_LINE_WIDTH);
+        ctx.lineTo(bottomRight.x + HALF_LINE_WIDTH, bottomRight.y + HALF_LINE_WIDTH);
+        ctx.lineTo(bottomRight.x - HALF_LINE_WIDTH, bottomRight.y + HALF_LINE_WIDTH);
+        ctx.lineTo(topLeft.x - HALF_LINE_WIDTH, topLeft.y + HALF_LINE_WIDTH);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    drawLeftwardPolygon(ctx: CanvasRenderingContext2D, topRight: Vec2, bottomLeft: Vec2, width: number): void {
+        const HALF_LINE_WIDTH = width / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(topRight.x + HALF_LINE_WIDTH, topRight.y - HALF_LINE_WIDTH);
+        ctx.lineTo(topRight.x + HALF_LINE_WIDTH, topRight.y + HALF_LINE_WIDTH);
+        ctx.lineTo(bottomLeft.x + HALF_LINE_WIDTH, bottomLeft.y + HALF_LINE_WIDTH);
+        ctx.lineTo(bottomLeft.x - HALF_LINE_WIDTH, bottomLeft.y + HALF_LINE_WIDTH);
+        ctx.lineTo(bottomLeft.x - HALF_LINE_WIDTH, bottomLeft.y - HALF_LINE_WIDTH);
+        ctx.lineTo(topRight.x - HALF_LINE_WIDTH, topRight.y - HALF_LINE_WIDTH);
+        ctx.closePath();
+        ctx.fill();
+    }
+
     drawVertices(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         this.lineWidth = this.changeWidth(this.lineWidth);
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = 'white';
+        ctx.fillStyle = 'white';
         ctx.lineCap = 'square';
-        ctx.lineJoin = 'round';
+        ctx.lineJoin = 'miter';
 
-        ctx.beginPath();
-        for (const point of this.vertices) {
-            ctx.lineTo(point.x, point.y);
-        }
-        ctx.stroke();
+        this.vertices.forEach((point, index) => {
+            if (index === 0) {
+                ctx.beginPath();
+                ctx.rect(point.x, point.y, 0, 0);
+                ctx.stroke();
+            } else {
+                const previousPoint = this.vertices[index - 1];
+
+                const isMovementRightward = point.x > previousPoint.x;
+                const isMovementDownward = point.y > previousPoint.y;
+
+                if (isMovementRightward && isMovementDownward) {
+                    this.drawRightwardPolygon(ctx, previousPoint, point, this.lineWidth);
+                } else if (!isMovementRightward && isMovementDownward) {
+                    this.drawLeftwardPolygon(ctx, previousPoint, point, this.lineWidth);
+                } else if (!isMovementRightward && !isMovementDownward) {
+                    this.drawRightwardPolygon(ctx, point, previousPoint, this.lineWidth);
+                } else {
+                    this.drawLeftwardPolygon(ctx, point, previousPoint, this.lineWidth);
+                }
+            }
+        });
 
         ctx.restore();
     }

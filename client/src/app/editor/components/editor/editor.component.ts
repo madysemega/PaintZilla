@@ -1,6 +1,10 @@
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
+import { ActivatedRoute } from '@angular/router';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -11,21 +15,41 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
     styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements AfterViewInit {
+    @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
     showColourPicker: boolean;
+
     constructor(
+        private route: ActivatedRoute,
         public toolSelector: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
         private colourService: ColourService,
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
+        private drawingLoader: DrawingLoaderService,
+        private drawingService: DrawingService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
         });
+
+        this.toolSelector.onToolChanged(() => {
+            this.configurationPanelDrawer.open();
+        });
     }
 
     ngAfterViewInit(): void {
-        this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        setTimeout(() => {
+            this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+        });
+        this.route.params.subscribe((parameters) => {
+            const imageId = parameters.imageId;
+            if (imageId) {
+                this.drawingLoader.loadFromServer(imageId);
+            } else {
+                this.drawingService.initialImage = undefined;
+            }
+        });
+        this.historyService.clear();
     }
 
     @HostListener('document:keydown', ['$event'])

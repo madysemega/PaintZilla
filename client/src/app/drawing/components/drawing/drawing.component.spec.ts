@@ -239,4 +239,15 @@ describe('DrawingComponent', () => {
         const currentTool = component.getCurrentTool();
         expect(currentTool).toEqual(toolStub);
     });
+
+    it('when the drawing surface is resized, in the drawing service, it should be reflected in the drawing component', () => {
+        const WIDTH = 420;
+        const HEIGHT = 332;
+
+        drawingStub.resizeDrawingSurface(WIDTH, HEIGHT);
+
+        // tslint:disable-next-line: no-string-literal
+        expect(component['canvasSize']).toEqual({ x: WIDTH, y: HEIGHT });
+        expect(drawingStub.canvasResize).toEqual({ x: WIDTH, y: HEIGHT });
+    });
 });

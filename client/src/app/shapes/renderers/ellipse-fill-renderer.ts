@@ -1,10 +1,10 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { BoxShape } from '@app/shapes/box-shape';
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
-export class EllipseFillRenderer extends ShapeRenderer<BoxShape> {
-    constructor(shape: BoxShape, properties: ShapeProperty[]) {
+export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
+    constructor(shape: ContouredBoxShape, properties: ShapeProperty[]) {
         super(shape, properties);
     }
 
@@ -17,8 +17,8 @@ export class EllipseFillRenderer extends ShapeRenderer<BoxShape> {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(this.shape.topLeft.x - this.shape.bottomRight.x) / 2,
-            y: Math.abs(this.shape.topLeft.y - this.shape.bottomRight.y) / 2,
+            x: Math.abs(this.shape.topLeft.x - this.shape.bottomRight.x) / 2 - this.shape.contourWidth / 2,
+            y: Math.abs(this.shape.topLeft.y - this.shape.bottomRight.y) / 2 - this.shape.contourWidth / 2,
         };
 
         ctx.beginPath();
@@ -26,7 +26,7 @@ export class EllipseFillRenderer extends ShapeRenderer<BoxShape> {
         ctx.fill();
     }
 
-    clone(): ShapeRenderer<BoxShape> {
+    clone(): ShapeRenderer<ContouredBoxShape> {
         return new EllipseFillRenderer(this.getShapeCopy(), this.getPropertiesCopy());
     }
 }
