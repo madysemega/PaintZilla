@@ -78,7 +78,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
             this.clearVertices();
         }
 
-        if(event.button === MouseButton.Left) {
+        if (event.button === MouseButton.Left) {
             this.mouseDown = false;
         }
     }
