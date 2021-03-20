@@ -1,8 +1,7 @@
 import 'reflect-metadata';
 import * as mocha from 'mocha';
-const supertest = require('supertest');
+import * as supertest from 'supertest';
 import { TYPES } from '@app/types';
-import * as chai from 'chai';
 import { Stubbed, testingContainer } from '../../test/test-utils';
 import { Drawing } from '@common/models/drawing';
 import { Application } from '@app/app';
@@ -28,7 +27,7 @@ mocha.describe('Drawing controller', () => {
            updateDrawingName: sandbox.stub(),
            updateDrawingLabels: sandbox.stub(),
            updateDrawingContent: sandbox.stub(),
-           deleteDrawing: sandbox.stub()
+           deleteDrawing: sandbox.stub(),
        });
        drawingService = container.get(TYPES.DrawingService);
        app = container.get<Application>(TYPES.Application).app;
@@ -37,9 +36,11 @@ mocha.describe('Drawing controller', () => {
     it('POST api/drawings: should return Created status on successful post/api/drawings request', async () => {
         const expectedDrawing: Drawing = Constants.DRAWING;
         drawingService.saveDrawing.resolves(expectedDrawing);
-        supertest(app).post('api/drawings').send(JSON.stringify(MOCK_DRAWING)).expect(HttpStatusCode.Created).then((drawing: Drawing) => {
-            chai.expect(drawing).to.deep.equal(expectedDrawing);
-        }).catch((error: Error) => {});
+        return supertest(app).post('api/drawings').send(JSON.stringify(MOCK_DRAWING)).expect(HttpStatusCode.Created).then(() => {
+            console.log('Yey !');
+        }).catch((error: Error) => {
+            console.log('Nope ' + error.message);
+        });
     });
 
     it('POST api/drawings: should return an error as a message on service fail', async () => {
