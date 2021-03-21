@@ -119,6 +119,12 @@ test:server:
     <<: *only-server
     script:
         - cd server
-        - npm run test
-    dependencies:
-        - build:server
+    - npm run coverage
+        dependencies:
+            - build:server
+    artifacts:
+        paths:
+            - server/coverage/
+        reports:
+            cobertura: server/coverage/cobertura-coverage.xml
+
