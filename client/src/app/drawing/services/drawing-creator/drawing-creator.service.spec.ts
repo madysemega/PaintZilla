@@ -120,8 +120,8 @@ describe('DrawingCreatorService', () => {
         expect(matDialogSpy.open).not.toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should not call emit if changes are discarded and canvas is not empty', () => {
-        matDialogRefSpy.afterClosed.and.returnValue(of(true));
+    it('createNewDrawing() should call emit if changes are discarded and canvas is not empty', () => {
+        matDialogRefSpy.afterClosed.and.returnValue(of('discard'));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
         spyOn(service.drawingRestored, 'emit');
@@ -130,14 +130,14 @@ describe('DrawingCreatorService', () => {
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
-    it('createNewDrawing() should call emit if changes are not discarded and canvas is not empty', () => {
-        matDialogRefSpy.afterClosed.and.returnValue(of(false));
+    it('createNewDrawing() should call emit if changes are saved and canvas is not empty', () => {
+        matDialogRefSpy.afterClosed.and.returnValue(of('save'));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
         spyOn(service.drawingRestored, 'emit');
         service.createNewDrawing();
-        expect(service.drawingRestored.emit).not.toHaveBeenCalled();
-        expect(drawingServiceSpy.canvasIsEmpty).toEqual(false);
+        expect(service.drawingRestored.emit).toHaveBeenCalled();
+        expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
     it('noDialogsOpen should return true if there are no dialogs', () => {
