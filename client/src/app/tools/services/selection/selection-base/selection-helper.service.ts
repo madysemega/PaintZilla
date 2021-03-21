@@ -77,8 +77,9 @@ export abstract class SelectionHelperService {
         anchor: GridMovementAnchor,
         topLeft: Vec2,
         bottomRight: Vec2,
+        isReversed: boolean[]
     ): Vec2 {
-        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight);
+        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
 
         if (gridCellSize > 0 && isMouseMovement) {
             return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
@@ -94,27 +95,83 @@ export abstract class SelectionHelperService {
         return movement;
     }
 
-    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2): Vec2 {
+    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2, isReversed: boolean[]): Vec2 {
         const width: number = Math.abs(topL.x - bottomR.x);
         const height: number = Math.abs(topL.y - bottomR.y);
+        const X: number = 0;
+        const Y: number = 1;
+
+        let anchorPosition: Vec2 = { x: 0, y: 0 };
 
         switch (anchor) {
             case GridMovementAnchor.topL:
-                return { x: topL.x, y: topL.y };
+                anchorPosition = { x: topL.x, y: topL.y };
+                if (isReversed[X]) {
+                    anchorPosition.x = bottomR.x;
+                }
+                if (isReversed[Y]) {
+                    anchorPosition.y = bottomR.y;
+                }
+                return anchorPosition
+
             case GridMovementAnchor.middleL:
-                return { x: topL.x, y: topL.y + height / 2 };
+                anchorPosition = { x: topL.x, y: topL.y + height / 2 };
+                if (isReversed[X]) {
+                    anchorPosition.x = bottomR.x;
+                }
+                return anchorPosition
+
             case GridMovementAnchor.bottomL:
-                return { x: topL.x, y: topL.y + height };
+                anchorPosition = { x: topL.x, y: topL.y + height };
+                if (isReversed[X]) {
+                    anchorPosition.x = bottomR.x;
+                }
+                if (isReversed[Y]) {
+                    anchorPosition.y = topL.y;
+                }
+                return anchorPosition
+
             case GridMovementAnchor.bottomM:
-                return { x: topL.x + width / 2, y: topL.y + height };
+                anchorPosition = { x: topL.x + width / 2, y: topL.y + height };
+                if (isReversed[Y]) {
+                    anchorPosition.y = topL.y;
+                }
+                return anchorPosition;
+
             case GridMovementAnchor.bottomR:
-                return { x: topL.x + width, y: topL.y + height };
+                anchorPosition = { x: topL.x + width, y: topL.y + height };
+                if (isReversed[X]) {
+                    anchorPosition.x = topL.x;
+                }
+                if (isReversed[Y]) {
+                    anchorPosition.y = topL.y;
+                }
+                return anchorPosition
+
             case GridMovementAnchor.middleR:
-                return { x: topL.x + width, y: topL.y + height / 2 };
+                anchorPosition = { x: topL.x + width, y: topL.y + height / 2 };
+                if (isReversed[X]) {
+                    anchorPosition.x = topL.x;
+                }
+                return anchorPosition
+
             case GridMovementAnchor.topR:
-                return { x: topL.x + width, y: topL.y };
+                anchorPosition = { x: topL.x + width, y: topL.y };
+                if (isReversed[X]) {
+                    anchorPosition.x = topL.x;
+                }
+                if (isReversed[Y]) {
+                    anchorPosition.y = bottomR.y;
+                }
+                return anchorPosition;
+
             case GridMovementAnchor.topM:
-                return { x: topL.x + width / 2, y: topL.y };
+                anchorPosition ={ x: topL.x + width / 2, y: topL.y };
+                if (isReversed[Y]) {
+                    anchorPosition.y = bottomR.y;
+                }
+                return anchorPosition;
+
             case GridMovementAnchor.center:
                 return { x: topL.x + width / 2, y: topL.y + height / 2 };
             default:

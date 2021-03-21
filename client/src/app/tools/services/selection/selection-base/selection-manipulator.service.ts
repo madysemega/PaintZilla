@@ -28,8 +28,8 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    gridCellSize: number = -1;
-    gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
+    gridCellSize: number = 50;
+    gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.bottomM;
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -226,6 +226,7 @@ export abstract class SelectionManipulatorService extends Tool {
             this.gridMovementAnchor,
             this.topLeft,
             this.bottomRight,
+            [ this.isReversedX,  this.isReversedY]
         );
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);
