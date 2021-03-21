@@ -100,7 +100,10 @@ mocha.describe('Drawing Service', () => {
     it ('getAllLabels(): should call filterByLabels from localDatabaseService if it finds labels', (done) => {
         databaseService.start();
         chai.spy.on(databaseService.localDatabaseService, 'filterByLabels');
-        drawingService.getAllDrawings().then(() => {
+        chai.spy.on(MetadataModel, 'find', () => {
+            return {};
+        });
+        drawingService.getAllLabels().then(() => {
             chai.expect(databaseService.localDatabaseService.filterByLabels).to.have.been.called;
             done();
         }).catch((error)=> {
@@ -110,6 +113,9 @@ mocha.describe('Drawing Service', () => {
 
     it ('getAllLabels(): should throw an error if request for metadatas fails', async () => {
         chai.use(chaiAspromised);
+        chai.spy.on(MetadataModel, 'find', () => {
+            return undefined;
+        });
         chai.expect(drawingService.getAllLabels()).to.eventually.be.rejectedWith(Error);
     });
 
@@ -140,7 +146,10 @@ mocha.describe('Drawing Service', () => {
         chai.spy.on(drawingService, 'getDrawingById', () => {
             return MOCK_DRAWING;
         });
-        drawingService.saveDrawing(MOCK_DRAWING.name, MOCK_DRAWING.drawing, MOCK_DRAWING.labels).then((result) => {
+        chai.spy.on(MetadataModel, 'findByIdAndUpdate', () => {
+            return MetadataModel.find({});
+        });
+        drawingService.updateDrawing(MOCK_DRAWING.id, MOCK_DRAWING).then((result) => {
             chai.expect(drawingService.getDrawingById).to.have.been.called;
             done();
         });
@@ -227,6 +236,23 @@ mocha.describe('Drawing Service', () => {
 
     it ('deleteDrawing(): should throw an error if request for metadatas fails', async () => {
         chai.use(chaiAspromised);
+        chai.spy.on(MetadataModel, 'findByIdAndDelete', () => {
+           return undefined;
+        });
         chai.expect(drawingService.deleteDrawing(MOCK_DRAWING.id)).to.eventually.be.rejectedWith(Error);
+    });
+
+    it('should close server correctly on SIGINT signal', () => {
+       process.emit('SIGINT' as any);
+        chai.spy.on(databaseService.localDatabaseService, 'updateServerDrawings');
+        chai.expect(databaseService.localDatabaseService.updateServerDrawings).to.have.been.called;
+    });
+
+    it('should print an error on console if there is a problem on updateServerDrawings', () => {
+        chai.spy.on(databaseService.localDatabaseService, 'updateServerDrawings', () => {
+            throw new Error('testing rejection');
+        });
+        process.emit('SIGINT' as any);
+        chai.expect(databaseService.localDatabaseService.updateServerDrawings).to.throw(Error);
     });
 });

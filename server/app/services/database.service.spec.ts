@@ -33,9 +33,8 @@ mocha.describe('Database service', () => {
     it ('start(): should not connect to the database when start is called with wrong URL', async () => {
         try {
             await databaseService.start('WRONG URL');
-        } catch {
-            chai.expect(databaseService.distantDatabase.connection.readyState).to.equal(READY_STATE_DISCONNECTED);
-        }
+        } catch {}
+        chai.expect(databaseService.distantDatabase.connection.readyState).to.equal(READY_STATE_DISCONNECTED);
     });
 
     it ('closeConnection(): should no longer be connected if closeConnection is called', async () => {

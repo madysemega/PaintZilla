@@ -55,7 +55,7 @@ export class DrawingService {
     }
 
     async getAllLabels(): Promise<string[]> {
-        const metadatas = await MetadataModel.find({}).exec();
+        const metadatas = await MetadataModel.find({});
         if (metadatas) {
             return this.databaseService.localDatabaseService.filterByLabels(metadatas);
         }
@@ -121,7 +121,7 @@ export class DrawingService {
 
     async deleteDrawing(id: string): Promise<void> {
         Validator.checkId(id);
-        const item = await MetadataModel.findByIdAndDelete(id).exec();
+        const item = await MetadataModel.findByIdAndDelete(id);
         if (item) {
             this.databaseService.localDatabaseService.deleteDrawing(id);
         } else {
