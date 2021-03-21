@@ -10,23 +10,26 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { Arrow } from './arrow';
 import { ResizingMode } from './resizing-mode';
+import {
+    Arrow,
+    GridMovementAnchor,
+    MOVEMENT_DOWN,
+    MOVEMENT_LEFT,
+    MOVEMENT_RIGHT,
+    MOVEMENT_UP,
+    NUMBER_OF_ARROW_TYPES,
+    TIME_BEFORE_START_MOV,
+    TIME_BETWEEN_MOV,
+} from './selection-constants';
 import { SelectionHandlerService } from './selection-handler.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    readonly MOVEMENT_PX: number = 3;
-    readonly TIME_BEFORE_START_MOV: number = 500;
-    readonly TIME_BETWEEN_MOV: number = 100;
-    readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
-    readonly NUMBER_OF_ARROW_TYPES: number = 4;
-    readonly MOVEMENT_DOWN: Vec2 = { x: 0, y: this.MOVEMENT_PX };
-    readonly MOVEMENT_UP: Vec2 = { x: 0, y: -this.MOVEMENT_PX };
-    readonly MOVEMENT_LEFT: Vec2 = { x: -this.MOVEMENT_PX, y: 0 };
-    readonly MOVEMENT_RIGHT: Vec2 = { x: this.MOVEMENT_PX, y: 0 };
+    gridCellSize: number = -1;
+    gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -50,7 +53,7 @@ export abstract class SelectionManipulatorService extends Tool {
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
-        this.subscriptions = new Array<Subscription>(this.NUMBER_OF_ARROW_TYPES);
+        this.subscriptions = new Array<Subscription>(NUMBER_OF_ARROW_TYPES);
     }
 
     abstract drawSelectionOutline(): void;
@@ -61,7 +64,6 @@ export abstract class SelectionManipulatorService extends Tool {
         if (!this.mouseDown) {
             return;
         }
-
         if (this.isClickOutsideSelection(event)) {
             this.stopManipulation(true);
             return;
@@ -78,7 +80,6 @@ export abstract class SelectionManipulatorService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
-
         if (!this.mouseDown) {
             return;
         }
@@ -89,32 +90,27 @@ export abstract class SelectionManipulatorService extends Tool {
             this.resizeSelection(mousePosition, this.resizingMode);
             return;
         }
-        this.moveSelection(this.selectionHelper.convertToMovement(mousePosition, this.mouseDownLastPos), true);
+        this.moveSelection(this.selectionHelper.sub(mousePosition, this.mouseDownLastPos), true);
     }
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isShiftDown = true;
         }
-
         if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
             this.resizeSelection(this.mouseLastPos, this.resizingMode);
         }
-
         if (event.key === 'ArrowUp' && !this.arrowKeyDown[Arrow.up]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_UP, Arrow.up);
+            this.moveIfPressLongEnough(MOVEMENT_UP, Arrow.up);
         }
-
         if (event.key === 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_DOWN, Arrow.down);
+            this.moveIfPressLongEnough(MOVEMENT_DOWN, Arrow.down);
         }
-
         if (event.key === 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_LEFT, Arrow.left);
+            this.moveIfPressLongEnough(MOVEMENT_LEFT, Arrow.left);
         }
-
         if (event.key === 'ArrowRight' && !this.arrowKeyDown[Arrow.right]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_RIGHT, Arrow.right);
+            this.moveIfPressLongEnough(MOVEMENT_RIGHT, Arrow.right);
         }
     }
 
@@ -122,25 +118,20 @@ export abstract class SelectionManipulatorService extends Tool {
         if (event.key === 'Shift') {
             this.isShiftDown = false;
         }
-
         if (event.key === 'Shift' && this.isSelectionBeingResizedDiagonally()) {
             this.resizeSelection(this.mouseLastPos, this.resizingMode);
         }
-
         if (event.key === 'ArrowDown') {
-            this.singleMove(Arrow.down, this.MOVEMENT_DOWN);
+            this.singleMove(Arrow.down, MOVEMENT_DOWN);
         }
-
         if (event.key === 'ArrowUp') {
-            this.singleMove(Arrow.up, this.MOVEMENT_UP);
+            this.singleMove(Arrow.up, MOVEMENT_UP);
         }
-
         if (event.key === 'ArrowLeft') {
-            this.singleMove(Arrow.left, this.MOVEMENT_LEFT);
+            this.singleMove(Arrow.left, MOVEMENT_LEFT);
         }
-
         if (event.key === 'ArrowRight') {
-            this.singleMove(Arrow.right, this.MOVEMENT_RIGHT);
+            this.singleMove(Arrow.right, MOVEMENT_RIGHT);
         }
     }
 
@@ -222,22 +213,31 @@ export abstract class SelectionManipulatorService extends Tool {
 
     startMovingSelectionContinous(movement: Vec2, arrowIndex: number): void {
         this.subscriptions[arrowIndex].unsubscribe();
-        const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
+        const source = interval(TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
         this.subscriptions[arrowIndex] = source.subscribe(() => this.moveSelection(movement, false));
         this.isContinousMovementByKeyboardOn[arrowIndex] = true;
     }
 
-    addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean): void {
+    addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
+        movement = this.selectionHelper.moveAlongTheGrid(
+            movement,
+            isMouseMovement,
+            this.gridCellSize,
+            this.gridMovementAnchor,
+            this.topLeft,
+            this.bottomRight,
+            [this.isReversedX, this.isReversedY],
+        );
+        this.selectionHelper.addInPlace(this.topLeft, movement);
+        this.selectionHelper.addInPlace(this.bottomRight, movement);
         if (isMouseMovement) {
-            this.selectionHelper.add(this.mouseDownLastPos, mouseMovement);
+            this.selectionHelper.addInPlace(this.mouseDownLastPos, movement);
         }
-        this.selectionHelper.add(this.topLeft, mouseMovement);
-        this.selectionHelper.add(this.bottomRight, mouseMovement);
     }
 
     moveIfPressLongEnough(movement: Vec2, arrowIndex: number): void {
         this.arrowKeyDown[arrowIndex] = true;
-        const source = interval(this.TIME_BEFORE_START_MOV);
+        const source = interval(TIME_BEFORE_START_MOV);
         this.subscriptions[arrowIndex] = source.subscribe((val) => {
             this.startMovingSelectionContinous(movement, arrowIndex);
         });
@@ -258,19 +258,14 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean): void {
-        this.mouseLastPos.x = mousePos.x;
-        this.mouseLastPos.y = mousePos.y;
-
+        this.mouseLastPos = { x: mousePos.x, y: mousePos.y };
         if (isMouseDownLastPos) {
-            this.mouseDownLastPos.x = mousePos.x;
-            this.mouseDownLastPos.y = mousePos.y;
+            this.mouseDownLastPos = { x: mousePos.x, y: mousePos.y };
         }
     }
 
     computeDiagonalEquation(): void {
-        const deltaY = this.topLeft.y - this.bottomRight.y;
-        const deltaX = this.bottomRight.x - this.topLeft.x;
-        this.diagonalSlope = deltaY / deltaX;
+        this.diagonalSlope = (this.topLeft.y - this.bottomRight.y) / (this.bottomRight.x - this.topLeft.x);
         if (this.resizingMode === ResizingMode.towardsBottomRight || this.resizingMode === ResizingMode.towardsTopLeft) {
             this.diagonalSlope = -this.diagonalSlope;
             this.diagonalYIntercept = this.topLeft.y - this.topLeft.x * this.diagonalSlope;
@@ -310,17 +305,7 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     resetProperties(): void {
-        this.diagonalSlope = 0;
-        this.diagonalYIntercept = 0;
-        this.topLeft = { x: 0, y: 0 };
-        this.bottomRight = { x: 0, y: 0 };
-        this.mouseLastPos = { x: 0, y: 0 };
-        this.mouseDownLastPos = { x: 0, y: 0 };
-        this.resizingMode = ResizingMode.off;
-        this.mouseDown = false;
-        this.isShiftDown = false;
-        this.isReversedY = false;
-        this.isReversedX = false;
+        this.selectionHelper.resetManipulatorProperties(this);
     }
 
     createMemento(): ManipulatorMemento {

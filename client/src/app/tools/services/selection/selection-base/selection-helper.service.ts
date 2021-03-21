@@ -5,6 +5,9 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { ResizingMode } from './resizing-mode';
+import { GridMovementAnchor } from './selection-constants';
+import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -57,13 +60,107 @@ export abstract class SelectionHelperService {
         return xOutsideSelection || yOutsideSelection;
     }
 
-    add(vect: Vec2, amount: Vec2): void {
+    addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;
         vect.y += amount.y;
     }
 
-    convertToMovement(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
+    sub(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
         const mouseMovement: Vec2 = { x: mousePos.x - mouseDownLastPos.x, y: mousePos.y - mouseDownLastPos.y };
         return mouseMovement;
+    }
+
+    moveAlongTheGrid(
+        movement: Vec2,
+        isMouseMovement: boolean,
+        gridCellSize: number,
+        anchor: GridMovementAnchor,
+        topLeft: Vec2,
+        bottomRight: Vec2,
+        isReversed: boolean[],
+    ): Vec2 {
+        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
+
+        if (gridCellSize > 0 && isMouseMovement) {
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
+        }
+        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
+            // increase movement by keyboard
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.ceil);
+        }
+        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
+            // decrease movement by keyboard
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.floor);
+        }
+        return movement;
+    }
+
+    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2, isReversed: boolean[]): Vec2 {
+        const width: number = Math.abs(topL.x - bottomR.x);
+        const height: number = Math.abs(topL.y - bottomR.y);
+        const X = 0;
+        const Y = 1;
+
+        const actualTopLeft: Vec2 = { x: topL.x, y: topL.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomR.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomR.y;
+        }
+
+        switch (anchor) {
+            case GridMovementAnchor.topL:
+                return { x: actualTopLeft.x, y: actualTopLeft.y };
+
+            case GridMovementAnchor.middleL:
+                return { x: actualTopLeft.x, y: actualTopLeft.y + height / 2 };
+
+            case GridMovementAnchor.bottomL:
+                return { x: actualTopLeft.x, y: actualTopLeft.y + height };
+
+            case GridMovementAnchor.bottomM:
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height };
+
+            case GridMovementAnchor.bottomR:
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y + height };
+
+            case GridMovementAnchor.middleR:
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y + height / 2 };
+
+            case GridMovementAnchor.topR:
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y };
+
+            case GridMovementAnchor.topM:
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y };
+
+            case GridMovementAnchor.center:
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height / 2 };
+            default:
+                return { x: actualTopLeft.x, y: actualTopLeft.y };
+        }
+    }
+
+    computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+        const newPos: Vec2 = { x: position.x, y: position.y };
+        this.addInPlace(newPos, movement);
+        newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
+        newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
+        return this.sub(newPos, position);
+    }
+
+    resetManipulatorProperties(manipulator: SelectionManipulatorService): void {
+        manipulator.diagonalSlope = 0;
+        manipulator.diagonalYIntercept = 0;
+        manipulator.topLeft = { x: 0, y: 0 };
+        manipulator.bottomRight = { x: 0, y: 0 };
+        manipulator.mouseLastPos = { x: 0, y: 0 };
+        manipulator.mouseDownLastPos = { x: 0, y: 0 };
+        manipulator.resizingMode = ResizingMode.off;
+        manipulator.mouseDown = false;
+        manipulator.isShiftDown = false;
+        manipulator.isReversedY = false;
+        manipulator.isReversedX = false;
     }
 }
