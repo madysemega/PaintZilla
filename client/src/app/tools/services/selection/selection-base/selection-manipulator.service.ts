@@ -28,6 +28,8 @@ export abstract class SelectionManipulatorService extends Tool {
     readonly MOVEMENT_LEFT: Vec2 = { x: -this.MOVEMENT_PX, y: 0 };
     readonly MOVEMENT_RIGHT: Vec2 = { x: this.MOVEMENT_PX, y: 0 };
 
+    gridCellSize: number = 50;
+
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
     diagonalSlope: number = 0;
@@ -89,7 +91,7 @@ export abstract class SelectionManipulatorService extends Tool {
             this.resizeSelection(mousePosition, this.resizingMode);
             return;
         }
-        this.moveSelection(this.selectionHelper.convertToMovement(mousePosition, this.mouseDownLastPos), true);
+        this.moveSelection(this.selectionHelper.sub(mousePosition, this.mouseDownLastPos), true);
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -227,12 +229,13 @@ export abstract class SelectionManipulatorService extends Tool {
         this.isContinousMovementByKeyboardOn[arrowIndex] = true;
     }
 
-    addMovementToPositions(mouseMovement: Vec2, isMouseMovement: boolean): void {
+    addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
+        movement = this.selectionHelper.moveAlongTheGrid(movement, isMouseMovement, this.gridCellSize, this.topLeft);
+        this.selectionHelper.addInPlace(this.topLeft, movement);
+        this.selectionHelper.addInPlace(this.bottomRight, movement);
         if (isMouseMovement) {
-            this.selectionHelper.add(this.mouseDownLastPos, mouseMovement);
+            this.selectionHelper.addInPlace(this.mouseDownLastPos, movement);
         }
-        this.selectionHelper.add(this.topLeft, mouseMovement);
-        this.selectionHelper.add(this.bottomRight, mouseMovement);
     }
 
     moveIfPressLongEnough(movement: Vec2, arrowIndex: number): void {

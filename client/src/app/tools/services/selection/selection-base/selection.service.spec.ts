@@ -122,7 +122,7 @@ describe('SelectionService', () => {
         const vect: Vec2 = { x: 9, y: 6 };
         const amount: Vec2 = { x: 9, y: 6 };
         const amountCopy: Vec2 = { x: 9, y: 6 };
-        service.add(vect, amount);
+        service.addInPlace(vect, amount);
         expect(amount).toEqual(amountCopy);
     });
 
@@ -132,7 +132,7 @@ describe('SelectionService', () => {
         const mousePosCopy: Vec2 = { x: 9, y: 6 };
         const mouseDownLastPosCopy: Vec2 = { x: 4, y: 3 };
 
-        service.convertToMovement(mousePos, mouseDownLastPos);
+        service.sub(mousePos, mouseDownLastPos);
         expect(mousePos).toEqual(mousePosCopy);
         expect(mouseDownLastPos).toEqual(mouseDownLastPosCopy);
     });

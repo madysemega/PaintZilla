@@ -57,13 +57,34 @@ export abstract class SelectionHelperService {
         return xOutsideSelection || yOutsideSelection;
     }
 
-    add(vect: Vec2, amount: Vec2): void {
+    addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;
         vect.y += amount.y;
     }
 
-    convertToMovement(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
+    sub(mousePos: Vec2, mouseDownLastPos: Vec2): Vec2 {
         const mouseMovement: Vec2 = { x: mousePos.x - mouseDownLastPos.x, y: mousePos.y - mouseDownLastPos.y };
         return mouseMovement;
+    }
+
+    moveAlongTheGrid(movement: Vec2, isMouseMovement: boolean, gridCellSize: number, topLeft: Vec2): Vec2 {
+        if (gridCellSize > 0 && isMouseMovement) {
+             return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.round);
+        }
+        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
+            return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.ceil);
+        }
+        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
+            return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.floor);
+        }
+        return movement;
+    }
+
+    computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+        let newPos: Vec2 = { x: position.x, y: position.y };
+        this.addInPlace(newPos, movement);
+        newPos.x = roundingFunction((newPos.x) / gridCellSize) * gridCellSize;
+        newPos.y = roundingFunction((newPos.y) / gridCellSize) * gridCellSize;
+        return this.sub(newPos, position);
     }
 }

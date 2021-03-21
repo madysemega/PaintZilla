@@ -398,7 +398,7 @@ describe('EllipseSelectionManipulatorService', () => {
     it('addMovementToPosition should call add 3 times if isMouseMovement is true ', () => {
         const mouseMovement = { x: 10, y: 11 };
         service.addMovementToPositions(mouseMovement, true);
-        expect(ellipseSelectionHelperMock.add).toHaveBeenCalledTimes(3);
+        expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
     });
 
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
