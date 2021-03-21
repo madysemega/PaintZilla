@@ -9,10 +9,10 @@ import { inject, injectable } from 'inversify';
 export class DrawingController {
     router: Router;
     constructor(@inject(TYPES.DrawingService) private drawingService: DrawingService) {
-        this.router = Router();
         this.configureRouter();
     }
     private configureRouter(): void {
+        this.router = Router();
         this.router.post('/drawings', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .saveDrawing(req.body.name, req.body.drawing, req.body.labels)

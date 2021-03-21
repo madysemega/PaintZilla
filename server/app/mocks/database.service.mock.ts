@@ -19,14 +19,9 @@ export class DatabaseServiceMock {
 
     async start(): Promise<void> {
         this.mongoUri = await this.mongoServer.getUri();
-        await this.distantDatabase
-            .connect(this.mongoUri, this.options)
-            .then(() => {
-                console.log('Connected successfully to Mongodb Atlas');
-            })
-            .catch(() => {
-                throw new Error('Distant database connection error');
-            });
+        await this.distantDatabase.connect(this.mongoUri, this.options).then(() => {
+            console.log('Connected successfully to Mongodb Atlas');
+        });
     }
 
     async closeConnection(): Promise<void> {
