@@ -57,13 +57,15 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen() && this.saveDrawingService.noDialogsOpen()) {
-            this.toolSelector.getSelectedTool().onKeyDown(event);
             const isCtrl: boolean = event.ctrlKey;
             const isA: boolean = event.key === 'a';
 
             if (isCtrl && isA) {
+                // S1
                 this.toolSelector.selectTool('rectangle-selection');
             }
+
+            this.toolSelector.getSelectedTool().onKeyDown(event); // this must stay after S1
         }
         this.drawingCreatorService.onKeyDown(event);
         this.exportDrawingService.onKeyDown(event);
