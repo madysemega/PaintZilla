@@ -162,6 +162,5 @@ export abstract class SelectionHelperService {
         manipulator.isShiftDown = false;
         manipulator.isReversedY = false;
         manipulator.isReversedX = false;
-        
     }
 }
