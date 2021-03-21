@@ -89,10 +89,26 @@ export abstract class SelectionHelperService {
         const height: number = Math.abs(topL.y - bottomR.y);
 
         switch (anchor) {
+            case GridMovementAnchor.topL:
+                return { x: topL.x, y: topL.y };
+            case GridMovementAnchor.middleL:
+                return { x: topL.x, y: topL.y + height / 2 };
+            case GridMovementAnchor.bottomL:
+                return { x: topL.x, y: topL.y + height };
+            case GridMovementAnchor.bottomM:
+                return { x: topL.x + width / 2, y: topL.y + height };
+            case GridMovementAnchor.bottomR:
+                return { x: topL.x + width, y: topL.y + height };
+            case GridMovementAnchor.middleR:
+                return { x: topL.x + width, y: topL.y + height / 2 };
+            case GridMovementAnchor.topR:
+                return { x: topL.x + width, y: topL.y };
+            case GridMovementAnchor.topM:
+                return { x: topL.x + width/2, y: topL.y };
             case GridMovementAnchor.center:
                 return { x: topL.x + width / 2, y: topL.y + height / 2 };
             default:
-                return { x: topL.x + width / 2, y: topL.y + height / 2 };
+                return { x: topL.x , y: topL.y };
         }
     }
 

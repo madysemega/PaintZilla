@@ -22,7 +22,7 @@ import { SelectionHandlerService } from './selection-handler.service';
 export abstract class SelectionManipulatorService extends Tool {
 
     gridCellSize: number = 50;
-    gridMovementAnchor : GridMovementAnchor = GridMovementAnchor.center;
+    gridMovementAnchor : GridMovementAnchor = GridMovementAnchor.bottomR;
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -153,6 +153,7 @@ export abstract class SelectionManipulatorService extends Tool {
     moveSelection(movement: Vec2, isMouseMovement: boolean): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.addMovementToPositions(movement, isMouseMovement);
+        console.log(this.topLeft, this.bottomRight);
         this.drawSelection();
     }
 
