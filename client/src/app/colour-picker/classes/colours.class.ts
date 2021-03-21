@@ -77,7 +77,7 @@ export class Colour {
         this.alpha = this.setColor(alpha, Constants.MIN_ALPHA, Constants.MAX_ALPHA);
     }
 
-    setColor(color: number, minValue: number, maxValue: number): number {
+    private setColor(color: number, minValue: number, maxValue: number): number {
         if (color < minValue) {
             return minValue;
         } else if (color > maxValue) {
