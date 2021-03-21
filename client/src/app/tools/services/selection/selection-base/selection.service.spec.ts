@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Vec2 } from '@app/app/classes/vec2';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovementAnchor } from './selection-constants';
 
 import { SelectionHelperService } from './selection-helper.service';
 
@@ -9,7 +10,7 @@ import { SelectionHelperService } from './selection-helper.service';
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 // tslint:disable:max-line-length
-describe('SelectionService', () => {
+describe('SelectionHelperService', () => {
     let service: SelectionHelperService;
     let ellipseServiceMock: jasmine.SpyObj<EllipseService>;
 
@@ -135,5 +136,371 @@ describe('SelectionService', () => {
         service.sub(mousePos, mouseDownLastPos);
         expect(mousePos).toEqual(mousePosCopy);
         expect(mouseDownLastPos).toEqual(mouseDownLastPosCopy);
+    });
+
+    it('moveAlongTheGrid should call computeMovementAlongGrid with Math.round in case of a MouseEvent', () => {
+        const movement: Vec2 = { x: 9, y: 6 };
+        const isMouseMovement: boolean = true;
+        const gridCellSize: number = 5;
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        const anchorPosition: Vec2 = {x: 5, y: 7};
+        spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
+        let computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
+        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.round);
+    });
+
+    it('moveAlongTheGrid should call computeMovementAlongGrid with Math.ceil if magnetisme is on with a keyboardEvent and increase movement ', () => {
+        const movement: Vec2 = { x: 9, y: 0 };
+        const isMouseMovement: boolean = false;
+        const gridCellSize: number = 5;
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        const anchorPosition: Vec2 = {x: 5, y: 7};
+        spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
+        let computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
+        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.ceil);
+    });
+
+    it('moveAlongTheGrid should call computeMovementAlongGrid with Math.floor if magnetisme is on with a keyboardEvent and decrease movement ', () => {
+        const movement: Vec2 = { x: -9, y: 0 };
+        const isMouseMovement: boolean = false;
+        const gridCellSize: number = 5;
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        const anchorPosition: Vec2 = {x: 5, y: 7};
+        spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
+        let computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
+        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.floor);
+    });
+
+    it('moveAlongTheGrid should not call computeMovementAlongGrid if magnetisme is off (<=> gridCellSize < 0) ', () => {
+        const movement: Vec2 = { x: -9, y: 0 };
+        const isMouseMovement: boolean = false;
+        const gridCellSize: number = -1;
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        const anchorPosition: Vec2 = {x: 5, y: 7};
+        spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
+        let computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
+        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        expect(computeMovementAlongGridSpy).not.toHaveBeenCalled();
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point topL', () => {
+        const X = 0;
+        const Y = 1;
+        
+        const anchor: GridMovementAnchor = GridMovementAnchor.topL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({x: actualTopLeft.x, y: actualTopLeft.y});
+    });
+
+
+    it('getAnchorPosition should return the correct position according to the given anchor point middleL', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.middleL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        //const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height / 2 });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point bottomL', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomL;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        //const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point bottomM', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomM;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point bottomR', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.bottomR;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y + height });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point middleR', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.middleR;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y + height / 2 });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point topR', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.topR;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point topM', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.topM;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point center', () => {
+        const anchor: GridMovementAnchor = GridMovementAnchor.center;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+        
+        const width: number = Math.abs(topLeft.x - bottomRight.x);
+        const height: number = Math.abs(topLeft.y - bottomRight.y);
+
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height / 2 });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point (inexisting)', () => {
+        const inexistingAnchorPoint: number = 97;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, false];
+
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point (inexisting) and if isReversedX', () => {
+        const inexistingAnchorPoint: number = 97;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [true, false];
+
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point (inexisting) and if isReversedY', () => {
+        const inexistingAnchorPoint: number = 97;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [false, true];
+
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+    });
+
+    it('getAnchorPosition should return the correct position according to the given anchor point (inexisting) and if isReversedX and isReversedY', () => {
+        const inexistingAnchorPoint: number = 97;
+        const topLeft: Vec2 = { x: 4, y: 3 };
+        const bottomRight: Vec2 = { x: 9, y: 6 };
+        const isReversed: boolean[] = [true, true];
+
+        const X = 0;
+        const Y = 1;
+        
+        const actualTopLeft: Vec2 = { x: topLeft.x, y: topLeft.y };
+
+        if (isReversed[X]) {
+            actualTopLeft.x = bottomRight.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomRight.y;
+        }
+        
+        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+    });
+
+    it('computeMovementAlongGrid should return correct movement', () => {
+        const position: Vec2 = { x: 4, y: 3 };
+        const movement: Vec2 = { x: -9, y: 0 };
+        const gridCellSize: number = -1;
+        const roundingFunction: (n: number) => number = Math.ceil;
+
+        const newPos: Vec2 = { x: position.x, y: position.y };
+        newPos.x += movement.x;
+        newPos.y += movement.y;
+        newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
+        newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
+        const correctMovement: Vec2 = { x: newPos.x - position.x, y: newPos.y - position.y };
+        
+        expect(service.computeMovementAlongGrid(position, movement, gridCellSize, roundingFunction)).toEqual(correctMovement);
     });
 });
