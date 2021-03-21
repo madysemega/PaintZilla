@@ -10,7 +10,7 @@ import { Drawing } from '@common/models/drawing';
     styleUrls: ['./image-navigation.component.scss'],
 })
 export class ImageNavigationComponent {
-    private readonly SNACK_BAR_DELAI = 6000;
+    private readonly SNACK_BAR_DELAI: number = 6000;
 
     labels: string[];
     drawings: Drawing[];
