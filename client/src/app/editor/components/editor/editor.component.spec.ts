@@ -1,3 +1,4 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -11,6 +12,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
+import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -84,6 +86,9 @@ describe('EditorComponent', () => {
                 { provide: RectangleService },
                 { provide: ResizingService },
                 { provide: MatDialogRef, useValue: {} },
+                { provide: HttpClient },
+                { provide: HttpHandler },
+                { provide: ServerService },
             ],
         })
             .overrideModule(MatIconModule, {
