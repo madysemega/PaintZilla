@@ -10,6 +10,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
+import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
@@ -61,6 +62,7 @@ describe('SidebarComponent', () => {
     let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let exportDrawingServiceSpy: jasmine.SpyObj<any>;
+    let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -95,7 +97,7 @@ describe('SidebarComponent', () => {
         drawingStub.canvasSize = { x: 500, y: 600 };
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
-        sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
+        sprayStoolStub = new SprayService(drawingStub, colourServiceStub, historyServiceStub);
         pipetteStoolStub = new PipetteService(drawingStub, colourServiceStub, historyServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
@@ -103,6 +105,7 @@ describe('SidebarComponent', () => {
         polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
+        saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -172,6 +175,7 @@ describe('SidebarComponent', () => {
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
                 { provide: ExportDrawingService, useValue: exportDrawingServiceSpy },
+                { provide: SaveDrawingService, useValue: saveDrawingServiceSpy },
                 { provide: ColourService },
                 { provide: EllipseService },
                 { provide: EraserService },
@@ -270,5 +274,10 @@ describe('SidebarComponent', () => {
     it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
         component.exportDrawing();
         expect(exportDrawingServiceSpy.openExportDrawingDialog).toHaveBeenCalled();
+    });
+
+    it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
+        component.saveDrawing();
+        expect(saveDrawingServiceSpy.openSaveDrawingDialog).toHaveBeenCalled();
     });
 });

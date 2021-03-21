@@ -23,7 +23,7 @@ describe('SprayToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService();
         drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        sprayServiceStub = new SprayService(drawingServiceStub, colourServiceStub);
+        sprayServiceStub = new SprayService(drawingServiceStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],
@@ -38,36 +38,30 @@ describe('SprayToolConfigurationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('onDiameterPointChange() should change the diameter attribute accordingly', () => {
+    it('onDropDiameterChange() should change the diameter attribute accordingly', () => {
         SAMPLE_DIAMETERS.forEach((initialDiameter) => {
             SAMPLE_DIAMETERS.forEach((givenDiameter) => {
-                component.diameterChange = initialDiameter;
-                component.onDiameterPointChange(givenDiameter);
-                expect(component.diameterChange).toEqual(givenDiameter);
+                component.dropDiameter = initialDiameter;
+                component.onDropDiameterChange(givenDiameter);
+                expect(component.dropDiameter).toEqual(givenDiameter);
             });
         });
     });
 
-    it('onDiameterPointChange() should set diameter in the spray service to the given parameter', () => {
-        SAMPLE_DIAMETERS.forEach((diameter) => {
-            component.onDiameterPointChange(diameter);
-            expect(sprayServiceStub.diameterDraw).toEqual(diameter);
-        });
-    });
-    it('onNumberPointChange() should change the number attribute accordingly', () => {
+    it('onJetDiameterChange() should change the number attribute accordingly', () => {
         SAMPLE_DIAMETERS.forEach((initialDiameter) => {
             SAMPLE_DIAMETERS.forEach((givenDiameter) => {
-                component.numberChange = initialDiameter;
-                component.onNumberPointChange(givenDiameter);
-                expect(component.numberChange).toEqual(givenDiameter);
+                component.jetDiameter = initialDiameter;
+                component.onJetDiameterChange(givenDiameter);
+                expect(component.jetDiameter).toEqual(givenDiameter);
             });
         });
     });
 
-    it('onNumberPointChange() should set number in the spray service to the given parameter', () => {
+    it('onNbDropsPerSecondChange() should set number in the spray service to the given parameter', () => {
         SAMPLE_DIAMETERS.forEach((diameter) => {
-            component.onNumberPointChange(diameter);
-            expect(sprayServiceStub.numberPoints).toEqual(diameter);
+            component.onNbDropsPerSecondChange(diameter);
+            expect(sprayServiceStub.nbDropsPerSecond).toEqual(diameter);
         });
     });
     it('should create', () => {

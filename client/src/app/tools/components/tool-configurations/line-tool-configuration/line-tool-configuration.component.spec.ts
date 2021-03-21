@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '@app/material.module';
 import { LineType } from '@app/shapes/types/line-type';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
@@ -32,7 +33,7 @@ describe('LineToolConfigurationComponent', () => {
         lineServiceStub = jasmine.createSpyObj('LineService', ['setLineType', 'setJointsDiameter']);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: LineService, useValue: lineServiceStub }],
         })

@@ -1,7 +1,9 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
@@ -10,6 +12,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
+import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -67,7 +70,7 @@ describe('EditorComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([])],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule],
             declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
@@ -83,6 +86,9 @@ describe('EditorComponent', () => {
                 { provide: RectangleService },
                 { provide: ResizingService },
                 { provide: MatDialogRef, useValue: {} },
+                { provide: HttpClient },
+                { provide: HttpHandler },
+                { provide: ServerService },
             ],
         })
             .overrideModule(MatIconModule, {

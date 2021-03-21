@@ -26,6 +26,16 @@
 
         <button
             mat-icon-button
+            aria-label="Sauvegarder le dessin"
+            matTooltip="Sauvegarder le dessinn (Ctrl+s)"
+            matTooltipPosition="right"
+            (click)="this.saveDrawing()"
+        >
+            <mat-icon>save</mat-icon>
+        </button>
+
+        <button
+            mat-icon-button
             matTooltip="Sélectionner toute la surface de dessin (Ctrl+a)"
             matTooltipPosition="right"
             (click)="selectTheEntireCanvas()"

@@ -1,19 +1,24 @@
-import { BoxShape } from '@app/shapes/box-shape';
+import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
-export class RectangleStrokeRenderer extends ShapeRenderer<BoxShape> {
-    constructor(shape: BoxShape, properties: ShapeProperty[]) {
+export class RectangleStrokeRenderer extends ShapeRenderer<ContouredBoxShape> {
+    constructor(shape: ContouredBoxShape, properties: ShapeProperty[]) {
         super(shape, properties);
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
-        ctx.rect(this.shape.topLeft.x, this.shape.topLeft.y, this.shape.width, this.shape.height);
+        ctx.rect(
+            this.shape.topLeft.x - this.shape.contourWidth / 2,
+            this.shape.topLeft.y - this.shape.contourWidth / 2,
+            this.shape.width + this.shape.contourWidth,
+            this.shape.height + this.shape.contourWidth,
+        );
         ctx.stroke();
     }
 
-    clone(): ShapeRenderer<BoxShape> {
+    clone(): ShapeRenderer<ContouredBoxShape> {
         return new RectangleStrokeRenderer(this.getShapeCopy(), this.getPropertiesCopy());
     }
 }

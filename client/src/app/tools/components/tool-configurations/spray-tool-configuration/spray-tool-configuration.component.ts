@@ -7,16 +7,32 @@ import { SprayService } from '@app/tools/services/tools/spray-service';
     styleUrls: ['./spray-tool-configuration.component.scss'],
 })
 export class SprayToolConfigurationComponent {
-    diameterChange: number = 1;
-    numberChange: number = 1;
-    constructor(public sprayService: SprayService) {}
+    static readonly DEFAULT_DROP_DIAMETER: number = 5;
+    static readonly DEFAULT_JET_DIAMETER: number = 50;
+    static readonly DEFAULT_NB_DROPS_PER_SECONDS: number = 50;
 
-    onDiameterPointChange(diameterChange: number): void {
-        this.diameterChange = diameterChange;
-        this.sprayService.diameterDraw = diameterChange;
+    dropDiameter: number;
+    jetDiameter: number;
+    nbDropsPerSecond: number;
+
+    constructor(public sprayService: SprayService) {
+        this.onDropDiameterChange(SprayToolConfigurationComponent.DEFAULT_DROP_DIAMETER);
+        this.onJetDiameterChange(SprayToolConfigurationComponent.DEFAULT_JET_DIAMETER);
+        this.onNbDropsPerSecondChange(SprayToolConfigurationComponent.DEFAULT_NB_DROPS_PER_SECONDS);
     }
-    onNumberPointChange(numberChange: number): void {
-        this.numberChange = numberChange;
-        this.sprayService.numberPoints = numberChange;
+
+    onDropDiameterChange(dropDiameter: number): void {
+        this.dropDiameter = dropDiameter;
+        this.sprayService.onRadiusChanged(dropDiameter / 2);
+    }
+
+    onJetDiameterChange(jetDiameter: number): void {
+        this.jetDiameter = jetDiameter;
+        this.sprayService.jetDiameter = jetDiameter;
+    }
+
+    onNbDropsPerSecondChange(nbDropsPerSecond: number): void {
+        this.nbDropsPerSecond = nbDropsPerSecond;
+        this.sprayService.nbDropsPerSecond = nbDropsPerSecond;
     }
 }

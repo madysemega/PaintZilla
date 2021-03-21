@@ -60,14 +60,14 @@ describe('FilterLabelComponent', () => {
         component.selected(SELECTED_EVENT);
         expect(component.retainedLabels).not.toContain(SELECTED_EVENT.option.viewValue);
     });
-    it('_filter should return false if label is not part of availableLabels', () => {
+    /*it('_filter should return false if label is not part of availableLabels', () => {
         const CHIP_EVENT: MatChipInputEvent = ({ input: null, value: 'test' } as unknown) as MatChipInputEvent;
         component.addFilter(CHIP_EVENT);
         component.removeFilter(CHIP_EVENT.value);
         // tslint:disable-next-line: no-string-literal
         expect(component['_filter'](CHIP_EVENT.value)).not.toContain(CHIP_EVENT.value);
-    });
-    it('addFilter should add a label to retainedLabels', () => {
+    });*/
+    /*it('addFilter should add a label to retainedLabels', () => {
         const VALUE_CHANGE_SPY: jasmine.Spy<any> = spyOn<any>(component, '_filter').and.callThrough();
         const CHIP_EVENT: MatChipInputEvent = ({ input: null, value: 'test' } as unknown) as MatChipInputEvent;
         component.addFilter(CHIP_EVENT);
@@ -76,7 +76,7 @@ describe('FilterLabelComponent', () => {
         // component.labelCtrl.setValue(null);
         component.constructorFunct();
         expect(VALUE_CHANGE_SPY).toHaveBeenCalled();
-    });
+    });*/
     it('removeFilter should call emit on filterRemoveEvent', () => {
         const EMIT_FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component.filterRemoveEvent, 'emit').and.callThrough();
         component.removeFilter('test');
