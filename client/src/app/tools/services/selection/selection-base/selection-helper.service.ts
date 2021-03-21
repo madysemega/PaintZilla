@@ -5,7 +5,9 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { ResizingMode } from './resizing-mode';
 import { GridMovementAnchor } from './selection-constants';
+import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -68,17 +70,25 @@ export abstract class SelectionHelperService {
         return mouseMovement;
     }
 
-    moveAlongTheGrid(movement: Vec2, isMouseMovement: boolean, gridCellSize: number, anchor: GridMovementAnchor, topLeft: Vec2, bottomRight: Vec2): Vec2 {
-
+    moveAlongTheGrid(
+        movement: Vec2,
+        isMouseMovement: boolean,
+        gridCellSize: number,
+        anchor: GridMovementAnchor,
+        topLeft: Vec2,
+        bottomRight: Vec2,
+    ): Vec2 {
         const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight);
 
         if (gridCellSize > 0 && isMouseMovement) {
             return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
         }
-        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) { //increase movement by keyboard
+        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
+            // increase movement by keyboard
             return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.ceil);
         }
-        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) { //decrease movement by keyboard
+        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
+            // decrease movement by keyboard
             return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.floor);
         }
         return movement;
@@ -104,19 +114,33 @@ export abstract class SelectionHelperService {
             case GridMovementAnchor.topR:
                 return { x: topL.x + width, y: topL.y };
             case GridMovementAnchor.topM:
-                return { x: topL.x + width/2, y: topL.y };
+                return { x: topL.x + width / 2, y: topL.y };
             case GridMovementAnchor.center:
                 return { x: topL.x + width / 2, y: topL.y + height / 2 };
             default:
-                return { x: topL.x , y: topL.y };
+                return { x: topL.x, y: topL.y };
         }
     }
 
     computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
-        let newPos: Vec2 = { x: position.x, y: position.y };
+        const newPos: Vec2 = { x: position.x, y: position.y };
         this.addInPlace(newPos, movement);
-        newPos.x = roundingFunction((newPos.x) / gridCellSize) * gridCellSize;
-        newPos.y = roundingFunction((newPos.y) / gridCellSize) * gridCellSize;
+        newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
+        newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
         return this.sub(newPos, position);
+    }
+
+    resetManipulatorProperties(manipulator: SelectionManipulatorService): void {
+        manipulator.diagonalSlope = 0;
+        manipulator.diagonalYIntercept = 0;
+        manipulator.topLeft = { x: 0, y: 0 };
+        manipulator.bottomRight = { x: 0, y: 0 };
+        manipulator.mouseLastPos = { x: 0, y: 0 };
+        manipulator.mouseDownLastPos = { x: 0, y: 0 };
+        manipulator.resizingMode = ResizingMode.off;
+        manipulator.mouseDown = false;
+        manipulator.isShiftDown = false;
+        manipulator.isReversedY = false;
+        manipulator.isReversedX = false;
     }
 }
