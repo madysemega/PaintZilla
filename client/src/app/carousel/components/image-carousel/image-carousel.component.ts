@@ -67,7 +67,6 @@ export class ImageCarouselComponent implements OnChanges {
     }
 
     private refreshImages(neighbouringIndices: NeighbouringIndices): void {
-        console.log('taille est', this.retainedImages.length);
         this.showLeft = false;
         this.showRight = false;
         this.showCenter = false;
@@ -103,23 +102,17 @@ export class ImageCarouselComponent implements OnChanges {
         this.retainedImages = [];
         if (this.retainedLabels.length === 0) {
             this.retainedImages = this.images;
-            console.log('chula', this.retainedImages.length);
             this.refreshImages(this.getNeighbouringIndices(1));
-            console.log('chulaencore', this.retainedImages);
             return;
         } else {
-            console.log(this.retainedImages);
             for (const IMAGE of this.images) {
                 if (IMAGE.labels.some((r) => this.retainedLabels.indexOf(r) >= 0)) this.retainedImages.push(IMAGE);
             }
-            console.log(this.retainedImages);
             this.refreshImages(this.getNeighbouringIndices(1));
         }
     }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('allo');
         if (changes.retainedLabels) {
-            console.log(changes.retainedLabels);
             this.getRetainedImages();
             this.refreshImages(this.getNeighbouringIndices(1));
         }
