@@ -27,9 +27,4 @@ describe('DiscardChangesDialogComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
-    it('openSaveDialog should close the current dialog', () => {
-        component.openSaveDialog();
-        expect(matDialogRefSpy.close).toHaveBeenCalled();
-    });
 });
