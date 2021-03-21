@@ -24,10 +24,6 @@ export class Colour {
         result.blue = rgb[Constants.THIRD_INDEX];
         return result;
     }
-    static hexToRgbSTring(hexColor: string): string {
-        const rgb = Converter.hex.rgb(hexColor);
-        return '' + this.toHex(rgb[Constants.FIRST_INDEX]) + this.toHex(rgb[Constants.SECOND_INDEX]) + this.toHex(rgb[Constants.THIRD_INDEX]);
-    }
 
     static toHex(color: number): string {
         const hex = Math.round(color).toString(Constants.BASE_HEX);
