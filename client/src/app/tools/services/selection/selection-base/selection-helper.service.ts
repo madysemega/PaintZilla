@@ -101,9 +101,6 @@ export abstract class SelectionHelperService {
         const X = 0;
         const Y = 1;
 
-        let anchorPosition: Vec2 = { x: 0, y: 0 };
-
-        anchorPosition = { x: topL.x, y: topL.y };
         const actualTopLeft: Vec2 = { x: topL.x, y: topL.y };
 
         if (isReversed[X]) {
@@ -165,5 +162,6 @@ export abstract class SelectionHelperService {
         manipulator.isShiftDown = false;
         manipulator.isReversedY = false;
         manipulator.isReversedX = false;
+        
     }
 }
