@@ -8,7 +8,6 @@ import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { TYPES } from './types';
-
 @injectable()
 export class Application {
     private readonly internalError: number = 500;
@@ -30,8 +29,8 @@ export class Application {
         };
 
         this.config();
+
         this.bindRoutes();
-        this.errorHandling();
     }
 
     private config(): void {
@@ -47,7 +46,7 @@ export class Application {
         // Notre application utilise le routeur de notre API `Index`
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api', this.drawingController.router);
-        // this.errorHandling();
+        this.errorHandling();
     }
 
     private errorHandling(): void {

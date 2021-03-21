@@ -13,6 +13,7 @@ export class DatabaseService {
     constructor(@inject(TYPES.LocalDatabaseService) public localDatabaseService: LocalDatabaseService) {
         this.distantDatabase = mongoose;
     }
+    /* istanbul ignore next */
     async start(url: string = Constants.DATABASE_URL): Promise<void> {
         await this.distantDatabase
             .connect(url, this.options)
