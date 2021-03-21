@@ -5,6 +5,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovementAnchor } from './selection-constants';
 
 @Injectable({
     providedIn: 'root',
@@ -67,17 +68,32 @@ export abstract class SelectionHelperService {
         return mouseMovement;
     }
 
-    moveAlongTheGrid(movement: Vec2, isMouseMovement: boolean, gridCellSize: number, topLeft: Vec2): Vec2 {
+    moveAlongTheGrid(movement: Vec2, isMouseMovement: boolean, gridCellSize: number, anchor: GridMovementAnchor, topLeft: Vec2, bottomRight: Vec2): Vec2 {
+
+        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight);
+
         if (gridCellSize > 0 && isMouseMovement) {
-             return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.round);
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
         }
-        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
-            return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.ceil);
+        if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) { //increase movement by keyboard
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.ceil);
         }
-        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
-            return this.computeMovementAlongGrid(topLeft, movement, gridCellSize, Math.floor);
+        if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) { //decrease movement by keyboard
+            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.floor);
         }
         return movement;
+    }
+
+    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2): Vec2 {
+        const width: number = Math.abs(topL.x - bottomR.x);
+        const height: number = Math.abs(topL.y - bottomR.y);
+
+        switch (anchor) {
+            case GridMovementAnchor.center:
+                return { x: topL.x + width / 2, y: topL.y + height / 2 };
+            default:
+                return { x: topL.x + width / 2, y: topL.y + height / 2 };
+        }
     }
 
     computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {

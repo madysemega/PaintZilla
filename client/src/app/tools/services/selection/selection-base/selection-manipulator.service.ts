@@ -10,7 +10,9 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { Arrow } from './arrow';
+import { Arrow, MOVEMENT_DOWN, MOVEMENT_LEFT, MOVEMENT_RIGHT, MOVEMENT_UP, TIME_BEFORE_START_MOV, TIME_BETWEEN_MOV, 
+NUMBER_OF_ARROW_TYPES, 
+GridMovementAnchor} from './selection-constants';
 import { ResizingMode } from './resizing-mode';
 import { SelectionHandlerService } from './selection-handler.service';
 
@@ -18,17 +20,9 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    readonly MOVEMENT_PX: number = 3;
-    readonly TIME_BEFORE_START_MOV: number = 500;
-    readonly TIME_BETWEEN_MOV: number = 100;
-    readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
-    readonly NUMBER_OF_ARROW_TYPES: number = 4;
-    readonly MOVEMENT_DOWN: Vec2 = { x: 0, y: this.MOVEMENT_PX };
-    readonly MOVEMENT_UP: Vec2 = { x: 0, y: -this.MOVEMENT_PX };
-    readonly MOVEMENT_LEFT: Vec2 = { x: -this.MOVEMENT_PX, y: 0 };
-    readonly MOVEMENT_RIGHT: Vec2 = { x: this.MOVEMENT_PX, y: 0 };
 
     gridCellSize: number = 50;
+    gridMovementAnchor : GridMovementAnchor = GridMovementAnchor.center;
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -52,7 +46,7 @@ export abstract class SelectionManipulatorService extends Tool {
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
-        this.subscriptions = new Array<Subscription>(this.NUMBER_OF_ARROW_TYPES);
+        this.subscriptions = new Array<Subscription>(NUMBER_OF_ARROW_TYPES);
     }
 
     abstract drawSelectionOutline(): void;
@@ -104,19 +98,19 @@ export abstract class SelectionManipulatorService extends Tool {
         }
 
         if (event.key === 'ArrowUp' && !this.arrowKeyDown[Arrow.up]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_UP, Arrow.up);
+            this.moveIfPressLongEnough(MOVEMENT_UP, Arrow.up);
         }
 
         if (event.key === 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_DOWN, Arrow.down);
+            this.moveIfPressLongEnough(MOVEMENT_DOWN, Arrow.down);
         }
 
         if (event.key === 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_LEFT, Arrow.left);
+            this.moveIfPressLongEnough(MOVEMENT_LEFT, Arrow.left);
         }
 
         if (event.key === 'ArrowRight' && !this.arrowKeyDown[Arrow.right]) {
-            this.moveIfPressLongEnough(this.MOVEMENT_RIGHT, Arrow.right);
+            this.moveIfPressLongEnough(MOVEMENT_RIGHT, Arrow.right);
         }
     }
 
@@ -130,19 +124,19 @@ export abstract class SelectionManipulatorService extends Tool {
         }
 
         if (event.key === 'ArrowDown') {
-            this.singleMove(Arrow.down, this.MOVEMENT_DOWN);
+            this.singleMove(Arrow.down, MOVEMENT_DOWN);
         }
 
         if (event.key === 'ArrowUp') {
-            this.singleMove(Arrow.up, this.MOVEMENT_UP);
+            this.singleMove(Arrow.up, MOVEMENT_UP);
         }
 
         if (event.key === 'ArrowLeft') {
-            this.singleMove(Arrow.left, this.MOVEMENT_LEFT);
+            this.singleMove(Arrow.left, MOVEMENT_LEFT);
         }
 
         if (event.key === 'ArrowRight') {
-            this.singleMove(Arrow.right, this.MOVEMENT_RIGHT);
+            this.singleMove(Arrow.right, MOVEMENT_RIGHT);
         }
     }
 
@@ -224,13 +218,13 @@ export abstract class SelectionManipulatorService extends Tool {
 
     startMovingSelectionContinous(movement: Vec2, arrowIndex: number): void {
         this.subscriptions[arrowIndex].unsubscribe();
-        const source = interval(this.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
+        const source = interval(TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
         this.subscriptions[arrowIndex] = source.subscribe(() => this.moveSelection(movement, false));
         this.isContinousMovementByKeyboardOn[arrowIndex] = true;
     }
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
-        movement = this.selectionHelper.moveAlongTheGrid(movement, isMouseMovement, this.gridCellSize, this.topLeft);
+        movement = this.selectionHelper.moveAlongTheGrid(movement, isMouseMovement, this.gridCellSize, this.gridMovementAnchor, this.topLeft, this.bottomRight);
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);
         if (isMouseMovement) {
@@ -240,7 +234,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
     moveIfPressLongEnough(movement: Vec2, arrowIndex: number): void {
         this.arrowKeyDown[arrowIndex] = true;
-        const source = interval(this.TIME_BEFORE_START_MOV);
+        const source = interval(TIME_BEFORE_START_MOV);
         this.subscriptions[arrowIndex] = source.subscribe((val) => {
             this.startMovingSelectionContinous(movement, arrowIndex);
         });
