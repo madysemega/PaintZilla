@@ -1,27 +1,38 @@
-<app-resizable-tool-configuration [toolService]="sprayService"></app-resizable-tool-configuration>
-
 <div class="vertical">
-    <mat-label class="margin-bottom-small">Distance des points</mat-label>
+    <mat-label class="margin-bottom-small">Diamètre des goutte de peinture</mat-label>
     <mat-slider thumbLabel
-                matTooltip="Distance des points"
+                matTooltip="Diamètre des goutte de peinture"
                 matTooltipPosition="right"
                 step="1"
                 min="1"
                 max="50"
-                [value]="diameterChange"
-                (valueChange)="onDiameterPointChange($event)">
+                [value]="dropDiameter"
+                (valueChange)="onDropDiameterChange($event)">
     </mat-slider>
 </div>
 
 <div class="vertical">
-    <mat-label class="margin-bottom-small">Nombre de points par seconde</mat-label>
+    <mat-label class="margin-bottom-small">Diamètre du jet</mat-label>
     <mat-slider thumbLabel
-                matTooltip="Nombre de points par seconde"
+                matTooltip="Diamètre du jet"
+                matTooltipPosition="right"
+                step="1"
+                min="1"
+                max="100"
+                [value]="jetDiameter"
+                (valueChange)="onJetDiameterChange($event)">
+    </mat-slider>
+</div>
+
+<div class="vertical">
+    <mat-label class="margin-bottom-small">Nombre de gouttes par seconde</mat-label>
+    <mat-slider thumbLabel
+                matTooltip="Nombre de gouttes par seconde"
                 matTooltipPosition="right"
                 step="10"
                 min="1"
-                max="300"
-                [value]="numberChange"
-                (valueChange)="onNumberPointChange($event)">
+                max="500"
+                [value]="nbDropsPerSecond"
+                (valueChange)="onNbDropsPerSecondChange($event)">
     </mat-slider>
 </div>

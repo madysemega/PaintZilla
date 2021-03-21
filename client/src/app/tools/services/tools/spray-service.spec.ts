@@ -1,29 +1,44 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { MouseButton } from '@app/tools/classes/mouse-button';
 import { SprayService } from './spray-service';
 
 // tslint:disable:no-any
 describe('SprayService', () => {
     let service: SprayService;
-    let mouseEvent: MouseEvent;
+
     let canvasTestHelper: CanvasTestHelper;
+
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let historyServiceSpy: HistoryService;
+    let colourServiceSpy: ColourService;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-    let drawVerticesSpy: jasmine.Spy<any>;
+    let spraySpy: jasmine.Spy<any>;
+    let previewPaintSpy: jasmine.Spy<any>;
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        historyServiceSpy = new HistoryService();
+        colourServiceSpy = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HistoryService, useValue: historyServiceSpy },
+                { provide: ColourService, useValue: colourServiceSpy },
+            ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -40,88 +55,118 @@ describe('SprayService', () => {
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
 
-        drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
+        spraySpy = spyOn<any>(service, 'spray').and.callThrough();
+        previewPaintSpy = spyOn<any>(service, 'previewPaint').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;
-
-        mouseEvent = {
-            clientX: 100,
-            clientY: 100,
-            button: 0,
-        } as MouseEvent;
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it(' mouseDown should set mouseDownCoord to correct position', () => {
-        const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
-        service.mouseInCanvas = true;
-        service.onMouseDown(mouseEvent);
-        expect(service.mouseDownCoord).toEqual(expectedResult);
+    it('onSpray() should spray and preview paint', () => {
+        service['lastMousePosition'] = { x: 0, y: 0 };
+
+        service.onSpray();
+
+        expect(spraySpy).toHaveBeenCalled();
+        expect(previewPaintSpy).toHaveBeenCalled();
     });
 
-    it(' mouseDown should set mouseDown property to true on left click', () => {
-        service.onMouseDown(mouseEvent);
-        expect(service.mouseDown).toEqual(true);
-    });
-
-    it(' mouseDown should set mouseDown property to false on right click', () => {
-        const mouseEventRClick = {
-            offsetX: 25,
-            offsetY: 25,
-            button: 1, // TODO: Avoir ceci dans un enum accessible
-        } as MouseEvent;
-        service.onMouseDown(mouseEventRClick);
-        expect(service.mouseDown).toEqual(false);
-    });
-
-    it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
+    it('mouse down should set mouse down flag to true if left button was used', () => {
         service.mouseDown = false;
-        service.mouseDownCoord = { x: 0, y: 0 };
+        service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(service.mouseDown).toBeTrue();
 
-        service.onMouseUp(mouseEvent);
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
-    });
-
-    it(' onMouseMove should call drawSegments if mouse was already down and createSegments has been called', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
-        service.onMouseDown(mouseEvent);
-
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
+        service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(service.mouseDown).toBeTrue();
     });
 
-    it(' onMouseMove should not call drawSegments if mouse was not already down', () => {
-        service.mouseDownCoord = { x: 0, y: 0 };
+    it('mouse down should set mouse down flag to false if right button was used', () => {
         service.mouseDown = false;
+        service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(service.mouseDown).toBeFalse();
 
-        service.onMouseMove(mouseEvent);
-        expect(drawServiceSpy.clearCanvas).not.toHaveBeenCalled();
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
+        service.mouseDown = true;
+        service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(service.mouseDown).toBeFalse();
     });
 
-    // Exemple de test d'intégration qui est quand même utile
-    it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseDown(mouseEvent);
-        service.mouseInCanvas = true;
-        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseUp(mouseEvent);
+    it('left mouse down should lock history service', () => {
+        historyServiceSpy.isLocked = false;
+        service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(historyServiceSpy.isLocked).toBeTrue();
+    });
 
-        // Premier pixel seulement
-        const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        expect(imageData.data[0]).toEqual(0); // R
-        expect(imageData.data[1]).toEqual(0); // G
-        expect(imageData.data[2]).toEqual(0); // B
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[3]).toEqual(0); // A
+    it('right mouse down should not lock history service', () => {
+        historyServiceSpy.isLocked = false;
+        service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(historyServiceSpy.isLocked).toBeFalse();
+
+        historyServiceSpy.isLocked = true;
+        service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(historyServiceSpy.isLocked).toBeTrue();
+    });
+
+    it('left mouse down should spray', () => {
+        service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(spraySpy).toHaveBeenCalled();
+    });
+
+    it('after left onMouseUp(), mouse down flag should be false', () => {
+        service.mouseDown = true;
+        service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
+        expect(service.mouseDown).toBeFalse();
+
+        service.mouseDown = false;
+        service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
+        expect(service.mouseDown).toBeFalse();
+    });
+
+    it('after right onMouseUp(), mouse down flag should not change', () => {
+        service.mouseDown = true;
+        service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+        expect(service.mouseDown).toBeTrue();
+
+        service.mouseDown = false;
+        service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+        expect(service.mouseDown).toBeFalse();
+    });
+
+    it('mouse move should update the last mouse position if mouse is down', () => {
+        const MOUSE_EVENT = { clientX: 3, clientY: 4 } as MouseEvent;
+
+        service.mouseDown = true;
+        service.onMouseMove(MOUSE_EVENT);
+        expect(service['lastMousePosition']).toEqual(service.getPositionFromMouse(MOUSE_EVENT));
+    });
+
+    it('mouse move should not update the last mouse position if mouse is not down', () => {
+        const MOUSE_EVENT_A = { clientX: 3, clientY: 4 } as MouseEvent;
+        const MOUSE_EVENT_B = { clientX: 4, clientY: 3 } as MouseEvent;
+        const EXPECTED_LAST_MOUSE_POSITION = service.getPositionFromMouse(MOUSE_EVENT_A);
+
+        service.mouseDown = true;
+        service.onMouseMove(MOUSE_EVENT_A);
+        expect(service['lastMousePosition']).toEqual(EXPECTED_LAST_MOUSE_POSITION);
+
+        service.mouseDown = false;
+        service.onMouseMove(MOUSE_EVENT_B);
+        expect(service['lastMousePosition']).toEqual(EXPECTED_LAST_MOUSE_POSITION);
+    });
+
+    it('When primary colour changed, it should be reflected in the colour property of the spray tool', () => {
+        const NEW_PRIMARY_COLOUR = Colour.hexToRgb('424242');
+
+        colourServiceSpy.setPrimaryColour(NEW_PRIMARY_COLOUR);
+        colourServiceSpy.primaryColourChanged.subscribe(() => {
+            expect(service['colourProperty'].colour).toEqual(NEW_PRIMARY_COLOUR);
+        });
     });
 });

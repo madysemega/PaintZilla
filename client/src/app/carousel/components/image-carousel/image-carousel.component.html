@@ -1,21 +1,21 @@
 <div carousel-wrapper>
     <div carousel-images class="horizontal">
-        <mat-card>
+        <mat-card *ngIf="drawingsToDisplay.length >= 1">
             <app-image-details [data]="leftImage"></app-image-details>
         </mat-card>
-        <mat-card *ngIf="images.length >= 2">
+        <mat-card *ngIf="drawingsToDisplay.length >= 2">
             <app-image-details [data]="centerImage"></app-image-details>
         </mat-card>
-        <mat-card *ngIf="images.length >= 3">
+        <mat-card *ngIf="drawingsToDisplay.length >= 3">
             <app-image-details [data]="rightImage"></app-image-details>
         </mat-card>
     </div>
 
-    <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()" *ngIf="images.length > 3">
+    <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()" *ngIf="drawingsToDisplay.length > 3">
         <mat-icon>navigate_before</mat-icon>
     </button>
 
-    <button rotate-right mat-icon-button matTooltip="Image suivante" (click)="rotateRight()" *ngIf="images.length > 3">
+    <button rotate-right mat-icon-button matTooltip="Image suivante" (click)="rotateRight()" *ngIf="drawingsToDisplay.length > 3">
         <mat-icon>navigate_next</mat-icon>
     </button>
 </div>
