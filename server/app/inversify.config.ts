@@ -3,10 +3,10 @@ import { DatabaseService } from '@app/services/database.service';
 import { DrawingService } from '@app/services/drawing.service';
 import { LocalDatabaseService } from '@app/services/local.database.service';
 import { Container } from 'inversify';
+import 'reflect-metadata';
 import { Application } from './app';
 import { Server } from './server';
 import { TYPES } from './types';
-import 'reflect-metadata';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
