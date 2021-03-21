@@ -23,9 +23,6 @@ export class DatabaseServiceMock {
             .connect(this.mongoUri, this.options)
             .then(() => {
                 console.log('Connected successfully to Mongodb Atlas');
-            })
-            .catch(() => {
-                throw new Error('Distant database connection error');
             });
     }
 
