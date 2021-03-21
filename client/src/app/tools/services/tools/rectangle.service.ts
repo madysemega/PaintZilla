@@ -124,6 +124,7 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     }
 
     private finalize(): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (this.mouseDown) {
             const renderersToRegister = new Array<ShapeRenderer<BoxShape>>();
 
