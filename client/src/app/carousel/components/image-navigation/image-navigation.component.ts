@@ -10,6 +10,7 @@ import { Drawing } from '@common/models/drawing';
 })
 export class ImageNavigationComponent {
     labels: string[];
+    retainedLabels: string[];
     drawings: Drawing[];
 
     filterDrawings(labels: string[]): void {
@@ -18,9 +19,22 @@ export class ImageNavigationComponent {
 
     constructor(public dialogRef: MatDialogRef<ImageNavigationComponent>, private server: ServerService) {
         this.labels = [];
+        this.retainedLabels=[];
         this.drawings = [];
 
         server.getAllLabels().subscribe((labels) => (this.labels = labels));
         server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
     }
+    addFilter(label: string): void {
+        this.retainedLabels.push(label);
+        this.filterDrawings(this.retainedLabels);
+    }
+    removeFilter(index: number): void {
+        console.log('called remove in nav');
+        this.retainedLabels.splice(index, 1);
+        console.log(this.retainedLabels);
+        if (this.retainedLabels.length === 0) {  console.log('chulala'); this.filterDrawings(this.labels); console.log(this.drawings); }
+        else
+            this.filterDrawings(this.retainedLabels);
+	}
 }

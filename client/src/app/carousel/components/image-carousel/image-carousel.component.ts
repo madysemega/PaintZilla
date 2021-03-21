@@ -19,7 +19,6 @@ export class ImageCarouselComponent {
     centerImage: Drawing;
 
     private centerIndex: number;
-    @Input() retainedLabels: string[] = [];
     constructor() {
         this.drawingsToDisplay = [];
         this.centerIndex = 1;
@@ -36,6 +35,7 @@ export class ImageCarouselComponent {
     }
 
     private refresh(): void {
+        console.log(this.drawingsToDisplay);
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
         this.refreshImages(neighbouringIndices);
     }

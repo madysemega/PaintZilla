@@ -1,5 +1,5 @@
 <div (click)="loadImage()" matDialogClose>
-    <img [src]="imageSrc" height="200">
+    <img *ngIf="imageSrc!=null" [src]="imageSrc" height="200">
     <p>{{ data.name }}</p>
     <mat-chip *ngFor="let label of data.labels">{{ label }}</mat-chip>
 </div>

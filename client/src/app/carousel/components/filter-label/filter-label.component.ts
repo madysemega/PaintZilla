@@ -5,6 +5,7 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 
+
 @Component({
     selector: 'app-filter-label',
     templateUrl: './filter-label.component.html',
@@ -39,6 +40,7 @@ export class FilterLabelComponent {
         const LABEL = event.value.trim();
         if (LABEL)
             if (this.retainedLabels.indexOf(LABEL) < 0) {
+                console.log(this.availableLabels);
                 this.retainedLabels.push(LABEL);
                 this.filterAddEvent.emit(LABEL);
             }
@@ -46,6 +48,7 @@ export class FilterLabelComponent {
         this.labelCtrl.setValue(null);
     }
     removeFilter(label: string): void {
+        console.log('calledremove');
         const INDEX: number = this.retainedLabels.indexOf(label);
         this.retainedLabels.splice(INDEX, 1);
         this.filterRemoveEvent.emit(INDEX);
