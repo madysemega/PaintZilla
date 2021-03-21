@@ -173,13 +173,13 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
         const shouldRenderFill = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
         const shouldRenderStroke = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
 
-        //const halfStrokeWidth = this.strokeWidthProperty.strokeWidth / 2;
+        // const halfStrokeWidth = this.strokeWidthProperty.strokeWidth / 2;
 
-        this.shape.topLeft.x = this.startingPos.x ;
-        this.shape.topLeft.y = this.startingPos.y ;
+        this.shape.topLeft.x = this.startingPos.x;
+        this.shape.topLeft.y = this.startingPos.y;
 
-        this.shape.bottomRight.x = this.startingPos.x + this.width ;
-        this.shape.bottomRight.y = this.startingPos.y + this.height ;
+        this.shape.bottomRight.x = this.startingPos.x + this.width;
+        this.shape.bottomRight.y = this.startingPos.y + this.height;
 
         if (shouldRenderFill) {
             this.fillRenderer.render(ctx);
