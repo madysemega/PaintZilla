@@ -103,79 +103,45 @@ export abstract class SelectionHelperService {
 
         let anchorPosition: Vec2 = { x: 0, y: 0 };
 
+        anchorPosition = { x: topL.x, y: topL.y };
+        let actualTopLeft: Vec2 = {x: topL.x, y: topL.y};
+
+        if (isReversed[X]) {
+            actualTopLeft.x =bottomR.x;
+        }
+        if (isReversed[Y]) {
+            actualTopLeft.y = bottomR.y
+        }
+
         switch (anchor) {
             case GridMovementAnchor.topL:
-                anchorPosition = { x: topL.x, y: topL.y };
-                if (isReversed[X]) {
-                    anchorPosition.x = bottomR.x;
-                }
-                if (isReversed[Y]) {
-                    anchorPosition.y = bottomR.y;
-                }
-                return anchorPosition
+                return { x: actualTopLeft.x, y: actualTopLeft.y };
 
             case GridMovementAnchor.middleL:
-                anchorPosition = { x: topL.x, y: topL.y + height / 2 };
-                if (isReversed[X]) {
-                    anchorPosition.x = bottomR.x;
-                }
-                return anchorPosition
+                return { x: actualTopLeft.x, y: actualTopLeft.y + height / 2 };
 
             case GridMovementAnchor.bottomL:
-                anchorPosition = { x: topL.x, y: topL.y + height };
-                if (isReversed[X]) {
-                    anchorPosition.x = bottomR.x;
-                }
-                if (isReversed[Y]) {
-                    anchorPosition.y = topL.y;
-                }
-                return anchorPosition
+                return{ x: actualTopLeft.x, y: actualTopLeft.y + height };
 
             case GridMovementAnchor.bottomM:
-                anchorPosition = { x: topL.x + width / 2, y: topL.y + height };
-                if (isReversed[Y]) {
-                    anchorPosition.y = topL.y;
-                }
-                return anchorPosition;
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height };
 
             case GridMovementAnchor.bottomR:
-                anchorPosition = { x: topL.x + width, y: topL.y + height };
-                if (isReversed[X]) {
-                    anchorPosition.x = topL.x;
-                }
-                if (isReversed[Y]) {
-                    anchorPosition.y = topL.y;
-                }
-                return anchorPosition
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y + height };
 
             case GridMovementAnchor.middleR:
-                anchorPosition = { x: topL.x + width, y: topL.y + height / 2 };
-                if (isReversed[X]) {
-                    anchorPosition.x = topL.x;
-                }
-                return anchorPosition
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y + height / 2 };
 
             case GridMovementAnchor.topR:
-                anchorPosition = { x: topL.x + width, y: topL.y };
-                if (isReversed[X]) {
-                    anchorPosition.x = topL.x;
-                }
-                if (isReversed[Y]) {
-                    anchorPosition.y = bottomR.y;
-                }
-                return anchorPosition;
+                return { x: actualTopLeft.x + width, y: actualTopLeft.y };
 
             case GridMovementAnchor.topM:
-                anchorPosition ={ x: topL.x + width / 2, y: topL.y };
-                if (isReversed[Y]) {
-                    anchorPosition.y = bottomR.y;
-                }
-                return anchorPosition;
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y };
 
             case GridMovementAnchor.center:
-                return { x: topL.x + width / 2, y: topL.y + height / 2 };
+                return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height / 2 };
             default:
-                return { x: topL.x, y: topL.y };
+                return { x: actualTopLeft.x, y: actualTopLeft.y };
         }
     }
 

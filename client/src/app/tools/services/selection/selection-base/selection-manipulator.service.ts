@@ -29,7 +29,7 @@ import { SelectionHandlerService } from './selection-handler.service';
 })
 export abstract class SelectionManipulatorService extends Tool {
     gridCellSize: number = 50;
-    gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.bottomM;
+    gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.bottomL;
 
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -258,19 +258,14 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean): void {
-        this.mouseLastPos.x = mousePos.x;
-        this.mouseLastPos.y = mousePos.y;
-
+        this.mouseLastPos = { x: mousePos.x, y: mousePos.y };
         if (isMouseDownLastPos) {
-            this.mouseDownLastPos.x = mousePos.x;
-            this.mouseDownLastPos.y = mousePos.y;
+            this.mouseDownLastPos = {x: mousePos.x, y: mousePos.y};
         }
     }
 
     computeDiagonalEquation(): void {
-        const deltaY = this.topLeft.y - this.bottomRight.y;
-        const deltaX = this.bottomRight.x - this.topLeft.x;
-        this.diagonalSlope = deltaY / deltaX;
+        this.diagonalSlope = (this.topLeft.y - this.bottomRight.y) / (this.bottomRight.x - this.topLeft.x);
         if (this.resizingMode === ResizingMode.towardsBottomRight || this.resizingMode === ResizingMode.towardsTopLeft) {
             this.diagonalSlope = -this.diagonalSlope;
             this.diagonalYIntercept = this.topLeft.y - this.topLeft.x * this.diagonalSlope;
