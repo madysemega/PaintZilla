@@ -1,4 +1,3 @@
-import "reflect-metadata";
 // import { fail } from 'assert';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
@@ -6,6 +5,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { DatabaseService } from './database.service';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { LocalDatabaseService } from '@app/services/local.database.service';
+import 'reflect-metadata';
 chai.use(chaiAsPromised);
 export const READY_STATE_DISCONNECTED = 0;
 export const READY_STATE_CONNECTED = 1;

@@ -13,10 +13,6 @@ export class Server {
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    static configureServerDisabling(updateServerDrawings: () => void): void {
-        process.on('SIGINT', updateServerDrawings);
-    }
-
     async init(): Promise<void> {
         this.application.app.set('port', this.appPort);
 
@@ -69,5 +65,9 @@ export class Server {
         const bind: string = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr!.port}`;
         // tslint:disable-next-line:no-console
         console.log(`Listening on ${bind}`);
+    }
+
+    static configureServerDisabling(updateServerDrawings: () => void): void {
+        process.on('SIGINT', updateServerDrawings);
     }
 }
