@@ -226,7 +226,7 @@ export abstract class SelectionManipulatorService extends Tool {
             this.gridMovementAnchor,
             this.topLeft,
             this.bottomRight,
-            [ this.isReversedX,  this.isReversedY]
+            [this.isReversedX, this.isReversedY],
         );
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);
@@ -260,7 +260,7 @@ export abstract class SelectionManipulatorService extends Tool {
     registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean): void {
         this.mouseLastPos = { x: mousePos.x, y: mousePos.y };
         if (isMouseDownLastPos) {
-            this.mouseDownLastPos = {x: mousePos.x, y: mousePos.y};
+            this.mouseDownLastPos = { x: mousePos.x, y: mousePos.y };
         }
     }
 

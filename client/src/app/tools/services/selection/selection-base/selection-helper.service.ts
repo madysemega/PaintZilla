@@ -77,7 +77,7 @@ export abstract class SelectionHelperService {
         anchor: GridMovementAnchor,
         topLeft: Vec2,
         bottomRight: Vec2,
-        isReversed: boolean[]
+        isReversed: boolean[],
     ): Vec2 {
         const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
 
@@ -98,19 +98,19 @@ export abstract class SelectionHelperService {
     getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2, isReversed: boolean[]): Vec2 {
         const width: number = Math.abs(topL.x - bottomR.x);
         const height: number = Math.abs(topL.y - bottomR.y);
-        const X: number = 0;
-        const Y: number = 1;
+        const X = 0;
+        const Y = 1;
 
         let anchorPosition: Vec2 = { x: 0, y: 0 };
 
         anchorPosition = { x: topL.x, y: topL.y };
-        let actualTopLeft: Vec2 = {x: topL.x, y: topL.y};
+        const actualTopLeft: Vec2 = { x: topL.x, y: topL.y };
 
         if (isReversed[X]) {
-            actualTopLeft.x =bottomR.x;
+            actualTopLeft.x = bottomR.x;
         }
         if (isReversed[Y]) {
-            actualTopLeft.y = bottomR.y
+            actualTopLeft.y = bottomR.y;
         }
 
         switch (anchor) {
@@ -121,7 +121,7 @@ export abstract class SelectionHelperService {
                 return { x: actualTopLeft.x, y: actualTopLeft.y + height / 2 };
 
             case GridMovementAnchor.bottomL:
-                return{ x: actualTopLeft.x, y: actualTopLeft.y + height };
+                return { x: actualTopLeft.x, y: actualTopLeft.y + height };
 
             case GridMovementAnchor.bottomM:
                 return { x: actualTopLeft.x + width / 2, y: actualTopLeft.y + height };
