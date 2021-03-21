@@ -1,3 +1,4 @@
+import { DrawingController } from '@app/controllers/drawing.controller';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
@@ -6,7 +7,6 @@ import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
-import { DrawingController } from '@app/controllers/drawing.controller';
 import { TYPES } from './types';
 @injectable()
 export class Application {
@@ -14,9 +14,7 @@ export class Application {
     private readonly swaggerOptions: swaggerJSDoc.Options;
     app: express.Application;
 
-    constructor(
-        @inject(TYPES.DrawingController) private drawingController: DrawingController,
-    ) {
+    constructor(@inject(TYPES.DrawingController) private drawingController: DrawingController) {
         this.app = express();
 
         this.swaggerOptions = {
