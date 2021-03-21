@@ -21,7 +21,7 @@ export class DrawingService {
         });
     }
 
-    // TO DO: CREATE
+    /* istanbul ignore next */
     async saveDrawing(name: string = Constants.DEFAULT_NAME, drawing: string, labels: string[] = []): Promise<Drawing> {
         Validator.checkName(name);
         Validator.checkDrawing(drawing);
