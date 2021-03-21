@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { CarouselCardInformation } from '@app/carousel/data/carousel-card-information';
+import { Drawing } from '@common/models/drawing';
 
 @Component({
     selector: 'app-image-details',
@@ -9,7 +9,7 @@ import { CarouselCardInformation } from '@app/carousel/data/carousel-card-inform
     styleUrls: ['./image-details.component.scss'],
 })
 export class ImageDetailsComponent {
-    @Input() data: CarouselCardInformation = {
+    @Input() data: Drawing = {
         id: '',
         name: '',
         drawing: '',

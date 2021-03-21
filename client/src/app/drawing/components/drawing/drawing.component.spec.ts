@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
@@ -37,7 +38,7 @@ describe('DrawingComponent', () => {
         resizingServiceStub = new ResizingService(drawingStub, historyServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
