@@ -30,4 +30,17 @@ describe('Colour picker', () => {
         expect(actualColour.getGreen()).toEqual(expectedGreen);
         expect(actualColour.getBlue()).toEqual(expectedBlue);
     });
+
+    it('toHex(): should return any number to hex format (#ff)', () => {
+        expect(Colour.toHex(Constants.MIN_RGB)).toEqual('00');
+        expect(Colour.toHex(Constants.MAX_RGB)).toEqual('ff');
+    });
+
+    it('equals(): should return true if colours are equal and false if not', () => {
+        const firstColour: Colour = new Colour(Constants.TEST_COLOUR.red, Constants.TEST_COLOUR.green, Constants.TEST_COLOUR.blue);
+        const secondColour: Colour = new Colour(Constants.TEST_COLOUR.red, Constants.TEST_COLOUR.green, Constants.TEST_COLOUR.blue);
+        expect(firstColour.equals(secondColour)).toBeTrue();
+        secondColour.setAlpha(0);
+        expect(firstColour.equals(secondColour)).toBeFalse();
+    });
 });

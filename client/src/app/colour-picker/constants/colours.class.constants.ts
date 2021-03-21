@@ -12,3 +12,4 @@ export const BASE_HEX = 16;
 export const TEST_RGB = [43, 64, 32];
 export const TEST_HSV = [100, 0.5, 0.25];
 export const TEST_HEX = '2B4020';
+export const TEST_COLOUR = { red: MAX_RGB, green: MAX_RGB, blue: MAX_RGB, alpha: MAX_ALPHA };
