@@ -57,4 +57,16 @@ describe('ImageCarouselComponent', () => {
         component.drawings = DRAWINGS;
         expect(refreshSpy).toHaveBeenCalled();
     });
+
+    it('handleDeleteImageEvent() should emit a delete image event', () => {
+        let deleteImageEventEmitted = false;
+        component.deleteImage.subscribe(() => (deleteImageEventEmitted = true));
+        component.handleDeleteImageEvent('123');
+        expect(deleteImageEventEmitted).toBeTrue();
+    });
+
+    it('handleDeleteImageEvent() should refresh the carousel', () => {
+        component.handleDeleteImageEvent('123');
+        expect(refreshSpy).toHaveBeenCalled();
+    });
 });

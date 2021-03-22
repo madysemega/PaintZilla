@@ -1,4 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
@@ -22,6 +23,7 @@ describe('ResizingService', () => {
         historyServiceStub = new HistoryService();
         drawingServiceStub = new DrawingService(historyServiceStub);
         TestBed.configureTestingModule({
+            imports: [BrowserAnimationsModule],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: HistoryService, useValue: historyServiceStub },

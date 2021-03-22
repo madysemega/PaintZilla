@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Drawing } from '@common/models/drawing';
@@ -16,7 +16,11 @@ export class ImageDetailsComponent {
         labels: [],
     };
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router) {}
+    @Output() delete: EventEmitter<string>;
+
+    constructor(private domSanitizer: DomSanitizer, private router: Router) {
+        this.delete = new EventEmitter();
+    }
 
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.drawing);
@@ -24,5 +28,11 @@ export class ImageDetailsComponent {
 
     loadImage(): void {
         this.router.navigate([`/editor/${this.data.id}`]);
+    }
+
+    deleteImage(event: MouseEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.delete.emit(this.data.id);
     }
 }
