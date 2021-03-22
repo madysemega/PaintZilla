@@ -34,6 +34,7 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
     }
 
     selectEntireCanvas(): void {
+        this.selectionManipulator.historyService.isLocked = true;
         this.createSelection({ x: 0, y: 0 }, { x: this.drawingService.canvasSize.x, y: this.drawingService.canvasSize.y });
     }
 }

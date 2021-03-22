@@ -32,6 +32,7 @@ describe('RectangleSelectionCreatorService', () => {
             'getSquareAdjustedPerimeter',
             'drawPerimeter',
             'setIsSelectionBeingManipulated',
+            'resetManipulatorProperties',
         ]);
         rectangleSelectionHelperService.isSelectionBeingManipulated = new BehaviorSubject(true);
 

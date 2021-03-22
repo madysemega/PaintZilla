@@ -53,6 +53,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         }
 
         if (this.mouseDown) {
+            this.selectionManipulator.historyService.isLocked = true;
             this.registerMousePosition(mousePosition, false);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSelectionOutline(mousePosition);

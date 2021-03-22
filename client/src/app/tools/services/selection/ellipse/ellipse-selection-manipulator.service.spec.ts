@@ -5,7 +5,6 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
-import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval } from 'rxjs';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
@@ -28,7 +27,6 @@ describe('EllipseSelectionManipulatorService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionHandlerMock: jasmine.SpyObj<SelectionHandlerService>;
-    let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
 
     let stopManipulationSpy: jasmine.Spy<any>;
@@ -55,15 +53,10 @@ describe('EllipseSelectionManipulatorService', () => {
             'setIsSelectionBeingManipulated',
             'drawPerimeter',
             'getSquareAjustedPerimeter',
-        ]);
-        selectionServiceMock = jasmine.createSpyObj('SelectionService', [
-            'isClickOutsideSelection',
-            'convertToMovement',
-            'add',
-            'setIsSelectionBeingManipulated',
-            'setIsSelectionBeingManipulated',
-            'drawPerimeter',
-            'getSquareAjustedPerimeter',
+            'resetManipulatorProperties',
+            'moveAlongTheGrid',
+            'addInPlace',
+            'sub',
         ]);
 
         TestBed.configureTestingModule({
@@ -71,7 +64,6 @@ describe('EllipseSelectionManipulatorService', () => {
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
-                { provide: SelectionHelperService, useValue: selectionServiceMock },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -398,7 +390,7 @@ describe('EllipseSelectionManipulatorService', () => {
     it('addMovementToPosition should call add 3 times if isMouseMovement is true ', () => {
         const mouseMovement = { x: 10, y: 11 };
         service.addMovementToPositions(mouseMovement, true);
-        expect(ellipseSelectionHelperMock.add).toHaveBeenCalledTimes(3);
+        expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
     });
 
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
@@ -434,10 +426,8 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('resetProperties should also reset isReversedX and isReversedY', () => {
-        service.isReversedY = service.isReversedX = true;
         service.resetProperties();
-        expect(service.isReversedY).toEqual(false);
-        expect(service.isReversedY).toEqual(false);
+        expect(ellipseSelectionHelperMock.resetManipulatorProperties).toHaveBeenCalledWith(service);
     });
 
     it('creating a memento then restoring to that memento should not change any property', () => {
