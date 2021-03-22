@@ -1,11 +1,11 @@
 import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Vec2 } from '@app/app/classes/vec2';
 import { ColourPaletteComponent } from '@app/colour-picker/components/colour-palette/colour-palette.component';
+import * as Constants from '@app/colour-picker/constants/colour-palette.component.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { SliderService } from '@app/colour-picker/services/slider/slider.service';
 import { Subject } from 'rxjs';
-import { Vec2 } from '@app/app/classes/vec2';
-import * as Constants from '@app/colour-picker/constants/colour-palette.component.constants';
 
 // tslint:disable: no-string-literal
 describe('ColourPaletteComponent', () => {
@@ -36,7 +36,7 @@ describe('ColourPaletteComponent', () => {
             height: 0,
         });
         nativeElementSpy.getContext.and.returnValue(context);
-        paletteCanvasSpy = jasmine.createSpyObj('ElementRed<HTMLCanvasElement>', [], {
+        paletteCanvasSpy = jasmine.createSpyObj('ElementRef<HTMLCanvasElement>', [], {
             nativeElement: nativeElementSpy,
         });
         TestBed.configureTestingModule({
