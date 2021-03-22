@@ -30,10 +30,8 @@ export class ImageNavigationComponent {
         this.filterDrawings(this.retainedLabels);
     }
     removeFilter(index: number): void {
-        console.log('called remove in nav');
         this.retainedLabels.splice(index, 1);
-        console.log(this.retainedLabels);
-        if (this.retainedLabels.length === 0) {  console.log('chulala'); this.filterDrawings(this.labels); console.log(this.drawings); }
+        if (this.retainedLabels.length === 0)   this.filterDrawings(this.labels);
         else
             this.filterDrawings(this.retainedLabels);
 	}

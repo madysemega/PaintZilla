@@ -54,7 +54,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     }
 
     private initialize(): void {
-        this.shape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.TRIANGLE_SIDES);
+        this.shape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.TRIANGLE_SIDES, this.lineWidth);
     }
 
     private initializeProperties(): void {
@@ -82,6 +82,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     onLineWidthChanged(): void {
         if (this.strokeWidthProperty) {
             this.strokeWidthProperty.strokeWidth = this.lineWidth;
+            this.shape.contourWidth = this.lineWidth;
         }
     }
 
@@ -154,13 +155,14 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
 
         const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
         const HALF_STROKE_WIDTH = this.strokeWidthProperty.strokeWidth / 2;
-        const SIZE = this.squarePoint(CENTER_POINT, endPoint) - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
 
-        this.shape.bottomRight.x = startPoint.x + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.bottomRight.y = startPoint.y + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.topLeft.x = endPoint.x - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.topLeft.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.topLeft.x = startPoint.x + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.topLeft.y = startPoint.y + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.x = endPoint.x - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
         this.shape.numberSides = this.numberSides;
+
+        const SIZE = this.squarePoint(CENTER_POINT, this.shape.bottomRight)/* - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0)*/;
 
         if (shouldRenderFill) {
             this.fillRenderer.render(ctx);

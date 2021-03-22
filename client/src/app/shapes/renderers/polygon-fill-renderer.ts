@@ -13,7 +13,7 @@ export class PolygonFillRenderer extends ShapeRenderer<PolygonShape> {
             x: (this.shape.bottomRight.x + this.shape.topLeft.x) / 2,
             y: (this.shape.bottomRight.y + this.shape.topLeft.y) / 2,
         };
-        const SIZE = this.squarePoint(CENTER_POINT, this.shape.topLeft);
+        const SIZE = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
         ctx.beginPath();
         ctx.moveTo(
             CENTER_POINT.x + SIZE * Math.cos((2 * Math.PI) / this.shape.numberSides),

@@ -28,27 +28,23 @@ export class FilterLabelComponent {
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-    constructor() {
-        /* console.log('called');
-        this.filteredLabels = this.labelCtrl.valueChanges.pipe(
-            startWith(null), map((label: string | null) => 
-            (label ? this._filter(label) : this.availableLabels.slice())),
-        ) as Observable<string[]>; */
-    }
+    constructor() {}
 
     addFilter(event: MatChipInputEvent): void {
         const LABEL = event.value.trim();
-        if (LABEL)
-            if (this.retainedLabels.indexOf(LABEL) < 0) {
-                console.log(this.availableLabels);
+        if (LABEL) {
+            if (this.availableLabels.indexOf(LABEL) < 0) {
+                alert('Label not available');
+            }
+            else if (this.retainedLabels.indexOf(LABEL) < 0) {
                 this.retainedLabels.push(LABEL);
                 this.filterAddEvent.emit(LABEL);
             }
+        }
         if (event.input) event.input.value = '';
         this.labelCtrl.setValue(null);
     }
     removeFilter(label: string): void {
-        console.log('calledremove');
         const INDEX: number = this.retainedLabels.indexOf(label);
         this.retainedLabels.splice(INDEX, 1);
         this.filterRemoveEvent.emit(INDEX);
