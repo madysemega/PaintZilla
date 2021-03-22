@@ -63,6 +63,7 @@ export class EditorComponent implements AfterViewInit {
             if (isCtrl && isA) {
                 // S1
                 this.toolSelector.selectTool('rectangle-selection');
+                event.preventDefault();
             }
 
             this.toolSelector.getSelectedTool().onKeyDown(event); // this must stay after S1
@@ -78,6 +79,7 @@ export class EditorComponent implements AfterViewInit {
             const isCtrl: boolean = event.ctrlKey;
             const isZ: boolean = event.key.toUpperCase() === 'Z';
             const isShift: boolean = event.shiftKey;
+        
 
             if (isCtrl) {
                 if (isZ && isShift) {
