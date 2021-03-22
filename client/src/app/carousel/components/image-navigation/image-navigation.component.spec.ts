@@ -24,8 +24,8 @@ describe('ImageNavigationComponent', () => {
             return matDialogRefSpy;
         });
 
-        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingsByLabelsAllMatch', 'getAllLabels', 'getAllDrawings']);
-        serverServiceSpy.getDrawingsByLabelsAllMatch.and.returnValue(of([]));
+        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingsByLabelsOneMatch', 'getAllLabels', 'getAllDrawings']);
+        serverServiceSpy.getDrawingsByLabelsOneMatch.and.returnValue(of([]));
         serverServiceSpy.getAllLabels.and.returnValue(of([]));
         serverServiceSpy.getAllDrawings.and.returnValue(of([]));
 
@@ -52,9 +52,9 @@ describe('ImageNavigationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('filtering drawings should call server service getDrawingsByLabelsAllMatch method', () => {
+    it('filtering drawings should call server service getDrawingsByLabelsOneMatch method', () => {
         component.filterDrawings([]);
-        expect(serverServiceSpy.getDrawingsByLabelsAllMatch).toHaveBeenCalled();
+        expect(serverServiceSpy.getDrawingsByLabelsOneMatch).toHaveBeenCalled();
     });
     it('removeFilter should call filterDrawings on all labels if retainedLabels is emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
