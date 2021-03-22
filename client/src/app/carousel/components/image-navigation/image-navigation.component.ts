@@ -14,6 +14,7 @@ export class ImageNavigationComponent {
     private readonly SNACK_BAR_DELAI: number = 6000;
 
     labels: string[];
+    retainedLabels: string[];
     drawings: Drawing[];
 
     private lastFilterLabels: string[];
@@ -22,7 +23,7 @@ export class ImageNavigationComponent {
         this.lastFilterLabels = labels;
 
         if (this.lastFilterLabels.length > 0) {
-            this.server.getDrawingsByLabelsAllMatch(labels).subscribe((drawings) => (this.drawings = drawings));
+            this.server.getDrawingsByLabelsOneMatch(labels).subscribe((drawings) => (this.drawings = drawings));
         } else {
             this.server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
         }
@@ -50,10 +51,20 @@ export class ImageNavigationComponent {
 
     constructor(public dialogRef: MatDialogRef<ImageNavigationComponent>, private server: ServerService, private snackBar: MatSnackBar) {
         this.labels = [];
+        this.retainedLabels = [];
         this.lastFilterLabels = [];
         this.drawings = [];
 
         server.getAllLabels().subscribe((labels) => (this.labels = labels));
         server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
+    }
+    addFilter(label: string): void {
+        this.retainedLabels.push(label);
+        this.filterDrawings(this.retainedLabels);
+    }
+    removeFilter(index: number): void {
+        this.retainedLabels.splice(index, 1);
+        if (this.retainedLabels.length === 0) this.filterDrawings(this.labels);
+        else this.filterDrawings(this.retainedLabels);
     }
 }

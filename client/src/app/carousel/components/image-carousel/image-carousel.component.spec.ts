@@ -69,4 +69,23 @@ describe('ImageCarouselComponent', () => {
         component.handleDeleteImageEvent('123');
         expect(refreshSpy).toHaveBeenCalled();
     });
+
+    it('refreshImages sets centerIndex at the center of neighbourIndices if drawingsToDisplay has more than 1 image', () => {
+        const DRAWING_TEST1: Drawing = {
+            id: 'test1',
+            name: 'test1',
+            drawing: 'test1',
+            labels: [],
+        };
+        const DRAWING_TEST2: Drawing = {
+            id: 'test2',
+            name: 'test2',
+            drawing: 'test2',
+            labels: [],
+        };
+        component.drawingsToDisplay.push(DRAWING_TEST1, DRAWING_TEST2);
+        const EXPECTED_VALUE = component['getNeighbouringIndices'](component['centerIndex']).center;
+        component['refresh']();
+        expect(component['centerIndex']).toBe(EXPECTED_VALUE);
+    });
 });

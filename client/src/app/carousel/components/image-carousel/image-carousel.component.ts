@@ -21,7 +21,6 @@ export class ImageCarouselComponent {
     centerImage: Drawing;
 
     private centerIndex: number;
-
     constructor() {
         this.drawingsToDisplay = [];
         this.centerIndex = 1;
@@ -53,8 +52,8 @@ export class ImageCarouselComponent {
             this.leftImage = this.drawingsToDisplay[neighbouringIndices.left];
             this.centerImage = this.drawingsToDisplay[neighbouringIndices.center];
             this.rightImage = this.drawingsToDisplay[neighbouringIndices.right];
-
-            this.centerIndex = neighbouringIndices.center;
+            if (this.drawingsToDisplay.length === 1) this.centerIndex = 1;
+            else this.centerIndex = neighbouringIndices.center;
         }
     }
 
