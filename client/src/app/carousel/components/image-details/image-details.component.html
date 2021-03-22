@@ -1,4 +1,4 @@
-<div (click)="loadImage()" matDialogClose>
+<div (click)="loadImage()" matDialogClose *ngIf="data != undefined">
     <div class="vertical">
         <p>{{ data.name }}</p>
 

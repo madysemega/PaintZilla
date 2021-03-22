@@ -1,5 +1,5 @@
 <div carousel-wrapper>
-    <div carousel-images class="horizontal">
+    <div carousel-images class="horizontal" *ngIf="drawingsToDisplay.length > 0">
         <mat-card *ngIf="drawingsToDisplay.length >= 1">
             <app-image-details [data]="leftImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
         </mat-card>
@@ -9,6 +9,10 @@
         <mat-card *ngIf="drawingsToDisplay.length >= 3">
             <app-image-details [data]="rightImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
         </mat-card>
+    </div>
+
+    <div carousel-images *ngIf="drawingsToDisplay.length === 0">
+        <h1>Aucun dessin à charger</h1>
     </div>
 
     <button rotate-left mat-icon-button matTooltip="Image précédente" (click)="rotateLeft()" *ngIf="drawingsToDisplay.length > 3">
