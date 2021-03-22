@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
-import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
@@ -30,21 +28,12 @@ export class EditorComponent implements AfterViewInit {
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
         private keyboardService: KeyboardService,
-        private dialog: MatDialog,
         private saveDrawingService: SaveDrawingService,
         private drawingLoader: DrawingLoaderService,
         private drawingService: DrawingService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
-        });
-
-        this.keyboardService.registerAction({
-            trigger: 'ctrl+g',
-            invoke: () => {
-                this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
-            },
-            context: 'editor',
         });
 
         this.toolSelector.onToolChanged(() => {

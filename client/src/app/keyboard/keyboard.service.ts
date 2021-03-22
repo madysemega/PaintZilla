@@ -21,7 +21,7 @@ export class KeyboardService {
         hotkeys(action.trigger, (event) => {
             event.preventDefault();
             event.stopPropagation();
-            if (action.context === this.context || action.context === 'always') {
+            if (action.contexts.includes(this.context) || action.contexts.includes('always')) {
                 action.invoke();
             }
         });

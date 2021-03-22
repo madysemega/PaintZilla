@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
@@ -40,7 +41,7 @@ describe('AppComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, MaterialModule, HttpClientModule],
+            imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule],
             declarations: [
                 AppComponent,
                 MainPageComponent,
