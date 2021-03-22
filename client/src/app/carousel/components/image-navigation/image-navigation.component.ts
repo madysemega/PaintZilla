@@ -64,7 +64,7 @@ export class ImageNavigationComponent {
     }
     removeFilter(index: number): void {
         this.retainedLabels.splice(index, 1);
-        if (this.retainedLabels.length === 0) this.filterDrawings(this.labels);
+        if (this.retainedLabels.length === 0) this.filterDrawings([]);
         else this.filterDrawings(this.retainedLabels);
     }
 }
