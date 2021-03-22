@@ -63,6 +63,7 @@ export class EditorComponent implements AfterViewInit {
             if (isCtrl && isA) {
                 // S1
                 this.toolSelector.selectTool('rectangle-selection');
+                event.preventDefault();
             }
 
             this.toolSelector.getSelectedTool().onKeyDown(event); // this must stay after S1

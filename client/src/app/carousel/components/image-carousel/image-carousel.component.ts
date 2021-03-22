@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
 import { Drawing } from '@common/models/drawing';
 
@@ -14,6 +14,8 @@ export class ImageCarouselComponent {
         this.refresh();
     }
 
+    @Output() deleteImage: EventEmitter<string>;
+
     leftImage: Drawing;
     rightImage: Drawing;
     centerImage: Drawing;
@@ -22,6 +24,12 @@ export class ImageCarouselComponent {
     constructor() {
         this.drawingsToDisplay = [];
         this.centerIndex = 1;
+        this.deleteImage = new EventEmitter();
+    }
+
+    handleDeleteImageEvent(imageId: string): void {
+        this.deleteImage.emit(imageId);
+        this.refresh();
     }
 
     rotateRight(): void {
@@ -36,7 +44,6 @@ export class ImageCarouselComponent {
 
     private refresh(): void {
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
-        console.log(neighbouringIndices);
         this.refreshImages(neighbouringIndices);
     }
 

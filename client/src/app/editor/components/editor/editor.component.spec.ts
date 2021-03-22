@@ -40,6 +40,8 @@ describe('EditorComponent', () => {
 
     class ToolStub extends Tool {}
 
+    class E {}
+
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
@@ -145,11 +147,13 @@ describe('EditorComponent', () => {
     });
 
     it('Ctrl+a should select the rectangle-selection tool from the tool selector', () => {
+        const dumbFunction: (x: number, y: number) => number = (x: number, y: number) => x + y;
         const keyboardEvent = {
             ctrlKey: true,
             key: 'a',
-        } as KeyboardEvent;
-        component.onKeyDown(keyboardEvent);
+            preventDefault: dumbFunction,
+        } as E;
+        component.onKeyDown(keyboardEvent as KeyboardEvent);
         expect(toolSelectorStub.selectTool).toHaveBeenCalled();
     });
 
