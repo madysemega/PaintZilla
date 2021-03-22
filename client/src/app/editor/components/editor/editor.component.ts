@@ -46,7 +46,7 @@ export class EditorComponent implements AfterViewInit {
             },
             context: 'editor',
         });
-        
+
         this.toolSelector.onToolChanged(() => {
             this.configurationPanelDrawer.open();
         });
@@ -54,7 +54,7 @@ export class EditorComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.keyboardService.context = 'editor';
-        
+
         setTimeout(() => {
             this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
         });
