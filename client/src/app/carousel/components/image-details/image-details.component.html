@@ -1,5 +1,17 @@
-<div (click)="loadImage()" matDialogClose>
-    <img [src]="imageSrc" height="200">
-    <p>{{ data.name }}</p>
-    <mat-chip *ngFor="let label of data.labels">{{ label }}</mat-chip>
+<div (click)="loadImage()" matDialogClose *ngIf="data != undefined">
+    <div class="vertical">
+        <p>{{ data.name }}</p>
+
+        <img [src]="imageSrc" height="200">
+
+        <button mat-icon-button aria-label="Supprimer" matTooltip="Supprimer" (click)="deleteImage($event)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="margin-top-small">
+        <mat-chip *ngFor="let label of data.labels">{{ label }}</mat-chip>
+    </div>
 </div>
