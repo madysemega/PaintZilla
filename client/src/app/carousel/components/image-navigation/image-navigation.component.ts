@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -28,22 +29,22 @@ export class ImageNavigationComponent {
     }
 
     handleDeleteImageEvent(imageId: string): void {
-        this.server.deleteDrawing(imageId).subscribe({
-            next: () => this.filterDrawings(this.lastFilterLabels),
-            error: (error) => {
-                this.snackBar.open("Erreur: le dessin n'a pas pu être supprimé", 'Ok', {
-                    duration: this.SNACK_BAR_DELAI,
-                    horizontalPosition: 'left',
-                    verticalPosition: 'bottom',
-                });
+        this.server.deleteDrawing(imageId).subscribe(
+            () => {
+                this.filterDrawings(this.lastFilterLabels);
+                this.displayMessage('Dessin supprimé');
             },
-            complete: () => {
-                this.snackBar.open('Dessin supprimé', 'Ok', {
-                    duration: this.SNACK_BAR_DELAI,
-                    horizontalPosition: 'left',
-                    verticalPosition: 'bottom',
-                });
+            (error: HttpErrorResponse) => {
+                this.displayMessage(`Erreur: le dessin n'a pas pu être supprimé, raison : ${error.message}`);
             },
+        );
+    }
+
+    displayMessage(message: string): void {
+        this.snackBar.open(message, 'Ok', {
+            duration: this.SNACK_BAR_DELAI,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
         });
     }
 

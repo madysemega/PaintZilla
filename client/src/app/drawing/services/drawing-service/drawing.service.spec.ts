@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
@@ -20,6 +21,7 @@ describe('DrawingService', () => {
     beforeEach(() => {
         historyServiceStub = new HistoryService();
         TestBed.configureTestingModule({
+            imports: [BrowserAnimationsModule],
             providers: [{ provide: HistoryService, useValue: historyServiceStub }],
         });
         service = TestBed.inject(DrawingService);

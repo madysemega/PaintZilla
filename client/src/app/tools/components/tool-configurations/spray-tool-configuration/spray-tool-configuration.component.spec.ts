@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -26,7 +27,7 @@ describe('SprayToolConfigurationComponent', () => {
         sprayServiceStub = new SprayService(drawingServiceStub, colourServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [SprayToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: SprayService, useValue: sprayServiceStub }],
         }).compileComponents();
