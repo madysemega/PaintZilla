@@ -162,7 +162,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.shape.bottomRight.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
         this.shape.numberSides = this.numberSides;
 
-        const SIZE = this.squarePoint(CENTER_POINT, this.shape.bottomRight)/* - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0)*/;
+        const SIZE = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
 
         if (shouldRenderFill) {
             this.fillRenderer.render(ctx);

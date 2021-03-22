@@ -35,8 +35,8 @@ export class ImageCarouselComponent {
     }
 
     private refresh(): void {
-        console.log(this.drawingsToDisplay);
         const neighbouringIndices = this.getNeighbouringIndices(this.centerIndex);
+        console.log(neighbouringIndices);
         this.refreshImages(neighbouringIndices);
     }
 
@@ -45,8 +45,8 @@ export class ImageCarouselComponent {
             this.leftImage = this.drawingsToDisplay[neighbouringIndices.left];
             this.centerImage = this.drawingsToDisplay[neighbouringIndices.center];
             this.rightImage = this.drawingsToDisplay[neighbouringIndices.right];
-
-            this.centerIndex = neighbouringIndices.center;
+            if (this.drawingsToDisplay.length === 1) this.centerIndex = 1;
+            else this.centerIndex = neighbouringIndices.center;
         }
     }
 

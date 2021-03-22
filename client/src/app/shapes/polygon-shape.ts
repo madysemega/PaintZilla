@@ -12,6 +12,8 @@ export class PolygonShape extends BoxShape {
         return new PolygonShape(
             { x: this.topLeft.x, y: this.topLeft.y },
             { x: this.bottomRight.x, y: this.bottomRight.y },
-            this.numberSides, this.contourWidth);
+            this.numberSides,
+            this.contourWidth,
+        );
     }
 }

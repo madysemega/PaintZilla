@@ -5,7 +5,6 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 
-
 @Component({
     selector: 'app-filter-label',
     templateUrl: './filter-label.component.html',
@@ -28,15 +27,12 @@ export class FilterLabelComponent {
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-    constructor() {}
-
     addFilter(event: MatChipInputEvent): void {
         const LABEL = event.value.trim();
         if (LABEL) {
             if (this.availableLabels.indexOf(LABEL) < 0) {
                 alert('Label not available');
-            }
-            else if (this.retainedLabels.indexOf(LABEL) < 0) {
+            } else if (this.retainedLabels.indexOf(LABEL) < 0) {
                 this.retainedLabels.push(LABEL);
                 this.filterAddEvent.emit(LABEL);
             }
@@ -59,9 +55,4 @@ export class FilterLabelComponent {
                 this.labelCtrl.setValue(null);
             }
     }
-    /* private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-
-        return this.availableLabels.filter((label) => label.toLowerCase().indexOf(filterValue) === 0);
-    } */
 }
