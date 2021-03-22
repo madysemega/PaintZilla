@@ -19,6 +19,7 @@ export class FilterLabelComponent {
     filteredLabels: Observable<string[]>;
     removable: boolean = true;
     selectable: boolean = true;
+    isAvailable: boolean = true;
     @Output()
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
@@ -31,10 +32,11 @@ export class FilterLabelComponent {
         const LABEL = event.value.trim();
         if (LABEL) {
             if (this.availableLabels.indexOf(LABEL) < 0) {
-                alert('Label not available');
+                this.isAvailable = false;
             } else if (this.retainedLabels.indexOf(LABEL) < 0) {
                 this.retainedLabels.push(LABEL);
                 this.filterAddEvent.emit(LABEL);
+                this.isAvailable = true;
             }
         }
         if (event.input) event.input.value = '';
@@ -51,6 +53,7 @@ export class FilterLabelComponent {
             if (this.retainedLabels.indexOf(LABEL) < 0) {
                 this.retainedLabels.push(event.option.viewValue);
                 this.filterAddEvent.emit(event.option.viewValue);
+                this.isAvailable = true;
                 this.labelInput.nativeElement.value = '';
                 this.labelCtrl.setValue(null);
             }
