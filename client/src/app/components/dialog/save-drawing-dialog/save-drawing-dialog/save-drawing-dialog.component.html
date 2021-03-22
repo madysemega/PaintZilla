@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Sauvegarder le dessin</h2>
+<form [formGroup]="formGroup" autocomplete="off">
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Nom du dessin</mat-label>
+            <input matInput formControlName="nameForm" (keyup)="setName($event)" />
+            <mat-error *ngIf="formGroup.controls.nameForm.invalid">Invalide</mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        Les étiquettes doivent être entre 1 et 15 caractères inclusivement. Utilisez la touche "enter" pour ajouter des étiquettes.
+        <mat-form-field appearance="fill" class="labels">
+            <mat-label>Étiquette</mat-label>
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let label of labels" [selectable]="true" [removable]="true" (removed)="removeLabel(label)">
+                    {{ label }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                    matInput
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addLabel($event)"
+                    formControlName="labelForm"
+                />
+                <mat-error *ngIf="formGroup.controls.labelForm.invalid">Invalide</mat-error>
+            </mat-chip-list>
+        </mat-form-field>
+    </div>
+</form>
+
+<div>
+    <mat-dialog-actions>
+        <button mat-button (click)="saveImage()" [disabled]="this.currentlySaving">Confirmer</button>
+        <button mat-button mat-dialog-close>Annuler</button>
+    </mat-dialog-actions>
+</div>

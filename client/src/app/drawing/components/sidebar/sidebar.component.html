@@ -1,5 +1,6 @@
 <div class="container vertical">
     <div class="navbar-section vertical">
+        <mat-divider></mat-divider>
         <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right" routerLink="/home">
             <mat-icon>home</mat-icon>
         </button>
@@ -21,6 +22,16 @@
             (click)="this.exportDrawing()"
         >
             <mat-icon>ios_share</mat-icon>
+        </button>
+
+        <button
+            mat-icon-button
+            aria-label="Sauvegarder le dessin"
+            matTooltip="Sauvegarder le dessinn (Ctrl+s)"
+            matTooltipPosition="right"
+            (click)="this.saveDrawing()"
+        >
+            <mat-icon>save</mat-icon>
         </button>
 
         <button

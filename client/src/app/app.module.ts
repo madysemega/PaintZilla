@@ -28,12 +28,14 @@ import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-co
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { PolygonComponent } from '@app/tools/components/tool-configurations/polygon/polygon.component';
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { ExportDrawingDialogComponent } from './components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
+import { SaveDrawingDialogComponent } from './components/dialog/save-drawing-dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 @NgModule({
     declarations: [
@@ -44,6 +46,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         MainPageComponent,
         EllipseToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        PipetteToolConfigurationComponent,
         SprayToolConfigurationComponent,
         EraserToolConfigurationComponent,
         RectangleToolConfigurationComponent,
@@ -51,6 +54,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         ShapeToolConfigurationComponent,
         ResizableToolConfigurationComponent,
         PencilToolConfigurationComponent,
+        PipetteToolConfigurationComponent,
         SprayToolConfigurationComponent,
         ColourPaletteComponent,
         LineToolConfigurationComponent,
@@ -69,6 +73,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         ImageCarouselComponent,
         ImageDetailsComponent,
         ConfigurationPanelComponent,
+        SaveDrawingDialogComponent,
     ],
     imports: [BrowserModule, HttpClientModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, FormsModule, ReactiveFormsModule],
 

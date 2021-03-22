@@ -20,6 +20,7 @@ export class DrawingComponent implements AfterViewInit {
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    isInCanevas: boolean;
 
     wasResizing: boolean;
 
@@ -31,9 +32,22 @@ export class DrawingComponent implements AfterViewInit {
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(() => {
-            // this.resizingService.resetCanvasDimensions();
-            // this.resizingService.updateCanvasSize();
+            this.resizingService.canvasResize.x = Constants.DEFAULT_WIDTH;
+            this.resizingService.canvasResize.y = Constants.DEFAULT_HEIGHT;
+            this.drawingService.canvas.width = Constants.DEFAULT_WIDTH;
+            this.drawingService.canvas.height = Constants.DEFAULT_HEIGHT;
+            this.drawingService.previewCanvas.width = Constants.DEFAULT_WIDTH;
+            this.drawingService.previewCanvas.height = Constants.DEFAULT_HEIGHT;
+            this.drawingService.restoreCanvasToDefault();
             this.drawingService.restoreCanvasStyle();
+        });
+
+        this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
+            this.canvasSize.x = newDimensions.x;
+            this.canvasSize.y = newDimensions.y;
+
+            this.drawingService.canvasResize.x = newDimensions.x;
+            this.drawingService.canvasResize.y = newDimensions.y;
         });
     }
 
@@ -45,6 +59,10 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
+        // this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+        // this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
     }
 
@@ -94,6 +112,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
+            this.isInCanevas = false;
         }
     }
 
@@ -101,6 +120,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseEnter(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
+            this.isInCanevas = true;
         }
     }
 

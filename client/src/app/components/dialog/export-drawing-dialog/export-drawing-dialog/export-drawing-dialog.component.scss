@@ -2,3 +2,25 @@
     border-style: solid;
     border-width: 1px;
 }
+
+::ng-deep .mat-option {
+    background-color: rgba(18, 37, 59, 0.932) !important;
+}
+.modal-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.drawing-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.drawing-info-div {
+    float: left;
+}
+
+.preview-canvas-div {
+    float: left;
+    padding-left: 30px;
+}

@@ -1,97 +1,119 @@
 import { Injectable } from '@angular/core';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { Vec2 } from '@app/app/classes/vec2';
+import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
+import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
+import { SprayRenderer } from '@app/shapes/renderers/spray-renderer';
+import { SprayShape } from '@app/shapes/spray-shape';
+import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
     providedIn: 'root',
 })
-export class SprayService extends ResizableTool implements ISelectableTool {
-    private vertices: Vec2[];
-    diameterDraw: number = 1;
-    numberPoints: number = 1;
-    delaiPoints: number = 10;
-    lastMousePosition: Vec2;
-    sprayTimer: ReturnType<typeof setTimeout>;
-    constructor(drawingService: DrawingService, private colourService: ColourService) {
+export class SprayService extends ResizableTool implements ISelectableTool, IDeselectableTool {
+    private shape: SprayShape;
+    private renderer: SprayRenderer;
+
+    private colourProperty: FillStyleProperty;
+
+    jetDiameter: number;
+    nbDropsPerSecond: number;
+
+    private lastMousePosition: Vec2;
+    private sprayTimer: ReturnType<typeof setTimeout>;
+
+    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
-        this.vertices = [];
         this.key = 'spray';
+
+        this.colourProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+        this.colourService.primaryColourChanged.subscribe((newColour: Colour) => (this.colourProperty.colour = newColour));
+
+        this.shape = new SprayShape([]);
+        this.renderer = new SprayRenderer(this.shape, [this.colourProperty]);
+    }
+
+    onRadiusChanged(newRadius: number): void {
+        this.shape.radius = newRadius;
     }
 
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    onToolDeselect(): void {
+        this.history.isLocked = false;
+    }
+
+    onSpray(): void {
+        this.spray(this.lastMousePosition);
+        this.previewPaint();
+    }
+
     onMouseDown(event: MouseEvent): void {
+        const NB_MS_IN_SECOND = 1000;
+
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
-            this.clearVertices();
+            this.lastMousePosition = this.getPositionFromMouse(event);
 
-            this.mouseDownCoord = this.getPositionFromMouse(event);
-            this.drawPoint(this.drawingService.previewCtx, this.mouseDownCoord);
-            this.lastMousePosition = this.mouseDownCoord;
+            this.history.isLocked = true;
 
-            this.sprayTimer = setInterval(() => {
-                this.vertices.push(this.lastMousePosition);
-                this.drawingService.clearCanvas(this.drawingService.previewCtx);
-                this.drawVertices(this.drawingService.baseCtx);
-            }, this.delaiPoints);
+            this.onSpray();
+            this.sprayTimer = setInterval(() => this.onSpray(), (1 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
         }
     }
-    private drawPoint(ctx: CanvasRenderingContext2D, point: Vec2): void {
-        ctx.beginPath();
-        ctx.fill();
-    }
+
     onMouseUp(event: MouseEvent): void {
         if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.vertices.push(mousePosition);
             clearInterval(this.sprayTimer);
+            this.finalizePaint();
+            this.clearVertices();
         }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.mouseDown = false;
-        this.clearVertices();
-        clearInterval();
+
+        if (event.button === MouseButton.Left) {
+            this.mouseDown = false;
+        }
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.vertices.push(mousePosition);
-            this.lastMousePosition = mousePosition;
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
+            this.lastMousePosition = this.getPositionFromMouse(event);
         }
-        this.clearVertices();
     }
 
-    private drawVertices(ctx: CanvasRenderingContext2D): void {
-        ctx.save();
-        let min: number = -this.diameterDraw;
-        let max: number = this.diameterDraw;
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.colourService.getPrimaryColour().toStringRGBA();
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+    private spray(around: Vec2): void {
+        const min: number = Math.ceil(-this.jetDiameter);
+        const max: number = Math.floor(this.jetDiameter);
 
-        ctx.beginPath();
-        for (let i = 0; i < this.numberPoints; i++) {
-            ctx.strokeRect(
-                this.vertices[0].x + Math.floor(Math.random() * (max - min + 1)) + min,
-                this.vertices[0].y + Math.floor(Math.random() * (max - min + 1)) + min,
-                1,
-                1,
-            );
-        }
+        this.shape.vertices.push({
+            x: around.x + Math.floor(Math.random() * (max - min + 1)) + min,
+            y: around.y + Math.floor(Math.random() * (max - min + 1)) + min,
+        });
+    }
+
+    private previewPaint(): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.renderPaint(this.drawingService.previewCtx);
+    }
+
+    private renderPaint(ctx: CanvasRenderingContext2D): void {
+        this.renderer.render(ctx);
+    }
+
+    private finalizePaint(): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.history.do(new UserActionRenderShape([this.renderer.clone()], this.drawingService.baseCtx));
     }
 
     clearVertices(): void {
-        this.vertices = [];
+        this.shape.vertices.length = 0;
     }
 }

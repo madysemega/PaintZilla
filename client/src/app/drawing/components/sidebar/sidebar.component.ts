@@ -4,6 +4,7 @@ import { ExportDrawingDialogComponent } from '@app/components/dialog/export-draw
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
+import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 
@@ -20,7 +21,8 @@ export class SidebarComponent implements OnInit {
     constructor(
         private toolSelectorService: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
-        public exportDrawingService: ExportDrawingService,
+        private exportDrawingService: ExportDrawingService,
+        private saveDrawingService: SaveDrawingService,
         public drawingService: DrawingService,
     ) {
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
@@ -64,5 +66,9 @@ export class SidebarComponent implements OnInit {
 
     exportDrawing(): void {
         this.exportDrawingService.openExportDrawingDialog();
+    }
+
+    saveDrawing(): void {
+        this.saveDrawingService.openSaveDrawingDialog();
     }
 }

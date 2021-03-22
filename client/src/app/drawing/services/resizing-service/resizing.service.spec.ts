@@ -342,15 +342,4 @@ describe('ResizingService', () => {
 
         expect(historyServiceStub['past'].length).toEqual(1);
     });
-
-    it('history undo should reset canvas dimensions', () => {
-        spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
-
-        const resetCanvasDimensionsSpy = spyOn(service, 'resetCanvasDimensions');
-
-        historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
-        historyServiceStub.undo();
-
-        expect(resetCanvasDimensionsSpy).toHaveBeenCalledTimes(1);
-    });
 });

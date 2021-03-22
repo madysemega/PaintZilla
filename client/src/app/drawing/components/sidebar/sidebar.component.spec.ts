@@ -10,12 +10,14 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
+import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
+import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
@@ -27,12 +29,13 @@ import { RectangleSelectionHandlerService } from '@app/tools/services/selection/
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-// import { ColourToolService } from '@app/tools/services/tools/colour-tool.service';
+// import { ColourToolService } from '@server/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
@@ -55,9 +58,11 @@ describe('SidebarComponent', () => {
     let lineServiceStub: LineService;
 
     let pencilStoolStub: PencilService;
+    let pipetteStoolStub: PipetteService;
     let sprayStoolStub: SprayService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let exportDrawingServiceSpy: jasmine.SpyObj<any>;
+    let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -92,13 +97,15 @@ describe('SidebarComponent', () => {
         drawingStub.canvasSize = { x: 500, y: 600 };
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilStoolStub = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
-        sprayStoolStub = new SprayService(drawingStub, colourServiceStub);
+        sprayStoolStub = new SprayService(drawingStub, colourServiceStub, historyServiceStub);
+        pipetteStoolStub = new PipetteService(drawingStub, colourServiceStub, historyServiceStub);
         eraserStoolStub = new EraserService(drawingStub);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
-        polygonService = new PolygonService(drawingStub, colourServiceStub);
+        polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
+        saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -138,6 +145,7 @@ describe('SidebarComponent', () => {
 
         toolSelectorServiceStub = new ToolSelectorService(
             pencilStoolStub,
+            pipetteStoolStub,
             sprayStoolStub,
             eraserStoolStub,
             ellipseToolStub,
@@ -154,6 +162,7 @@ describe('SidebarComponent', () => {
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
                 PencilToolConfigurationComponent,
+                PipetteToolConfigurationComponent,
                 SprayToolConfigurationComponent,
                 EraserToolConfigurationComponent,
                 RectangleToolConfigurationComponent,
@@ -166,11 +175,13 @@ describe('SidebarComponent', () => {
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
                 { provide: ExportDrawingService, useValue: exportDrawingServiceSpy },
+                { provide: SaveDrawingService, useValue: saveDrawingServiceSpy },
                 { provide: ColourService },
                 { provide: EllipseService },
                 { provide: EraserService },
                 { provide: LineService },
                 { provide: PencilService },
+                { provide: PipetteService },
                 { provide: SprayService },
                 { provide: RectangleService },
                 { provide: EllipseSelectionHandlerService },
@@ -263,5 +274,10 @@ describe('SidebarComponent', () => {
     it('exportDrawing should call exportDrawingService.openExportDrawingDialog', () => {
         component.exportDrawing();
         expect(exportDrawingServiceSpy.openExportDrawingDialog).toHaveBeenCalled();
+    });
+
+    it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
+        component.saveDrawing();
+        expect(saveDrawingServiceSpy.openSaveDrawingDialog).toHaveBeenCalled();
     });
 });

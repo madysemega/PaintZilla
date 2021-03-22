@@ -9,6 +9,7 @@ import { LineService } from '@app/tools/services/tools/line.service';
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 // tslint:disable:max-line-length
+// tslint:disable:no-string-literal
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
@@ -23,6 +24,10 @@ describe('ToolSelectorService', () => {
     it("should change tool to pencil when selectTool('pencil') is called", () => {
         service.selectTool('pencil');
         expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pencil') as MetaWrappedTool).tool);
+    });
+    it("should change tool to pipette when selectTool('pipette') is called", () => {
+        service.selectTool('pipette');
+        expect(service.getSelectedTool()).toBe((service.getRegisteredTools().get('pipette') as MetaWrappedTool).tool);
     });
     it("should change tool to spray when selectTool('spray') is called", () => {
         service.selectTool('spray');
@@ -65,6 +70,12 @@ describe('ToolSelectorService', () => {
     it("fromKeyboardShortcut should map 'c' to 'pencil'", () => {
         const expectedToolName = 'pencil';
         const toolName = service.fromKeyboardShortcut('c');
+        expect(toolName).toBe(expectedToolName);
+    });
+
+    it("fromKeyboardShortcut should map 'i' to 'pipette'", () => {
+        const expectedToolName = 'pipette';
+        const toolName = service.fromKeyboardShortcut('i');
         expect(toolName).toBe(expectedToolName);
     });
     it("fromKeyboardShortcut should map 'a' to 'spray'", () => {
@@ -113,31 +124,36 @@ describe('ToolSelectorService', () => {
 
     it('should call onToolDeselect on current tool when changing to valid tool if current tool implements IDeselectableTool', () => {
         service.selectTool('line');
-        const onToolDeselectSpy = spyOn(service.selectedTool.tool as LineService, 'onToolDeselect');
+        const onToolDeselectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolDeselect');
         service.selectTool('pencil');
         expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should call onToolSelect on new tool when changing to valid tool if new tool implements ISelectableTool', () => {
-        service.selectTool('pencil');
-        const onToolSelectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolSelect');
+        service.selectTool('spray');
+        const onToolSelectSpy = spyOn(service.getRegisteredTools().get('pencil')?.tool as LineService, 'onToolSelect');
 
-        service.selectTool('line');
+        service.selectTool('pencil');
 
         expect(onToolSelectSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not crash when selecting a tool which does not implement ISelectableTool', () => {
-        // tslint:disable-next-line: no-string-literal
         service['tools'].set('not-selectable', { tool: {} as Tool } as MetaWrappedTool);
         service.selectTool('not-selectable');
         expect(service.selectedTool).toBeTruthy();
     });
 
     it('should not crash when deselecting a tool which does not implement IDeselectableTool', () => {
-        // tslint:disable-next-line: no-string-literal
         service['tools'].set('not-deselectable', { tool: {} as Tool } as MetaWrappedTool);
         service.selectTool('not-deselectable');
         expect(service.selectedTool).toBeTruthy();
+    });
+
+    it('changing tool should call callbacks registered for onToolChanged event', () => {
+        let callbackCalled = false;
+        service.onToolChanged(() => (callbackCalled = true));
+        service.selectTool('ellipse');
+        expect(callbackCalled).toBeTrue();
     });
 });

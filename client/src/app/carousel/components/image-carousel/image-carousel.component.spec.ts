@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaterialModule } from '@app/material.module';
+import { Drawing } from '@common/models/drawing';
 import { ImageCarouselComponent } from './image-carousel.component';
 
 // tslint:disable: no-any
@@ -11,6 +12,8 @@ describe('ImageCarouselComponent', () => {
     let getNeightbouringIndicesSpy: jasmine.Spy<any>;
     let rotateRightSpy: jasmine.Spy<any>;
     let rotateLeftSpy: jasmine.Spy<any>;
+
+    let refreshSpy: jasmine.Spy<any>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -27,6 +30,8 @@ describe('ImageCarouselComponent', () => {
         getNeightbouringIndicesSpy = spyOn<any>(component, 'getNeighbouringIndices').and.callThrough();
         rotateRightSpy = spyOn(component, 'rotateRight').and.callThrough();
         rotateLeftSpy = spyOn(component, 'rotateLeft').and.callThrough();
+
+        refreshSpy = spyOn<any>(component, 'refresh').and.callThrough();
     });
 
     it('should create', () => {
@@ -53,5 +58,19 @@ describe('ImageCarouselComponent', () => {
     it('left arrow should rotate carousel to the left', () => {
         component.onKeyPress({ key: 'ArrowLeft' } as KeyboardEvent);
         expect(rotateLeftSpy).toHaveBeenCalled();
+    });
+
+    it('setting the drawings input should update the drawings to display', () => {
+        const DRAWINGS = [{} as Drawing];
+
+        component.drawings = DRAWINGS;
+        expect(component.drawingsToDisplay).toEqual(DRAWINGS);
+    });
+
+    it('settings the drawings input should refresh the carousel', () => {
+        const DRAWINGS = [{} as Drawing];
+
+        component.drawings = DRAWINGS;
+        expect(refreshSpy).toHaveBeenCalled();
     });
 });

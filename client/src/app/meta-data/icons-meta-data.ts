@@ -8,6 +8,10 @@ export class IconsMetaData {
                 path: '../assets/icons/pencil.svg',
             },
             {
+                name: 'pipette',
+                path: '../assets/icons/pipette.svg',
+            },
+            {
                 name: 'spray',
                 path: '../assets/icons/spray.svg',
             },
@@ -86,7 +90,7 @@ export class IconsMetaData {
             },
             {
                 name: 'polygon-contoured-and-filled',
-                path: '../assets/icons/polygon-contoured-and-filled.svg',
+                path: './assets/icons/polygon-contoured-and-filled.svg',
             },
         ];
     }

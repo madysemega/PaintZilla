@@ -1,12 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  }
+
+[class*="mat-"]{
+    color: white;
+}
 
 //from https://stackoverflow.com/questions/58057900/how-can-i-display-thumb-label-all-the-time-for-material-slider
-.mat-slider-thumb-label {
+.mat-slider-thumb-label { 
     transform: rotate(45deg) !important;
     border-radius: 50% 50% 0 !important;
+    background-color: rgba(228, 37, 37, 0.733) !important;
   }
 
 .mat-slider-thumb {
@@ -17,6 +22,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     opacity: 1 !important;
 }
 //end from
+
+.mat-accent .mat-slider-track-fill {
+    background-color: rgb(230, 255, 6);
+}  
+
+.custom-modalbox{
+    mat-dialog-container {
+        background-color: rgba(18, 37, 59, 0.932);
+    }
+}
 
 // Orientation
 
@@ -61,4 +76,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .margin-left-small {
     margin-left: 24px;
+}
+
+// Scroll bars
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(18, 37, 59, 0.212);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(18, 37, 59, 0.932);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #283463;
 }

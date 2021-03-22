@@ -6,17 +6,33 @@ import { KeyboardAction } from './keyboard-action';
     providedIn: 'root',
 })
 export class KeyboardService {
+    static readonly DEFAULT_CONTEXT: string = 'default';
+
     context: string;
 
+    private savedContextStack: string[];
+
     constructor() {
-        this.context = 'default';
+        this.context = KeyboardService.DEFAULT_CONTEXT;
+        this.savedContextStack = new Array<string>();
     }
 
     registerAction(action: KeyboardAction): void {
-        hotkeys(action.trigger, () => {
+        hotkeys(action.trigger, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             if (action.context === this.context || action.context === 'always') {
                 action.invoke();
             }
         });
+    }
+
+    saveContext(): void {
+        this.savedContextStack.push(this.context);
+    }
+
+    restoreContext(): void {
+        const lastContext = this.savedContextStack.pop();
+        this.context = lastContext === undefined ? KeyboardService.DEFAULT_CONTEXT : lastContext;
     }
 }

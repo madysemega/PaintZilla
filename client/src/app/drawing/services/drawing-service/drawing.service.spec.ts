@@ -11,8 +11,8 @@ describe('DrawingService', () => {
     let canvasTestHelper: CanvasTestHelper;
     let historyServiceStub: HistoryService;
 
-    let restoreCanvasStyleStub: jasmine.Spy<any>;
-    // let clearCanvasStub: jasmine.Spy<any>;
+    let baseCtxDrawImageSpy: jasmine.Spy<any>;
+    let resetDrawingSurfaceSpy: jasmine.Spy<any>;
 
     const WIDTH_1 = 5;
     const WIDTH_2 = 10;
@@ -33,8 +33,8 @@ describe('DrawingService', () => {
         service.canvasSize = { x: 1000, y: 1000 };
         service.previewCanvas.style.background = Constants.PREVIEW_CTX_COLOR;
 
-        restoreCanvasStyleStub = spyOn(service, 'restoreCanvasStyle').and.callThrough();
-        // clearCanvasStub = spyOn(service, 'clearCanvas').and.callThrough();
+        baseCtxDrawImageSpy = spyOn(service.baseCtx, 'drawImage').and.stub();
+        resetDrawingSurfaceSpy = spyOn(service, 'resetDrawingSurface').and.callThrough();
     });
 
     it('should be created', () => {
@@ -81,11 +81,24 @@ describe('DrawingService', () => {
         expect(service.baseCtx.fillStyle).toEqual(Constants.HEX_WHITE);
     });
 
-    it('history service undo should restore canvas style and fill canvas', () => {
-        historyServiceStub.register(jasmine.createSpyObj('IUserAction', ['apply']));
-        const fillStub = spyOn(service, 'fillCanvas').and.stub();
-        historyServiceStub.undo();
-        expect(restoreCanvasStyleStub).toHaveBeenCalled();
-        expect(fillStub).toHaveBeenCalled();
+    it('setImageFromBase64() should reset the drawing surface', () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+
+        service.setImageFromBase64(IMAGE_SRC_BASE_64);
+        expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
+    });
+
+    it('drawInitialImage() should draw the initial image if there is one', () => {
+        service.initialImage = new Image();
+
+        service.drawInitialImage();
+        expect(baseCtxDrawImageSpy).toHaveBeenCalled();
+    });
+
+    it('drawInitialImage() should not draw the initial image if there is none', () => {
+        service.initialImage = undefined;
+
+        service.drawInitialImage();
+        expect(baseCtxDrawImageSpy).not.toHaveBeenCalled();
     });
 });
