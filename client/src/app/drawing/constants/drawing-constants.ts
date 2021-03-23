@@ -1,5 +1,5 @@
 // tslint:disable-next-line:no-magic-numbers
-export const DEFAULT_WIDTH = (window.innerWidth - 220) / 2;
+export const DEFAULT_WIDTH = (window.innerWidth - 130) / 2;
 // tslint:disable-next-line:no-magic-numbers
 export const DEFAULT_HEIGHT = window.innerHeight - 10;
 export const MINIMUM_SIZE = 250;
@@ -11,4 +11,3 @@ export const CTX_COLOR = 'rgba(255, 255, 255, 1)';
 export const PREVIEW_CTX_COLOR = 'rgba(255, 255, 255, 0)';
 export const BLANK = 0;
 export const HEX_WHITE = '#ffffff';
-export const RGB_WHITE = 'rgba(255, 255, 255, 1)';

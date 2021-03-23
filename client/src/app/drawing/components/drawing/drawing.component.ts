@@ -32,14 +32,7 @@ export class DrawingComponent implements AfterViewInit {
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(() => {
-            this.resizingService.canvasResize.x = Constants.DEFAULT_WIDTH;
-            this.resizingService.canvasResize.y = Constants.DEFAULT_HEIGHT;
-            this.drawingService.canvas.width = Constants.DEFAULT_WIDTH;
-            this.drawingService.canvas.height = Constants.DEFAULT_HEIGHT;
-            this.drawingService.previewCanvas.width = Constants.DEFAULT_WIDTH;
-            this.drawingService.previewCanvas.height = Constants.DEFAULT_HEIGHT;
-            this.drawingService.restoreCanvasToDefault();
-            this.drawingService.restoreCanvasStyle();
+            this.drawingService.resetDrawingSurface();
         });
 
         this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
@@ -59,8 +52,6 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
-        // this.drawingService.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
-        // this.drawingService.fillCanvas(this.previewCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.PREVIEW_CTX_COLOR);
         this.drawingService.initialSize.x = this.canvasSize.x;
         this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
@@ -125,10 +116,12 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     get resizeWidth(): number {
+        // console.log('Called resizeWidth');
         return this.resizingService.canvasResize.x;
     }
 
     get resizeHeight(): number {
+        // console.log('Called resizeHeight');
         return this.resizingService.canvasResize.y;
     }
 
