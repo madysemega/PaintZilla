@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
+import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
+import { HistoryService } from '@app/history/service/history.service';
 import { Drawing } from '@common/models/drawing';
 
 @Component({
@@ -28,9 +32,10 @@ export class ImageDetailsComponent {
         return isHeightGreaterThanWidth ? this.imageContainerHeight : (this.imageContainerWidth / imageDimensions.x) * imageDimensions.y;
     }
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router) {
+    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
         this.delete = new EventEmitter();
     }
+
     @Input() data: Drawing = {
         id: '',
         name: '',
@@ -38,13 +43,24 @@ export class ImageDetailsComponent {
         labels: [],
     };
 
+    @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
+
     @Output() delete: EventEmitter<string>;
 
     imageContainerWidth: number = 150;
     imageContainerHeight: number = 150;
 
     loadImage(): void {
-        this.router.navigate([`/editor/${this.data.id}`]);
+        if (this.history.canUndo() || this.history.canRedo()) {
+            this.dialog.open(DiscardChangesModalComponent, {
+                panelClass: 'custom-modalbox',
+                data: {
+                    confirmCallback: () => this.navigateToImage(),
+                },
+            });
+        } else {
+            this.navigateToImage();
+        }
     }
 
     deleteImage(event: MouseEvent): void {
@@ -58,5 +74,12 @@ export class ImageDetailsComponent {
         image.src = this.data.drawing;
 
         return { x: image.width, y: image.height };
+    }
+
+    navigateToImage(): void {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate([`/editor/${this.data.id}`]);
+        });
+        this.dialogRef.close();
     }
 }
