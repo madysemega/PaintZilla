@@ -22,7 +22,7 @@ describe('DrawingLoaderService', () => {
     beforeEach(() => {
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['setImageFromBase64']);
 
-        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingById']);
+        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingById', 'getAllLabels']);
         serverServiceSpy.getDrawingById.and.returnValue(of({} as Drawing));
 
         snackBarStub = jasmine.createSpyObj('MatSnackBar', ['open']);
