@@ -7,8 +7,10 @@ import { ImageNavigationComponent } from '@app/carousel/components/image-navigat
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { IndexService } from '@app/tools/services/index/index.service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { of } from 'rxjs';
 import { MainPageComponent } from './main-page.component';
 
@@ -31,12 +33,13 @@ describe('MainPageComponent', () => {
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule],
+            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [MainPageComponent],
             providers: [
                 { provide: IndexService, useValue: indexServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceStub },
                 { provide: MatDialog, useValue: dialogServiceStub },
+                { provide: KeyboardService },
             ],
         }).compileComponents();
         resizingServiceStub = TestBed.inject(ResizingService);

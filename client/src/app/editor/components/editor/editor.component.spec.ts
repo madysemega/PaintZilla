@@ -25,6 +25,7 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
@@ -71,7 +72,7 @@ describe('EditorComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },

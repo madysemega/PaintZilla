@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { KeyboardAction } from './keyboard-action';
 import { KeyboardService } from './keyboard.service';
 
@@ -7,7 +8,9 @@ describe('KeyboardService', () => {
     let service: KeyboardService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
+        });
         service = TestBed.inject(KeyboardService);
     });
 

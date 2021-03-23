@@ -12,6 +12,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -25,6 +26,7 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { AppComponent } from './app.component';
 
 // tslint:disable: no-any
@@ -41,7 +43,7 @@ describe('AppComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule],
+            imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [
                 AppComponent,
                 MainPageComponent,
@@ -66,6 +68,7 @@ describe('AppComponent', () => {
                 EraserService,
                 LineService,
                 RectangleService,
+                KeyboardService,
             ],
         })
             .overrideModule(MatIconModule, {
