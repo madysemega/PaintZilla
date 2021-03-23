@@ -184,6 +184,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
+        if (shouldRenderFill) size = Math.abs(size - this.lineWidth / 2);
         ctx.ellipse(
             center.x,
             center.y,

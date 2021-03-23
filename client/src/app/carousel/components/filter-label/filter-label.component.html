@@ -1,5 +1,5 @@
 <mat-form-field>
-  <mat-label>Selected label</mat-label>
+  <mat-label>Étiquette sélectionnée</mat-label>
   <mat-chip-list #chipList aria-label="Label selection">
       <mat-chip
         *ngFor="let label of retainedLabels"
@@ -7,7 +7,7 @@
         [removable]="removable"
         (removed)="removeFilter(label)">
         {{label}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        <mat-icon matChipRemove *ngIf="removable">annuler</mat-icon>
       </mat-chip>
       <input
         #labelInput
@@ -23,4 +23,4 @@
       </mat-option>
   </mat-autocomplete>
 </mat-form-field>
-<mat-error *ngIf="!this.isAvailable">Invalid filter</mat-error>
+<mat-error *ngIf="!this.isAvailable">Filtre invalide</mat-error>
