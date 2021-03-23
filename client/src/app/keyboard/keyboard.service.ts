@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import hotkeys from 'hotkeys-js';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { KeyboardAction } from './keyboard-action';
 
 @Injectable({
@@ -12,19 +12,22 @@ export class KeyboardService {
 
     private savedContextStack: string[];
 
-    constructor() {
+    constructor(private hotKeysService: HotkeysService) {
         this.context = KeyboardService.DEFAULT_CONTEXT;
         this.savedContextStack = new Array<string>();
     }
 
     registerAction(action: KeyboardAction): void {
-        hotkeys(action.trigger, (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (action.contexts.includes(this.context) || action.contexts.includes('always')) {
-                action.invoke();
-            }
-        });
+        this.hotKeysService.add(
+            new Hotkey(action.trigger, (event: KeyboardEvent): boolean => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (action.contexts.includes(this.context) || action.contexts.includes('always')) {
+                    action.invoke();
+                }
+                return false;
+            }),
+        );
     }
 
     saveContext(): void {
