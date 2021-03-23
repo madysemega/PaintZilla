@@ -12,13 +12,13 @@ export class KeyboardService {
 
     private savedContextStack: string[];
 
-    constructor(private hotKeysService: HotkeysService) {
+    constructor(private hotkeysService: HotkeysService) {
         this.context = KeyboardService.DEFAULT_CONTEXT;
         this.savedContextStack = new Array<string>();
     }
 
     registerAction(action: KeyboardAction): void {
-        this.hotKeysService.add(
+        this.hotkeysService.add(
             new Hotkey(action.trigger, (event: KeyboardEvent): boolean => {
                 event.preventDefault();
                 event.stopPropagation();
