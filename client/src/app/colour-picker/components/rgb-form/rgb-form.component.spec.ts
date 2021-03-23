@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 export const DEFAULT_COLOUR = new Colour();
 // tslint:disable:no-any
 // tslint:disable: no-string-literal
-fdescribe('RgbFormComponent', () => {
+describe('RgbFormComponent', () => {
     let component: RgbFormComponent;
     let fixture: ComponentFixture<RgbFormComponent>;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;
