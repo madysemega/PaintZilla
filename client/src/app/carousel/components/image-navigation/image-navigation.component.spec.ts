@@ -3,14 +3,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FilterLabelComponent } from '@app/carousel/components/filter-label/filter-label.component';
+import { ImageCarouselComponent } from '@app/carousel/components/image-carousel/image-carousel.component';
+import { ImageDetailsComponent } from '@app/carousel/components/image-details/image-details.component';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { of, throwError } from 'rxjs';
-import { FilterLabelComponent } from '../filter-label/filter-label.component';
-import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
-import { ImageDetailsComponent } from '../image-details/image-details.component';
 import { ImageNavigationComponent } from './image-navigation.component';
 
 // tslint:disable: no-any
