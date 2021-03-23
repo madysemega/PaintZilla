@@ -11,10 +11,8 @@ export class EraserShape extends VerticesShape {
         const clonedVertices = new Array<Vec2>();
 
         this.vertices.forEach((vertex) => {
-            if (vertex != undefined) {
-                const clone = { x: vertex.x, y: vertex.y };
-                clonedVertices.push(clone);
-            }
+            const clone = { x: vertex.x, y: vertex.y };
+            clonedVertices.push(clone);
         });
 
         return new EraserShape(clonedVertices, this.strokeWidth);
