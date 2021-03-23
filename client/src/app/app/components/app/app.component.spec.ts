@@ -33,6 +33,7 @@ import { HotkeyModule } from 'angular2-hotkeys';
 import { AppComponent } from './app.component';
 
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 describe('AppComponent', () => {
     @Component({
         selector: 'mat-icon',

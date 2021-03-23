@@ -52,7 +52,7 @@ describe('ImageDetailsComponent', () => {
         const WIDTH = 400;
         const HEIGHT = 300;
 
-        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+        spyOn(component, 'getRealImageDimensions').and.returnValue({ x: WIDTH, y: HEIGHT } as Vec2);
 
         expect(component.imageWidth).toEqual(component.imageContainerWidth);
     });
@@ -61,7 +61,7 @@ describe('ImageDetailsComponent', () => {
         const WIDTH = 300;
         const HEIGHT = 400;
 
-        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+        spyOn(component, 'getRealImageDimensions').and.returnValue({ x: WIDTH, y: HEIGHT } as Vec2);
 
         expect(component.imageWidth).toEqual((component.imageContainerHeight / HEIGHT) * WIDTH);
     });
@@ -70,7 +70,7 @@ describe('ImageDetailsComponent', () => {
         const WIDTH = 300;
         const HEIGHT = 400;
 
-        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+        spyOn(component, 'getRealImageDimensions').and.returnValue({ x: WIDTH, y: HEIGHT } as Vec2);
 
         expect(component.imageHeight).toEqual(component.imageContainerHeight);
     });
@@ -79,7 +79,7 @@ describe('ImageDetailsComponent', () => {
         const WIDTH = 400;
         const HEIGHT = 300;
 
-        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+        spyOn(component, 'getRealImageDimensions').and.returnValue({ x: WIDTH, y: HEIGHT } as Vec2);
 
         expect(component.imageHeight).toEqual((component.imageContainerWidth / WIDTH) * HEIGHT);
     });
