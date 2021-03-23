@@ -1,7 +1,7 @@
 // tslint:disable-next-line:no-magic-numbers
 export const DEFAULT_WIDTH = (window.innerWidth - 130) / 2;
 // tslint:disable-next-line:no-magic-numbers
-export const DEFAULT_HEIGHT = window.innerHeight - 10;
+export const DEFAULT_HEIGHT = (window.innerHeight - 10) / 2;
 export const MINIMUM_SIZE = 250;
 export const MAX_WIDTH = 2365;
 export const MAX_HEIGHT = 1185;
