@@ -14,9 +14,7 @@ describe('KeyboardService', () => {
 
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-            ]
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
         });
         service = TestBed.inject(KeyboardService);
     });
@@ -42,7 +40,7 @@ describe('KeyboardService', () => {
         const ACTION = {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
-            invoke: () => hasActionBeenInvoked = true,
+            invoke: () => (hasActionBeenInvoked = true),
             contexts: [CURRENT_CONTEXT],
         } as KeyboardAction;
 
@@ -64,7 +62,7 @@ describe('KeyboardService', () => {
         const ACTION = {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
-            invoke: () => hasActionBeenInvoked = true,
+            invoke: () => (hasActionBeenInvoked = true),
             contexts: ['test'],
         } as KeyboardAction;
 
@@ -95,7 +93,7 @@ describe('KeyboardService', () => {
         service.context = LATENT_CONTEXT;
         service.saveContext();
         service.context = FINAL_CONTEXT;
-        
+
         service.restoreContext();
         expect(service.context).toEqual(LATENT_CONTEXT);
 
