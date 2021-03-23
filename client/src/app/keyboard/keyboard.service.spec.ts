@@ -24,7 +24,7 @@ describe('KeyboardService', () => {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
             invoke: () => {},
-            context: 'test',
+            contexts: ['test'],
         } as KeyboardAction;
 
         service.registerAction(ACTION);

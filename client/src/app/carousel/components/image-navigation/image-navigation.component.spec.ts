@@ -23,6 +23,7 @@ describe('ImageNavigationComponent', () => {
 
     beforeEach(async(() => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ImageNavigationComponent>', ['afterClosed', 'close']);
+        matDialogRefSpy.afterClosed.and.returnValue(of());
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
         matDialogSpy.open.and.callFake(() => {
