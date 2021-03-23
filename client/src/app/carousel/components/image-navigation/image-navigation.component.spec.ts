@@ -35,8 +35,8 @@ describe('ImageNavigationComponent', () => {
         matSnackBarStub = jasmine.createSpyObj('MatSnackBar', ['open']);
         matSnackBarStub.open.and.callThrough();
 
-        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingsByLabelsAllMatch', 'getAllLabels', 'getAllDrawings', 'deleteDrawing']);
-        serverServiceSpy.getDrawingsByLabelsAllMatch.and.returnValue(of([]));
+        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingsByLabelsOneMatch', 'getAllLabels', 'getAllDrawings', 'deleteDrawing']);
+        serverServiceSpy.getDrawingsByLabelsOneMatch.and.returnValue(of([]));
         serverServiceSpy.getAllLabels.and.returnValue(of([]));
         serverServiceSpy.getAllDrawings.and.returnValue(of([]));
         serverServiceSpy.deleteDrawing.and.returnValue(of());
@@ -67,10 +67,28 @@ describe('ImageNavigationComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
-    it('filtering drawings should call server service getDrawingsByLabelsAllMatch method if given labels', () => {
+    it('removeFilter should call filterDrawings on all labels if retainedLabels is emptied', () => {
+        const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
+        component.retainedLabels.push('test');
+        component.removeFilter(component.retainedLabels.indexOf('test'));
+        expect(component.retainedLabels.length).toBe(0);
+        expect(FILTER_SPY).toHaveBeenCalled();
+    });
+    it('removeFilter should call filterDrawings if retainedElements is not emptied', () => {
+        const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
+        component.retainedLabels.push('test1');
+        component.retainedLabels.push('test2');
+        component.removeFilter(component.retainedLabels.indexOf('test1'));
+        expect(FILTER_SPY).toHaveBeenCalled();
+    });
+    it('removeFilter should call filterDrawings if retainedElements is not emptied', () => {
+        const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
+        component.addFilter('test');
+        expect(FILTER_SPY).toHaveBeenCalled();
+    });
+    it('filtering drawings should call server service getDrawingsByLabelsOneMatch method if given labels', () => {
         component.filterDrawings(['One']);
-        expect(serverServiceSpy.getDrawingsByLabelsAllMatch).toHaveBeenCalled();
+        expect(serverServiceSpy.getDrawingsByLabelsOneMatch).toHaveBeenCalled();
     });
 
     it('filtering drawings should call server service getAllDrawings method if given no labels', () => {

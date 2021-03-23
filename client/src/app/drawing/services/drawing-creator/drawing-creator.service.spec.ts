@@ -32,6 +32,7 @@ describe('DrawingCreatorService', () => {
         drawingServiceSpy = new DrawingService(historyServiceStub);
         resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['clear']);
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
         matDialogSpy.open.and.callFake(() => {
@@ -44,6 +45,7 @@ describe('DrawingCreatorService', () => {
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceSpy },
+                { provide: HistoryService, useValue: historyServiceStub },
             ],
         });
 
@@ -130,6 +132,14 @@ describe('DrawingCreatorService', () => {
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
     });
 
+    it('createNewDrawing() should clear undo-redo history if changes are discarded and canvas is not empty', () => {
+        matDialogRefSpy.afterClosed.and.returnValue(of('discard'));
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        drawingServiceSpy.canvasIsEmpty = false;
+        service.createNewDrawing();
+        expect(historyServiceStub.clear).toHaveBeenCalled();
+    });
+
     it('createNewDrawing() should call emit if changes are saved and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of('save'));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
@@ -138,6 +148,14 @@ describe('DrawingCreatorService', () => {
         service.createNewDrawing();
         expect(service.drawingRestored.emit).toHaveBeenCalled();
         expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
+    });
+
+    it('createNewDrawing() should clear undo-redo history if changes are saved and canvas is not empty', () => {
+        matDialogRefSpy.afterClosed.and.returnValue(of('save'));
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        drawingServiceSpy.canvasIsEmpty = false;
+        service.createNewDrawing();
+        expect(historyServiceStub.clear).toHaveBeenCalled();
     });
 
     it('noDialogsOpen should return true if there are no dialogs', () => {
