@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaterialModule } from '@app/material.module';
 import { Drawing } from '@common/models/drawing';
+import { ImageDetailsComponent } from '../image-details/image-details.component';
 import { ImageCarouselComponent } from './image-carousel.component';
 
 // tslint:disable: no-any
@@ -18,7 +19,7 @@ describe('ImageCarouselComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [MaterialModule],
-            declarations: [ImageCarouselComponent],
+            declarations: [ImageCarouselComponent, ImageDetailsComponent],
         }).compileComponents();
     }));
 

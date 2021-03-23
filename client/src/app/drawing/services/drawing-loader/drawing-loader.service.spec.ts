@@ -21,6 +21,7 @@ describe('DrawingLoaderService', () => {
 
     beforeEach(() => {
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['setImageFromBase64']);
+        drawingServiceSpy.setImageFromBase64.and.stub();
 
         serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingById', 'getAllLabels']);
         serverServiceSpy.getDrawingById.and.returnValue(of({} as Drawing));
@@ -48,8 +49,12 @@ describe('DrawingLoaderService', () => {
     it("loadFromServer() should set the drawing surface's image to the downloaded base64 image", () => {
         const IMAGE_ID = '1234567890';
 
+        serverServiceSpy.getDrawingById.and.returnValue(of());
+
         service.loadFromServer(IMAGE_ID);
-        expect(drawingServiceSpy.setImageFromBase64).toHaveBeenCalled();
+        serverServiceSpy.getDrawingById('123').subscribe(() => {
+            expect(drawingServiceSpy.setImageFromBase64).toHaveBeenCalled();
+        });
     });
 
     it('loadFromServer() should open snack bar on error', () => {
@@ -63,6 +68,8 @@ describe('DrawingLoaderService', () => {
 
         service.loadFromServer('123');
 
-        expect(snackBarStub.open).toHaveBeenCalled();
+        serverServiceSpy.getDrawingById('123').subscribe(() => {
+            expect(snackBarStub.open).toHaveBeenCalled();
+        });
     });
 });

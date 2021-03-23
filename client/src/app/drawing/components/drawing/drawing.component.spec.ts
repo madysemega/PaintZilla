@@ -270,9 +270,6 @@ describe('DrawingComponent', () => {
 
             expect(Math.floor(drawingStub.previewCanvas.width)).toEqual(EXPECTED_WIDTH);
             expect(Math.floor(drawingStub.previewCanvas.height)).toEqual(EXPECTED_HEIGHT);
-
-            expect(drawingStub.restoreCanvasToDefault).toHaveBeenCalled();
-            expect(drawingStub.restoreCanvasStyle).toHaveBeenCalled();
         });
 
         drawingCreatorService.drawingRestored.emit();
