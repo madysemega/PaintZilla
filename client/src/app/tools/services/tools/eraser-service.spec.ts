@@ -1,9 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { EraserService } from './eraser-service';
+
 // tslint:disable:no-any
+// tslint:disable:no-string-literal
 describe('EraserService', () => {
     let service: EraserService;
     let mouseEvent: MouseEvent;
@@ -12,20 +16,23 @@ describe('EraserService', () => {
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
 
-    let drawVerticesSpy: jasmine.Spy<any>;
-    let drawPointSpy: jasmine.Spy<any>;
+    let finalizeSpy: jasmine.Spy<any>;
 
-    let drawRightwardPolygonSpy: jasmine.Spy<any>;
-    let drawLeftwardPolygonSpy: jasmine.Spy<any>;
+    let drawVerticesSpy: jasmine.Spy<any>;
+    let historyStub: HistoryService;
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
+        historyStub = new HistoryService();
 
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HistoryService, useValue: historyStub },
+            ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -43,10 +50,7 @@ describe('EraserService', () => {
         );
 
         drawVerticesSpy = spyOn<any>(service, 'drawVertices').and.callThrough();
-        drawPointSpy = spyOn<any>(service, 'drawPoint').and.callThrough();
-
-        drawRightwardPolygonSpy = spyOn<any>(service, 'drawRightwardPolygon').and.callThrough();
-        drawLeftwardPolygonSpy = spyOn<any>(service, 'drawLeftwardPolygon').and.callThrough();
+        finalizeSpy = spyOn<any>(service, 'finalize').and.callThrough();
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -76,20 +80,10 @@ describe('EraserService', () => {
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
+
     it(' mouseMove should set the mouse to move', () => {
         service.onMouseMove(mouseEvent);
         expect(service.getPositionFromMouse(mouseEvent)).toEqual({ x: 50, y: 60 });
-    });
-    // tslint:disable:no-magic-numbers
-    it(' a eraser width less than 5 should set the width to 5', () => {
-        let width = 20;
-        width = service.changeWidth(width);
-        expect(width).toEqual(20);
-    });
-    it(' a eraser width more than 5 should set the width to the same thing', () => {
-        let width = 2;
-        width = service.changeWidth(width);
-        expect(width).toEqual(service.minimumWidth);
     });
 
     it(' onToolDeselect should change the cursor to crosshair', () => {
@@ -118,134 +112,34 @@ describe('EraserService', () => {
         expect(service.mouseDown).toEqual(false);
     });
 
-    it(' onMouseUp should call drawSegments if mouse was already down', () => {
+    it(' onMouseUp should call finalize if mouse was already down', () => {
         service.mouseInCanvas = true;
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.onMouseUp(mouseEvent);
-        expect(drawVerticesSpy).toHaveBeenCalled();
+        expect(finalizeSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should not call drawSegments if mouse was not already down', () => {
+    it(' onMouseUp should not call finalize if mouse was not already down', () => {
         service.mouseDown = false;
         service.mouseDownCoord = { x: 0, y: 0 };
 
         service.onMouseUp(mouseEvent);
-        expect(drawVerticesSpy).not.toHaveBeenCalled();
+        expect(finalizeSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseUp should call drawPoint if mouse was down but did not move', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = true;
+    it('When line width property changes, so should the stroke width property', () => {
+        const NEW_STROKE_WIDTH = 42;
 
-        service.onMouseUp(mouseEvent);
-        expect(drawPointSpy).toHaveBeenCalled();
+        service.lineWidth = NEW_STROKE_WIDTH;
+        service.onLineWidthChanged();
+
+        expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_STROKE_WIDTH);
     });
 
-    it(' onMouseUp should not call drawPoint if mouse was not down', () => {
-        service.mouseInCanvas = true;
-        service.mouseDownCoord = { x: 0, y: 0 };
-        service.mouseDown = false;
-
-        service.onMouseUp(mouseEvent);
-        expect(drawPointSpy).not.toHaveBeenCalled();
-    });
-
-    // Exemple de test d'intégration qui est quand même utile
-    it(' should change the pixel of the canvas ', () => {
-        mouseEvent = { clientX: canvasPosition.x, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseDown(mouseEvent);
-        service.mouseInCanvas = true;
-        mouseEvent = { clientX: canvasPosition.x + 1, clientY: canvasPosition.y, button: 0 } as MouseEvent;
-        service.onMouseUp(mouseEvent);
-
-        // Premier pixel seulement
-        const imageData: ImageData = baseCtxStub.getImageData(0, 0, 1, 1);
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[0]).toEqual(255); // R
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[1]).toEqual(255); // G
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[2]).toEqual(255); // B
-        // tslint:disable-next-line:no-magic-numbers
-        expect(imageData.data[3]).not.toEqual(0); // A
-    });
-
-    it('drawRightwardPolygon() should draw a rightward Polygon', () => {
-        const HALF_WIDTH = 3;
-        const TOP_LEFT = { x: 3, y: 5 };
-        const BOTTOM_RIGHT = { x: 28, y: 56 };
-
-        const baseCtxMoveToSpy = spyOn(drawServiceSpy.baseCtx, 'moveTo').and.callThrough();
-        const baseCtxLineToSpy = spyOn(drawServiceSpy.baseCtx, 'lineTo').and.callThrough();
-
-        service.drawRightwardPolygon(drawServiceSpy.baseCtx, TOP_LEFT, BOTTOM_RIGHT, 2 * HALF_WIDTH);
-
-        expect(baseCtxMoveToSpy).toHaveBeenCalledWith(TOP_LEFT.x - HALF_WIDTH, TOP_LEFT.y - HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_LEFT.x + HALF_WIDTH, TOP_LEFT.y - HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x + HALF_WIDTH, BOTTOM_RIGHT.y - HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x + HALF_WIDTH, BOTTOM_RIGHT.y + HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_RIGHT.x - HALF_WIDTH, BOTTOM_RIGHT.y + HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_LEFT.x - HALF_WIDTH, TOP_LEFT.y + HALF_WIDTH);
-    });
-
-    it('drawLeftwardPolygon() should draw a leftward Polygon', () => {
-        const HALF_WIDTH = 3;
-        const TOP_RIGHT = { x: 3, y: 5 };
-        const BOTTOM_LEFT = { x: 28, y: 56 };
-
-        const baseCtxMoveToSpy = spyOn(drawServiceSpy.baseCtx, 'moveTo').and.callThrough();
-        const baseCtxLineToSpy = spyOn(drawServiceSpy.baseCtx, 'lineTo').and.callThrough();
-
-        service.drawLeftwardPolygon(drawServiceSpy.baseCtx, TOP_RIGHT, BOTTOM_LEFT, 2 * HALF_WIDTH);
-
-        expect(baseCtxMoveToSpy).toHaveBeenCalledWith(TOP_RIGHT.x + HALF_WIDTH, TOP_RIGHT.y - HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_RIGHT.x + HALF_WIDTH, TOP_RIGHT.y + HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x + HALF_WIDTH, BOTTOM_LEFT.y + HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x - HALF_WIDTH, BOTTOM_LEFT.y + HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(BOTTOM_LEFT.x - HALF_WIDTH, BOTTOM_LEFT.y - HALF_WIDTH);
-        expect(baseCtxLineToSpy).toHaveBeenCalledWith(TOP_RIGHT.x - HALF_WIDTH, TOP_RIGHT.y - HALF_WIDTH);
-    });
-
-    it('drawVertices() should draw (only) a rightward Polygon if movement is down-right', () => {
-        service['vertices'].push({ x: 0, y: 0 });
-        service['vertices'].push({ x: 34, y: 42 });
-
-        service.drawVertices(drawServiceSpy.baseCtx);
-
-        expect(drawRightwardPolygonSpy).toHaveBeenCalled();
-        expect(drawLeftwardPolygonSpy).not.toHaveBeenCalled();
-    });
-
-    it('drawVertices() should draw (only) a rightward Polygon if movement is up-left', () => {
-        service['vertices'].push({ x: 34, y: 42 });
-        service['vertices'].push({ x: 0, y: 0 });
-
-        service.drawVertices(drawServiceSpy.baseCtx);
-
-        expect(drawRightwardPolygonSpy).toHaveBeenCalled();
-        expect(drawLeftwardPolygonSpy).not.toHaveBeenCalled();
-    });
-
-    it('drawVertices() should draw (only) a leftward polygon if movement is down-left', () => {
-        service['vertices'].push({ x: 34, y: 0 });
-        service['vertices'].push({ x: 0, y: 42 });
-
-        service.drawVertices(drawServiceSpy.baseCtx);
-
-        expect(drawLeftwardPolygonSpy).toHaveBeenCalled();
-        expect(drawRightwardPolygonSpy).not.toHaveBeenCalled();
-    });
-
-    it('drawVertices() should draw (only) a leftward polygon if movement is up-right', () => {
-        service['vertices'].push({ x: 0, y: 42 });
-        service['vertices'].push({ x: 34, y: 0 });
-
-        service.drawVertices(drawServiceSpy.baseCtx);
-
-        expect(drawLeftwardPolygonSpy).toHaveBeenCalled();
-        expect(drawRightwardPolygonSpy).not.toHaveBeenCalled();
+    it('When tool is selected, it should hide the cursor', () => {
+        service.onToolSelect();
+        expect(drawServiceSpy.setCursorType).toHaveBeenCalledWith(CursorType.NONE);
     });
 });
