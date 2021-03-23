@@ -5,6 +5,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
 import { Subject } from 'rxjs';
 export const DEFAULT_COLOUR = new Colour();
+// tslint:disable:no-any
 describe('RgbaFormService', () => {
     let service: RgbaFormService;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;

@@ -6,7 +6,7 @@ import { ColoursComponent } from '@app/drawing/components/colours/colours.compon
 import { MouseButton } from '@app/tools/classes/mouse-button';
 // tslint:disable: no-string-literal
 export const DEFAULT_COLOUR = new Colour();
-fdescribe('ColoursComponent', () => {
+describe('ColoursComponent', () => {
     let component: ColoursComponent;
     let fixture: ComponentFixture<ColoursComponent>;
     let colourServiceSpy: jasmine.SpyObj<ColourService>;
