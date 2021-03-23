@@ -1,4 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
 import { Drawing } from '@common/models/drawing';
 
@@ -13,6 +15,8 @@ export class ImageCarouselComponent {
         this.drawingsToDisplay = drawings;
         this.refresh();
     }
+
+    @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
 
     @Output() deleteImage: EventEmitter<string>;
 

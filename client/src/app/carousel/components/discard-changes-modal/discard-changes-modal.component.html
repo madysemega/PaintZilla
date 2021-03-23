@@ -1,0 +1,11 @@
+<h3>Voulez-vous écraser les changements ?</h3>
+
+<mat-dialog-content>
+    Vous avez effectué des changements sur le dessin actuel,<br>
+    ils seront écrasés si vous chargez un nouveau dessin.
+</mat-dialog-content>
+
+<mat-dialog-actions class="right">
+    <button mat-button mat-dialog-close>Annuler</button>
+    <button mat-button mat-dialog-close (click)="confirm()">Écraser</button>
+</mat-dialog-actions>

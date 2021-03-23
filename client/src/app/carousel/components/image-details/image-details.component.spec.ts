@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
+import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ImageDetailsComponent } from './image-details.component';
 
@@ -10,13 +12,22 @@ describe('ImageDetailsComponent', () => {
     let fixture: ComponentFixture<ImageDetailsComponent>;
 
     let routerSpy: jasmine.SpyObj<Router>;
+    let historyService: HistoryService;
 
     beforeEach(async(() => {
-        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+        routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+        // tslint:disable-next-line: no-empty
+        routerSpy.navigateByUrl.and.returnValue(new Promise(() => {}));
+
+        historyService = new HistoryService();
+
         TestBed.configureTestingModule({
             imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [ImageDetailsComponent],
-            providers: [{ provide: Router, useValue: routerSpy }],
+            providers: [
+                { provide: Router, useValue: routerSpy },
+                { provide: HistoryService, useValue: historyService },
+            ],
         }).compileComponents();
     }));
 
@@ -24,6 +35,8 @@ describe('ImageDetailsComponent', () => {
         fixture = TestBed.createComponent(ImageDetailsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+
+        component.dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
     });
 
     it('should create', () => {
@@ -31,12 +44,18 @@ describe('ImageDetailsComponent', () => {
     });
 
     it('loadImage() should navigate to /editor/:imageId', () => {
+        const promise = Promise.resolve(true);
+        routerSpy.navigateByUrl.and.returnValue(promise);
+
         const IMAGE_ID = '1234567890';
 
         component.data.id = IMAGE_ID;
         component.loadImage();
 
-        expect(routerSpy.navigate).toHaveBeenCalledWith([`/editor/${IMAGE_ID}`]);
+        expect(routerSpy.navigateByUrl).toHaveBeenCalled();
+        promise.then(() => {
+            expect(routerSpy.navigate).toHaveBeenCalled();
+        });
     });
 
     it('deleteImage() should emit a delete event', () => {
@@ -82,5 +101,24 @@ describe('ImageDetailsComponent', () => {
         spyOn(component, 'getRealImageDimensions').and.returnValue({ x: WIDTH, y: HEIGHT } as Vec2);
 
         expect(component.imageHeight).toEqual((component.imageContainerWidth / WIDTH) * HEIGHT);
+    });
+
+    it('Discard confirm callback should navigate to image', () => {
+        const navigateToImageSpy = spyOn(component, 'navigateToImage').and.stub();
+
+        // tslint:disable-next-line: no-string-literal
+        component['discardChangesModalData'].confirmCallback();
+
+        expect(navigateToImageSpy).toHaveBeenCalled();
+    });
+
+    it('loadImage() should display discard changes modal if changes have been done to current drawing', () => {
+        const dialogOpenSpy = spyOn(fixture.debugElement.injector.get(MatDialog), 'open').and.stub();
+
+        // tslint:disable-next-line: no-empty
+        historyService.do({ apply: () => {} });
+        component.loadImage();
+
+        expect(dialogOpenSpy).toHaveBeenCalled();
     });
 });

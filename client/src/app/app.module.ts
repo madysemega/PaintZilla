@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
 import { ImageCarouselComponent } from '@app/carousel/components/image-carousel/image-carousel.component';
 import { ImageDetailsComponent } from '@app/carousel/components/image-details/image-details.component';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
@@ -78,6 +79,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         ConfigurationPanelComponent,
         FilterLabelComponent,
         SaveDrawingDialogComponent,
+        DiscardChangesModalComponent,
     ],
     imports: [
         BrowserModule,
