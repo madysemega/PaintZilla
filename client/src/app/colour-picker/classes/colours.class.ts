@@ -5,6 +5,17 @@ export class Colour {
     private green: number = Constants.MIN_RGB;
     private blue: number = Constants.MIN_RGB;
     private alpha: number = Constants.MAX_ALPHA;
+    constructor(
+        red: number = Constants.MIN_RGB,
+        green: number = Constants.MIN_RGB,
+        blue: number = Constants.MIN_RGB,
+        alpha: number = Constants.MAX_ALPHA,
+    ) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.alpha = alpha;
+    }
     static hsvToRgb(hue: number, saturation: number, value: number): Colour {
         // references -> color-conversion ref: https://github.com/Qix-/color-convert, library: https://www.npmjs.com/package/color-convert
         // hsv explanation refs: https://stackoverflow.com/a/39147465, https://medium.com/innovaccer-tech/rgb-vs-hsb-vs-hsl-demystified-1992d7273d3a
@@ -23,10 +34,6 @@ export class Colour {
         result.green = rgb[Constants.SECOND_INDEX];
         result.blue = rgb[Constants.THIRD_INDEX];
         return result;
-    }
-    static hexToRgbSTring(hexColor: string): string {
-        const rgb = Converter.hex.rgb(hexColor);
-        return '' + this.toHex(rgb[Constants.FIRST_INDEX]) + this.toHex(rgb[Constants.SECOND_INDEX]) + this.toHex(rgb[Constants.THIRD_INDEX]);
     }
 
     static toHex(color: number): string {
@@ -70,7 +77,7 @@ export class Colour {
         this.alpha = this.setColor(alpha, Constants.MIN_ALPHA, Constants.MAX_ALPHA);
     }
 
-    setColor(color: number, minValue: number, maxValue: number): number {
+    private setColor(color: number, minValue: number, maxValue: number): number {
         if (color < minValue) {
             return minValue;
         } else if (color > maxValue) {

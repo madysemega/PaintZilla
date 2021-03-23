@@ -86,7 +86,7 @@ export class ColourService {
         this.colourPickerService.setCurrentColour(this.primaryColourSelected ? this.primaryColour : this.secondaryColour);
     }
 
-    private updatePreviousColours(colour: Colour): void {
+    updatePreviousColours(colour: Colour): void {
         const colorToMatch = (color: Colour) => color.toStringHex() === colour.toStringHex();
         const index = this.previousColours.findIndex(colorToMatch);
         if (index === Constants.NOT_FOUND) {
