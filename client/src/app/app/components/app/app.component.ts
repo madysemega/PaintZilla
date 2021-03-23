@@ -15,14 +15,18 @@ export class AppComponent {
     constructor(
         private iconRegistryService: MatIconRegistry,
         private domSanitizer: DomSanitizer,
-        keyboardService: KeyboardService,
+        private keyboardService: KeyboardService,
         private dialog: MatDialog,
     ) {
         for (const icon of IconsMetaData.iconFiles) {
             this.iconRegistryService.addSvgIcon(icon.name, this.domSanitizer.bypassSecurityTrustResourceUrl(icon.path));
         }
 
-        keyboardService.registerAction({
+        this.registerKeyboardShortcuts();
+    }
+
+    private registerKeyboardShortcuts(): void {
+        this.keyboardService.registerAction({
             trigger: 'ctrl+g',
             invoke: () => {
                 if (this.dialog.openDialogs.length === 0) {

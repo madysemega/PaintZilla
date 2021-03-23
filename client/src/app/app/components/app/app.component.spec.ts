@@ -1,10 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
@@ -12,6 +14,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { KeyboardAction } from '@app/keyboard/keyboard-action';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
@@ -30,6 +33,7 @@ import { HotkeyModule } from 'angular2-hotkeys';
 import { AppComponent } from './app.component';
 
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 describe('AppComponent', () => {
     @Component({
         selector: 'mat-icon',
@@ -41,7 +45,17 @@ describe('AppComponent', () => {
         @Input() fontIcon: any;
     }
 
+    let app: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
+
+    let dialogServiceStub: jasmine.SpyObj<MatDialog>;
+    let dialogRefStub: jasmine.SpyObj<MatDialogRef<ImageNavigationComponent>>;
+
     beforeEach(async(() => {
+        dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
+        dialogRefStub = jasmine.createSpyObj('MatDialogRef<ImageNavigationComponent>', ['close', 'afterClosed']);
+        dialogServiceStub.open.and.returnValue(dialogRefStub);
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [
@@ -55,20 +69,23 @@ describe('AppComponent', () => {
                 RectangleToolConfigurationComponent,
             ],
             providers: [
-                IndexService,
-                ResizingService,
-                PencilService,
-                PipetteService,
-                SprayService,
-                DrawingService,
-                DrawingCreatorService,
-                ToolSelectorService,
-                ColourService,
-                EllipseService,
-                EraserService,
-                LineService,
-                RectangleService,
-                KeyboardService,
+                { provide: IndexService },
+                { provide: ResizingService },
+                { provide: PencilService },
+                { provide: PipetteService },
+                { provide: SprayService },
+                { provide: DrawingService },
+                { provide: DrawingCreatorService },
+                { provide: ToolSelectorService },
+                { provide: ColourService },
+                { provide: EllipseService },
+                { provide: EraserService },
+                { provide: LineService },
+                { provide: RectangleService },
+                { provide: MatDialog, useValue: dialogServiceStub },
+                { provide: MatDialogRef, useValue: dialogRefStub },
+                { provide: KeyboardService },
+                // { provide: KeyboardService, useValue: keyboardServiceStub },
             ],
         })
             .overrideModule(MatIconModule, {
@@ -84,9 +101,35 @@ describe('AppComponent', () => {
             .compileComponents();
     }));
 
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        app = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
     it('should create the server', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
         expect(app).toBeTruthy();
+    });
+
+    it('Ctrl+G should open ImageNavigationComponent in a modal if no other modal is open', () => {
+        Object.defineProperty(dialogServiceStub, 'openDialogs', { value: [] });
+        spyOn(fixture.debugElement.injector.get(KeyboardService), 'registerAction').and.callFake((action: KeyboardAction) => {
+            action.invoke();
+        });
+
+        app['registerKeyboardShortcuts']();
+
+        expect(dialogServiceStub.open).toHaveBeenCalled();
+    });
+
+    it('Ctrl+G should not open ImageNavigationComponent in a modal if other modals are open', () => {
+        Object.defineProperty(dialogServiceStub, 'openDialogs', { value: [{}] });
+        spyOn(fixture.debugElement.injector.get(KeyboardService), 'registerAction').and.callFake((action: KeyboardAction) => {
+            action.invoke();
+        });
+
+        app['registerKeyboardShortcuts']();
+
+        expect(dialogServiceStub.open).not.toHaveBeenCalled();
     });
 });
