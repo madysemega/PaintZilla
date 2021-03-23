@@ -18,7 +18,7 @@ export class ExportDrawingService {
     }
 
     openExportDrawingDialog(): void {
-        if (this.dialog.openDialogs.length === 0) {
+        if (this.noDialogsOpen()) {
             this.dialogRef = this.dialog.open(ExportDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
         }
     }
