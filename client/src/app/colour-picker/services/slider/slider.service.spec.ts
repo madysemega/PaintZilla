@@ -5,7 +5,7 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 export const DEFAULT_COLOUR = new Colour();
 // tslint:disable: no-string-literal
-fdescribe('SliderService', () => {
+describe('SliderService', () => {
     let service: SliderService;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;
     let canvasTestHelper: CanvasTestHelper;

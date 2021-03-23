@@ -36,7 +36,7 @@ export class RgbaFormService {
         }
     }
 
-    formString(): string {
+    private formString(): string {
         return (
             '' + this.rgbaFormGroup.controls.redForm.value + this.rgbaFormGroup.controls.greenForm.value + this.rgbaFormGroup.controls.blueForm.value
         );
