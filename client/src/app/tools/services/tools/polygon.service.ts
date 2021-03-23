@@ -168,7 +168,6 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
             this.fillRenderer.render(ctx);
         }
         if (shouldRenderStroke) {
-            this.strokeRenderer.lineWidth = this.strokeWidthProperty.strokeWidth;
             this.strokeRenderer.render(ctx);
         }
         if (this.isToDrawPerim) {
@@ -184,16 +183,11 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
-        if (shouldRenderFill) size = Math.abs(size - this.lineWidth / 2);
-        ctx.ellipse(
-            center.x,
-            center.y,
-            size + (shouldRenderFill ? 0 : this.lineWidth),
-            size + (shouldRenderFill ? 0 : this.lineWidth),
-            0,
-            0,
-            this.CIRCLE_MAX_ANGLE,
-        );
+        if (shouldRenderFill && size > 0) size = Math.abs(size - this.lineWidth);
+        else if (shouldRenderFill) size = Math.abs(size + this.lineWidth);
+        else if (!shouldRenderFill && size > 0) size = Math.abs(size + this.lineWidth);
+        else size = Math.abs(size - this.lineWidth);
+        ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
     }
