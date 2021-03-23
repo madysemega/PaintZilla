@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Constants from '@app/drawing/constants/drawing-constants';
+import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -37,6 +38,7 @@ describe('DrawingComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         resizingServiceStub = new ResizingService(drawingStub, historyServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+
         TestBed.configureTestingModule({
             imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [DrawingComponent],
@@ -46,6 +48,7 @@ describe('DrawingComponent', () => {
                 { provide: ResizingService, useValue: resizingServiceStub },
                 { provide: ToolSelectorService, useValue: toolSelectorStub },
                 { provide: MatDialogRef, useValue: {} },
+                { provide: DrawingCreatorService },
             ],
         }).compileComponents();
 
@@ -250,5 +253,28 @@ describe('DrawingComponent', () => {
         // tslint:disable-next-line: no-string-literal
         expect(component['canvasSize']).toEqual({ x: WIDTH, y: HEIGHT });
         expect(drawingStub.canvasResize).toEqual({ x: WIDTH, y: HEIGHT });
+    });
+
+    it('When drawing is restored from creator service, attributes should be reset to default', () => {
+        const drawingCreatorService = fixture.debugElement.injector.get(DrawingCreatorService);
+
+        drawingCreatorService.drawingRestored.subscribe(() => {
+            const EXPECTED_WIDTH = Math.floor(Constants.DEFAULT_WIDTH);
+            const EXPECTED_HEIGHT = Math.floor(Constants.DEFAULT_HEIGHT);
+
+            expect(Math.floor(resizingServiceStub.canvasResize.x)).toEqual(EXPECTED_WIDTH);
+            expect(Math.floor(resizingServiceStub.canvasResize.y)).toEqual(EXPECTED_HEIGHT);
+
+            expect(Math.floor(drawingStub.canvas.width)).toEqual(EXPECTED_WIDTH);
+            expect(Math.floor(drawingStub.canvas.height)).toEqual(EXPECTED_HEIGHT);
+
+            expect(Math.floor(drawingStub.previewCanvas.width)).toEqual(EXPECTED_WIDTH);
+            expect(Math.floor(drawingStub.previewCanvas.height)).toEqual(EXPECTED_HEIGHT);
+
+            expect(drawingStub.restoreCanvasToDefault).toHaveBeenCalled();
+            expect(drawingStub.restoreCanvasStyle).toHaveBeenCalled();
+        });
+
+        drawingCreatorService.drawingRestored.emit();
     });
 });

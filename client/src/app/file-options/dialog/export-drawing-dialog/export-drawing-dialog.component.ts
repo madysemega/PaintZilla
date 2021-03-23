@@ -35,17 +35,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         this.previewCanvas.nativeElement.width = this.canvas.nativeElement.width / 2;
         this.previewCanvas.nativeElement.height = this.canvas.nativeElement.height / 2;
         this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.previewCtx.drawImage(
-            this.drawingService.canvas,
-            0,
-            0,
-            this.resizingService.canvasResize.x,
-            this.resizingService.canvasResize.y,
-            0,
-            0,
-            this.previewCanvas.nativeElement.width,
-            this.previewCanvas.nativeElement.height,
-        );
+        this.drawImage();
     }
 
     updatePreviewImage(event: MatSelectChange): void {
@@ -54,6 +44,10 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         this.ctx.drawImage(this.drawingService.canvas, 0, 0);
 
         this.previewCtx.filter = event.value;
+        this.drawImage();
+    }
+
+    drawImage(): void {
         this.previewCtx.drawImage(
             this.drawingService.canvas,
             0,

@@ -18,22 +18,38 @@ export class ImageNavigationComponent {
     retainedLabels: string[];
     drawings: Drawing[];
 
+    isLoadingDrawings: boolean;
+
     private lastFilterLabels: string[];
 
-    filterDrawings(labels: string[]): void {
+    filterDrawings(labels: string[] = this.lastFilterLabels): void {
+        this.isLoadingDrawings = true;
+
         this.lastFilterLabels = labels;
 
         if (this.lastFilterLabels.length > 0) {
-            this.server.getDrawingsByLabelsOneMatch(labels).subscribe((drawings) => (this.drawings = drawings));
+            this.server.getDrawingsByLabelsOneMatch(labels).subscribe(
+                (drawings) => {
+                    this.drawings = drawings;
+                    this.isLoadingDrawings = false;
+                },
+                (error: HttpErrorResponse) => this.handleRequestError(error),
+            );
         } else {
-            this.server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
+            this.server.getAllDrawings().subscribe(
+                (drawings) => {
+                    this.drawings = drawings;
+                    this.isLoadingDrawings = false;
+                },
+                (error: HttpErrorResponse) => this.handleRequestError(error),
+            );
         }
     }
 
     handleDeleteImageEvent(imageId: string): void {
         this.server.deleteDrawing(imageId).subscribe(
             () => {
-                this.filterDrawings(this.lastFilterLabels);
+                this.filterDrawings();
                 this.displayMessage('Dessin supprimé');
             },
             (error: HttpErrorResponse) => {
@@ -50,10 +66,32 @@ export class ImageNavigationComponent {
         });
     }
 
+    addFilter(label: string): void {
+        this.retainedLabels.push(label);
+        this.filterDrawings(this.retainedLabels);
+    }
+
+    removeFilter(index: number): void {
+        this.retainedLabels.splice(index, 1);
+        if (this.retainedLabels.length === 0) this.filterDrawings([]);
+        else this.filterDrawings(this.retainedLabels);
+    }
+
+    private handleRequestError(error: HttpErrorResponse): void {
+        this.displayMessage(`Nous n'avons pas accéder au serveur, erreur : ${error.message}`);
+        this.dialogRef.close();
+    }
+
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'carousel';
+        this.dialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
+    }
+
     constructor(
         public dialogRef: MatDialogRef<ImageNavigationComponent>,
         private server: ServerService,
-        keyboardService: KeyboardService,
+        private keyboardService: KeyboardService,
         private snackBar: MatSnackBar,
     ) {
         this.labels = [];
@@ -61,20 +99,11 @@ export class ImageNavigationComponent {
         this.lastFilterLabels = [];
         this.drawings = [];
 
-        server.getAllLabels().subscribe((labels) => (this.labels = labels));
-        server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
+        this.isLoadingDrawings = false;
 
-        keyboardService.saveContext();
-        keyboardService.context = 'carousel';
-        this.dialogRef.afterClosed().subscribe(() => keyboardService.restoreContext());
-    }
-    addFilter(label: string): void {
-        this.retainedLabels.push(label);
-        this.filterDrawings(this.retainedLabels);
-    }
-    removeFilter(index: number): void {
-        this.retainedLabels.splice(index, 1);
-        if (this.retainedLabels.length === 0) this.filterDrawings([]);
-        else this.filterDrawings(this.retainedLabels);
+        server.getAllLabels().subscribe((labels) => (this.labels = labels));
+        this.filterDrawings();
+
+        this.handleKeyboardContext();
     }
 }

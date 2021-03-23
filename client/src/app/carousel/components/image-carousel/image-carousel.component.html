@@ -1,13 +1,13 @@
 <div carousel-wrapper>
     <div carousel-images class="horizontal" *ngIf="drawingsToDisplay.length > 0">
         <mat-card *ngIf="drawingsToDisplay.length >= 1">
-            <app-image-details [data]="leftImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
+            <app-image-details [dialogRef]="dialogRef" [data]="leftImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
         </mat-card>
         <mat-card *ngIf="drawingsToDisplay.length >= 2">
-            <app-image-details [data]="centerImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
+            <app-image-details [dialogRef]="dialogRef" [data]="centerImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
         </mat-card>
         <mat-card *ngIf="drawingsToDisplay.length >= 3">
-            <app-image-details [data]="rightImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
+            <app-image-details [dialogRef]="dialogRef" [data]="rightImage" (delete)="handleDeleteImageEvent($event)"></app-image-details>
         </mat-card>
     </div>
 

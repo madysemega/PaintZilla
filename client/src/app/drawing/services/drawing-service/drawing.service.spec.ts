@@ -4,6 +4,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
+import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable:no-any
@@ -102,5 +103,29 @@ describe('DrawingService', () => {
 
         service.drawInitialImage();
         expect(baseCtxDrawImageSpy).not.toHaveBeenCalled();
+    });
+
+    it('restoreCanvasToDefault() should fillCanvas with default values', () => {
+        const fillCanvasSpy = spyOn(service, 'fillCanvas').and.stub();
+
+        service.restoreCanvasToDefault();
+
+        expect(service.canvas.style.zIndex).toEqual(Constants.INFERIOR_Z_INDEX);
+        expect(fillCanvasSpy).toHaveBeenCalledWith(service.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
+    });
+
+    it('currentDrawing property should convert canvas image to base64 with jpeg mime type', () => {
+        expect(service.currentDrawing).toEqual(service.canvas.toDataURL('image/jpeg', 1.0));
+    });
+
+    it('Undo should reset drawing surface', () => {
+        const WIDTH = 400;
+        const HEIGHT = 300;
+
+        // tslint:disable-next-line: no-empty
+        historyServiceStub.do(new UserActionResizeDrawingSurface(WIDTH, HEIGHT, (width, height) => {}));
+        historyServiceStub.undo();
+
+        expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
     });
 });

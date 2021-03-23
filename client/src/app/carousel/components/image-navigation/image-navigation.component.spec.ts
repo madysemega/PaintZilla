@@ -18,8 +18,6 @@ describe('ImageNavigationComponent', () => {
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let matDialogSpy: jasmine.SpyObj<MatDialog>;
 
-    let matSnackBarStub: jasmine.SpyObj<MatSnackBar>;
-
     let serverServiceSpy: jasmine.SpyObj<ServerService>;
     let displayMessageSpy: jasmine.Spy<any>;
 
@@ -31,9 +29,6 @@ describe('ImageNavigationComponent', () => {
         matDialogSpy.open.and.callFake(() => {
             return matDialogRefSpy;
         });
-
-        matSnackBarStub = jasmine.createSpyObj('MatSnackBar', ['open']);
-        matSnackBarStub.open.and.callThrough();
 
         serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingsByLabelsOneMatch', 'getAllLabels', 'getAllDrawings', 'deleteDrawing']);
         serverServiceSpy.getDrawingsByLabelsOneMatch.and.returnValue(of([]));
@@ -50,7 +45,7 @@ describe('ImageNavigationComponent', () => {
                 { provide: HttpClient },
                 { provide: HttpHandler },
                 { provide: ServerService, useValue: serverServiceSpy },
-                { provide: MatSnackBar, useValue: matSnackBarStub },
+                { provide: MatSnackBar },
                 { provide: KeyboardService },
             ],
         }).compileComponents();
@@ -61,7 +56,7 @@ describe('ImageNavigationComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
 
-        displayMessageSpy = spyOn(component, 'displayMessage').and.stub();
+        displayMessageSpy = spyOn(component, 'displayMessage').and.callThrough();
     });
 
     it('should create', () => {
@@ -117,5 +112,46 @@ describe('ImageNavigationComponent', () => {
         serverServiceSpy.deleteDrawing.and.returnValue(throwError(error));
         component.handleDeleteImageEvent('123');
         expect(displayMessageSpy).toHaveBeenCalled();
+    });
+
+    it('filterDrawings() should handle errors for case where there are labels to filter', () => {
+        const error: HttpErrorResponse = new HttpErrorResponse({
+            error: '',
+            status: 404,
+            statusText: '',
+        });
+
+        serverServiceSpy.getDrawingsByLabelsOneMatch.and.returnValue(throwError(error));
+        component.filterDrawings(['123', '321']);
+        expect(displayMessageSpy).toHaveBeenCalled();
+    });
+
+    it('filterDrawings() should handle errors for case where there are no labels to filter', () => {
+        const error: HttpErrorResponse = new HttpErrorResponse({
+            error: '',
+            status: 404,
+            statusText: '',
+        });
+
+        serverServiceSpy.getAllDrawings.and.returnValue(throwError(error));
+        component.filterDrawings([]);
+        expect(displayMessageSpy).toHaveBeenCalled();
+    });
+
+    it('displayMessage() should open the snack bar', () => {
+        const snackBarOpenSpy = spyOn(fixture.debugElement.injector.get(MatSnackBar), 'open').and.stub();
+
+        component.displayMessage('test');
+        expect(snackBarOpenSpy).toHaveBeenCalled();
+    });
+
+    it('should restore the keyboard context after dialog is closed', () => {
+        const keyboardRestoreContextSpy = spyOn(fixture.debugElement.injector.get(KeyboardService), 'restoreContext').and.stub();
+
+        matDialogRefSpy.close();
+
+        matDialogRefSpy.afterClosed().subscribe(() => {
+            expect(keyboardRestoreContextSpy).toHaveBeenCalled();
+        });
     });
 });

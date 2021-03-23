@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
+import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
 import { ImageCarouselComponent } from '@app/carousel/components/image-carousel/image-carousel.component';
 import { ImageDetailsComponent } from '@app/carousel/components/image-details/image-details.component';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
@@ -14,11 +15,13 @@ import { ColourPickerComponent } from '@app/colour-picker/components/colour-pick
 import { ColourSliderComponent } from '@app/colour-picker/components/colour-slider/colour-slider.component';
 import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
-import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { DiscardChangesDialogComponent } from '@app/file-options/dialog/discard-changes-dialog/discard-changes-dialog.component';
+import { ExportDrawingDialogComponent } from '@app/file-options/dialog/export-drawing-dialog/export-drawing-dialog.component';
+import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { MaterialModule } from '@app/material.module';
 import { EllipseSelectionComponent } from '@app/tools/components/selection/ellipse-selection/ellipse-selection.component';
@@ -36,8 +39,6 @@ import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-conf
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { FilterLabelComponent } from './carousel/components/filter-label/filter-label.component';
-import { ExportDrawingDialogComponent } from './components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
-import { SaveDrawingDialogComponent } from './components/dialog/save-drawing-dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         ConfigurationPanelComponent,
         FilterLabelComponent,
         SaveDrawingDialogComponent,
+        DiscardChangesModalComponent,
     ],
     imports: [
         BrowserModule,

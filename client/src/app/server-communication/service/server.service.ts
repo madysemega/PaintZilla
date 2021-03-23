@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ServerService {
     constructor(private httpClient: HttpClient) {}
 
-    createDrawing(name: string = Constants.DEFAULT_NAME, drawing: string, labels: string[] = []): Observable<Drawing> {
+    createDrawing(name: string, drawing: string, labels: string[]): Observable<Drawing> {
         Validator.checkDrawing(drawing);
         return this.httpClient.post<Drawing>(Constants.API_URL, { name, drawing, labels }, Constants.JSON_HTTP_OPTIONS);
     }

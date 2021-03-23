@@ -3,25 +3,24 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as RegularExpressions from '@app/colour-picker/constants/regular-expressions.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, merge, Subscription } from 'rxjs';
 @Component({
     selector: 'app-rgb-form',
     templateUrl: './rgb-form.component.html',
     styleUrls: ['./rgb-form.component.scss'],
 })
 export class RgbFormComponent implements OnInit, OnDestroy {
-    rgbaFormGroup: FormGroup;
+    rgbaFormGroup: FormGroup = new FormGroup({
+        redForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+        greenForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+        blueForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
+        alphaForm: new FormControl('100', [Validators.required, Validators.pattern(RegularExpressions.ALPHA_FORM_REGEX)]),
+    });
     private colourSubscription: Subscription;
     private rgbaFormSubscription: Subscription;
     constructor(private colourPickerService: ColourPickerService, private rgbaFormService: RgbaFormService) {}
 
     ngOnInit(): void {
-        this.rgbaFormGroup = new FormGroup({
-            redForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-            greenForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-            blueForm: new FormControl('00', [Validators.required, Validators.pattern(RegularExpressions.RGB_FORM_REGEX)]),
-            alphaForm: new FormControl('100', [Validators.required, Validators.pattern(RegularExpressions.ALPHA_FORM_REGEX)]),
-        });
         this.rgbaFormService.rgbaFormGroup = this.rgbaFormGroup;
         this.colourSubscription = combineLatest([
             this.colourPickerService.hueObservable,
@@ -29,11 +28,14 @@ export class RgbFormComponent implements OnInit, OnDestroy {
             this.colourPickerService.valueObservable,
             this.colourPickerService.alphaObservable,
         ]).subscribe(() => {
-            // console.log('From colour subscription change, current colour =  ' + this.colourPickerService.getCurrentColor().toStringRBG());
             this.rgbaFormService.updateRgbForm(this.colourPickerService.getCurrentColor());
         });
-
-        this.rgbaFormSubscription = this.rgbaFormGroup.valueChanges.subscribe(() => {
+        this.rgbaFormSubscription = merge(
+            this.rgbaFormGroup.controls.redForm.valueChanges,
+            this.rgbaFormGroup.controls.greenForm.valueChanges,
+            this.rgbaFormGroup.controls.blueForm.valueChanges,
+            this.rgbaFormGroup.controls.alphaForm.valueChanges,
+        ).subscribe(() => {
             this.rgbaFormService.isTyping = true;
             this.rgbaFormService.updateColourComponents();
             this.rgbaFormService.isTyping = false;
