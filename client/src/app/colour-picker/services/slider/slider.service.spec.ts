@@ -5,7 +5,7 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 export const DEFAULT_COLOUR = new Colour();
 // tslint:disable: no-string-literal
-describe('SliderService', () => {
+fdescribe('SliderService', () => {
     let service: SliderService;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;
     let canvasTestHelper: CanvasTestHelper;
@@ -65,7 +65,7 @@ describe('SliderService', () => {
     it('updateColor(): should set colourPickerService.hue', () => {
         const initialHue = 0;
         colourPickerServiceSpy.hue = initialHue;
-        service.updateOpacity({ clientY: 10 } as MouseEvent);
+        service.updateColor({ clientY: 10 } as MouseEvent);
         expect(colourPickerServiceSpy.getHue()).not.toEqual(initialHue);
     });
 
@@ -81,11 +81,11 @@ describe('SliderService', () => {
         expect(strokeSpy).toHaveBeenCalled();
     });
 
-    it('updateColor(): should set colourPickerService.saturation and colourPickerService.value', () => {
+    it('updatePalette(): should set colourPickerService.saturation and colourPickerService.value', () => {
         const initial = 0;
         colourPickerServiceSpy.saturation = initial;
         colourPickerServiceSpy.value = initial;
-        service.updateOpacity({ clientX: 10, clientY: 10 } as MouseEvent);
+        service.updatePalette({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(colourPickerServiceSpy.getSaturation).not.toEqual(initial);
         expect(colourPickerServiceSpy.getValue).not.toEqual(initial);
     });
