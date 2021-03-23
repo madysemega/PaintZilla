@@ -16,8 +16,14 @@ export class LocalDatabaseService {
             const data = JSON.parse(str);
             this.localDatabase = data;
             console.log('Server drawings were charged successfully');
-        } catch (error) {
-            throw new Error(error.message);
+        } catch {
+            try {
+                fileSystem.mkdirSync(Constants.LOCAL_DATABASE_DIRECTORY, { recursive: true });
+                fileSystem.writeFileSync(Constants.LOCAL_DATABASE_PATH, JSON.stringify(this.localDatabase));
+                console.log('Could not find drawing.database.json but a file with the same name was created successfully');
+            } catch (error) {
+                throw new Error('Could not find nor create drawing.database.json, ' + error.message);
+            }
         }
     }
     updateServerDrawings(): void {
@@ -72,7 +78,6 @@ export class LocalDatabaseService {
             const data = metadatas.find((metadata: Metadata) => {
                 return metadata.id === drawing.id;
             });
-            /* istanbul ignore next */
             if (data) {
                 result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
             }

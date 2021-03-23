@@ -4,7 +4,8 @@
     <div>
         <app-image-carousel *ngIf="!isLoadingDrawings"
                             [drawings]="drawings"
-                            (deleteImage)="handleDeleteImageEvent($event)">
+                            (deleteImage)="handleDeleteImageEvent($event)"
+                            [dialogRef]="dialogRef">
         </app-image-carousel>
 
         <mat-spinner *ngIf="isLoadingDrawings" class="center"></mat-spinner>
