@@ -2,7 +2,9 @@
     <div class="vertical">
         <p>{{ data.name }}</p>
 
-        <img [src]="imageSrc" height="200">
+        <div class="image-container">
+            <img [src]="imageSrc" [width]="imageWidth" [height]="imageHeight">
+        </div>
 
         <button mat-icon-button aria-label="Supprimer" matTooltip="Supprimer" (click)="deleteImage($event)">
             <mat-icon>delete</mat-icon>
