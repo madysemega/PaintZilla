@@ -53,7 +53,7 @@ export class ImageDetailsComponent {
         this.delete.emit(this.data.id);
     }
 
-    private getRealImageDimensions(): Vec2 {
+    getRealImageDimensions(): Vec2 {
         const image = new Image();
         image.src = this.data.drawing;
 

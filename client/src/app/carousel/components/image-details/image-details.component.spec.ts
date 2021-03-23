@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { Vec2 } from '@app/app/classes/vec2';
 import { MaterialModule } from '@app/material.module';
 import { ImageDetailsComponent } from './image-details.component';
 
@@ -45,5 +46,41 @@ describe('ImageDetailsComponent', () => {
         });
         component.deleteImage(jasmine.createSpyObj('MouseEvent', ['preventDefault', 'stopPropagation']));
         expect(deleteEventEmitted).toBeTrue();
+    });
+
+    it('imageWidth should be maximum in is greater than imageHeight', () => {
+        const WIDTH = 400;
+        const HEIGHT = 300;
+
+        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+
+        expect(component.imageWidth).toEqual(component.imageContainerWidth);
+    });
+
+    it('imageWidth should keep aspect ratio even if it is less than imageHeight', () => {
+        const WIDTH = 300;
+        const HEIGHT = 400;
+
+        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+
+        expect(component.imageWidth).toEqual((component.imageContainerHeight / HEIGHT) * WIDTH);
+    });
+
+    it('imageHeight should be maximum in is greater than imageWidth', () => {
+        const WIDTH = 300;
+        const HEIGHT = 400;
+
+        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+
+        expect(component.imageHeight).toEqual(component.imageContainerHeight);
+    });
+
+    it('imageHeight should keep aspect ratio even if it is less than imageWidth', () => {
+        const WIDTH = 400;
+        const HEIGHT = 300;
+
+        spyOn(component, 'getRealImageDimensions').and.returnValue({x: WIDTH, y: HEIGHT} as Vec2);
+
+        expect(component.imageHeight).toEqual((component.imageContainerWidth / WIDTH) * HEIGHT);
     });
 });
