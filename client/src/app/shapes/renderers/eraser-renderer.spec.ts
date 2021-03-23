@@ -1,7 +1,7 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { EraserShape } from '@app/shapes/eraser-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { EraserShape } from '../eraser-shape';
 import { EraserRenderer } from './eraser-renderer';
 
 // tslint:disable:no-any
