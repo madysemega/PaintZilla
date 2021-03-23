@@ -78,7 +78,6 @@ export class LocalDatabaseService {
             const data = metadatas.find((metadata: Metadata) => {
                 return metadata.id === drawing.id;
             });
-            /* istanbul ignore next */
             if (data) {
                 result.push({ id: drawing.id, name: data.name, drawing: drawing.drawing, labels: data.labels });
             }
