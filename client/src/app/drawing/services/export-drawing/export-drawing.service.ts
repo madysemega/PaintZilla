@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ExportDrawingDialogComponent } from '@app/components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
+import { ExportDrawingDialogComponent } from '@app/file-options/dialog/export-drawing-dialog/export-drawing-dialog.component';
 
 @Injectable({
     providedIn: 'root',

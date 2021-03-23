@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { DiscardChangesDialogComponent } from '@app/components/dialog/discard-changes-dialog/discard-changes-dialog.component';
-import { SaveDrawingDialogComponent } from '@app/components/dialog/save-drawing-dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { DiscardChangesDialogComponent } from '@app/file-options/dialog/discard-changes-dialog/discard-changes-dialog.component';
+import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { HistoryService } from '@app/history/service/history.service';
 @Injectable({
     providedIn: 'root',
