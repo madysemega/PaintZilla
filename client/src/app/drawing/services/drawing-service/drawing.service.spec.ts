@@ -105,15 +105,6 @@ describe('DrawingService', () => {
         expect(baseCtxDrawImageSpy).not.toHaveBeenCalled();
     });
 
-    it('restoreCanvasToDefault() should fillCanvas with default values', () => {
-        const fillCanvasSpy = spyOn(service, 'fillCanvas').and.stub();
-
-        service.restoreCanvasToDefault();
-
-        expect(service.canvas.style.zIndex).toEqual(Constants.INFERIOR_Z_INDEX);
-        expect(fillCanvasSpy).toHaveBeenCalledWith(service.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
-    });
-
     it('currentDrawing property should convert canvas image to base64 with jpeg mime type', () => {
         expect(service.currentDrawing).toEqual(service.canvas.toDataURL('image/jpeg', 1.0));
     });

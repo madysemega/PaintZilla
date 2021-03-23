@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,10 +27,13 @@ describe('DrawingComponent', () => {
     let resizingServiceStub: ResizingService;
     let toolSelectorStub: jasmine.SpyObj<any>;
     let creatorStub: SelectionCreatorService;
-
+    let drawingCreatorServiceSpy: jasmine.SpyObj<DrawingCreatorService>;
+    let drawingRestoredStub: EventEmitter<void>;
     beforeEach(async(() => {
+        drawingRestoredStub = new EventEmitter<void>();
         toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut', 'getActiveSelectionTool']);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'undo', 'redo', 'onUndo']);
+        drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', [], { drawingRestored: drawingRestoredStub });
         historyServiceStub.do.and.stub();
         historyServiceStub.undo.and.stub();
         historyServiceStub.redo.and.stub();
@@ -48,7 +52,7 @@ describe('DrawingComponent', () => {
                 { provide: ResizingService, useValue: resizingServiceStub },
                 { provide: ToolSelectorService, useValue: toolSelectorStub },
                 { provide: MatDialogRef, useValue: {} },
-                { provide: DrawingCreatorService },
+                { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
         }).compileComponents();
 
@@ -68,6 +72,11 @@ describe('DrawingComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('should call drawingService.resetDrawingSurface on drawingRestored emit', () => {
+        const resetDrawingSurfaceStub = spyOn(drawingStub, 'resetDrawingSurface').and.callThrough();
+        drawingCreatorServiceSpy.drawingRestored.emit();
+        expect(resetDrawingSurfaceStub).toHaveBeenCalled();
     });
 
     it("onMouseMove(): should call the resizingService's resizeCanvas method when receiving a mouse move event and the canvas is resizing", () => {
@@ -270,9 +279,6 @@ describe('DrawingComponent', () => {
 
             expect(Math.floor(drawingStub.previewCanvas.width)).toEqual(EXPECTED_WIDTH);
             expect(Math.floor(drawingStub.previewCanvas.height)).toEqual(EXPECTED_HEIGHT);
-
-            expect(drawingStub.restoreCanvasToDefault).toHaveBeenCalled();
-            expect(drawingStub.restoreCanvasStyle).toHaveBeenCalled();
         });
 
         drawingCreatorService.drawingRestored.emit();
