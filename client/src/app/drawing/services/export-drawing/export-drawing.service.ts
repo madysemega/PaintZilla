@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ExportDrawingDialogComponent } from '@app/components/dialog/export-drawing-dialog/export-drawing-dialog/export-drawing-dialog.component';
+import { ExportDrawingDialogComponent } from '@app/file-options/dialog/export-drawing-dialog/export-drawing-dialog.component';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +18,7 @@ export class ExportDrawingService {
     }
 
     openExportDrawingDialog(): void {
-        if (this.dialog.openDialogs.length === 0) {
+        if (this.noDialogsOpen()) {
             this.dialogRef = this.dialog.open(ExportDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
         }
     }

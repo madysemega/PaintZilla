@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { SaveDrawingDialogComponent } from '@app/components/dialog/save-drawing-dialog/save-drawing-dialog/save-drawing-dialog.component';
+import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +17,7 @@ export class SaveDrawingService {
     }
 
     openSaveDrawingDialog(): void {
-        if (this.dialog.openDialogs.length === 0) {
+        if (this.noDialogsOpen()) {
             this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
         }
     }
