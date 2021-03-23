@@ -15,6 +15,7 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
     styleUrls: ['./save-drawing-dialog.component.scss'],
 })
 export class SaveDrawingDialogComponent implements OnInit {
+    SNACK_BAR_DURATION: number = 6000;
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
@@ -40,9 +41,8 @@ export class SaveDrawingDialogComponent implements OnInit {
         const labelName = event.value;
 
         if (this.formGroup.controls.labelForm.valid && labelName !== '') {
-            // tslint:disable-next-line: no-magic-numbers
-            const labelNotPresent = this.labels.indexOf(labelName) === -1;
-            if (labelNotPresent) this.labels.push(labelName);
+            const LABEL_NOT_PRESENT = -1;
+            if (this.labels.indexOf(labelName) === LABEL_NOT_PRESENT) this.labels.push(labelName);
 
             input.value = '';
         }
@@ -78,7 +78,7 @@ export class SaveDrawingDialogComponent implements OnInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: 6000,
+            duration: this.SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
