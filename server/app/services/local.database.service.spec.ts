@@ -30,8 +30,32 @@ mocha.describe('Local database service', () => {
         chai.expect(databaseService.localDatabase).to.deep.equal(expectedResult);
     });
 
-    it('start(): should throw an error if file is not parsed correctly', () => {
+    it('start(): should create a new file if ./app/drawings/drawing.database.json is not found', () => {
         chai.use(chaiAspromised);
+        chai.spy.on(filesystem, 'readFileSync', () => {
+            throw new Error();
+        });
+        chai.spy.on(filesystem, 'mkdirSync', () => {
+            return '';
+        });
+        chai.spy.on(filesystem, 'writeFileSync', () => {
+            return '';
+        });
+        databaseService.start();
+        chai.expect(filesystem.mkdirSync).to.have.been.called;
+    });
+
+    it('start(): should throw an error if could not find nor create drawing.database.json', () => {
+        chai.use(chaiAspromised);
+        chai.spy.on(filesystem, 'readFileSync', () => {
+            throw new Error();
+        });
+        chai.spy.on(filesystem, 'mkdirSync', () => {
+            return '';
+        });
+        chai.spy.on(filesystem, 'writeFileSync', () => {
+            throw new Error();
+        });
         chai.expect(databaseService.start).to.throw(Error);
     });
 
@@ -120,7 +144,17 @@ mocha.describe('Local database service', () => {
         chai.expect(result).to.deep.equal(expected);
     });
 
-    it('filterDrawings(): should throw an error if no matching drawing was found', () => {
+    it('filterDrawings(): should throw an error if no matching drawing was found from metadatas', () => {
+        chai.use(chaiAspromised);
+        const firstDrawing = new MetadataModel({name: 'default', labels: []});
+        const secondDrawing = new MetadataModel({name: 'default', labels: []});
+        const metadatas = [secondDrawing];
+        databaseService.localDatabase.drawings.push({id: firstDrawing.id, drawing: 's'});
+        chai.expect(databaseService.filterDrawings.bind(databaseService, metadatas))
+            .to.throw('Could not find any drawing matching with provided metadatas');
+    });
+
+    it('filterDrawings(): should throw an error if no matching drawing was found from localDatabase', () => {
         chai.use(chaiAspromised);
         chai.expect(databaseService.filterDrawings.bind(databaseService, [new MetadataModel({name: 'default', labels: ['lab1', 'lab2']})]))
             .to.throw('Could not find any drawing matching with provided metadatas');
