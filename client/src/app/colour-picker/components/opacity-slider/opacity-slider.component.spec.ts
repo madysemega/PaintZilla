@@ -1,8 +1,8 @@
-import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
+import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { SliderService } from '@app/colour-picker/services/slider/slider.service';
-import { ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 // tslint:disable: no-string-literal
 describe('OpacitySliderComponent', () => {

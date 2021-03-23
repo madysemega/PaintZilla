@@ -1,8 +1,8 @@
-import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
-import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
+import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 // tslint:disable: no-string-literal
 export const DEFAULT_COLOUR = new Colour();

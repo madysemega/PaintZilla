@@ -1,8 +1,8 @@
-import { SliderService } from '@app/colour-picker/services/slider/slider.service';
 import { async, TestBed } from '@angular/core/testing';
-import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { SliderService } from '@app/colour-picker/services/slider/slider.service';
 export const DEFAULT_COLOUR = new Colour();
 // tslint:disable: no-string-literal
 describe('SliderService', () => {

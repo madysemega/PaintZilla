@@ -1,7 +1,7 @@
-import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { TestBed } from '@angular/core/testing';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 export const DEFAULT_COLOUR = new Colour(1, 1, 1, 1);
 // tslint:disable: no-string-literal
 describe('ColourService', () => {
@@ -11,7 +11,7 @@ describe('ColourService', () => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['getCurrentColor', 'setCurrentColour']);
         colourPickerServiceSpy.getCurrentColor.and.returnValue(DEFAULT_COLOUR);
         TestBed.configureTestingModule({
-            providers: [{ provide: ColourService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy },],
+            providers: [{ provide: ColourService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy }],
         });
         service = TestBed.inject(ColourService);
     });
