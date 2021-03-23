@@ -95,6 +95,7 @@ describe('EditorComponent', () => {
                 { provide: ServerService },
                 { provide: KeyboardService },
             ],
+            // schemas: [NO_ERRORS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

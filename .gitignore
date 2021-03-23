@@ -10,3 +10,6 @@ coverage/
 
 #Node Modules
 /node_modules
+
+# .JSON pour la base de donnée locale
+server/app/drawings/
