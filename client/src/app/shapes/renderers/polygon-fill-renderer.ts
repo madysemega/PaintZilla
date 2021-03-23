@@ -15,8 +15,8 @@ export class PolygonFillRenderer extends ShapeRenderer<PolygonShape> {
         };
         const SIZE_BEFORE_CONTOUR = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
         let size;
-        if (SIZE_BEFORE_CONTOUR > 0) size = Math.abs(SIZE_BEFORE_CONTOUR - this.shape.contourWidth);
-        else size = Math.abs(SIZE_BEFORE_CONTOUR + this.shape.contourWidth);
+        if (SIZE_BEFORE_CONTOUR > 0) size = Math.abs(SIZE_BEFORE_CONTOUR - this.shape.contourWidth / 2);
+        else size = Math.abs(SIZE_BEFORE_CONTOUR + this.shape.contourWidth / 2);
         ctx.beginPath();
         ctx.moveTo(
             CENTER_POINT.x + size * Math.cos((2 * Math.PI) / this.shape.numberSides),

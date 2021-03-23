@@ -35,7 +35,6 @@ describe('PolygonService', () => {
     let canvas: HTMLCanvasElement;
 
     let fillRenderSpy: jasmine.Spy<any>;
-    // let strokeRenderSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -69,7 +68,6 @@ describe('PolygonService', () => {
         drawPerimeterSpy = spyOn<any>(service, 'drawPerimeter').and.callThrough();
 
         fillRenderSpy = spyOn<any>(service['fillRenderer'], 'render').and.callThrough();
-        // strokeRenderSpy = spyOn<any>(service['strokeRenderer'], 'render').and.callThrough();
 
         service['drawingService'].baseCtx = baseCtxStub;
         service['drawingService'].previewCtx = previewCtxStub;
@@ -258,5 +256,26 @@ describe('PolygonService', () => {
         colourService.secondaryColourChanged.subscribe(() => {
             expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
         });
+    });
+
+    it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {
+        const STROKE_DISTANCE =
+        service.lineWidth / Math.sin((Math.PI + Math.PI * (service.numberSides - service['TRIANGLE_SIDES'])) / (2 * service.numberSides)) / 2;
+        const CIRCLE_MAX_ANGLE: number = 360;
+        const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
+        service.shapeType = ShapeType.Contoured;
+        const NEGATIVE_SIZE = -2;
+        service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
+        const SIZE = Math.abs(NEGATIVE_SIZE - STROKE_DISTANCE)
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, CIRCLE_MAX_ANGLE);
+    });
+    it('drawPerimeter calls ctx.ellipse with the appropriate size when polygon is filled', () => {
+        const CIRCLE_MAX_ANGLE: number = 360;
+        const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
+        service.shapeType = ShapeType.Filled;
+        const NEGATIVE_SIZE = -2;
+        service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
+        const SIZE = Math.abs(NEGATIVE_SIZE + service.lineWidth / 2)
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, CIRCLE_MAX_ANGLE);
     });
 });

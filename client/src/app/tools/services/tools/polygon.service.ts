@@ -183,10 +183,15 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
-        if (shouldRenderFill && size > 0) size = Math.abs(size - this.lineWidth);
-        else if (shouldRenderFill) size = Math.abs(size + this.lineWidth);
-        else if (!shouldRenderFill && size > 0) size = Math.abs(size + this.lineWidth);
-        else size = Math.abs(size - this.lineWidth);
+
+        const STROKE_DISTANCE =
+            this.lineWidth / Math.sin((Math.PI + Math.PI * (this.numberSides - this.TRIANGLE_SIDES)) / (2 * this.numberSides)) / 2;
+
+        if (shouldRenderFill && size > 0) size = Math.abs(size - this.lineWidth / 2);
+        else if (shouldRenderFill) size = Math.abs(size + this.lineWidth / 2);
+        else if (!shouldRenderFill && size > 0) size = Math.abs(size + STROKE_DISTANCE);
+        else size = Math.abs(size - STROKE_DISTANCE);
+
         ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
