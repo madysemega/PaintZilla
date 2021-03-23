@@ -85,6 +85,7 @@ describe('EditorComponent', () => {
                 { provide: ResizingService },
                 { provide: MatDialogRef, useValue: {} },
             ],
+            // schemas: [NO_ERRORS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

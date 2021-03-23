@@ -5,7 +5,7 @@ import { SliderService } from '@app/colour-picker/services/slider/slider.service
 import { ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 // tslint:disable: no-string-literal
-fdescribe('OpacitySliderComponent', () => {
+describe('OpacitySliderComponent', () => {
     let component: OpacitySliderComponent;
     let fixture: ComponentFixture<OpacitySliderComponent>;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;
@@ -77,14 +77,14 @@ fdescribe('OpacitySliderComponent', () => {
         expect(alphaSubscriptionSpy).toHaveBeenCalled();
     });
 
-    it('ngAfterViewInit(): hue, saturation, value or alpha subscriptions should change opacitySliderPosition and call sliderServiceSpy.drawOpacityContext()', () => {
+    it('ngAfterViewInit(): hue, saturation, value or alpha subscriptions should change opacitySliderPosition and call sliderServiceSpy.drawOpacityContext() once', () => {
         sliderServiceSpy.opacitySliderPosition = 0;
         hueSubject.next();
         saturationSubject.next();
         valueSubject.next();
         alphaSubject.next();
         expect(sliderServiceSpy.opacitySliderPosition).not.toEqual(0);
-        expect(sliderServiceSpy.drawOpacityContext).toHaveBeenCalled();
+        expect(sliderServiceSpy.drawOpacityContext).toHaveBeenCalledTimes(1);
     });
 
     it('ngOnDestroy(): should unsubscribe from all subscriptions', () => {
