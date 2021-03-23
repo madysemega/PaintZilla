@@ -8,6 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class EditorComponent implements AfterViewInit {
         private colourService: ColourService,
         private historyService: HistoryService,
         private exportDrawingService: ExportDrawingService,
+        private keyboardService: KeyboardService,
         private saveDrawingService: SaveDrawingService,
         private drawingLoader: DrawingLoaderService,
         private drawingService: DrawingService,
@@ -40,6 +42,8 @@ export class EditorComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.keyboardService.context = 'editor';
+
         setTimeout(() => {
             this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
         });

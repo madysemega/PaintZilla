@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { NeighbouringIndices } from '@app/carousel/data/neighbouring-indices';
 import { Drawing } from '@common/models/drawing';
 
@@ -30,6 +30,19 @@ export class ImageCarouselComponent {
     handleDeleteImageEvent(imageId: string): void {
         this.deleteImage.emit(imageId);
         this.refresh();
+    }
+
+    @HostListener('window:keyup', ['$event'])
+    onKeyPress(event: KeyboardEvent): void {
+        switch (event.key) {
+            case 'ArrowRight':
+                this.rotateRight();
+                break;
+
+            case 'ArrowLeft':
+                this.rotateLeft();
+                break;
+        }
     }
 
     rotateRight(): void {

@@ -3,8 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { of, throwError } from 'rxjs';
 import { ImageNavigationComponent } from './image-navigation.component';
 
@@ -23,6 +25,7 @@ describe('ImageNavigationComponent', () => {
 
     beforeEach(async(() => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ImageNavigationComponent>', ['afterClosed', 'close']);
+        matDialogRefSpy.afterClosed.and.returnValue(of());
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
         matDialogSpy.open.and.callFake(() => {
@@ -39,7 +42,7 @@ describe('ImageNavigationComponent', () => {
         serverServiceSpy.deleteDrawing.and.returnValue(of());
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule],
+            imports: [MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [ImageNavigationComponent],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },
@@ -48,6 +51,7 @@ describe('ImageNavigationComponent', () => {
                 { provide: HttpHandler },
                 { provide: ServerService, useValue: serverServiceSpy },
                 { provide: MatSnackBar, useValue: matSnackBarStub },
+                { provide: KeyboardService },
             ],
         }).compileComponents();
     }));

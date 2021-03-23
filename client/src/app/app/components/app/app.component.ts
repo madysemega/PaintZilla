@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { IconsMetaData } from '@app/meta-data/icons-meta-data';
 
 @Component({
@@ -9,9 +12,24 @@ import { IconsMetaData } from '@app/meta-data/icons-meta-data';
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    constructor(private iconRegistryService: MatIconRegistry, private domSanitizer: DomSanitizer) {
+    constructor(
+        private iconRegistryService: MatIconRegistry,
+        private domSanitizer: DomSanitizer,
+        keyboardService: KeyboardService,
+        private dialog: MatDialog,
+    ) {
         for (const icon of IconsMetaData.iconFiles) {
             this.iconRegistryService.addSvgIcon(icon.name, this.domSanitizer.bypassSecurityTrustResourceUrl(icon.path));
         }
+
+        keyboardService.registerAction({
+            trigger: 'ctrl+g',
+            invoke: () => {
+                if (this.dialog.openDialogs.length === 0) {
+                    this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
+                }
+            },
+            contexts: ['editor', 'main-page'],
+        });
     }
 }

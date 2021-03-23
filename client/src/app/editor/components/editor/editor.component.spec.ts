@@ -11,6 +11,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
@@ -24,6 +25,7 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
@@ -72,7 +74,7 @@ describe('EditorComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
             declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
@@ -91,6 +93,7 @@ describe('EditorComponent', () => {
                 { provide: HttpClient },
                 { provide: HttpHandler },
                 { provide: ServerService },
+                { provide: KeyboardService },
             ],
         })
             .overrideModule(MatIconModule, {
@@ -175,5 +178,13 @@ describe('EditorComponent', () => {
         } as KeyboardEvent;
         component.onKeyUp(keyboardEvent);
         expect(historyServiceStub.redo).toHaveBeenCalled();
+    });
+
+    it('Ctrl+G should open the carousel', () => {
+        const keyboardService = fixture.debugElement.injector.get(KeyboardService);
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            action.invoke();
+        });
     });
 });

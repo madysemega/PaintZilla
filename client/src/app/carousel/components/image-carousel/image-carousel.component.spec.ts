@@ -8,7 +8,10 @@ import { ImageCarouselComponent } from './image-carousel.component';
 describe('ImageCarouselComponent', () => {
     let component: ImageCarouselComponent;
     let fixture: ComponentFixture<ImageCarouselComponent>;
+
     let getNeightbouringIndicesSpy: jasmine.Spy<any>;
+    let rotateRightSpy: jasmine.Spy<any>;
+    let rotateLeftSpy: jasmine.Spy<any>;
 
     let refreshSpy: jasmine.Spy<any>;
 
@@ -25,6 +28,9 @@ describe('ImageCarouselComponent', () => {
         fixture.detectChanges();
 
         getNeightbouringIndicesSpy = spyOn<any>(component, 'getNeighbouringIndices').and.callThrough();
+        rotateRightSpy = spyOn(component, 'rotateRight').and.callThrough();
+        rotateLeftSpy = spyOn(component, 'rotateLeft').and.callThrough();
+
         refreshSpy = spyOn<any>(component, 'refresh').and.callThrough();
     });
 
@@ -42,6 +48,16 @@ describe('ImageCarouselComponent', () => {
         const expectedIndex: number = component['centerIndex'] - 1;
         component.rotateLeft();
         expect(getNeightbouringIndicesSpy).toHaveBeenCalledWith(expectedIndex);
+    });
+
+    it('right arrow should rotate carousel to the right', () => {
+        component.onKeyPress({ key: 'ArrowRight' } as KeyboardEvent);
+        expect(rotateRightSpy).toHaveBeenCalled();
+    });
+
+    it('left arrow should rotate carousel to the left', () => {
+        component.onKeyPress({ key: 'ArrowLeft' } as KeyboardEvent);
+        expect(rotateLeftSpy).toHaveBeenCalled();
     });
 
     it('setting the drawings input should update the drawings to display', () => {

@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Drawing } from '@common/models/drawing';
 
@@ -49,7 +50,12 @@ export class ImageNavigationComponent {
         });
     }
 
-    constructor(public dialogRef: MatDialogRef<ImageNavigationComponent>, private server: ServerService, private snackBar: MatSnackBar) {
+    constructor(
+        public dialogRef: MatDialogRef<ImageNavigationComponent>,
+        private server: ServerService,
+        keyboardService: KeyboardService,
+        private snackBar: MatSnackBar,
+    ) {
         this.labels = [];
         this.retainedLabels = [];
         this.lastFilterLabels = [];
@@ -57,6 +63,10 @@ export class ImageNavigationComponent {
 
         server.getAllLabels().subscribe((labels) => (this.labels = labels));
         server.getAllDrawings().subscribe((drawings) => (this.drawings = drawings));
+
+        keyboardService.saveContext();
+        keyboardService.context = 'carousel';
+        this.dialogRef.afterClosed().subscribe(() => keyboardService.restoreContext());
     }
     addFilter(label: string): void {
         this.retainedLabels.push(label);
