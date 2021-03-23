@@ -144,4 +144,14 @@ describe('ImageNavigationComponent', () => {
         component.displayMessage('test');
         expect(snackBarOpenSpy).toHaveBeenCalled();
     });
+
+    it('should restore the keyboard context after dialog is closed', () => {
+        const keyboardRestoreContextSpy = spyOn(fixture.debugElement.injector.get(KeyboardService), 'restoreContext').and.stub();
+
+        matDialogRefSpy.close();
+
+        matDialogRefSpy.afterClosed().subscribe(() => {
+            expect(keyboardRestoreContextSpy).toHaveBeenCalled();
+        });
+    });
 });

@@ -82,10 +82,16 @@ export class ImageNavigationComponent {
         this.dialogRef.close();
     }
 
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'carousel';
+        this.dialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
+    }
+
     constructor(
         public dialogRef: MatDialogRef<ImageNavigationComponent>,
         private server: ServerService,
-        keyboardService: KeyboardService,
+        private keyboardService: KeyboardService,
         private snackBar: MatSnackBar,
     ) {
         this.labels = [];
@@ -98,8 +104,6 @@ export class ImageNavigationComponent {
         server.getAllLabels().subscribe((labels) => (this.labels = labels));
         this.filterDrawings();
 
-        keyboardService.saveContext();
-        keyboardService.context = 'carousel';
-        this.dialogRef.afterClosed().subscribe(() => keyboardService.restoreContext());
+        this.handleKeyboardContext();
     }
 }

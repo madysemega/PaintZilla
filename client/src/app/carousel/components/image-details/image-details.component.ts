@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
+import { DiscardChangesModalData } from '@app/carousel/interfaces/discard-changes-modal-data';
 import { HistoryService } from '@app/history/service/history.service';
 import { Drawing } from '@common/models/drawing';
 
@@ -14,6 +15,10 @@ import { Drawing } from '@common/models/drawing';
     styleUrls: ['./image-details.component.scss'],
 })
 export class ImageDetailsComponent {
+    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
+        this.delete = new EventEmitter();
+    }
+
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.drawing);
     }
@@ -32,10 +37,6 @@ export class ImageDetailsComponent {
         return isHeightGreaterThanWidth ? this.imageContainerHeight : (this.imageContainerWidth / imageDimensions.x) * imageDimensions.y;
     }
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
-        this.delete = new EventEmitter();
-    }
-
     @Input() data: Drawing = {
         id: '',
         name: '',
@@ -50,13 +51,15 @@ export class ImageDetailsComponent {
     imageContainerWidth: number = 150;
     imageContainerHeight: number = 150;
 
+    private discardChangesModalData: DiscardChangesModalData = {
+        confirmCallback: () => this.navigateToImage(),
+    };
+
     loadImage(): void {
         if (this.history.canUndo() || this.history.canRedo()) {
             this.dialog.open(DiscardChangesModalComponent, {
                 panelClass: 'custom-modalbox',
-                data: {
-                    confirmCallback: () => this.navigateToImage(),
-                },
+                data: this.discardChangesModalData,
             });
         } else {
             this.navigateToImage();
