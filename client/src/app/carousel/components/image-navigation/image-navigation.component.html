@@ -2,7 +2,12 @@
     <h3>Sélectionnez une image</h3>
 
     <div>
-        <app-image-carousel [drawings]="drawings" (deleteImage)="handleDeleteImageEvent($event)"></app-image-carousel>
+        <app-image-carousel *ngIf="!isLoadingDrawings"
+                            [drawings]="drawings"
+                            (deleteImage)="handleDeleteImageEvent($event)">
+        </app-image-carousel>
+
+        <mat-spinner *ngIf="isLoadingDrawings" class="center"></mat-spinner>
     </div>
 
     <mat-divider></mat-divider>
