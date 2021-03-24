@@ -72,6 +72,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     onToolDeselect(): void {
         this.history.isLocked = false;
+        this.finalize();
     }
 
     onLineWidthChanged(): void {
@@ -93,25 +94,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.mouseDown) {
-            const mousePosition = this.getPositionFromMouse(event);
-            this.lastMousePosition = mousePosition;
-            this.drawEllipse(this.drawingService.baseCtx, this.startPoint, mousePosition);
-
-            const renderersToRegister = new Array<ShapeRenderer<BoxShape>>();
-
-            if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
-                renderersToRegister.push(this.fillRenderer.clone());
-            }
-
-            if (this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled) {
-                renderersToRegister.push(this.strokeRenderer.clone());
-            }
-
-            this.history.register(new UserActionRenderShape(renderersToRegister, this.drawingService.baseCtx));
-        }
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.mouseDown = false;
+        this.finalize();
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -164,6 +147,27 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             x: startPoint.x + (isXComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
             y: startPoint.y + (isYComponentPositive ? endPointShortestComponent : -endPointShortestComponent),
         };
+    }
+
+    finalize(){
+        if (this.mouseDown) {
+        
+            this.drawEllipse(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
+
+            const renderersToRegister = new Array<ShapeRenderer<BoxShape>>();
+
+            if (this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled) {
+                renderersToRegister.push(this.fillRenderer.clone());
+            }
+
+            if (this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled) {
+                renderersToRegister.push(this.strokeRenderer.clone());
+            }
+
+            this.history.register(new UserActionRenderShape(renderersToRegister, this.drawingService.baseCtx));
+        }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.mouseDown = false;
     }
 
     drawPerimeter(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {

@@ -31,6 +31,8 @@ describe('EllipseService', () => {
     let previewCtxFillSpy: jasmine.Spy<any>;
     let baseCtxStrokeSpy: jasmine.Spy<any>;
     let baseCtxFillSpy: jasmine.Spy<any>;
+    let finalizeSpy: jasmine.Spy<any>;
+
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
@@ -62,17 +64,22 @@ describe('EllipseService', () => {
         );
 
         drawEllipseSpy = spyOn<any>(service, 'drawEllipse').and.callThrough();
+        finalizeSpy = spyOn<any>(service, 'finalize').and.callThrough();
         getSquareAdjustedPerimeterSpy = spyOn<any>(service, 'getSquareAdjustedPerimeter').and.callThrough();
         previewCtxStrokeSpy = spyOn<any>(previewCtxStub, 'stroke').and.callThrough();
         previewCtxFillSpy = spyOn<any>(previewCtxStub, 'fill').and.callThrough();
         baseCtxStrokeSpy = spyOn<any>(baseCtxStub, 'stroke').and.callThrough();
         baseCtxFillSpy = spyOn<any>(baseCtxStub, 'fill').and.callThrough();
 
+
         // Configuration du spy du service
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;
+
+        service.lastMousePosition = {x:6, y: 8};
+        service.startPoint = {x:1, y: 6};
 
         mouseEvent = {
             clientX: 100,
@@ -109,19 +116,19 @@ describe('EllipseService', () => {
         expect(service.mouseDown).toEqual(false);
     });
 
-    it(' onMouseUp should call drawEllipse if mouse was already down', () => {
+    it(' finalize should call drawEllipse if mouse was already down', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(drawEllipseSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should not call drawEllipse if mouse was not already down', () => {
+    it(' finalize should not call drawEllipse if mouse was not already down', () => {
         service.mouseDown = false;
         service.mouseDownCoord = { x: 0, y: 0 };
 
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(drawEllipseSpy).not.toHaveBeenCalled();
     });
 
@@ -188,57 +195,62 @@ describe('EllipseService', () => {
         expect(previewCtxFillSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseUp should call stroke on base canvas if shape type is Contoured', () => {
+    it('onMouseUp should call finalize()', () => {
+        service.onMouseUp(mouseEvent);
+        expect(finalizeSpy).toHaveBeenCalled();
+    });
+
+    it(' finalize should call stroke on base canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.Contoured;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxStrokeSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should call stroke on base canvas if shape type is ContouredAndFilled', () => {
+    it(' finalize should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxStrokeSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should call fill on base canvas if shape type is Filled', () => {
+    it(' finalize should call fill on base canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.Filled;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxFillSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should call fill on base canvas if shape type is ContouredAndFilled', () => {
+    it(' finalize should call fill on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxFillSpy).toHaveBeenCalled();
     });
 
-    it(' onMouseUp should not call fill on base canvas if shape type is Contoured', () => {
+    it(' finalize should not call fill on base canvas if shape type is Contoured', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.Contoured;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxFillSpy).not.toHaveBeenCalled();
     });
 
-    it(' onMouseUp should not call stroke on base canvas if shape type is Filled', () => {
+    it(' finalize should not call stroke on base canvas if shape type is Filled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.Filled;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxStrokeSpy).not.toHaveBeenCalled();
     });
 
