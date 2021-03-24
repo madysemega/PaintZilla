@@ -3,8 +3,8 @@ import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { PencilService } from '../tools/pencil-service';
-import { SprayService } from '../tools/spray-service';
+import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { SprayService } from '@app/tools/services/tools/spray-service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
