@@ -23,7 +23,7 @@ export class ClipboardService {
   private handlerToRestore: SelectionHandlerService;
 
   public applyWhiteFill: boolean = false;
-  private isEmpty: boolean = true;;
+  public isEmpty: boolean = true;;
 
   constructor(private drawingService: DrawingService, private selectionHelper: SelectionHelperService, private history: HistoryService) { }
 

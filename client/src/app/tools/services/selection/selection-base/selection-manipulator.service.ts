@@ -191,20 +191,18 @@ export abstract class SelectionManipulatorService extends Tool {
         this.drawSelectionOutline();
     }
 
+    delete(): void{
+        this.selectionHandler.whiteFillAtOriginalLocation();
+        this.registerAction(true);
+        this.stopManipulation(false);
+    }
+
     stopManipulation(needDrawSelection: boolean): void {
         this.selectionHelper.setIsSelectionBeingManipulated(false);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
-                const memento: HandlerMemento = this.selectionHandler.createMemento();
-                const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
-                    x: this.topLeft.x,
-                    y: this.topLeft.y,
-
-                },
-                    false
-                );
-                this.historyService.register(userAction);
+                this.registerAction(false);
             }
         }
         this.historyService.isLocked = false;
@@ -212,6 +210,18 @@ export abstract class SelectionManipulatorService extends Tool {
             sub.unsubscribe();
         });
         this.resetProperties();
+    }
+
+    registerAction(allWhite: boolean){
+        const memento: HandlerMemento = this.selectionHandler.createMemento();
+        const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
+            x: this.topLeft.x,
+            y: this.topLeft.y,
+
+        },
+            allWhite
+        );
+        this.historyService.register(userAction);
     }
 
     startMovingSelectionContinous(movement: Vec2, arrowIndex: number): void {

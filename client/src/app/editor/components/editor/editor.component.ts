@@ -101,7 +101,7 @@ export class EditorComponent implements AfterViewInit {
                     this.historyService.undo();
                     return;
                 }
-                if(isV){
+                if(isV && !this.clipboardService.isEmpty){
                     this.toolSelector.selectTool(this.clipboardService.copyOwner.key);
                     this.clipboardService.paste();
                     this.historyService.isLocked = true;

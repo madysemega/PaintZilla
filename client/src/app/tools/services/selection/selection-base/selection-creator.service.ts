@@ -108,6 +108,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         const isCtrl: boolean = event.ctrlKey;
         const isC: boolean = event.key === 'c';
         const isX: boolean = event.key === 'x';
+        const isDel: boolean = event.key === 'Delete';
         
         if (this.isSelectionBeingManipulated()) {
             if (isCtrl && isC) {
@@ -123,6 +124,10 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
                 this.clipboardService.cut(manipulatorMemento, handlerMemento, this);
                 this.selectionManipulator.stopManipulation(false);
                 return;
+            }
+
+            if(isDel){
+                this.selectionManipulator.delete();
             }
 
             this.selectionManipulator.onKeyUp(event);
