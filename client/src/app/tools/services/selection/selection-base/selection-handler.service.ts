@@ -49,10 +49,12 @@ export abstract class SelectionHandlerService {
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
 
-    makeWhiteBehindSelection(): void {
+    makeWhiteBehindSelection(): boolean {
         if (this.needWhitePostDrawing) {
             this.whiteFillAtOriginalLocation();
+            return true;
         }
+        return false;
     }
 
     initAllProperties(vertices: Vec2[]): void {

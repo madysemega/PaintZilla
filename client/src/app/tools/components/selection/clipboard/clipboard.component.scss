@@ -8,14 +8,20 @@
     user-select: none;
 }
 
+.clipboardButton{
+    transition: ease 500ms;
+    opacity: 1;
+}
+
+.clipboardButton.disabled{
+    transition: ease 500ms;
+    opacity: 0.25;
+}
+
 .lastButton{
     margin-right: 0;
 }
 
 #delete{
     margin-right: 0;
-}
-
-#copy{
-
 }

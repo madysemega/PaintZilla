@@ -191,9 +191,10 @@ export abstract class SelectionManipulatorService extends Tool {
         this.drawSelectionOutline();
     }
 
-    delete(): void{
-        this.selectionHandler.whiteFillAtOriginalLocation();
-        this.registerAction(true);
+    delete(): void {
+        if(this.selectionHandler.makeWhiteBehindSelection()) {
+            this.registerAction(true);
+        }
         this.stopManipulation(false);
     }
 
@@ -212,7 +213,7 @@ export abstract class SelectionManipulatorService extends Tool {
         this.resetProperties();
     }
 
-    registerAction(allWhite: boolean){
+    registerAction(allWhite: boolean) {
         const memento: HandlerMemento = this.selectionHandler.createMemento();
         const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
             x: this.topLeft.x,
