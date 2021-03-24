@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
-
+// source: https://material.angular.io/components/chips/examples
 @Component({
     selector: 'app-filter-label',
     templateUrl: './filter-label.component.html',
@@ -14,12 +14,15 @@ export class FilterLabelComponent {
     @Input()
     availableLabels: string[] = [];
     retainedLabels: string[] = [];
+
     separatorKeysCodes: number[] = [ENTER, COMMA];
     labelCtrl: FormControl = new FormControl();
     filteredLabels: Observable<string[]>;
+
     removable: boolean = true;
     selectable: boolean = true;
     isAvailable: boolean = true;
+
     @Output()
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()

@@ -100,12 +100,12 @@ describe('PolygonService', () => {
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawPerimeterSpy).not.toHaveBeenCalled();
     });
-    it(' onMouseUp should call stroke on base canvas if shape type is ContouredAndFilled', () => {
+    it(' finalize should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
 
         service.shapeType = ShapeType.ContouredAndFilled;
-        service.onMouseUp(mouseEvent);
+        service.finalize();
         expect(baseCtxStrokeSpy).toHaveBeenCalled();
     });
     it(' onMouseMove should not call fill on preview canvas if shape type is Contoured', () => {

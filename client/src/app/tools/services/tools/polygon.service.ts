@@ -77,6 +77,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
 
     onToolDeselect(): void {
         this.history.isLocked = false;
+        this.finalize();
     }
 
     onLineWidthChanged(): void {
@@ -99,8 +100,11 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     }
 
     onMouseUp(event: MouseEvent): void {
+        this.finalize();
+    }
+
+    finalize(): void {
         if (this.mouseDown) {
-            this.lastMousePosition = this.getPositionFromMouse(event);
             this.isToDrawPerim = false;
 
             const renderersToRegister = new Array<ShapeRenderer<PolygonShape>>();

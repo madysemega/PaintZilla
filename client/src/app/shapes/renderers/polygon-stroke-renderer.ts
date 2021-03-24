@@ -13,12 +13,15 @@ export class PolygonStrokeRenderer extends ShapeRenderer<PolygonShape> {
             x: (this.shape.bottomRight.x + this.shape.topLeft.x) / 2,
             y: (this.shape.bottomRight.y + this.shape.topLeft.y) / 2,
         };
+
         const SIZE = Math.abs(this.squarePoint(CENTER_POINT, this.shape.bottomRight));
+
         ctx.beginPath();
         ctx.moveTo(
             CENTER_POINT.x + SIZE * Math.cos((2 * Math.PI) / this.shape.numberSides),
             CENTER_POINT.y + SIZE * Math.sin((2 * Math.PI) / this.shape.numberSides),
         );
+
         for (let i = 2; i <= this.shape.numberSides; i++) {
             ctx.lineTo(
                 CENTER_POINT.x + SIZE * Math.cos((i * 2 * Math.PI) / this.shape.numberSides),
