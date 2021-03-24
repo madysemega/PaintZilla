@@ -3,13 +3,19 @@ import { Component, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatDrawer } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
+import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
+import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
@@ -47,11 +53,16 @@ describe('EditorComponent', () => {
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
+
     let historyServiceStub: jasmine.SpyObj<HistoryService>;
     let drawingStub: DrawingService;
-    let keyboardZEvent: KeyboardEvent;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
-    let toolSelectorStub: jasmine.SpyObj<any>;
+    let colourServiceStub: ColourService;
+
+    let keyboardZEvent: KeyboardEvent;
+    let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
+
+    let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
 
     keyboardZEvent = {
         key: 'Z',
@@ -64,14 +75,19 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo', 'clear']);
         drawingStub = new DrawingService(historyServiceStub);
-        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'onToolChanged', 'fromKeyboardShortcut']);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
             return true;
         });
 
+        colourServiceStub = new ColourService({} as ColourPickerService);
+
+        toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'onToolChanged', 'fromKeyboardShortcut']);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+
+        configurationPanelDrawerStub = jasmine.createSpyObj('MatDrawer', ['open']);
+        configurationPanelDrawerStub.open.and.stub();
 
         TestBed.configureTestingModule({
             imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
@@ -94,6 +110,10 @@ describe('EditorComponent', () => {
                 { provide: HttpHandler },
                 { provide: ServerService },
                 { provide: KeyboardService },
+                { provide: ExportDrawingService },
+                { provide: SaveDrawingService },
+                { provide: DrawingLoaderService },
+                { provide: ColourService, useValue: colourServiceStub },
             ],
             // schemas: [NO_ERRORS_SCHEMA],
         })
@@ -114,6 +134,8 @@ describe('EditorComponent', () => {
         fixture = TestBed.createComponent(EditorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+
+        component.configurationPanelDrawer = configurationPanelDrawerStub;
     });
 
     it('should create', () => {
@@ -187,5 +209,47 @@ describe('EditorComponent', () => {
         spyOn(keyboardService, 'registerAction').and.callFake((action) => {
             action.invoke();
         });
+    });
+
+    it("When colour picker visibility state changes, so should the editor component's internal flag", () => {
+        const INITIAL_FLAG_VALUE = false;
+        const NEW_FLAG_VALUE = true;
+
+        component.showColourPicker = INITIAL_FLAG_VALUE;
+
+        colourServiceStub.showColourPickerChange.subscribe(() => {
+            expect(component.showColourPicker).toEqual(NEW_FLAG_VALUE);
+        });
+
+        colourServiceStub.showColourPickerChange.emit(NEW_FLAG_VALUE);
+    });
+
+    it('When new tool is selected, the configuration drawer should open', () => {
+        toolSelectorStub.onToolChanged.and.callFake((callback) => callback());
+
+        // tslint:disable-next-line: no-string-literal
+        component['handleToolChange']();
+
+        expect(configurationPanelDrawerStub.open).toHaveBeenCalled();
+    });
+
+    it('Mouse down should hide colour picker if it was shown', () => {
+        colourServiceStub.showColourPicker = true;
+        colourServiceStub.onColourPicker = false;
+        component.showColourPicker = true;
+        component.onMouseDown({} as MouseEvent);
+
+        expect(colourServiceStub.onColourPicker).toBeFalse();
+        expect(component.showColourPicker).toBeFalse();
+    });
+
+    it('updateColour() should propagate event to colour service', () => {
+        const colourServiceUpdateColourSpy = spyOn(colourServiceStub, 'updateColour').and.stub();
+        component.updateColour();
+        expect(colourServiceUpdateColourSpy).toHaveBeenCalled();
+    });
+
+    it('height property should be the innerHeight of the window', () => {
+        expect(component.height).toEqual(window.innerHeight);
     });
 });
