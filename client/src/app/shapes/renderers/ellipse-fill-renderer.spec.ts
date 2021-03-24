@@ -52,8 +52,8 @@ describe('EllipseFillRenderer', () => {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(shape.topLeft.x - shape.bottomRight.x) / 2 - HALF_CONTOUR_WIDTH,
-            y: Math.abs(shape.topLeft.y - shape.bottomRight.y) / 2 - HALF_CONTOUR_WIDTH,
+            x: Math.max(Math.abs(shape.topLeft.x - shape.bottomRight.x) / 2 - HALF_CONTOUR_WIDTH,0),
+            y: Math.max(Math.abs(shape.topLeft.y - shape.bottomRight.y) / 2 - HALF_CONTOUR_WIDTH,0),
         };
 
         renderer.render(ctxStub);
