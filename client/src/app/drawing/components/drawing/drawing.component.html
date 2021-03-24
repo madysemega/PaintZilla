@@ -11,6 +11,7 @@
         (mousedown)="activateResizer('rightDown')"
         (click)="(disableResizer)"
         (dblclick)="(disableResizer)"
+        ondragstart="return false"
     ></div>
     <div
         id="down"
@@ -22,6 +23,7 @@
         (mousedown)="activateResizer('down')"
         (click)="(disableResizer)"
         (dblclick)="(disableResizer)"
+        ondragstart="return false"
     ></div>
     <div
         id="right"
@@ -33,8 +35,9 @@
         (mousedown)="activateResizer('right')"
         (click)="(disableResizer)"
         (dblclick)="(disableResizer)"
+        ondragstart="return false"
     ></div>
-  
+
     <app-ellipse-selection></app-ellipse-selection>
     <app-rectangle-selection></app-rectangle-selection>
 </div>
