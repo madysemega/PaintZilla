@@ -200,7 +200,10 @@ export abstract class SelectionManipulatorService extends Tool {
                 const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
                     x: this.topLeft.x,
                     y: this.topLeft.y,
-                });
+
+                },
+                    false
+                );
                 this.historyService.register(userAction);
             }
         }

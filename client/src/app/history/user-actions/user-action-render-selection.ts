@@ -7,6 +7,12 @@ import { IUserAction } from './user-action';
 export class UserActionRenderSelection implements IUserAction {
     apply(): void {
         this.selectionHandler.restoreFromMemento(this.handlerMemento);
+
+        if(this.justAWhiteFill){
+            this.selectionHandler.whiteFillAtOriginalLocation();
+            return;
+        }
+
         this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft);
     }
 
@@ -15,5 +21,8 @@ export class UserActionRenderSelection implements IUserAction {
         private selectionHandler: SelectionHandlerService,
         private handlerMemento: HandlerMemento,
         private topLeft: Vec2,
+        private justAWhiteFill: boolean,
     ) {}
+
+    
 }
