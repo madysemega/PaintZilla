@@ -33,7 +33,6 @@ describe('EllipseService', () => {
     let baseCtxFillSpy: jasmine.Spy<any>;
     let finalizeSpy: jasmine.Spy<any>;
 
-
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
@@ -71,15 +70,14 @@ describe('EllipseService', () => {
         baseCtxStrokeSpy = spyOn<any>(baseCtxStub, 'stroke').and.callThrough();
         baseCtxFillSpy = spyOn<any>(baseCtxStub, 'fill').and.callThrough();
 
-
         // Configuration du spy du service
         // tslint:disable:no-string-literal
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;
 
-        service.lastMousePosition = {x:6, y: 8};
-        service.startPoint = {x:1, y: 6};
+        service.lastMousePosition = { x: 6, y: 8 };
+        service.startPoint = { x: 1, y: 6 };
 
         mouseEvent = {
             clientX: 100,

@@ -149,9 +149,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         };
     }
 
-    finalize(){
+    finalize(): void {
         if (this.mouseDown) {
-        
             this.drawEllipse(this.drawingService.baseCtx, this.startPoint, this.lastMousePosition);
 
             const renderersToRegister = new Array<ShapeRenderer<BoxShape>>();
@@ -194,11 +193,11 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         const shouldRenderFill = this.shapeType === ShapeType.Filled;
         const halfStrokeWidth = this.strokeWidthProperty.strokeWidth / 2;
 
-        if(shouldRenderFill){
+        if (shouldRenderFill) {
             topLeft.x += halfStrokeWidth;
             topLeft.y += halfStrokeWidth;
-            dimensions.x -= halfStrokeWidth*2;
-            dimensions.y -= halfStrokeWidth*2;
+            dimensions.x -= halfStrokeWidth * 2;
+            dimensions.y -= halfStrokeWidth * 2;
         }
 
         ctx.save();
