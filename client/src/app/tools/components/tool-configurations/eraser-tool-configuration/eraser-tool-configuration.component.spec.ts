@@ -17,12 +17,15 @@ describe('EraserToolConfigurationComponent', () => {
     beforeEach(async(() => {
         historyServiceStub = new HistoryService();
         drawingServiceStub = new DrawingService(historyServiceStub);
-        eraserServiceStub = new EraserService(drawingServiceStub);
+        eraserServiceStub = new EraserService(drawingServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule],
             declarations: [EraserToolConfigurationComponent, ResizableToolConfigurationComponent],
-            providers: [{ provide: EraserService, useValue: eraserServiceStub }],
+            providers: [
+                { provide: EraserService, useValue: eraserServiceStub },
+                { provide: HistoryService, useValue: historyServiceStub },
+            ],
         }).compileComponents();
     }));
 

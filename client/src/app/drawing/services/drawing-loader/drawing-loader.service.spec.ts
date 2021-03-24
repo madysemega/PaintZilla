@@ -7,7 +7,6 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Drawing } from '@common/models/drawing';
-import { HotkeyModule } from 'angular2-hotkeys';
 import { of, throwError } from 'rxjs';
 import { DrawingLoaderService } from './drawing-loader.service';
 
@@ -15,27 +14,31 @@ describe('DrawingLoaderService', () => {
     let service: DrawingLoaderService;
 
     let drawingServiceSpy: jasmine.SpyObj<DrawingService>;
-    let serverServiceSpy: jasmine.SpyObj<ServerService>;
-
     let snackBarStub: jasmine.SpyObj<MatSnackBar>;
+    let dialogStub: jasmine.SpyObj<MatDialog>;
+    let serverServiceStub: jasmine.SpyObj<ServerService>;
 
     beforeEach(() => {
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['setImageFromBase64']);
+        drawingServiceSpy.setImageFromBase64.and.stub();
 
-        serverServiceSpy = jasmine.createSpyObj('ServerService', ['getDrawingById', 'getAllLabels']);
-        serverServiceSpy.getDrawingById.and.returnValue(of({} as Drawing));
+        serverServiceStub = jasmine.createSpyObj('ServerService', ['getDrawingById']);
 
         snackBarStub = jasmine.createSpyObj('MatSnackBar', ['open']);
+        snackBarStub.open.and.stub();
+
+        dialogStub = jasmine.createSpyObj('MatDialog', ['open']);
+        dialogStub.open.and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [MaterialModule, BrowserAnimationsModule],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: HttpClient },
                 { provide: HttpHandler },
-                { provide: ServerService, useValue: serverServiceSpy },
+                { provide: ServerService, useValue: serverServiceStub },
                 { provide: MatSnackBar, useValue: snackBarStub },
-                { provide: MatDialog },
+                { provide: MatDialog, useValue: dialogStub },
             ],
         });
         service = TestBed.inject(DrawingLoaderService);
@@ -45,24 +48,28 @@ describe('DrawingLoaderService', () => {
         expect(service).toBeTruthy();
     });
 
-    it("loadFromServer() should set the drawing surface's image to the downloaded base64 image", () => {
-        const IMAGE_ID = '1234567890';
+    it('When loading drawing from server, if success then apply drawing to surface', () => {
+        const FAKE_DRAWING: Drawing = {
+            id: '123',
+            name: 'test',
+            drawing: '',
+            labels: ['321', 'test'],
+        };
 
-        service.loadFromServer(IMAGE_ID);
+        serverServiceStub.getDrawingById.and.returnValue(of(FAKE_DRAWING));
+        service.loadFromServer('123');
         expect(drawingServiceSpy.setImageFromBase64).toHaveBeenCalled();
     });
 
-    it('loadFromServer() should open snack bar on error', () => {
-        const error: HttpErrorResponse = new HttpErrorResponse({
+    it('When loading drawing from server, if failure then notify user', () => {
+        const FAKE_HTTP_ERROR_RESPONSE: HttpErrorResponse = new HttpErrorResponse({
             error: '',
             status: 404,
             statusText: '',
         });
 
-        serverServiceSpy.getDrawingById.and.returnValue(throwError(error));
-
+        serverServiceStub.getDrawingById.and.returnValue(throwError(FAKE_HTTP_ERROR_RESPONSE));
         service.loadFromServer('123');
-
         expect(snackBarStub.open).toHaveBeenCalled();
     });
 });

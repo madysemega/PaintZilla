@@ -78,7 +78,7 @@ export class ImageNavigationComponent {
     }
 
     private handleRequestError(error: HttpErrorResponse): void {
-        this.displayMessage(`Nous n'avons pas accéder au serveur, erreur : ${error.message}`);
+        this.displayMessage(`Nous n'avons pas pu accéder au serveur, erreur : ${error.message}`);
         this.dialogRef.close();
     }
 
