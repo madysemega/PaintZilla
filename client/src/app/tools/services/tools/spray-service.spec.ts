@@ -25,6 +25,8 @@ describe('SprayService', () => {
     let spraySpy: jasmine.Spy<any>;
     let previewPaintSpy: jasmine.Spy<any>;
 
+    let finalizePaintSpy: jasmine.Spy<any>;
+
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
@@ -56,6 +58,7 @@ describe('SprayService', () => {
         );
 
         spraySpy = spyOn<any>(service, 'spray').and.callThrough();
+        finalizePaintSpy = spyOn<any>(service, 'finalizePaint').and.callThrough();
         previewPaintSpy = spyOn<any>(service, 'previewPaint').and.callThrough();
 
         // Configuration du spy du service
@@ -169,4 +172,12 @@ describe('SprayService', () => {
             expect(service['colourProperty'].colour).toEqual(NEW_PRIMARY_COLOUR);
         });
     });
+
+    it('onToolDeselect should call finalizePaint', () => {
+  
+        service.onToolDeselect();
+        expect(finalizePaintSpy).toHaveBeenCalled();
+    });
+
+    
 });
