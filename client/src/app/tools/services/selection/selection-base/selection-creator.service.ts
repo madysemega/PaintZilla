@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HandlerMemento } from '@app/app/classes/handler-memento';
+import { ManipulatorMemento } from '@app/app/classes/manipulator-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -7,6 +9,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { ClipboardService } from '../clipboard/clipboard.service';
 import { SelectionHelperService } from './selection-helper.service';
 
 @Injectable({
@@ -22,8 +25,9 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
     constructor(
         drawingService: DrawingService,
-        protected selectionManipulator: SelectionManipulatorService,
-        protected selectionHelper: SelectionHelperService,
+        public selectionManipulator: SelectionManipulatorService,
+        public selectionHelper: SelectionHelperService,
+        private clipboardService: ClipboardService
     ) {
         super(drawingService);
     }
@@ -101,7 +105,26 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
+        const isCtrl: boolean = event.ctrlKey;
+        const isC: boolean = event.key === 'c';
+        const isX: boolean = event.key === 'x';
+        
         if (this.isSelectionBeingManipulated()) {
+            if (isCtrl && isC) {
+                let manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+                let handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+                this.clipboardService.copy(manipulatorMemento, handlerMemento, this);
+                return;
+            }
+
+            if (isCtrl && isX) {
+                let manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+                let handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+                this.clipboardService.cut(manipulatorMemento, handlerMemento, this);
+                this.selectionManipulator.stopManipulation(false);
+                return;
+            }
+
             this.selectionManipulator.onKeyUp(event);
             return;
         }
@@ -138,6 +161,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
         this.selectionHelper.setIsSelectionBeingManipulated(true);
         this.selectionManipulator.initialize(vertices);
+        this.clipboardService.applyWhiteFill = true;
     }
 
     stopManipulatingSelection(): void {

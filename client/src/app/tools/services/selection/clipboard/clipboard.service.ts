@@ -22,7 +22,8 @@ export class ClipboardService {
   private manipulatorToRestore: SelectionManipulatorService;
   private handlerToRestore: SelectionHandlerService;
 
-  private isEmpty: boolean;
+  public applyWhiteFill: boolean = false;
+  private isEmpty: boolean = true;;
 
   constructor(private drawingService: DrawingService, private selectionHelper: SelectionHelperService, private history: HistoryService) { }
 
@@ -30,8 +31,8 @@ export class ClipboardService {
     this.manipulatorMemento = manipulatorMemento;
     this.handlerMemento = handlerMemento;
     this.copyOwner = selectionCreator;
-    this.manipulatorToRestore = selectionCreator.selectionManipulatorService;
-    this.handlerToRestore = selectionCreator.selectionManipulatorService.selectionHandler;
+    this.manipulatorToRestore = selectionCreator.selectionManipulator;
+    this.handlerToRestore = selectionCreator.selectionManipulator.selectionHandler;
     this.isEmpty = false;
   }
 
@@ -39,10 +40,13 @@ export class ClipboardService {
     this.manipulatorMemento = manipulatorMemento;
     this.handlerMemento = handlerMemento;
     this.copyOwner = selectionCreator;
-    this.manipulatorToRestore = selectionCreator.selectionManipulatorService;
-    this.handlerToRestore = selectionCreator.selectionManipulatorService.selectionHandler;
-    this.handlerToRestore.makeWhiteBehindSelection();
-    this.registerWhiteFillInHistory();
+    this.manipulatorToRestore = selectionCreator.selectionManipulator;
+    this.handlerToRestore = selectionCreator.selectionManipulator.selectionHandler;
+    if(this.applyWhiteFill){
+      console.log("hello");
+      this.handlerToRestore.whiteFillAtOriginalLocation();
+      this.registerWhiteFillInHistory();
+    }
     this.isEmpty = false;
   }
 
@@ -52,10 +56,11 @@ export class ClipboardService {
       //this.selectionManipulator.setPositionsAtTopLeft();
       this.positionAtOrigin();
       this.handlerToRestore.restoreFromMemento(this.handlerMemento);
+      this.copyOwner.selectionHelper.setIsSelectionBeingManipulated(true);
       this.handlerToRestore.needWhitePostDrawing = false;
-      this.copyOwner.selectionService.setIsSelectionBeingManipulated(true);
       this.handlerToRestore.drawSelection(this.drawingService.previewCtx, this.manipulatorToRestore.topLeft);
-      this.copyOwner.selectionManipulatorService.drawSelectionOutline();
+      this.copyOwner.selectionManipulator.drawSelectionOutline();
+      this.applyWhiteFill = false;
     }
   }
 

@@ -39,7 +39,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionHelper: SelectionHelperService) {
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
         this.selection = document.createElement('canvas');
         this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
         this.originalSelection = document.createElement('canvas');
@@ -48,6 +48,12 @@ export abstract class SelectionHandlerService {
 
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
+
+    makeWhiteBehindSelection(): void {
+        if (this.needWhitePostDrawing) {
+            this.whiteFillAtOriginalLocation();
+        }
+    }
 
     initAllProperties(vertices: Vec2[]): void {
         this.originalVertices = vertices;
@@ -75,11 +81,14 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
+
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
 
-        this.makeWhiteBehindSelection();
+        if (this.needWhitePostDrawing) {
+            this.whiteFillAtOriginalLocation();
+        }
 
         const topLeft: Vec2 = {
             x: topLeftOnDestination.x - this.topLeftRelativeToMiddle.x + this.offset.x,
@@ -97,13 +106,20 @@ export abstract class SelectionHandlerService {
             newlength = bottomRightOnSource.x - topLeftOnSource.x;
             this.currentHorizontalScaling = newlength / this.originalWidth;
             this.updateHorizontalOffset(newlength);
-        } else {
+        }
+        else {
             newlength = bottomRightOnSource.y - topLeftOnSource.y;
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
         }
 
         this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
+    }
+
+    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
+        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
+        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
     }
 
     drawACanvasOnAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, topLeftOnDestination?: Vec2): void {
@@ -119,12 +135,7 @@ export abstract class SelectionHandlerService {
         destination.closePath();
     }
 
-    overwriteACanvasWithAnother(
-        source: HTMLCanvasElement,
-        destination: CanvasRenderingContext2D,
-        horizontalScaling: number,
-        verticalScaling: number,
-    ): void {
+    overwriteACanvasWithAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
         this.drawingService.clearCanvas(destination);
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
@@ -132,18 +143,6 @@ export abstract class SelectionHandlerService {
         destination.drawImage(source, 0, 0);
         destination.closePath();
         destination.resetTransform();
-    }
-
-    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
-        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
-        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
-        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
-    }
-
-    makeWhiteBehindSelection(): void {
-        if (this.needWhitePostDrawing) {
-            this.whiteFillAtOriginalLocation();
-        }
     }
 
     updateHorizontalOffset(newWidth: number): void {

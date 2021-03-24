@@ -48,7 +48,7 @@ export abstract class SelectionManipulatorService extends Tool {
     constructor(
         protected drawingService: DrawingService,
         protected selectionHelper: SelectionHelperService,
-        protected selectionHandler: SelectionHandlerService,
+        public selectionHandler: SelectionHandlerService,
         public historyService: HistoryService,
     ) {
         super(drawingService);

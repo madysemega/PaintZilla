@@ -4,6 +4,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { ClipboardService } from '../selection/clipboard/clipboard.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,9 +13,10 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
     constructor(
         public drawingService: DrawingService,
         selectionManipulator: RectangleSelectionManipulatorService,
-        protected selectionHelper: RectangleSelectionHelperService,
+        public selectionHelper: RectangleSelectionHelperService,
+        clipboardService: ClipboardService
     ) {
-        super(drawingService, selectionManipulator, selectionHelper);
+        super(drawingService, selectionManipulator, selectionHelper, clipboardService );
         this.key = 'rectangle-selection';
     }
 

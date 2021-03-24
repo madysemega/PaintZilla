@@ -9,6 +9,7 @@ import { ExportDrawingService } from '@app/drawing/services/export-drawing/expor
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class EditorComponent implements AfterViewInit {
         private saveDrawingService: SaveDrawingService,
         private drawingLoader: DrawingLoaderService,
         private drawingService: DrawingService,
+        private clipboardService: ClipboardService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -86,18 +88,30 @@ export class EditorComponent implements AfterViewInit {
         if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen() && this.saveDrawingService.noDialogsOpen()) {
             const isCtrl: boolean = event.ctrlKey;
             const isZ: boolean = event.key.toUpperCase() === 'Z';
+            const isV: boolean = event.key === 'v';
             const isShift: boolean = event.shiftKey;
 
             if (isCtrl) {
+                
                 if (isZ && isShift) {
                     this.historyService.redo();
-                } else if (isZ) {
-                    this.historyService.undo();
+                    return;
                 }
-                return;
+                if (isZ) {
+                    this.historyService.undo();
+                    return;
+                }
+                if(isV){
+                    this.toolSelector.selectTool(this.clipboardService.copyOwner.key);
+                    this.clipboardService.paste();
+                    this.historyService.isLocked = true;
+                    return;
+                }
+            }
+            else{
+                this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
             }
 
-            this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
             this.toolSelector.getSelectedTool().onKeyUp(event);
         }
         this.drawingCreatorService.onKeyDown(event);

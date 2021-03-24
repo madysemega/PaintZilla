@@ -4,6 +4,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import { ClipboardService } from '../selection/clipboard/clipboard.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,8 +14,9 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
         drawingService: DrawingService,
         selectionManipulator: EllipseSelectionManipulatorService,
         public selectionHelper: EllipseSelectionHelperService,
+        clipboardService: ClipboardService
     ) {
-        super(drawingService, selectionManipulator, selectionHelper);
+        super(drawingService, selectionManipulator, selectionHelper, clipboardService);
         this.key = 'ellipse-selection';
     }
 
