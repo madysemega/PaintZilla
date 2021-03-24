@@ -13,6 +13,51 @@ export class DrawingController {
     }
     private configureRouter(): void {
         this.router = Router();
+        /*
+         * @swagger
+         *
+         * definitions:
+         *   Drawing:
+         *       type: object
+         *       properties:
+         *           id:
+         *               type: string
+         *           name:
+         *               type: string
+         *           drawing:
+         *               type: string
+         *           labels:
+         *               type: array
+         *               items:
+         *                  type:string
+         *
+         * */
+
+        /*
+         * @swagger
+         * tags:
+         *   - name: Drawing
+         *     description: Drawing functions
+         * */
+
+        /*
+         * @swagger
+         *
+         * /api/drawings:
+         *   post:
+         *       description: create and returns a new drawing from arguments passed as parameter
+         *       tags:
+         *           - Drawing
+         *       produces:
+         *           - application/json:
+         *                  schema:
+         *                      $ref: '#/definitions/Drawing'
+         *       responses:
+         *           201:
+         *               schema:
+         *                   $ref: '#/definitions/Drawing'
+         *
+         * */
         this.router.post('/drawings', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .saveDrawing(req.body.name, req.body.drawing, req.body.labels)
