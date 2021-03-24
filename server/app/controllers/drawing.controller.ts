@@ -31,7 +31,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.Ok).send([]);
                 });
         });
 
@@ -75,7 +75,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings, ' + error.message);
+                    res.status(HttpStatusCode.Ok).send([]);
                 });
         });
 
@@ -86,7 +86,7 @@ export class DrawingController {
                     res.status(HttpStatusCode.Ok).send(drawings);
                 })
                 .catch((error: Error) => {
-                    res.status(HttpStatusCode.NotFound).send('An error occurred while trying to get drawings ' + error.message);
+                    res.status(HttpStatusCode.Ok).send([]);
                 });
         });
 

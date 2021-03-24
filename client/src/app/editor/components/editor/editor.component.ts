@@ -36,6 +36,10 @@ export class EditorComponent implements AfterViewInit {
             this.showColourPicker = flag;
         });
 
+        this.handleToolChange();
+    }
+
+    private handleToolChange(): void {
         this.toolSelector.onToolChanged(() => {
             this.configurationPanelDrawer.open();
         });
