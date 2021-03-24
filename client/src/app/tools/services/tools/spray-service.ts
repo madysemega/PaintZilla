@@ -67,7 +67,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
             this.history.isLocked = true;
 
             this.onSpray();
-            this.sprayTimer = setInterval(() => this.onSpray(), (1 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
+            this.sprayTimer = setInterval(() => this.onSpray(), (1.0 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
         }
     }
 

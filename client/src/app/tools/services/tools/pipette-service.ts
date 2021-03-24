@@ -87,7 +87,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
-        const zoom5 = 8;
+        const zoomCenterPos = 8;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.couleur = this.drawingService.baseCtx.getImageData(
             mousePosition.x - this.rectangleWidth,
@@ -101,8 +101,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.outputCouleur = '#' + R + G + B;
         if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
             this.cerclePreview = this.drawingService.baseCtx.getImageData(
-                mousePosition.x - zoom5,
-                mousePosition.y - zoom5,
+                mousePosition.x - zoomCenterPos,
+                mousePosition.y - zoomCenterPos,
                 this.zoomWidth,
                 this.zoomWidth,
             );
