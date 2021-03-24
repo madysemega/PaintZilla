@@ -4,7 +4,6 @@ import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 
 export class PolygonStrokeRenderer extends ShapeRenderer<PolygonShape> {
-    lineWidth: number = 0;
     constructor(shape: PolygonShape, properties: ShapeProperty[]) {
         super(shape, properties);
     }

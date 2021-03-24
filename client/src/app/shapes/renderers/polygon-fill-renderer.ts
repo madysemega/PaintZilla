@@ -13,16 +13,19 @@ export class PolygonFillRenderer extends ShapeRenderer<PolygonShape> {
             x: (this.shape.bottomRight.x + this.shape.topLeft.x) / 2,
             y: (this.shape.bottomRight.y + this.shape.topLeft.y) / 2,
         };
-        const SIZE = Math.abs(this.squarePoint(CENTER_POINT, this.shape.bottomRight) - this.shape.contourWidth);
+        const SIZE_BEFORE_CONTOUR = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
+        let size;
+        if (SIZE_BEFORE_CONTOUR > 0) size = Math.abs(SIZE_BEFORE_CONTOUR - this.shape.contourWidth / 2);
+        else size = Math.abs(SIZE_BEFORE_CONTOUR + this.shape.contourWidth / 2);
         ctx.beginPath();
         ctx.moveTo(
-            CENTER_POINT.x + SIZE * Math.cos((2 * Math.PI) / this.shape.numberSides),
-            CENTER_POINT.y + SIZE * Math.sin((2 * Math.PI) / this.shape.numberSides),
+            CENTER_POINT.x + size * Math.cos((2 * Math.PI) / this.shape.numberSides),
+            CENTER_POINT.y + size * Math.sin((2 * Math.PI) / this.shape.numberSides),
         );
         for (let i = 2; i <= this.shape.numberSides; i++) {
             ctx.lineTo(
-                CENTER_POINT.x + SIZE * Math.cos((i * 2 * Math.PI) / this.shape.numberSides),
-                CENTER_POINT.y + SIZE * Math.sin((i * 2 * Math.PI) / this.shape.numberSides),
+                CENTER_POINT.x + size * Math.cos((i * 2 * Math.PI) / this.shape.numberSides),
+                CENTER_POINT.y + size * Math.sin((i * 2 * Math.PI) / this.shape.numberSides),
             );
         }
         ctx.closePath();
