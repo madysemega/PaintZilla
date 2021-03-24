@@ -3,8 +3,7 @@ import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-import { LineService } from '../tools/line.service';
-
+import { LineService } from '@app/tools/services/tools/line.service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -132,7 +131,7 @@ describe('ToolSelectorService', () => {
         expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
     });
 
-   /*it('should call onToolSelect on new tool when changing to valid tool if new tool implements ISelectableTool', () => {
+    /*it('should call onToolSelect on new tool when changing to valid tool if new tool implements ISelectableTool', () => {
         service.selectTool('spray');
         const onToolSelectSpy = spyOn(service.getRegisteredTools().get('pencil')?.tool as PencilService, 'onToolSelect');
 

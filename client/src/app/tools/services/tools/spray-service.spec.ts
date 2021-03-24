@@ -174,10 +174,7 @@ describe('SprayService', () => {
     });
 
     it('onToolDeselect should call finalizePaint', () => {
-  
         service.onToolDeselect();
         expect(finalizePaintSpy).toHaveBeenCalled();
     });
-
-    
 });
