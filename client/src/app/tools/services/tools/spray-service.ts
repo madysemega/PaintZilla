@@ -50,6 +50,10 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
 
     onToolDeselect(): void {
         this.history.isLocked = false;
+        clearInterval(this.sprayTimer);
+        this.finalizePaint();
+        this.clearVertices();
+        this.mouseDown = false;
     }
 
     onSpray(): void {

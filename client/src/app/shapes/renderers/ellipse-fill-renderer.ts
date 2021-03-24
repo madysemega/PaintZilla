@@ -17,8 +17,8 @@ export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
         };
 
         const radii: Vec2 = {
-            x: Math.abs(this.shape.topLeft.x - this.shape.bottomRight.x) / 2 - this.shape.contourWidth / 2,
-            y: Math.abs(this.shape.topLeft.y - this.shape.bottomRight.y) / 2 - this.shape.contourWidth / 2,
+            x: Math.max(Math.abs(this.shape.topLeft.x - this.shape.bottomRight.x) / 2 - this.shape.contourWidth / 2, 0),
+            y: Math.max(Math.abs(this.shape.topLeft.y - this.shape.bottomRight.y) / 2 - this.shape.contourWidth / 2, 0),
         };
 
         ctx.beginPath();
