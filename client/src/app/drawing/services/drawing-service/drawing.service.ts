@@ -43,22 +43,21 @@ export class DrawingService {
     }
 
     fillCanvas(ctx: CanvasRenderingContext2D, width: number, height: number, colour: string): void {
+        ctx.beginPath();
+        ctx.rect(0, 0, width, height);
         ctx.fillStyle = colour;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fill();
+        ctx.closePath();
     }
 
     updateCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.SUPERIOR_Z_INDEX;
+        this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.PREVIEW_CTX_COLOR);
     }
 
     restoreCanvasStyle(): void {
         this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
         this.fillCanvas(this.baseCtx, this.canvasResize.x, this.canvasResize.y, Constants.CTX_COLOR);
-    }
-
-    restoreCanvasToDefault(): void {
-        this.canvas.style.zIndex = Constants.INFERIOR_Z_INDEX;
-        this.fillCanvas(this.baseCtx, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT, Constants.CTX_COLOR);
     }
 
     get currentDrawing(): string {
