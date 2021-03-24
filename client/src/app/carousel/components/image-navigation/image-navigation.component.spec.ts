@@ -3,6 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FilterLabelComponent } from '@app/carousel/components/filter-label/filter-label.component';
+import { ImageCarouselComponent } from '@app/carousel/components/image-carousel/image-carousel.component';
+import { ImageDetailsComponent } from '@app/carousel/components/image-details/image-details.component';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
@@ -38,7 +41,7 @@ describe('ImageNavigationComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
-            declarations: [ImageNavigationComponent],
+            declarations: [ImageNavigationComponent, ImageCarouselComponent, ImageDetailsComponent, FilterLabelComponent],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
@@ -62,6 +65,7 @@ describe('ImageNavigationComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
     it('removeFilter should call filterDrawings on all labels if retainedLabels is emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
         component.retainedLabels.push('test');
@@ -69,6 +73,7 @@ describe('ImageNavigationComponent', () => {
         expect(component.retainedLabels.length).toBe(0);
         expect(FILTER_SPY).toHaveBeenCalled();
     });
+
     it('removeFilter should call filterDrawings if retainedElements is not emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
         component.retainedLabels.push('test1');
@@ -76,11 +81,13 @@ describe('ImageNavigationComponent', () => {
         component.removeFilter(component.retainedLabels.indexOf('test1'));
         expect(FILTER_SPY).toHaveBeenCalled();
     });
+
     it('removeFilter should call filterDrawings if retainedElements is not emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
         component.addFilter('test');
         expect(FILTER_SPY).toHaveBeenCalled();
     });
+
     it('filtering drawings should call server service getDrawingsByLabelsOneMatch method if given labels', () => {
         component.filterDrawings(['One']);
         expect(serverServiceSpy.getDrawingsByLabelsOneMatch).toHaveBeenCalled();

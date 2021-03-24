@@ -16,7 +16,9 @@ export class DrawingLoaderService {
 
     loadFromServer(imageId: string): void {
         this.server.getDrawingById(imageId).subscribe(
-            (drawingData) => this.drawingService.setImageFromBase64(drawingData.drawing),
+            (drawingData) => {
+                this.drawingService.setImageFromBase64(drawingData.drawing);
+            },
             (error: HttpErrorResponse) => {
                 this.snackBar.open(`Ce dessin n'a pas pu être ouvert, erreur: ${error.message}`, 'Ok', {
                     duration: this.SNACK_BAR_DELAI,

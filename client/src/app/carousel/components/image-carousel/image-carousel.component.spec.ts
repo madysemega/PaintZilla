@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ImageDetailsComponent } from '@app/carousel/components/image-details/image-details.component';
 import { MaterialModule } from '@app/material.module';
 import { Drawing } from '@common/models/drawing';
 import { ImageCarouselComponent } from './image-carousel.component';
@@ -18,7 +19,7 @@ describe('ImageCarouselComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [MaterialModule],
-            declarations: [ImageCarouselComponent],
+            declarations: [ImageCarouselComponent, ImageDetailsComponent],
         }).compileComponents();
     }));
 

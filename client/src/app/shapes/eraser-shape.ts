@@ -1,13 +1,10 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { Shape } from './shape';
+import { VerticesShape } from './vertices-shape';
 
-export class VerticesShape extends Shape {
-    constructor(public vertices: Vec2[]) {
-        super();
-    }
-
-    clear(): void {
-        this.vertices = [];
+export class EraserShape extends VerticesShape {
+    constructor(public vertices: Vec2[], public strokeWidth: number) {
+        super(vertices);
     }
 
     clone(): Shape {
@@ -18,6 +15,6 @@ export class VerticesShape extends Shape {
             clonedVertices.push(clone);
         });
 
-        return new VerticesShape(clonedVertices);
+        return new EraserShape(clonedVertices, this.strokeWidth);
     }
 }
