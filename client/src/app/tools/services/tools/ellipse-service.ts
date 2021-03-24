@@ -187,6 +187,16 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
             y: Math.abs(endPoint.y - startPoint.y),
         };
 
+        const shouldRenderFill = this.shapeType === ShapeType.Filled;
+        const halfStrokeWidth = this.strokeWidthProperty.strokeWidth / 2;
+
+        if(shouldRenderFill){
+            topLeft.x += halfStrokeWidth;
+            topLeft.y += halfStrokeWidth;
+            dimensions.x -= halfStrokeWidth*2;
+            dimensions.y -= halfStrokeWidth*2;
+        }
+
         ctx.save();
         ctx.beginPath();
         ctx.setLineDash([DASH_NUMBER]);
