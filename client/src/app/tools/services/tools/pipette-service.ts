@@ -48,8 +48,12 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     setCtx(ctx: CanvasRenderingContext2D): void {
         this.zoomctx = ctx;
 
+        this.zoomctx.save();
         this.fillTheEntireCanvasInBlue();
         this.fillTheCircleInWhite();
+        this.drawHorizontalLines();
+        this.drawVerticalLines();
+        this.zoomctx.restore();
     }
 
     onLineWidthChanged(): void {
@@ -103,30 +107,29 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
         this.getCouleur(mousePosition);
 
+        this.zoomctx.save();
+
         if (
             this.drawingService.canvasSize.x > mousePosition.x &&
             mousePosition.x > 0 &&
             this.drawingService.canvasSize.y > mousePosition.y &&
             mousePosition.y > 0
         ) {
-            this.zoomctx.save();
 
             this.extractAPortionOfCanvas(mousePosition);
-
             this.fillTheEntireCanvasInBlue();
-
             this.pasteThePortionOfCanvas();
-
             this.drawHorizontalLines();
-
             this.drawVerticalLines();
 
-            this.zoomctx.restore();
         } else {
             this.fillTheCircleInWhite();
+            this.drawHorizontalLines();
+            this.drawVerticalLines();
         }
 
         this.drawPixelSelector();
+        this.zoomctx.restore();
     }
 
     private clearVertices(): void {
@@ -157,14 +160,12 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     fillTheCircleInWhite(): void {
-        this.zoomctx.save();
         this.zoomctx.beginPath();
         this.zoomctx.arc(this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, 0, 2 * Math.PI);
         this.zoomctx.clip();
         this.zoomctx.fillStyle = 'white';
         this.zoomctx.fillRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
         this.zoomctx.closePath();
-        this.zoomctx.restore();
     }
 
     fillTheEntireCanvasInBlue(): void {
