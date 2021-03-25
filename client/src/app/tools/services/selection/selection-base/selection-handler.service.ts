@@ -83,6 +83,7 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
+        console.log(this.selection.width, this.selection.height);
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
@@ -160,6 +161,7 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
+        console.log("RESET");
         this.selection.width = this.drawingService.canvas.width;
         this.selection.height = this.drawingService.canvas.height;
         this.originalSelection.width = this.drawingService.canvas.width;
@@ -202,10 +204,13 @@ export abstract class SelectionHandlerService {
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
-        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
-        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
+        let drawingPosition: Vec2 = {x: this.selection.width/2 - memento.selection.width/2, y: this.selection.height/2 - memento.selection.height/2};
+        let drawingPosition2: Vec2 = {x: this.selection.width/2 - memento.originalSelection.width/2, y: this.selection.height/2 - memento.originalSelection.height/2};
+        
+        this.drawACanvasOnAnother(memento.selection, this.selectionCtx, drawingPosition); //DON'T DRAW AT 0,0; DRAW IT @ MIDDLE SELECTION - LENGTH MEMENTO
+        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx, drawingPosition2);
 
-        this.topLeftRelativeToMiddle = { x: memento.topLeftRelativeToMiddle.x, y: memento.topLeftRelativeToMiddle.y };
+        this.topLeftRelativeToMiddle = { x: memento.topLeftRelativeToMiddle.x +drawingPosition.x, y: memento.topLeftRelativeToMiddle.y +drawingPosition.y };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
 
         this.originalWidth = memento.originalWidth;

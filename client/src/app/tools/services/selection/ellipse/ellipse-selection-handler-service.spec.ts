@@ -32,6 +32,7 @@ describe('EllipseSelectionHandlerService', () => {
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 500, y: 500 };
+        
 
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
@@ -93,6 +94,9 @@ describe('EllipseSelectionHandlerService', () => {
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;
+        drawServiceSpy.canvas.width = 500;
+        drawServiceSpy.canvas.height = 500;
+        
     });
 
     it('should be created', () => {
@@ -220,7 +224,7 @@ describe('EllipseSelectionHandlerService', () => {
         expect(fillSpy).toHaveBeenCalled();
     });
 
-    it('creating a memento then restoring to that memento should not change any property', () => {
+    it('creating a memento then restoring to that memento should not change any property if canvas size has not changed meanwhile', () => {
         // tslint:disable-next-line: no-magic-numbers
         service.originalWidth = 10;
         // tslint:disable-next-line: no-magic-numbers
