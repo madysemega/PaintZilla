@@ -13,6 +13,7 @@ export class PipetteToolConfigurationComponent {
     // tslint:disable:use-lifecycle-interface
     ngAfterViewInit(): void {
         this.zoomctx = this.zoomCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.pipetteService.zoomctx = this.zoomctx;
+        this.pipetteService.setCtx(this.zoomctx);
+        //this.pipetteService.zoomctx = this.zoomctx;
     }
 }

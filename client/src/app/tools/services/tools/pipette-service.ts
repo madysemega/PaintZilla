@@ -40,6 +40,28 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.shape = new VerticesShape([]);
     }
 
+    setCtx(ctx: CanvasRenderingContext2D): void {
+        this.zoomctx = ctx;
+
+        this.zoomctx.save();
+        this.zoomctx.beginPath();
+        this.zoomctx.fillStyle = 'rgba(40, 82, 145, 0.932)';
+        this.zoomctx.fillRect(0, 0, this.zoomSize, this.zoomSize);
+        this.zoomctx.closePath();
+        this.zoomctx.restore();
+
+
+        this.zoomctx.save();
+        this.zoomctx.beginPath();
+        this.zoomctx.lineWidth = this.rectangleWidth;
+        this.zoomctx.arc(this.zoomSize / 2, this.zoomSize / 2, this.zoomSize / 2, 0, 2 * Math.PI);
+        this.zoomctx.clip()
+        this.zoomctx.fillStyle = 'white';
+        this.zoomctx.fillRect(0, 0, this.zoomSize, this.zoomSize);
+        this.zoomctx.closePath();
+        this.zoomctx.restore();
+    }
+
     onLineWidthChanged(): void {
         if (this.strokeWidthProperty) {
             this.strokeWidthProperty.strokeWidth = this.lineWidth;
@@ -85,6 +107,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     onMouseMove(event: MouseEvent): void {
+
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
         const zoomCenterPos = 8;
@@ -98,16 +121,32 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         const R = Colour.toHex(this.couleur[0]);
         const G = Colour.toHex(this.couleur[1]);
         const B = Colour.toHex(this.couleur[2]);
+
         this.outputCouleur = '#' + R + G + B;
-        if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
+
+        if (this.drawingService.canvasSize.x > mousePosition.x && mousePosition.x > 0 && this.drawingService.canvasSize.y > mousePosition.y && mousePosition.y > 0) {
+
             this.cerclePreview = this.drawingService.baseCtx.getImageData(
                 mousePosition.x - zoomCenterPos,
                 mousePosition.y - zoomCenterPos,
                 this.zoomWidth,
                 this.zoomWidth,
             );
-            this.zoomctx.fillStyle = 'white';
+
+            this.zoomctx.clearRect(0, 0, this.zoomSize, this.zoomSize);
+            this.zoomctx.save();
+            this.zoomctx.beginPath();
+            this.zoomctx.fillStyle = 'rgba(40, 82, 145, 0.932)';
             this.zoomctx.fillRect(0, 0, this.zoomSize, this.zoomSize);
+            this.zoomctx.closePath();
+            this.zoomctx.restore();
+
+
+            this.zoomctx.save();
+            this.zoomctx.beginPath();
+            this.zoomctx.lineWidth = this.rectangleWidth;
+            this.zoomctx.arc(this.zoomSize / 2, this.zoomSize / 2, this.zoomSize / 2, 0, 2 * Math.PI);
+            this.zoomctx.clip();
             this.zoomctx.putImageData(this.cerclePreview, this.zoomSize / 2, this.zoomSize / 2);
             this.zoomctx.imageSmoothingEnabled = false;
             this.zoomctx.drawImage(
@@ -121,15 +160,42 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
                 this.zoomSize,
                 this.zoomSize,
             );
+
+            this.zoomctx.closePath();
+            this.zoomctx.restore();
+
+
+            this.zoomctx.save();
             this.zoomctx.beginPath();
-            this.zoomctx.lineWidth = this.rectangleWidth;
-            this.zoomctx.arc(this.zoomSize / 2, this.zoomSize / 2, this.zoomSize / 2, 0, 2 * Math.PI);
-            this.zoomctx.clip();
-            this.zoomctx.strokeRect(this.zoomSize / 2, this.zoomSize / 2, this.rectangleSize, this.rectangleSize);
+            this.zoomctx.strokeRect(this.zoomSize / 2 - this.rectangleSize / 2, this.zoomSize / 2 - this.rectangleSize / 2, this.rectangleSize, this.rectangleSize);
             this.zoomctx.lineWidth = this.circleWidth;
             this.zoomctx.stroke();
+            this.zoomctx.closePath();
+            this.zoomctx.restore();
+
+        }
+        else {
+            console.log("otuside");
+            this.zoomctx.save();
+            this.zoomctx.beginPath();
+            this.zoomctx.lineWidth = 10;
+            this.zoomctx.arc(this.zoomSize / 2, this.zoomSize / 2, this.zoomSize / 2, 0, 2 * Math.PI);
+            this.zoomctx.clip()
+            this.zoomctx.fillStyle = 'white';
+            this.zoomctx.fillRect(0, 0, this.zoomSize, this.zoomSize);
+            this.zoomctx.closePath();
+            this.zoomctx.restore();
+
+            this.zoomctx.save();
+            this.zoomctx.beginPath();
+            this.zoomctx.strokeRect(this.zoomSize / 2 - this.rectangleSize / 2, this.zoomSize / 2 - this.rectangleSize / 2, this.rectangleSize, this.rectangleSize);
+            this.zoomctx.lineWidth = this.circleWidth;
+            this.zoomctx.stroke();
+            this.zoomctx.closePath();
+            this.zoomctx.restore();
         }
     }
+
     private clearVertices(): void {
         this.shape.clear();
     }
