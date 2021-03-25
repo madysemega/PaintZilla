@@ -28,7 +28,7 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    gridCellSize: number = -1;
+    gridCellSize: number = 50;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
 
     topLeft: Vec2 = { x: 0, y: 0 };

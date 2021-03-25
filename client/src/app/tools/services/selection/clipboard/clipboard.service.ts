@@ -43,7 +43,6 @@ export class ClipboardService {
     this.manipulatorToRestore = selectionCreator.selectionManipulator;
     this.handlerToRestore = selectionCreator.selectionManipulator.selectionHandler;
     if(this.applyWhiteFill){
-      console.log("hello");
       this.handlerToRestore.whiteFillAtOriginalLocation();
       this.registerWhiteFillInHistory();
     }

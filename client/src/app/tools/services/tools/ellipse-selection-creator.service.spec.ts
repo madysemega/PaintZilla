@@ -8,6 +8,7 @@ import { EllipseSelectionHelperService } from '@app/tools/services/selection/ell
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { BehaviorSubject } from 'rxjs';
+import { EllipseSelectionHandlerService } from '../selection/ellipse/ellipse-selection-handler-service';
 
 import { EllipseSelectionCreatorService } from './ellipse-selection-creator.service';
 
@@ -29,6 +30,8 @@ describe('EllipseSelectionCreatorService', () => {
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
     let ellipseSelectionManipulatorMock: EllipseSelectionManipulatorService;
+    let ellipseSelectionHandlerMock: EllipseSelectionHandlerService;
+
 
     let isSelectionBeingManipulatedSpy: jasmine.Spy<any>;
     let registerMousePositionSpy: jasmine.Spy<any>;
@@ -36,6 +39,13 @@ describe('EllipseSelectionCreatorService', () => {
     let createSelectionSpy: jasmine.Spy<any>;
     let resetPropertiesSpy: jasmine.Spy<any>;
     let drawSelectionOutlineSpy: jasmine.Spy<any>;
+    let stopManipulatingSelectionSpy: jasmine.Spy<any>;
+    let copySpy: jasmine.Spy<any>;
+    let cutSpy: jasmine.Spy<any>;
+
+
+
+
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -49,6 +59,8 @@ describe('EllipseSelectionCreatorService', () => {
             'onMouseUp',
             'initialize',
             'stopManipulation',
+            'createMemento',
+            'delete'
         ]);
 
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
@@ -73,7 +85,12 @@ describe('EllipseSelectionCreatorService', () => {
             'getSquareAdjustedPerimeter',
         ]);
 
+        ellipseSelectionHandlerMock = jasmine.createSpyObj('EllipseSelectionHandlerService', [
+            'createMemento',
+        ]);
+
         ellipseSelectionHelperMock.isSelectionBeingManipulated = new BehaviorSubject(true);
+    
 
         TestBed.configureTestingModule({
             providers: [
@@ -91,6 +108,8 @@ describe('EllipseSelectionCreatorService', () => {
         canvasPosition = { x: 50, y: 40 };
 
         ellipseSelectionManipulatorMock.historyService = TestBed.inject(HistoryService);
+        ellipseSelectionManipulatorMock.selectionHandler = ellipseSelectionHandlerMock;
+
         service = TestBed.inject(EllipseSelectionCreatorService);
 
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
@@ -111,6 +130,11 @@ describe('EllipseSelectionCreatorService', () => {
         createSelectionSpy = spyOn<any>(service, 'createSelection').and.callThrough();
         resetPropertiesSpy = spyOn<any>(service, 'resetProperties').and.callThrough();
         drawSelectionOutlineSpy = spyOn<any>(service, 'drawSelectionOutline').and.callThrough();
+        stopManipulatingSelectionSpy = spyOn<any>(service, 'stopManipulatingSelection').and.callThrough();
+        copySpy = spyOn<any>(service, 'copy').and.callThrough();
+        cutSpy = spyOn<any>(service, 'cut').and.callThrough();
+
+
 
         /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
@@ -257,6 +281,35 @@ describe('EllipseSelectionCreatorService', () => {
         isSelectionBeingManipulatedSpy.and.returnValue(true);
         service.onKeyUp(keyboardEvent);
         expect(ellipseSelectionManipulatorMock.onKeyUp).toHaveBeenCalled();
+    });
+
+    it('releasing Ctrl + C should copy', () => {
+        keyboardEvent = {
+            ctrlKey: true,
+            key: 'c',
+        } as KeyboardEvent;
+        isSelectionBeingManipulatedSpy.and.returnValue(true);
+        service.onKeyUp(keyboardEvent);
+        expect(copySpy).toHaveBeenCalled();
+    });
+
+    it('releasing Ctrl + X should cut', () => {
+        keyboardEvent = {
+            ctrlKey: true,
+            key: 'x',
+        } as KeyboardEvent;
+        isSelectionBeingManipulatedSpy.and.returnValue(true);
+        service.onKeyUp(keyboardEvent);
+        expect(cutSpy).toHaveBeenCalled();
+    });
+
+    it('releasing Del should delete', () => {
+        keyboardEvent = {
+            key: 'Delete',
+        } as KeyboardEvent;
+        isSelectionBeingManipulatedSpy.and.returnValue(true);
+        service.onKeyUp(keyboardEvent);
+        expect(ellipseSelectionManipulatorMock.delete).toHaveBeenCalled();
     });
 
     it('releasing shift should set isShiftDown to true if isSelectionBeingManipulated returns false', () => {
@@ -479,5 +532,15 @@ describe('EllipseSelectionCreatorService', () => {
         service.startPoint = mousePos;
         const output: boolean = service.startPointIsFarEnoughFrom(mousePos);
         expect(output).toEqual(false);
+    });
+
+    it('copying should not cancel current selection', () => {
+        service.copy();
+        expect(stopManipulatingSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('cutting should cancel current selection ', () => {
+        service.cut();
+        expect(ellipseSelectionManipulatorMock.stopManipulation).toHaveBeenCalled();
     });
 });

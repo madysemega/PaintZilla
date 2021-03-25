@@ -36,12 +36,14 @@ describe('EllipseSelectionManipulatorService', () => {
     let moveIfPressLongEnoughSpy: jasmine.Spy<any>;
     let singleMoveSpy: jasmine.Spy<any>;
     let getMousePosOnDiagonalSpy: jasmine.Spy<any>;
+    let registerActionSpy: jasmine.Spy<any>;
+
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 0, y: 0 };
 
-        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select']);
+        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select', 'makeWhiteBehindSelection']);
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
             'drawSelectionEllipse',
@@ -96,6 +98,8 @@ describe('EllipseSelectionManipulatorService', () => {
         moveIfPressLongEnoughSpy = spyOn<any>(service, 'moveIfPressLongEnough').and.callThrough();
         singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
         getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
+        registerActionSpy = spyOn<any>(service, 'registerAction').and.callThrough();
+
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -469,5 +473,17 @@ describe('EllipseSelectionManipulatorService', () => {
         service.onKeyDown(keyboardEvent);
         const isPressed: boolean = service.isAnArrowKeyPressed();
         expect(isPressed).toEqual(true);
+    });
+
+    it('delete should register an action in case white fill is applied', () => {
+        (selectionHandlerMock.makeWhiteBehindSelection as jasmine.Spy<any>).and.returnValue(true);
+        service.delete();
+        expect(registerActionSpy).toHaveBeenCalled();
+    });
+
+    it('delete should not register an action in case white fill is not applied', () => {
+        (selectionHandlerMock.makeWhiteBehindSelection as jasmine.Spy<any>).and.returnValue(false);
+        service.delete();
+        expect(registerActionSpy).not.toHaveBeenCalled();
     });
 });

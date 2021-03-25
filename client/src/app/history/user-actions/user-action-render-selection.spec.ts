@@ -19,7 +19,7 @@ describe('UserActionRenderSelection', () => {
         const height = 200;
         handlerMemento = new HandlerMemento(width, height);
         topLeft = { x: 5, y: 6 };
-        action = new UserActionRenderSelection(drawingService, selectionHandlerSpy, handlerMemento, topLeft);
+        action = new UserActionRenderSelection(drawingService, selectionHandlerSpy, handlerMemento, topLeft, false);
     });
 
     it('apply should restore from memento and draw the selection', () => {
