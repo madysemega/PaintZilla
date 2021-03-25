@@ -40,6 +40,8 @@ import { SprayToolConfigurationComponent } from '@app/tools/components/tool-conf
 import { HotkeyModule } from 'angular2-hotkeys';
 import { FilterLabelComponent } from './carousel/components/filter-label/filter-label.component';
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
+import { MagnetismComponent } from './magnetism/magnetism/magnetism.component';
+import { ClipboardComponent } from './tools/components/selection/clipboard/clipboard.component';
 
 @NgModule({
     declarations: [
@@ -80,6 +82,8 @@ import { ConfigurationPanelComponent } from './drawing/components/configuration-
         FilterLabelComponent,
         SaveDrawingDialogComponent,
         DiscardChangesModalComponent,
+        ClipboardComponent,
+        MagnetismComponent,
     ],
     imports: [
         BrowserModule,
