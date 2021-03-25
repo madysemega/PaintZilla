@@ -21,8 +21,6 @@ describe('EllipseSelectionHandlerService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHandlerService>;
-    
-
 
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
     let hasSelectionBeenManipulatedSpy: jasmine.Spy<any>;
@@ -30,7 +28,6 @@ describe('EllipseSelectionHandlerService', () => {
     let updateHorizontalOffsetSpy: jasmine.Spy<any>;
     let updateVerticalOffsetSpy: jasmine.Spy<any>;
     let fillSpy: jasmine.Spy<any>;
-
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -279,5 +276,4 @@ describe('EllipseSelectionHandlerService', () => {
         service.makeWhiteBehindSelection();
         expect(whiteFillAtOriginalLocationSpy).not.toHaveBeenCalled();
     });
-
 });

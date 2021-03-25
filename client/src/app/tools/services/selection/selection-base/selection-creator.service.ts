@@ -8,8 +8,8 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
-import { ClipboardService } from '../clipboard/clipboard.service';
 import { SelectionHelperService } from './selection-helper.service';
 
 @Injectable({
@@ -27,7 +27,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         drawingService: DrawingService,
         public selectionManipulator: SelectionManipulatorService,
         public selectionHelper: SelectionHelperService,
-        private clipboardService: ClipboardService
+        private clipboardService: ClipboardService,
     ) {
         super(drawingService);
     }
@@ -139,15 +139,15 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         }
     }
 
-    copy() {
-        let manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
-        let handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+    copy(): void {
+        const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+        const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
         this.clipboardService.copy(manipulatorMemento, handlerMemento, this);
     }
 
-    cut() {
-        let manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
-        let handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+    cut(): void {
+        const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+        const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
         this.clipboardService.cut(manipulatorMemento, handlerMemento, this);
         this.selectionManipulator.stopManipulation(false);
     }

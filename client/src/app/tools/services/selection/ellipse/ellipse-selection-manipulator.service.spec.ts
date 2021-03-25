@@ -38,12 +38,17 @@ describe('EllipseSelectionManipulatorService', () => {
     let getMousePosOnDiagonalSpy: jasmine.Spy<any>;
     let registerActionSpy: jasmine.Spy<any>;
 
-
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 0, y: 0 };
 
-        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', ['createMemento', 'drawSelection', 'resizeSelection', 'select', 'makeWhiteBehindSelection']);
+        selectionHandlerMock = jasmine.createSpyObj('SelectionHandlerService', [
+            'createMemento',
+            'drawSelection',
+            'resizeSelection',
+            'select',
+            'makeWhiteBehindSelection',
+        ]);
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
             'drawSelectionEllipse',
@@ -99,7 +104,6 @@ describe('EllipseSelectionManipulatorService', () => {
         singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
         getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
         registerActionSpy = spyOn<any>(service, 'registerAction').and.callThrough();
-
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal

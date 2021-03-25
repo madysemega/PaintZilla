@@ -122,8 +122,7 @@ describe('SidebarComponent', () => {
             drawingStub,
             ellipseSelectionManipulatorService,
             ellipseSelectionHelperService,
-            clipboardService
-            
+            clipboardService,
         );
 
         rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -143,7 +142,7 @@ describe('SidebarComponent', () => {
             drawingStub,
             rectangleSelectionManipulatorService,
             rectangleSelectionHelperService,
-            clipboardService
+            clipboardService,
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
@@ -212,7 +211,7 @@ describe('SidebarComponent', () => {
             })
             .compileComponents();
 
-            clipboardService = TestBed.inject(ClipboardService);
+        clipboardService = TestBed.inject(ClipboardService);
     }));
 
     beforeEach(() => {

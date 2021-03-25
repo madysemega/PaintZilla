@@ -92,7 +92,6 @@ export class EditorComponent implements AfterViewInit {
             const isShift: boolean = event.shiftKey;
 
             if (isCtrl) {
-                
                 if (isZ && isShift) {
                     this.historyService.redo();
                     return;
@@ -101,14 +100,13 @@ export class EditorComponent implements AfterViewInit {
                     this.historyService.undo();
                     return;
                 }
-                if(isV && !this.clipboardService.isEmpty){
+                if (isV && !this.clipboardService.isEmpty) {
                     this.toolSelector.selectTool(this.clipboardService.copyOwner.key);
                     this.clipboardService.paste();
                     this.historyService.isLocked = true;
                     return;
                 }
-            }
-            else{
+            } else {
                 this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
             }
 

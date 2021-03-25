@@ -14,121 +14,119 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 
 import { ClipboardComponent } from './clipboard.component';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-empty
+// tslint:disable:max-file-line-count
+// tslint:disable:no-unused-expression
 describe('ClipboardComponent', () => {
-  let component: ClipboardComponent;
-  let fixture: ComponentFixture<ClipboardComponent>;
-  let clipboardService: ClipboardService;
-  let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
-  let ellipseSelectionManipulatorService: EllipseSelectionManipulatorService;
-  let ellipseSelectionHelperService: EllipseSelectionHelperService;
-  let ellipseSelectionCreatorService: EllipseSelectionCreatorService;
-  let drawingStub: DrawingService;
-  let historyServiceStub: HistoryService;
-  let colourServiceStub: ColourService;
-  let ellipseToolStub: EllipseService;
-  let pencilService: PencilService;
+    let component: ClipboardComponent;
+    let fixture: ComponentFixture<ClipboardComponent>;
+    let clipboardService: ClipboardService;
+    let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
+    let ellipseSelectionManipulatorService: EllipseSelectionManipulatorService;
+    let ellipseSelectionHelperService: EllipseSelectionHelperService;
+    let ellipseSelectionCreatorService: EllipseSelectionCreatorService;
+    let drawingStub: DrawingService;
+    let historyServiceStub: HistoryService;
+    let colourServiceStub: ColourService;
+    let ellipseToolStub: EllipseService;
+    let pencilService: PencilService;
 
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ClipboardComponent],
+        }).compileComponents();
 
+        colourServiceStub = new ColourService({} as ColourPickerService);
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ClipboardComponent ]
-    })
-    .compileComponents();
+        historyServiceStub = new HistoryService();
 
-    colourServiceStub = new ColourService({} as ColourPickerService);
+        drawingStub = new DrawingService(historyServiceStub);
+        drawingStub.canvasSize = { x: 500, y: 600 };
 
-    historyServiceStub = new HistoryService();
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
-    drawingStub = new DrawingService(historyServiceStub);
-    drawingStub.canvasSize = { x: 500, y: 600 };
+        pencilService = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
 
-    ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
+        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
+        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        clipboardService = new ClipboardService(drawingStub, ellipseSelectionHelperService, historyServiceStub);
+        ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(
+            drawingStub,
+            ellipseSelectionHelperService,
+            ellipseSelectionHandlerService,
+            historyServiceStub,
+        );
+        ellipseSelectionCreatorService = new EllipseSelectionCreatorService(
+            drawingStub,
+            ellipseSelectionManipulatorService,
+            ellipseSelectionHelperService,
+            clipboardService,
+        );
 
-    pencilService = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
+        spyOn<any>(ellipseSelectionHandlerService, 'restoreFromMemento').and.callThrough().and.returnValue(true);
+        spyOn<any>(ellipseSelectionManipulatorService, 'restoreFromMemento').and.callThrough().and.returnValue(true);
+        spyOn<any>(ellipseSelectionManipulatorService, 'drawSelectionOutline').and.callThrough().and.returnValue(true);
 
-    ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
-    ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
-    clipboardService = new ClipboardService(drawingStub, ellipseSelectionHelperService, historyServiceStub);
-    ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(
-      drawingStub,
-      ellipseSelectionHelperService,
-      ellipseSelectionHandlerService,
-      historyServiceStub,
-    );
-    ellipseSelectionCreatorService = new EllipseSelectionCreatorService(
-      drawingStub,
-      ellipseSelectionManipulatorService,
-      ellipseSelectionHelperService,
-      clipboardService,
-    );
+        spyOn<any>(ellipseSelectionHandlerService, 'whiteFillAtOriginalLocation').and.returnValue(undefined);
+    }));
 
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ClipboardComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        component.toolSelector = TestBed.inject(ToolSelectorService);
+    });
 
-    
-    spyOn<any>(ellipseSelectionHandlerService, 'restoreFromMemento').and.callThrough().and.returnValue(true);
-    spyOn<any>(ellipseSelectionManipulatorService, 'restoreFromMemento').and.callThrough().and.returnValue(true);
-    spyOn<any>(ellipseSelectionManipulatorService, 'drawSelectionOutline').and.callThrough().and.returnValue(true);
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-    spyOn<any>(ellipseSelectionHandlerService, 'whiteFillAtOriginalLocation').and.returnValue(undefined);
-  }));
+    it('isSelectionBeingManipulated should return true if currently selected tool is RectangleSelection and \
+    the selection is being manipulated', () => {
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        spyOn<any>(ellipseSelectionCreatorService, 'isSelectionBeingManipulated').and.returnValue(true);
+        expect(component.isSelectionBeingManipulated()).toEqual(true);
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ClipboardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    component.toolSelector = TestBed.inject(ToolSelectorService);
+    it('isSelectionBeingManipulated should return false if currently selected tool is RectangleSelection and \
+    the selection is being manipulated', () => {
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(pencilService);
+        expect(component.isSelectionBeingManipulated()).toEqual(false);
+    });
 
-  });
+    it('isClipboard empty should return false if it is not empty', () => {
+        component.clipboardService.isEmpty = false;
+        expect(component.isClipboardEmpty()).toEqual(false);
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('copy should call copy from the selectionCreator', () => {
+        const copySpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'copy').and.callThrough();
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        component.copy();
+        expect(copySpy).toHaveBeenCalled();
+    });
 
-  it('isSelectionBeingManipulated should return true if currently selected tool is RectangleSelection and the selection is being manipulated', () => {
-    
-    spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
-    spyOn<any>(ellipseSelectionCreatorService, 'isSelectionBeingManipulated').and.returnValue(true);
-    expect(component.isSelectionBeingManipulated()).toEqual(true);
-  });
+    it('cut should call cut from the selectionCreator', () => {
+        const cutSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'cut').and.callThrough().and.returnValue(undefined);
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        component.cut();
+        expect(cutSpy).toHaveBeenCalled();
+    });
 
-  it('isSelectionBeingManipulated should return false if currently selected tool is RectangleSelection and the selection is being manipulated', () => {
-    
-    spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(pencilService);
-    expect(component.isSelectionBeingManipulated()).toEqual(false);
-  });
+    it('pasting should lock the history', () => {
+        spyOn<any>(clipboardService, 'paste').and.callThrough().and.returnValue(undefined);
+        component.historyService = historyServiceStub;
+        component.clipboardService.copyOwner = ellipseSelectionCreatorService;
+        component.paste();
+        expect(historyServiceStub.isLocked).toEqual(true);
+    });
 
-  it('isClipboard empty should return false if it is not empty', () => {
-    
-    component.clipboardService.isEmpty = false;
-    expect(component.isClipboardEmpty()).toEqual(false);
-  });
-
-  it('copy should call copy from the selectionCreator', () => {
-    let copySpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'copy').and.callThrough();
-    spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
-    component.copy();
-    expect(copySpy).toHaveBeenCalled();
-  });
-
-  it('cut should call cut from the selectionCreator', () => {
-    let cutSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'cut').and.callThrough().and.returnValue(undefined);
-    spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
-    component.cut();
-    expect(cutSpy).toHaveBeenCalled();
-  });
-
-  it('pasting should lock the history', () => {
-    spyOn<any>(clipboardService, 'paste').and.callThrough().and.returnValue(undefined);
-    component.historyService = historyServiceStub;
-    component.clipboardService.copyOwner = ellipseSelectionCreatorService;
-    component.paste();
-    expect(historyServiceStub.isLocked).toEqual(true);
-  });
-
-  it('delete should call delete from the selection manipulator', () => {
-    let deleteSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionManipulatorService, 'delete').and.returnValue(undefined);
-    spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
-    component.delete();
-    expect(deleteSpy).toHaveBeenCalled();
-  });
+    it('delete should call delete from the selection manipulator', () => {
+        const deleteSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionManipulatorService, 'delete').and.returnValue(undefined);
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        component.delete();
+        expect(deleteSpy).toHaveBeenCalled();
+    });
 });

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
-import { ClipboardService } from '../selection/clipboard/clipboard.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,9 +14,9 @@ export class RectangleSelectionCreatorService extends SelectionCreatorService {
         public drawingService: DrawingService,
         selectionManipulator: RectangleSelectionManipulatorService,
         public selectionHelper: RectangleSelectionHelperService,
-        clipboardService: ClipboardService
+        clipboardService: ClipboardService,
     ) {
-        super(drawingService, selectionManipulator, selectionHelper, clipboardService );
+        super(drawingService, selectionManipulator, selectionHelper, clipboardService);
         this.key = 'rectangle-selection';
     }
 

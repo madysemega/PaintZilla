@@ -8,7 +8,7 @@ export class UserActionRenderSelection implements IUserAction {
     apply(): void {
         this.selectionHandler.restoreFromMemento(this.handlerMemento);
 
-        if(this.justAWhiteFill){
+        if (this.justAWhiteFill) {
             this.selectionHandler.whiteFillAtOriginalLocation();
             return;
         }
@@ -23,6 +23,4 @@ export class UserActionRenderSelection implements IUserAction {
         private topLeft: Vec2,
         private justAWhiteFill: boolean,
     ) {}
-
-    
 }

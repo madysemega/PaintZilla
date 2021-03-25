@@ -4,13 +4,12 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { BehaviorSubject } from 'rxjs';
-import { EllipseSelectionHandlerService } from '../selection/ellipse/ellipse-selection-handler-service';
-
-import { EllipseSelectionCreatorService } from './ellipse-selection-creator.service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -32,7 +31,6 @@ describe('EllipseSelectionCreatorService', () => {
     let ellipseSelectionManipulatorMock: EllipseSelectionManipulatorService;
     let ellipseSelectionHandlerMock: EllipseSelectionHandlerService;
 
-
     let isSelectionBeingManipulatedSpy: jasmine.Spy<any>;
     let registerMousePositionSpy: jasmine.Spy<any>;
     let startPointIsFarEnoughFromSpy: jasmine.Spy<any>;
@@ -42,10 +40,6 @@ describe('EllipseSelectionCreatorService', () => {
     let stopManipulatingSelectionSpy: jasmine.Spy<any>;
     let copySpy: jasmine.Spy<any>;
     let cutSpy: jasmine.Spy<any>;
-
-
-
-
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -60,7 +54,7 @@ describe('EllipseSelectionCreatorService', () => {
             'initialize',
             'stopManipulation',
             'createMemento',
-            'delete'
+            'delete',
         ]);
 
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
@@ -85,12 +79,9 @@ describe('EllipseSelectionCreatorService', () => {
             'getSquareAdjustedPerimeter',
         ]);
 
-        ellipseSelectionHandlerMock = jasmine.createSpyObj('EllipseSelectionHandlerService', [
-            'createMemento',
-        ]);
+        ellipseSelectionHandlerMock = jasmine.createSpyObj('EllipseSelectionHandlerService', ['createMemento']);
 
         ellipseSelectionHelperMock.isSelectionBeingManipulated = new BehaviorSubject(true);
-    
 
         TestBed.configureTestingModule({
             providers: [
@@ -133,8 +124,6 @@ describe('EllipseSelectionCreatorService', () => {
         stopManipulatingSelectionSpy = spyOn<any>(service, 'stopManipulatingSelection').and.callThrough();
         copySpy = spyOn<any>(service, 'copy').and.callThrough();
         cutSpy = spyOn<any>(service, 'cut').and.callThrough();
-
-
 
         /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();

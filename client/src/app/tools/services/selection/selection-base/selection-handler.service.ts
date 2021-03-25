@@ -83,7 +83,6 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
-
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
@@ -108,8 +107,7 @@ export abstract class SelectionHandlerService {
             newlength = bottomRightOnSource.x - topLeftOnSource.x;
             this.currentHorizontalScaling = newlength / this.originalWidth;
             this.updateHorizontalOffset(newlength);
-        }
-        else {
+        } else {
             newlength = bottomRightOnSource.y - topLeftOnSource.y;
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
@@ -137,7 +135,12 @@ export abstract class SelectionHandlerService {
         destination.closePath();
     }
 
-    overwriteACanvasWithAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+    overwriteACanvasWithAnother(
+        source: HTMLCanvasElement,
+        destination: CanvasRenderingContext2D,
+        horizontalScaling: number,
+        verticalScaling: number,
+    ): void {
         this.drawingService.clearCanvas(destination);
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);

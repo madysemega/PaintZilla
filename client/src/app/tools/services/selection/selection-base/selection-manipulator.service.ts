@@ -83,9 +83,7 @@ export abstract class SelectionManipulatorService extends Tool {
         if (!this.mouseDown) {
             return;
         }
-
         this.registerMousePos(mousePosition, false);
-
         if (this.resizingMode !== ResizingMode.off) {
             this.resizeSelection(mousePosition, this.resizingMode);
             return;
@@ -192,7 +190,7 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     delete(): void {
-        if(this.selectionHandler.makeWhiteBehindSelection()) {
+        if (this.selectionHandler.makeWhiteBehindSelection()) {
             this.registerAction(true);
         }
         this.stopManipulation(false);
@@ -213,14 +211,17 @@ export abstract class SelectionManipulatorService extends Tool {
         this.resetProperties();
     }
 
-    registerAction(allWhite: boolean) {
+    registerAction(allWhite: boolean): void {
         const memento: HandlerMemento = this.selectionHandler.createMemento();
-        const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
-            x: this.topLeft.x,
-            y: this.topLeft.y,
-
-        },
-            allWhite
+        const userAction: UserActionRenderSelection = new UserActionRenderSelection(
+            this.drawingService,
+            this.selectionHandler,
+            memento,
+            {
+                x: this.topLeft.x,
+                y: this.topLeft.y,
+            },
+            allWhite,
         );
         this.historyService.register(userAction);
     }
