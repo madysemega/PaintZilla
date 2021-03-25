@@ -115,13 +115,11 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.drawingService.canvasSize.y > mousePosition.y &&
             mousePosition.y > 0
         ) {
-
             this.extractAPortionOfCanvas(mousePosition);
             this.fillTheEntireCanvasInBlue();
             this.pasteThePortionOfCanvas();
             this.drawHorizontalLines();
             this.drawVerticalLines();
-
         } else {
             this.fillTheCircleInWhite();
             this.drawHorizontalLines();
