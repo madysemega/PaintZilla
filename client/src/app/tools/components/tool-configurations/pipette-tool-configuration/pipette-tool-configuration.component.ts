@@ -14,6 +14,6 @@ export class PipetteToolConfigurationComponent {
     ngAfterViewInit(): void {
         this.zoomctx = this.zoomCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.pipetteService.setCtx(this.zoomctx);
-        //this.pipetteService.zoomctx = this.zoomctx;
+        // this.pipetteService.zoomctx = this.zoomctx;
     }
 }
