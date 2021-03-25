@@ -23,7 +23,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     mouseRightDown: boolean = false;
     zoomWidth: number = 10;
     circleWidth: number = 6;
-    zoomSize: number = 200;
+    zoomSize: number = 201;
     rectangleWidth: number = 3;
     rectangleSize: number = 20;
     zoomctx: CanvasRenderingContext2D;
@@ -129,8 +129,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.cerclePreview = this.drawingService.baseCtx.getImageData(
                 mousePosition.x - zoomCenterPos,
                 mousePosition.y - zoomCenterPos,
-                this.zoomWidth,
-                this.zoomWidth,
+                this.zoomWidth+1 ,
+                this.zoomWidth+1 ,
             );
 
             this.zoomctx.clearRect(0, 0, this.zoomSize, this.zoomSize);
@@ -152,13 +152,13 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.zoomctx.drawImage(
                 this.zoomctx.canvas,
                 this.zoomSize / 2,
-                this.zoomSize / 2,
-                this.zoomWidth,
-                this.zoomWidth,
+                this.zoomSize / 2 ,
+                this.zoomWidth ,
+                this.zoomWidth ,
                 0,
                 0,
                 this.zoomSize,
-                this.zoomSize,
+                this.zoomSize ,
             );
 
             this.zoomctx.closePath();
@@ -167,6 +167,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
             this.zoomctx.save();
             this.zoomctx.beginPath();
+            this.zoomctx.lineWidth = 2;
+            this.zoomctx.strokeStyle = 'rgb(230, 255, 6)';
             this.zoomctx.strokeRect(this.zoomSize / 2 - this.rectangleSize / 2, this.zoomSize / 2 - this.rectangleSize / 2, this.rectangleSize, this.rectangleSize);
             this.zoomctx.lineWidth = this.circleWidth;
             this.zoomctx.stroke();
@@ -175,7 +177,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
         }
         else {
-            console.log("otuside");
             this.zoomctx.save();
             this.zoomctx.beginPath();
             this.zoomctx.lineWidth = 10;
@@ -188,6 +189,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
             this.zoomctx.save();
             this.zoomctx.beginPath();
+            this.zoomctx.lineWidth = 2;
+            this.zoomctx.strokeStyle = 'rgb(230, 255, 6)';
             this.zoomctx.strokeRect(this.zoomSize / 2 - this.rectangleSize / 2, this.zoomSize / 2 - this.rectangleSize / 2, this.rectangleSize, this.rectangleSize);
             this.zoomctx.lineWidth = this.circleWidth;
             this.zoomctx.stroke();
