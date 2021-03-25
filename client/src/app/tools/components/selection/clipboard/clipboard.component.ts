@@ -27,13 +27,13 @@ export class ClipboardComponent implements OnInit {
   }
 
   copy(): void {
-    const selector: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-    selector.copy();
+    const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+    creator.copy();
   }
 
   cut(): void {
-    const selector: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-    selector.cut();
+    const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+    creator.cut();
   }
 
   paste(): void {
@@ -43,8 +43,8 @@ export class ClipboardComponent implements OnInit {
   }
 
   delete(): void {
-    const selector: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-    selector.selectionManipulator.delete();
+    const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+    creator.selectionManipulator.delete();
   }
 
   ngOnInit(): void {
