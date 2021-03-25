@@ -83,7 +83,7 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
-        console.log(this.selection.width, this.selection.height);
+    
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
@@ -161,7 +161,6 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        console.log('RESET');
         this.selection.width = this.drawingService.canvas.width;
         this.selection.height = this.drawingService.canvas.height;
         this.originalSelection.width = this.drawingService.canvas.width;

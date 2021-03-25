@@ -28,7 +28,8 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    gridCellSize: number = 50;
+    isMagnetismActivated: boolean = false;
+    gridCellSize: number = 75;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
 
     topLeft: Vec2 = { x: 0, y: 0 };
@@ -79,6 +80,7 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
+        //console.log(this.gridMovementAnchor);
         const mousePosition = this.getPositionFromMouse(event);
         if (!this.mouseDown) {
             return;
@@ -234,10 +236,11 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
+        let cellSize: number = this.isMagnetismActivated ? this.gridCellSize : -1;
         movement = this.selectionHelper.moveAlongTheGrid(
             movement,
             isMouseMovement,
-            this.gridCellSize,
+            cellSize,
             this.gridMovementAnchor,
             this.topLeft,
             this.bottomRight,
