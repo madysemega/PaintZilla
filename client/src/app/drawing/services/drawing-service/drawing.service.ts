@@ -28,8 +28,8 @@ export class DrawingService {
         }
     }
 
-    clearCanvas(context: CanvasRenderingContext2D, size?:Vec2): void {
-        if(size!=undefined){
+    clearCanvas(context: CanvasRenderingContext2D, size?: Vec2): void {
+        if (size != undefined) {
             context.clearRect(0, 0, size.x, size.y);
         }
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
