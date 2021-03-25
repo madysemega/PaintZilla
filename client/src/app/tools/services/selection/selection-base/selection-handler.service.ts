@@ -112,7 +112,6 @@ export abstract class SelectionHandlerService {
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
         }
-
         this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
     }
 
@@ -141,7 +140,7 @@ export abstract class SelectionHandlerService {
         horizontalScaling: number,
         verticalScaling: number,
     ): void {
-        this.drawingService.clearCanvas(destination);
+        this.drawingService.clearCanvas(destination, {x:5000, y: 5000});
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
         destination.imageSmoothingEnabled = false;
@@ -160,10 +159,10 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        this.selection.width = this.drawingService.canvas.width;
-        this.selection.height = this.drawingService.canvas.height;
-        this.originalSelection.width = this.drawingService.canvas.width;
-        this.originalSelection.height = this.drawingService.canvas.height;
+        this.selection.width = 5000;
+        this.selection.height = 5000;
+        this.originalSelection.width = 5000;
+        this.originalSelection.height = 5000;
     }
 
     hasSelectionBeenManipulated(topLeftOnDestination: Vec2): boolean {
@@ -175,7 +174,7 @@ export abstract class SelectionHandlerService {
     }
 
     createMemento(): HandlerMemento {
-        const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
+        const memento: HandlerMemento = new HandlerMemento(5000, 5000);
 
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };
@@ -202,21 +201,13 @@ export abstract class SelectionHandlerService {
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
-        const drawingPosition: Vec2 = {
-            x: this.selection.width / 2 - memento.selection.width / 2,
-            y: this.selection.height / 2 - memento.selection.height / 2,
-        };
-        const drawingPosition2: Vec2 = {
-            x: this.selection.width / 2 - memento.originalSelection.width / 2,
-            y: this.selection.height / 2 - memento.originalSelection.height / 2,
-        };
-
-        this.drawACanvasOnAnother(memento.selection, this.selectionCtx, drawingPosition);
-        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx, drawingPosition2);
+        
+        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
+        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
 
         this.topLeftRelativeToMiddle = {
-            x: memento.topLeftRelativeToMiddle.x + drawingPosition.x,
-            y: memento.topLeftRelativeToMiddle.y + drawingPosition.y,
+            x: memento.topLeftRelativeToMiddle.x ,
+            y: memento.topLeftRelativeToMiddle.y ,
         };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
 
