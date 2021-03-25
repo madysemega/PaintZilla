@@ -5,22 +5,26 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 
 @Component({
-  selector: 'app-magnetism',
-  templateUrl: './magnetism.component.html',
-  styleUrls: ['./magnetism.component.scss']
+    selector: 'app-magnetism',
+    templateUrl: './magnetism.component.html',
+    styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-  public isActivated: boolean = false;
-  constructor(public selectionManipulator: SelectionManipulatorService, public toolSelector: ToolSelectorService) { }
+    isActivated: boolean = false;
+    constructor(public selectionManipulator: SelectionManipulatorService, public toolSelector: ToolSelectorService) {}
 
-  toggleMagnetism() {
-    this.isActivated = !this.isActivated;
-    ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
-    ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
-  }
+    toggleMagnetism(): void {
+        this.isActivated = !this.isActivated;
+        ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+        ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+    }
 
-  setGridAnchor(gridAnchor: number): void {
-    ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
-    ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
-  }
+    setGridAnchor(gridAnchor: number): void {
+        ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+        ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+    }
 }

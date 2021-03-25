@@ -83,7 +83,6 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
-    
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
