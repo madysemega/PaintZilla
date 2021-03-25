@@ -17,6 +17,7 @@ export enum ResizingMode {
 })
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
+    protected readonly CANVAS_SIZE: number = 5000;
 
     selection: HTMLCanvasElement;
     originalSelection: HTMLCanvasElement;
@@ -142,7 +143,7 @@ export abstract class SelectionHandlerService {
         horizontalScaling: number,
         verticalScaling: number,
     ): void {
-        this.drawingService.clearCanvas(destination);
+        this.drawingService.clearCanvas(destination, { x: this.CANVAS_SIZE, y: this.CANVAS_SIZE });
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
         destination.imageSmoothingEnabled = false;
@@ -161,11 +162,10 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        console.log('RESET');
-        this.selection.width = this.drawingService.canvas.width;
-        this.selection.height = this.drawingService.canvas.height;
-        this.originalSelection.width = this.drawingService.canvas.width;
-        this.originalSelection.height = this.drawingService.canvas.height;
+        this.selection.width = this.CANVAS_SIZE;
+        this.selection.height = this.CANVAS_SIZE;
+        this.originalSelection.width = this.CANVAS_SIZE;
+        this.originalSelection.height = this.CANVAS_SIZE;
     }
 
     hasSelectionBeenManipulated(topLeftOnDestination: Vec2): boolean {
@@ -177,7 +177,7 @@ export abstract class SelectionHandlerService {
     }
 
     createMemento(): HandlerMemento {
-        const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
+        const memento: HandlerMemento = new HandlerMemento(this.CANVAS_SIZE, this.CANVAS_SIZE);
 
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };
@@ -204,21 +204,13 @@ export abstract class SelectionHandlerService {
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
-        const drawingPosition: Vec2 = {
-            x: this.selection.width / 2 - memento.selection.width / 2,
-            y: this.selection.height / 2 - memento.selection.height / 2,
-        };
-        const drawingPosition2: Vec2 = {
-            x: this.selection.width / 2 - memento.originalSelection.width / 2,
-            y: this.selection.height / 2 - memento.originalSelection.height / 2,
-        };
 
-        this.drawACanvasOnAnother(memento.selection, this.selectionCtx, drawingPosition);
-        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx, drawingPosition2);
+        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
+        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
 
         this.topLeftRelativeToMiddle = {
-            x: memento.topLeftRelativeToMiddle.x + drawingPosition.x,
-            y: memento.topLeftRelativeToMiddle.y + drawingPosition.y,
+            x: memento.topLeftRelativeToMiddle.x,
+            y: memento.topLeftRelativeToMiddle.y,
         };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
 
