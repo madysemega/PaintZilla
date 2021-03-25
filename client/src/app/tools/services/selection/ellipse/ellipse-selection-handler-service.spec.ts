@@ -32,7 +32,6 @@ describe('EllipseSelectionHandlerService', () => {
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 500, y: 500 };
-        
 
         ellipseSelectionHelperMock = jasmine.createSpyObj('EllipseSelectionHelperService', [
             'getEllipseParam',
@@ -96,7 +95,6 @@ describe('EllipseSelectionHandlerService', () => {
         service['drawingService'].canvas = canvas;
         drawServiceSpy.canvas.width = 500;
         drawServiceSpy.canvas.height = 500;
-        
     });
 
     it('should be created', () => {
