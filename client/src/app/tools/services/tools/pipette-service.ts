@@ -202,11 +202,13 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         const PIXEL_WIDTH = 20;
         const OFFSET = 10;
         const N_LINES = 12;
-        const GRID_WIDTH = 1.5;
+        const GRID_WIDTH = 1.0;
 
         this.zoomctx.beginPath();
         this.zoomctx.lineTo(0, OFFSET);
         this.zoomctx.lineWidth = GRID_WIDTH;
+        this.zoomctx.strokeStyle = 'rgba(18, 37, 59, 0.932)';
+
         let i = 0;
         while (i < N_LINES) {
             this.zoomctx.lineTo(this.ZOOM_SIZE, i * PIXEL_WIDTH + OFFSET);
@@ -222,11 +224,13 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         const PIXEL_HEIGHT = 20;
         const OFFSET = 10;
         const N_LINES = 12;
-        const GRID_WIDTH = 1.5;
+        const GRID_WIDTH = 1.0;
 
         this.zoomctx.beginPath();
         this.zoomctx.lineTo(OFFSET, 0);
         this.zoomctx.lineWidth = GRID_WIDTH;
+        this.zoomctx.strokeStyle = 'rgba(18, 37, 59, 0.932)';
+
         let j = 0;
         while (j < N_LINES) {
             this.zoomctx.lineTo(j * PIXEL_HEIGHT + OFFSET, this.ZOOM_SIZE);
