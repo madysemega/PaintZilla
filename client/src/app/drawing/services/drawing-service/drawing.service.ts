@@ -32,7 +32,9 @@ export class DrawingService {
         if (size != undefined) {
             context.clearRect(0, 0, size.x, size.y);
         }
-        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        else{
+            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
     }
 
     // Taken from https://stackoverflow.com/questions/17386707/how-to-check-if-a-canvas-is-blank

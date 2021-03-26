@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { Vec2 } from '@app/app/classes/vec2';
+//import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
@@ -49,6 +51,19 @@ describe('DrawingService', () => {
         const pixelBuffer = new Uint32Array(service.baseCtx.getImageData(0, 0, service.canvas.width, service.canvas.height).data.buffer);
         const hasColoredPixels = pixelBuffer.some((color) => color !== 0);
         expect(hasColoredPixels).toBeFalse();
+    });
+
+    it('clearCanvas() should not affect the portion outside the one passed in param if there is any', () => {
+        service.canvas.width = 1000;
+        service.canvas.height = 1000;
+        service.baseCtx.fillStyle = 'blue';
+        service.baseCtx.fillRect(0, 0, service.canvasSize.x, service.canvasSize.y);
+        const clearArea: Vec2 = { x: 200, y: 200 };
+        service.clearCanvas(service.baseCtx, clearArea);
+        const pixelBuffer = new Uint32Array(service.baseCtx.getImageData(clearArea.x + 1, clearArea.y + 1,
+            service.canvasSize.x - clearArea.x - 1, service.canvasSize.y - clearArea.y - 1).data.buffer);
+        const hasPixelWithoutColor = pixelBuffer.some((color) => color === 0);
+        expect(hasPixelWithoutColor).toBeFalse();
     });
 
     it('isCanvasEmpty should be true if canvas is empty', () => {
@@ -114,7 +129,7 @@ describe('DrawingService', () => {
         const HEIGHT = 300;
 
         // tslint:disable-next-line: no-empty
-        historyServiceStub.do(new UserActionResizeDrawingSurface(WIDTH, HEIGHT, (width, height) => {}));
+        historyServiceStub.do(new UserActionResizeDrawingSurface(WIDTH, HEIGHT, (width, height) => { }));
         historyServiceStub.undo();
 
         expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
