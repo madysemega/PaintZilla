@@ -14,6 +14,7 @@ import { ResizingMode } from './resizing-mode';
 import {
     Arrow,
     GridMovementAnchor,
+    MAGNETISM_OFF,
     MOVEMENT_DOWN,
     MOVEMENT_LEFT,
     MOVEMENT_RIGHT,
@@ -28,9 +29,9 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    gridCellSize: number = 50;
+    isMagnetismActivated: boolean = false;
+    gridCellSize: number = 75;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
-
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
     diagonalSlope: number = 0;
@@ -45,6 +46,8 @@ export abstract class SelectionManipulatorService extends Tool {
     subscriptions: Subscription[] = [];
     isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
+    abstract drawSelectionOutline(): void;
+
     constructor(
         protected drawingService: DrawingService,
         protected selectionHelper: SelectionHelperService,
@@ -56,8 +59,6 @@ export abstract class SelectionManipulatorService extends Tool {
         this.subscriptions = new Array<Subscription>(NUMBER_OF_ARROW_TYPES);
     }
 
-    abstract drawSelectionOutline(): void;
-
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         const mousePos = this.getPositionFromMouse(event);
@@ -68,7 +69,6 @@ export abstract class SelectionManipulatorService extends Tool {
             this.stopManipulation(true);
             return;
         }
-
         this.computeDiagonalEquation();
         this.registerMousePos(mousePos, true);
     }
@@ -158,7 +158,6 @@ export abstract class SelectionManipulatorService extends Tool {
         if (this.isShiftDown && this.isSelectionBeingResizedDiagonally()) {
             newPos = this.getMousePosOnDiagonal(newPos);
         }
-
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
         if (
@@ -234,10 +233,11 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
+        const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : MAGNETISM_OFF;
         movement = this.selectionHelper.moveAlongTheGrid(
             movement,
             isMouseMovement,
-            this.gridCellSize,
+            cellSize,
             this.gridMovementAnchor,
             this.topLeft,
             this.bottomRight,

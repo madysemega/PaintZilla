@@ -1,0 +1,27 @@
+#container{
+    margin-top: 5%;
+}
+
+.description{
+    color: white;
+}
+
+.icon{
+    color: white;
+}
+
+#toggle{
+    margin-top: 6%;
+}
+
+::ng-deep .mat-menu-content{
+    background-color:rgba(18, 37, 59, 0.932);
+  }
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: rgb(230, 255, 6);
+}
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: rgba(228, 37, 37, 0.733);
+}

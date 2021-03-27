@@ -28,3 +28,4 @@ export const MOVEMENT_DOWN: Vec2 = { x: 0, y: MOVEMENT_PX };
 export const MOVEMENT_UP: Vec2 = { x: 0, y: -MOVEMENT_PX };
 export const MOVEMENT_LEFT: Vec2 = { x: -MOVEMENT_PX, y: 0 };
 export const MOVEMENT_RIGHT: Vec2 = { x: MOVEMENT_PX, y: 0 };
+export const MAGNETISM_OFF = 1;

@@ -84,7 +84,6 @@ export abstract class SelectionHandlerService {
     }
 
     drawSelection(destination: CanvasRenderingContext2D, topLeftOnDestination: Vec2): boolean {
-        console.log(this.selection.width, this.selection.height);
         if (!this.hasSelectionBeenManipulated(topLeftOnDestination)) {
             return false;
         }
@@ -114,7 +113,6 @@ export abstract class SelectionHandlerService {
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
         }
-
         this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
     }
 
