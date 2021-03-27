@@ -22,6 +22,7 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
@@ -56,6 +57,7 @@ describe('SidebarComponent', () => {
     let rectangleService: RectangleService;
     let polygonService: PolygonService;
     let lineServiceStub: LineService;
+    let clipboardService: ClipboardService;
 
     let pencilStoolStub: PencilService;
     let pipetteStoolStub: PipetteService;
@@ -120,6 +122,7 @@ describe('SidebarComponent', () => {
             drawingStub,
             ellipseSelectionManipulatorService,
             ellipseSelectionHelperService,
+            clipboardService,
         );
 
         rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -139,6 +142,7 @@ describe('SidebarComponent', () => {
             drawingStub,
             rectangleSelectionManipulatorService,
             rectangleSelectionHelperService,
+            clipboardService,
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
@@ -206,6 +210,8 @@ describe('SidebarComponent', () => {
                 },
             })
             .compileComponents();
+
+        clipboardService = TestBed.inject(ClipboardService);
     }));
 
     beforeEach(() => {

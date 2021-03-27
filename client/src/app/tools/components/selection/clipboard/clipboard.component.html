@@ -1,0 +1,16 @@
+<div id="container">
+
+    <mat-icon id="cut" class="clipboardButton" [class.disabled]="!isSelectionBeingManipulated()" matTooltip="Couper (Ctrl+X)" (click)="cut()">
+        content_cut
+    </mat-icon>
+    <mat-icon id="copy" class="clipboardButton" [class.disabled]="!isSelectionBeingManipulated()" matTooltip="Copier (Ctrl+C)" (click)="copy()" >
+        content_copy
+    </mat-icon>
+    <mat-icon id="paste" class="clipboardButton" [class.disabled]="isClipboardEmpty()" matTooltip="Coller (Ctrl+V)" (click)="paste()">
+        content_paste
+    </mat-icon>
+    <mat-icon id="delete" class="clipboardButton lastButton " [class.disabled]="!isSelectionBeingManipulated()" matTooltip="Delete (Suppr)" (click)="delete()">
+        delete
+    </mat-icon>
+
+</div>

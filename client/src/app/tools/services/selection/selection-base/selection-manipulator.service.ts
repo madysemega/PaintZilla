@@ -28,7 +28,7 @@ import { SelectionHandlerService } from './selection-handler.service';
     providedIn: 'root',
 })
 export abstract class SelectionManipulatorService extends Tool {
-    gridCellSize: number = -1;
+    gridCellSize: number = 50;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
 
     topLeft: Vec2 = { x: 0, y: 0 };
@@ -48,7 +48,7 @@ export abstract class SelectionManipulatorService extends Tool {
     constructor(
         protected drawingService: DrawingService,
         protected selectionHelper: SelectionHelperService,
-        protected selectionHandler: SelectionHandlerService,
+        public selectionHandler: SelectionHandlerService,
         public historyService: HistoryService,
     ) {
         super(drawingService);
@@ -83,9 +83,7 @@ export abstract class SelectionManipulatorService extends Tool {
         if (!this.mouseDown) {
             return;
         }
-
         this.registerMousePos(mousePosition, false);
-
         if (this.resizingMode !== ResizingMode.off) {
             this.resizeSelection(mousePosition, this.resizingMode);
             return;
@@ -191,17 +189,19 @@ export abstract class SelectionManipulatorService extends Tool {
         this.drawSelectionOutline();
     }
 
+    delete(): void {
+        if (this.selectionHandler.makeWhiteBehindSelection()) {
+            this.registerAction(true);
+        }
+        this.stopManipulation(false);
+    }
+
     stopManipulation(needDrawSelection: boolean): void {
         this.selectionHelper.setIsSelectionBeingManipulated(false);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         if (needDrawSelection) {
             if (this.selectionHandler.drawSelection(this.drawingService.baseCtx, this.topLeft)) {
-                const memento: HandlerMemento = this.selectionHandler.createMemento();
-                const userAction: UserActionRenderSelection = new UserActionRenderSelection(this.drawingService, this.selectionHandler, memento, {
-                    x: this.topLeft.x,
-                    y: this.topLeft.y,
-                });
-                this.historyService.register(userAction);
+                this.registerAction(false);
             }
         }
         this.historyService.isLocked = false;
@@ -209,6 +209,21 @@ export abstract class SelectionManipulatorService extends Tool {
             sub.unsubscribe();
         });
         this.resetProperties();
+    }
+
+    registerAction(allWhite: boolean): void {
+        const memento: HandlerMemento = this.selectionHandler.createMemento();
+        const userAction: UserActionRenderSelection = new UserActionRenderSelection(
+            this.drawingService,
+            this.selectionHandler,
+            memento,
+            {
+                x: this.topLeft.x,
+                y: this.topLeft.y,
+            },
+            allWhite,
+        );
+        this.historyService.register(userAction);
     }
 
     startMovingSelectionContinous(movement: Vec2, arrowIndex: number): void {

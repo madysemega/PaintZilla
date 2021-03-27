@@ -13,18 +13,24 @@ describe('UserActionRenderSelection', () => {
     let topLeft: Vec2;
 
     beforeEach(() => {
-        selectionHandlerSpy = jasmine.createSpyObj('SelectionHandlerService', ['restoreFromMemento', 'drawSelection']);
+        selectionHandlerSpy = jasmine.createSpyObj('SelectionHandlerService', ['restoreFromMemento', 'drawSelection', 'whiteFillAtOriginalLocation']);
         drawingService = TestBed.inject(DrawingService);
         const width = 100;
         const height = 200;
         handlerMemento = new HandlerMemento(width, height);
         topLeft = { x: 5, y: 6 };
-        action = new UserActionRenderSelection(drawingService, selectionHandlerSpy, handlerMemento, topLeft);
+        action = new UserActionRenderSelection(drawingService, selectionHandlerSpy, handlerMemento, topLeft, false);
     });
 
     it('apply should restore from memento and draw the selection', () => {
         action.apply();
         expect(selectionHandlerSpy.restoreFromMemento).toHaveBeenCalled();
         expect(selectionHandlerSpy.drawSelection).toHaveBeenCalled();
+    });
+
+    it('apply should call tell the selection handler to apply white fill if the action is just a white fill ', () => {
+        action = new UserActionRenderSelection(drawingService, selectionHandlerSpy, handlerMemento, topLeft, true);
+        action.apply();
+        expect(selectionHandlerSpy.whiteFillAtOriginalLocation).toHaveBeenCalled();
     });
 });
