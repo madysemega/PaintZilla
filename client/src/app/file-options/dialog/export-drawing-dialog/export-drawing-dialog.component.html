@@ -45,8 +45,9 @@
     <div>
         <mat-dialog-actions>
             <a #downloadLink id="download" download="this.imageName + this.imageFormat"
-                ><button mat-button (click)="downloadImage()">Exporter</button></a
+                ><button mat-button (click)="downloadImage()">Exporter localement</button></a
             >
+            <button mat-button (click)="uploadToImgur()" mat-dialog-close>Exporter sur Imgur</button>
             <button mat-button mat-dialog-close>Annuler</button>
         </mat-dialog-actions>
     </div>

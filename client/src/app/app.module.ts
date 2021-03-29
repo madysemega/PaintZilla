@@ -21,6 +21,7 @@ import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.compon
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { DiscardChangesDialogComponent } from '@app/file-options/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { ExportDrawingDialogComponent } from '@app/file-options/dialog/export-drawing-dialog/export-drawing-dialog.component';
+import { ImgurLinkDialogComponent } from '@app/file-options/dialog/imgur-link-dialog/imgur-link-dialog/imgur-link-dialog.component';
 import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { MaterialModule } from '@app/material.module';
@@ -42,7 +43,6 @@ import { FilterLabelComponent } from './carousel/components/filter-label/filter-
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 import { MagnetismComponent } from './magnetism/magnetism/magnetism.component';
 import { ClipboardComponent } from './tools/components/selection/clipboard/clipboard.component';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -84,6 +84,7 @@ import { ClipboardComponent } from './tools/components/selection/clipboard/clipb
         DiscardChangesModalComponent,
         ClipboardComponent,
         MagnetismComponent,
+        ImgurLinkDialogComponent,
     ],
     imports: [
         BrowserModule,
