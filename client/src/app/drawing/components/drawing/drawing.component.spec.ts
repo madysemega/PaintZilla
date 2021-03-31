@@ -56,8 +56,7 @@ describe('DrawingComponent', () => {
                 { provide: MatDialogRef, useValue: {} },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
-            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
-
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         creatorStub = TestBed.inject(EllipseSelectionCreatorService);

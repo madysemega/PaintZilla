@@ -22,7 +22,7 @@ describe('MagnetismComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatMenuModule, CommonModule, MatTooltipModule],
             declarations: [MagnetismComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

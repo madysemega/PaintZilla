@@ -10,7 +10,6 @@ import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from './resizable-tool-configuration.component';
 
-
 class ResizableToolStub extends ResizableTool {
     constructor(drawingService: DrawingService) {
         super(drawingService);
@@ -34,10 +33,7 @@ describe('ResizableToolConfigurationComponent', () => {
             imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule],
             declarations: [ResizableToolConfigurationComponent],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
-            ]
-
+            providers: [{ provide: MatIconRegistry, useValue: FakeMatIconRegistry }],
         }).compileComponents();
     }));
 

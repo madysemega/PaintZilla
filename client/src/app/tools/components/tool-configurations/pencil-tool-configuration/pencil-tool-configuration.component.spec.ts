@@ -30,7 +30,7 @@ describe('PencilToolConfigurationComponent', () => {
             imports: [MaterialModule, MatTooltipModule, CommonModule],
             declarations: [PencilToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: PencilService, useValue: pencilServiceStub }],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

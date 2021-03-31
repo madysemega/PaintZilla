@@ -43,11 +43,10 @@ describe('ShapeToolConfigurationComponent', () => {
             imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [
-            { provide: EllipseService, useValue: ellipseToolStub },
-            { provide: MatIconRegistry, useValue: FakeMatIconRegistry }
+                { provide: EllipseService, useValue: ellipseToolStub },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
             ],
-            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
-
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

@@ -15,7 +15,7 @@ describe('EllipseSelectionComponent', () => {
             imports: [MatTooltipModule],
             declarations: [EllipseSelectionComponent],
             providers: [{ provide: EllipseSelectionManipulatorService }],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

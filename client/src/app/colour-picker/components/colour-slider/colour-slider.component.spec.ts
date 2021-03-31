@@ -40,7 +40,7 @@ describe('ColourSliderComponent', () => {
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
                 { provide: SliderService, useValue: sliderServiceSpy },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

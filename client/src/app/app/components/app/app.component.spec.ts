@@ -59,7 +59,15 @@ describe('AppComponent', () => {
         dialogServiceStub.open.and.returnValue(dialogRefStub);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule, HotkeyModule.forRoot(), CommonModule, MatTooltipModule],
+            imports: [
+                RouterTestingModule,
+                MaterialModule,
+                HttpClientModule,
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                CommonModule,
+                MatTooltipModule,
+            ],
             declarations: [
                 AppComponent,
                 MainPageComponent,

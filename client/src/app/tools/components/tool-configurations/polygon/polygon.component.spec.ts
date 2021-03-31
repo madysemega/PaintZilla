@@ -10,9 +10,9 @@ describe('PolygonComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports:[MatTooltipModule, CommonModule],
+            imports: [MatTooltipModule, CommonModule],
             declarations: [PolygonComponent],
-            schemas: [NO_ERRORS_SCHEMA]
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 

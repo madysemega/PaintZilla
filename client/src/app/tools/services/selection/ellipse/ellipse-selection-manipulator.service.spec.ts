@@ -419,7 +419,7 @@ describe('EllipseSelectionManipulatorService', () => {
         const deltaX = bottomRight.x - topLeft.x;
         const diagonalSlope = deltaY / deltaX;
         service.computeDiagonalEquation();
-        expect(service.diagonalSlope).toEqual( -diagonalSlope);
+        expect(service.diagonalSlope).toEqual(-diagonalSlope);
     });
 
     it('getMousePosOnDiagonal should output a position that belongs to the diagonal', () => {

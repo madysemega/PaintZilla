@@ -54,7 +54,16 @@ describe('ExportDrawingDialogComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [ExportDrawingDialogComponent],
-            imports: [MatDialogModule, MatFormFieldModule, MatSelectModule, MatOptionModule, MatInputModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
+            imports: [
+                MatDialogModule,
+                MatFormFieldModule,
+                MatSelectModule,
+                MatOptionModule,
+                MatInputModule,
+                BrowserAnimationsModule,
+                CommonModule,
+                MatTooltipModule,
+            ],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },

@@ -56,7 +56,7 @@ describe('RgbaFormService', () => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['setCurrentColour']);
         spyOn(Colour, 'hexToRgb').and.returnValue(DEFAULT_COLOUR);
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule ],
+            imports: [ReactiveFormsModule],
             providers: [{ provide: RgbaFormService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy }],
         });
         service = TestBed.inject(RgbaFormService);

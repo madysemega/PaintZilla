@@ -12,7 +12,7 @@ describe('ConfigurationPanelComponent', () => {
         TestBed.configureTestingModule({
             imports: [CommonModule, MatTooltipModule],
             declarations: [ConfigurationPanelComponent],
-            schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

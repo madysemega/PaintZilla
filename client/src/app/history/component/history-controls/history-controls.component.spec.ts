@@ -10,10 +10,9 @@ describe('HistoryControlsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports:[MatTooltipModule, CommonModule, MatTooltipModule],
+            imports: [MatTooltipModule, CommonModule, MatTooltipModule],
             declarations: [HistoryControlsComponent],
-            schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
-
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

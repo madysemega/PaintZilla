@@ -38,7 +38,7 @@ describe('LineToolConfigurationComponent', () => {
             imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
             declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: LineService, useValue: lineServiceStub }],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

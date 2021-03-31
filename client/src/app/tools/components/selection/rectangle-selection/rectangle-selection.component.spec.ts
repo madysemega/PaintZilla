@@ -12,7 +12,7 @@ describe('RectangleSelectionComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatTooltipModule],
             declarations: [RectangleSelectionComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

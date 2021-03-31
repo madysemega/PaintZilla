@@ -36,7 +36,15 @@ describe('MainPageComponent', () => {
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot(), CommonModule, MatTooltipModule],
+            imports: [
+                RouterTestingModule,
+                HttpClientModule,
+                MaterialModule,
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                CommonModule,
+                MatTooltipModule,
+            ],
             declarations: [MainPageComponent],
             providers: [
                 { provide: IndexService, useValue: indexServiceSpy },
@@ -44,8 +52,7 @@ describe('MainPageComponent', () => {
                 { provide: MatDialog, useValue: dialogServiceStub },
                 { provide: KeyboardService },
             ],
-            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
-
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
         resizingServiceStub = TestBed.inject(ResizingService);
     }));
