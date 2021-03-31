@@ -20,7 +20,7 @@ describe('ImageCarouselComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule, CommonModule, MatTooltipModule],
+            imports: [MaterialModule, CommonModule, MatTooltipModule, CommonModule],
             declarations: [ImageCarouselComponent, ImageDetailsComponent],
         }).compileComponents();
     }));

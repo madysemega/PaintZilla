@@ -4,6 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '@app/material.module';
 import { FilterLabelComponent } from './filter-label.component';
@@ -14,7 +15,7 @@ describe('FilterLabelComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule, ReactiveFormsModule, CommonModule],
+            imports: [MaterialModule, BrowserAnimationsModule, ReactiveFormsModule, CommonModule, MatTooltipModule],
             declarations: [FilterLabelComponent],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();

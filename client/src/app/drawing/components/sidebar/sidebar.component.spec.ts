@@ -43,6 +43,7 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { SidebarComponent } from './sidebar.component';
 import { FakeMatIconRegistry } from '@angular/material/icon/testing';
+import { CommonModule } from '@angular/common';
 
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
@@ -162,7 +163,7 @@ describe('SidebarComponent', () => {
         );
 
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule, MatIconModule],
+            imports: [MatTooltipModule, CommonModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule, MatIconModule],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,

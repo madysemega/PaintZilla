@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
@@ -44,7 +46,7 @@ describe('DrawingComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },

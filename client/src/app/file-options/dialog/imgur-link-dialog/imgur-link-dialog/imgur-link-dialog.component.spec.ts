@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +14,7 @@ describe('ImgurLinkDialogComponent', () => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close']);
         TestBed.configureTestingModule({
             declarations: [ImgurLinkDialogComponent],
-            imports: [MatDialogModule, MatIconModule, MatTooltipModule],
+            imports: [MatDialogModule, MatIconModule, MatTooltipModule, CommonModule, MatTooltipModule],
             providers: [{ provide: MatDialogRef, useValue: matDialogRefSpy }],
         }).compileComponents();
     }));

@@ -21,7 +21,7 @@ describe('ColourPicker', () => {
             colourPickerService: colourPickerServiceSpy,
         });
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, CommonModule],
+            imports: [MatTooltipModule, CommonModule, MatTooltipModule],
             declarations: [ColourPickerComponent],
             providers: [
                 { provide: ColourService, useValue: colourServiceSpy },

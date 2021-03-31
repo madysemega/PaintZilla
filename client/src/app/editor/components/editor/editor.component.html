@@ -4,7 +4,7 @@
         <app-sidebar></app-sidebar>
         <button class="panel-toggler"
                 mat-icon-button
-                [matTooltip]="(configurationPanelDrawer.opened ? 'Cacher' : 'Afficher') + ' le panneau de configuration'"
+                matTooltip="(configurationPanelDrawer.opened ? 'Cacher' : 'Afficher') + ' le panneau de configuration'"
                 matTooltipPosition="right"
                 (click)="configurationPanelDrawer.toggle()">
             <mat-icon> {{ configurationPanelDrawer.opened ? 'toggle_on' : 'toggle_off' }} </mat-icon>

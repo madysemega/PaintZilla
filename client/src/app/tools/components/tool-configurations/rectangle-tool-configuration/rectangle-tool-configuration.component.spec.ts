@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
 
 describe('RectangleToolConfigurationComponent', () => {
@@ -8,6 +10,7 @@ describe('RectangleToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule, CommonModule],
             declarations: [RectangleToolConfigurationComponent],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

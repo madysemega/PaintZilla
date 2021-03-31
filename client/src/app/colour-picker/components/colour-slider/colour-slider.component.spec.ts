@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ColourSliderComponent } from '@app/colour-picker/components/colour-slider/colour-slider.component';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { SliderService } from '@app/colour-picker/services/slider/slider.service';
@@ -32,6 +34,7 @@ describe('ColourSliderComponent', () => {
             nativeElement: nativeElementSpy,
         });
         TestBed.configureTestingModule({
+            imports: [CommonModule, MatTooltipModule],
             declarations: [ColourSliderComponent],
             providers: [
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },

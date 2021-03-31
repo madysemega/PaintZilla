@@ -2,7 +2,7 @@
     <div
         class="previous-colour mat-elevation-z2"
         *ngFor="let color of previousColours"
-        [matTooltip]="'#' + color.toStringHex()"
+        matTooltip="'#' + color.toStringHex()"
         matRipple
         [style.background-color]="color.toStringRGB()"
         (click)="onPreviousColourClick($event, color)"
@@ -13,7 +13,7 @@
     <div
         matRipple
         class="primary-colour-item"
-        [matTooltip]="'Couleur primaire'"
+        matTooltip="'Couleur primaire'"
         matTooltipPosition="above"
         [style.background-color]="primaryColour.toStringRGBA()"
         [class.mat-elevation-z12]="primaryColourSelected && showColourPicker"
@@ -26,7 +26,7 @@
     <div
         matRipple
         class="secondary-colour-item"
-        [matTooltip]="'Couleur secondaire'"
+        matTooltip="'Couleur secondaire'"
         matTooltipPosition="above"
         [style.background-color]="secondaryColour.toStringRGBA()"
         [class.mat-elevation-z12]="!primaryColourSelected && showColourPicker"

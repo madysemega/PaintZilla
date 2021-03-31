@@ -187,7 +187,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.isShiftDown = true;
         spyOn<any>(service, 'isSelectionBeingResizedDiagonally').and.returnValue('true');
         service.onKeyDown(keyboardEvent);
-        expect(resizeSelectionSpy).toHaveBeenCalled;
+        expect(resizeSelectionSpy).toHaveBeenCalled();
     });
 
     it('onKeyDown should call moveIfPressLongEnough if event.key === ArrowDown !arrowKeyDown[Arrow.Down]', () => {
@@ -419,7 +419,7 @@ describe('EllipseSelectionManipulatorService', () => {
         const deltaX = bottomRight.x - topLeft.x;
         const diagonalSlope = deltaY / deltaX;
         service.computeDiagonalEquation();
-        expect((service.diagonalSlope = -diagonalSlope));
+        expect(service.diagonalSlope).toEqual( -diagonalSlope);
     });
 
     it('getMousePosOnDiagonal should output a position that belongs to the diagonal', () => {

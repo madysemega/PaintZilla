@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
@@ -30,7 +31,7 @@ describe('ResizableToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule, MatIconModule, MatTooltipModule],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule],
             declarations: [ResizableToolConfigurationComponent],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
             providers: [

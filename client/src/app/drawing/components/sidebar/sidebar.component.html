@@ -52,7 +52,7 @@
             [ngClass]="{ selected: selectedToolName === toolName }"
             (click)="selectTool(toolName)"
             mat-icon-button
-            [matTooltip]="getTooltipInfo(toolName)"
+            matTooltip="getTooltipInfo(toolName)"
             matTooltipPosition="right"
         >
             <mat-icon [svgIcon]="getIconName(toolName)"></mat-icon>

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
@@ -39,7 +40,7 @@ describe('ShapeToolConfigurationComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, MatIconModule, MatTooltipModule],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [
             { provide: EllipseService, useValue: ellipseToolStub },

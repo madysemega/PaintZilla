@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 
@@ -18,7 +20,7 @@ describe('MagnetismComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MatMenuModule],
+            imports: [MatMenuModule, CommonModule, MatTooltipModule],
             declarations: [MagnetismComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();

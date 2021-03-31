@@ -6,6 +6,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
@@ -34,7 +35,7 @@ describe('SaveDrawingDialogComponent', () => {
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
         TestBed.configureTestingModule({
             declarations: [SaveDrawingDialogComponent],
-            imports: [MatDialogModule, ReactiveFormsModule, CommonModule ],
+            imports: [MatDialogModule, ReactiveFormsModule, CommonModule, MatTooltipModule],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
                 { provide: MatSnackBar, useValue: snackBarSpy },
