@@ -6,7 +6,7 @@ export class FontProperty extends ShapeProperty {
     }
 
     apply(ctx: CanvasRenderingContext2D): void {
-        ctx.font = `${this.fontSize}px`;
+        ctx.font = `${this.fontSize}px serif`;
     }
 
     clone(): ShapeProperty {
