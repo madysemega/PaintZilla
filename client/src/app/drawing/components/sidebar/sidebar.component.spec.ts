@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -42,6 +42,7 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { SidebarComponent } from './sidebar.component';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
@@ -161,7 +162,7 @@ describe('SidebarComponent', () => {
         );
 
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule],
+            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule, MatIconModule],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
@@ -174,6 +175,7 @@ describe('SidebarComponent', () => {
                 ResizableToolConfigurationComponent,
                 ShapeToolConfigurationComponent,
                 HistoryControlsComponent,
+                
             ],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceStub },
@@ -196,6 +198,7 @@ describe('SidebarComponent', () => {
                 { provide: RectangleSelectionManipulatorService },
                 { provide: RectangleSelectionHelperService },
                 { provide: RectangleSelectionCreatorService },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry},
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })

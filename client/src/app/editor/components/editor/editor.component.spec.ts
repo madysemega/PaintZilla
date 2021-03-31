@@ -2,7 +2,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatDrawer } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -34,6 +34,8 @@ import { SprayService } from '@app/tools/services/tools/spray-service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
+
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
 describe('EditorComponent', () => {
@@ -99,7 +101,7 @@ describe('EditorComponent', () => {
         configurationPanelDrawerStub.open.and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot(), MatIconModule],
             declarations: [],
             providers: [
                 { provide: PencilService, useValue: toolStub },
@@ -123,6 +125,7 @@ describe('EditorComponent', () => {
                 { provide: SaveDrawingService },
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry}
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })

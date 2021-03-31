@@ -1,5 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -27,9 +29,13 @@ describe('ResizableToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, MatIconModule],
             declarations: [ResizableToolConfigurationComponent],
-            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+            ]
+
         }).compileComponents();
     }));
 
