@@ -41,6 +41,10 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.drawingService.setCursorType(CursorType.NONE);
     }
 
+    updateFontSize(size: number): void {
+        this.editor.setFontSize(size);
+    }
+
     private reset(): void {
         this.editor = new TextEditor({ drawingService: this.drawingService, colourService: this.colourService });
         this.isEditing = false;

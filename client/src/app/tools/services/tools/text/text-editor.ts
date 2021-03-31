@@ -40,9 +40,14 @@ export class TextEditor {
         this.initializeProperties();
         this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty]);
 
-        this.cursorRenderer = new TextCursorRenderer(this.shape, [], this.DEFAULT_CURSOR_POSITION);
+        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.DEFAULT_CURSOR_POSITION);
 
         this.enableCursor();
+    }
+
+    setFontSize(size: number): void {
+        this.fontProperty.fontSize = size;
+        this.shape.fontSize = size;
     }
 
     enableCursor(): void {
