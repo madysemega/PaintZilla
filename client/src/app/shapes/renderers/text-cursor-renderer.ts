@@ -11,9 +11,11 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
         const xOffset = ctx.measureText(this.shape.text.substr(0, this.cursorPosition)).width;
         const xPosition = this.shape.position.x + xOffset;
 
+        const fontSize = this.shape.fontSize;
+
         ctx.beginPath();
-        ctx.moveTo(xPosition, this.shape.position.y - this.shape.fontSize);
-        ctx.lineTo(xPosition, this.shape.position.y);
+        ctx.moveTo(xPosition, this.shape.position.y - fontSize);
+        ctx.lineTo(xPosition, this.shape.position.y + fontSize / 3);
         ctx.stroke();
     }
 
