@@ -14,7 +14,7 @@ export class TextEditor {
     private cursorTimerHandle: number;
 
     constructor(private ctx: TextEditorContext) {
-        this.reset();
+        this.initialize();
     }
 
     private shape: TextShape;
@@ -26,7 +26,15 @@ export class TextEditor {
     private showCursor: boolean;
     private cursorRenderer: TextCursorRenderer;
 
-    initializeProperties(): void {
+    private initialize(): void {
+        this.shape = new TextShape();
+        this.initializeProperties();
+        this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty]);
+
+        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.DEFAULT_CURSOR_POSITION);
+    }
+
+    private initializeProperties(): void {
         this.colourProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
         this.ctx.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
@@ -36,13 +44,9 @@ export class TextEditor {
     reset(position: Vec2 = { x: 0, y: 0 }): void {
         this.disableCursor();
 
-        this.shape = new TextShape('', position);
-        this.initializeProperties();
-        this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty]);
-
-        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.DEFAULT_CURSOR_POSITION);
-
-        this.enableCursor();
+        this.shape.text = TextShape.DEFAULT_TEXT;
+        this.shape.position.x = position.x;
+        this.shape.position.y = position.y;
     }
 
     setFontSize(size: number): void {
@@ -63,16 +67,22 @@ export class TextEditor {
 
     moveCursorRight(): void {
         this.showCursor = true;
-        this.cursorRenderer.cursorPosition = (this.cursorRenderer.cursorPosition + 1) % (this.shape.text.length + 1);
+
+        const canMoveRight = this.cursorRenderer.cursorPosition < this.shape.text.length;
+        if (canMoveRight) {
+            ++this.cursorRenderer.cursorPosition;
+        }
+
         this.render();
     }
 
     moveCursorLeft(): void {
         this.showCursor = true;
 
-        const isNegativeOverflow = this.cursorRenderer.cursorPosition - 1 < 0;
-        this.cursorRenderer.cursorPosition =
-            (isNegativeOverflow ? this.shape.text.length - 1 : this.cursorRenderer.cursorPosition - 1) % (this.shape.text.length + 1);
+        const canMoveLeft = this.cursorRenderer.cursorPosition > 0;
+        if (canMoveLeft) {
+            --this.cursorRenderer.cursorPosition;
+        }
 
         this.render();
     }

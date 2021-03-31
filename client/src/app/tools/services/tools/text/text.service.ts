@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -28,6 +29,7 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         super(drawingService);
 
         this.key = 'text';
+        this.editor = new TextEditor({ drawingService: this.drawingService, colourService: this.colourService });
     }
 
     onToolSelect(): void {
@@ -36,9 +38,8 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     onToolDeselect(): void {
-        this.keyboardService.context = 'editor';
-        this.history.isLocked = false;
-        this.drawingService.setCursorType(CursorType.NONE);
+        this.finalize();
+        this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
     updateFontSize(size: number): void {
@@ -46,7 +47,7 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     private reset(): void {
-        this.editor = new TextEditor({ drawingService: this.drawingService, colourService: this.colourService });
+        this.editor.reset();
         this.isEditing = false;
     }
 
@@ -58,6 +59,27 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
             }
         });
         return isAllowed;
+    }
+
+    private finalize(): void {
+        this.editor.disableCursor();
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+
+        if (!this.editor.isEmpty()) {
+            this.history.do(new UserActionRenderShape([this.editor.getTextRenderer()], this.drawingService.baseCtx));
+        }
+
+        this.keyboardService.context = 'editor';
+        this.history.isLocked = false;
+    }
+
+    private startEditing(position: Vec2): void {
+        this.editor.reset(position);
+        this.editor.enableCursor();
+        this.editor.render();
+
+        this.keyboardService.context = 'editing-text';
+        this.history.isLocked = true;
     }
 
     onKeyUp(event: KeyboardEvent): void {
@@ -98,22 +120,9 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
 
     onMouseClick(event: MouseEvent): void {
         if (this.isEditing) {
-            this.editor.disableCursor();
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
-            if (!this.editor.isEmpty()) {
-                this.history.do(new UserActionRenderShape([this.editor.getTextRenderer()], this.drawingService.baseCtx));
-            }
-
-            this.editor.reset();
-            this.keyboardService.context = 'editor';
-            this.history.isLocked = false;
+            this.finalize();
         } else {
-            this.editor.reset(this.getPositionFromMouse(event));
-            this.editor.render();
-
-            this.keyboardService.context = 'editing-text';
-            this.history.isLocked = true;
+            this.startEditing(this.getPositionFromMouse(event));
         }
 
         this.isEditing = !this.isEditing;
