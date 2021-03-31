@@ -1,4 +1,4 @@
-import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -197,7 +197,7 @@ describe('SidebarComponent', () => {
                 { provide: RectangleSelectionHelperService },
                 { provide: RectangleSelectionCreatorService },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

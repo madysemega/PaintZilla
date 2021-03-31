@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
@@ -84,7 +84,7 @@ describe('RgbFormComponent', () => {
                 { providers: ColourPickerService, useValue: colourPickerServiceSpy },
                 { providers: RgbaFormService, useValue: rgbaFormServiceSpy },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

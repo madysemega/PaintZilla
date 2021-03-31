@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerComponent } from '@app/colour-picker/components/colour-picker/colour-picker.component';
@@ -24,7 +24,7 @@ describe('ColourPicker', () => {
                 { provide: ColourService, useValue: colourServiceSpy },
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     });
 

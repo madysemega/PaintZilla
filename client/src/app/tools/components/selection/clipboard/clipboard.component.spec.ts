@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
@@ -36,6 +37,7 @@ describe('ClipboardComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ClipboardComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         colourServiceStub = new ColourService({} as ColourPickerService);

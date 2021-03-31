@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -36,6 +36,7 @@ describe('LineToolConfigurationComponent', () => {
             imports: [MaterialModule, BrowserAnimationsModule],
             declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: LineService, useValue: lineServiceStub }],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
             .overrideModule(MatIconModule, {
                 remove: {

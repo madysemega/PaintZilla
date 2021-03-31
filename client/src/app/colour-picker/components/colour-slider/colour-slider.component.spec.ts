@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColourSliderComponent } from '@app/colour-picker/components/colour-slider/colour-slider.component';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
@@ -37,6 +37,7 @@ describe('ColourSliderComponent', () => {
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
                 { provide: SliderService, useValue: sliderServiceSpy },
             ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     }));
 

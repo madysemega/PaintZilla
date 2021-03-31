@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -19,6 +20,7 @@ describe('MagnetismComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatMenuModule],
             declarations: [MagnetismComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     }));
 

@@ -1,4 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,6 +42,8 @@ describe('MainPageComponent', () => {
                 { provide: MatDialog, useValue: dialogServiceStub },
                 { provide: KeyboardService },
             ],
+            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+
         }).compileComponents();
         resizingServiceStub = TestBed.inject(ResizingService);
     }));

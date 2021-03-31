@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +54,8 @@ describe('DrawingComponent', () => {
                 { provide: MatDialogRef, useValue: {} },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
             ],
+            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+
         }).compileComponents();
 
         creatorStub = TestBed.inject(EllipseSelectionCreatorService);

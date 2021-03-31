@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -87,6 +87,7 @@ describe('AppComponent', () => {
                 { provide: KeyboardService },
                 // { provide: KeyboardService, useValue: keyboardServiceStub },
             ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

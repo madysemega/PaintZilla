@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OpacitySliderComponent } from '@app/colour-picker/components/opacity-slider/opacity-slider.component';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
@@ -45,6 +45,7 @@ describe('OpacitySliderComponent', () => {
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
                 { provide: SliderService, useValue: sliderServiceSpy },
             ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
     beforeEach(async(() => {

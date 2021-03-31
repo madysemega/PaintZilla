@@ -1,5 +1,5 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -8,8 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
+//import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+//import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -21,8 +21,8 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
-import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
-import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
+//import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
+//import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -33,6 +33,7 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
 describe('EditorComponent', () => {
@@ -46,9 +47,9 @@ describe('EditorComponent', () => {
         @Input() fontIcon: any;
     }
 
-    class ToolStub extends Tool {}
+    class ToolStub extends Tool { }
 
-    class E {}
+    class E { }
 
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
@@ -63,6 +64,14 @@ describe('EditorComponent', () => {
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
+
+
+    /*class DrawingComponentMock extends DrawingComponent{};
+    class SidebarComponentMock extends SidebarComponent{};
+    class EllipseToolConfigurationComponentMock extends EllipseToolConfigurationComponent{};
+    class LineToolConfigurationComponentMock extends LineToolConfigurationComponent{};*/
+
+
 
     keyboardZEvent = {
         key: 'Z',
@@ -91,7 +100,7 @@ describe('EditorComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
-            declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
+            declarations: [],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
@@ -115,7 +124,7 @@ describe('EditorComponent', () => {
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
             ],
-            // schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

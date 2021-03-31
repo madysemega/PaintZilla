@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
@@ -36,7 +36,7 @@ describe('ColoursComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ColoursComponent],
             providers: [{ provide: ColourService, useValue: colourServiceSpy }],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
     beforeEach(async(() => {

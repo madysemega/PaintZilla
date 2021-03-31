@@ -1,9 +1,11 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from './resizable-tool-configuration.component';
+
 
 class ResizableToolStub extends ResizableTool {
     constructor(drawingService: DrawingService) {
@@ -27,6 +29,7 @@ describe('ResizableToolConfigurationComponent', () => {
         TestBed.configureTestingModule({
             imports: [MaterialModule],
             declarations: [ResizableToolConfigurationComponent],
+            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
         }).compileComponents();
     }));
 

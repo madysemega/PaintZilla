@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
@@ -8,6 +9,7 @@ import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { RectangleToolConfigurationComponent } from './rectangle-tool-configuration.component';
+
 
 // tslint:disable:no-any
 describe('RectangleToolConfigurationComponent', () => {
@@ -28,6 +30,7 @@ describe('RectangleToolConfigurationComponent', () => {
             imports: [MaterialModule],
             declarations: [RectangleToolConfigurationComponent, ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: RectangleService, useValue: rectangleToolStub }],
+            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     }));
 

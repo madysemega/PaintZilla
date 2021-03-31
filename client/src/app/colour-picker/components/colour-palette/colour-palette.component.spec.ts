@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourPaletteComponent } from '@app/colour-picker/components/colour-palette/colour-palette.component';
@@ -45,6 +45,7 @@ describe('ColourPaletteComponent', () => {
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
                 { provide: SliderService, useValue: sliderServiceSpy },
             ],
+            schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     }));
 

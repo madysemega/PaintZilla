@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { ShapeType } from '@app/app/classes/shape-type';
@@ -40,6 +40,8 @@ describe('ShapeToolConfigurationComponent', () => {
             imports: [MaterialModule],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: EllipseService, useValue: ellipseToolStub }],
+            schemas:      [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+
         })
             .overrideModule(MatIconModule, {
                 remove: {
