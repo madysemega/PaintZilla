@@ -9,6 +9,7 @@ import { BoxShape } from '@app/shapes/box-shape';
 import { ImageSizeProperty } from '@app/shapes/properties/image-size-property';
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';
 import { StampRenderer } from '@app/shapes/renderers/stamp-renderer';
+import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 
 @Injectable({
@@ -20,6 +21,7 @@ export class StampService extends ShapeTool implements ISelectableTool {
     lastMousePosition: Vec2 = { x: 0, y: 0 };
     imageSize: number = 10;
     imageSizeProperty: ImageSizeProperty;
+    mouseDown: boolean;
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'stamp';
@@ -30,21 +32,27 @@ export class StampService extends ShapeTool implements ISelectableTool {
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
-    onMouseUp(event: MouseEvent): void {
-        this.shape.topLeft = this.getPositionFromMouse(event);
-        this.shape.bottomRight = { x: this.shape.topLeft.x + this.imageSize, y: this.shape.topLeft.y + this.imageSize };
-        this.history.isLocked = true;
-        this.finalize();
+    onMouseDown(event: MouseEvent): void {
+        this.mouseDown = event.button === MouseButton.Left;
+        if (this.mouseDown) {
+            this.shape.topLeft = this.getPositionFromMouse(event);
+            this.shape.bottomRight = { x: this.shape.topLeft.x + this.imageSize, y: this.shape.topLeft.y + this.imageSize };
+            this.history.isLocked = true;
+            this.finalize();
+        }
     }
     changeSize(size: number): void {
         this.imageSize = size;
         this.imageSizeProperty.imageSize = size;
     }
     finalize(): void {
-        const RENDERS = new Array<ShapeRenderer<BoxShape>>();
-        RENDERS.push(this.renderer.clone());
-        this.history.do(new UserActionRenderShape(RENDERS, this.drawingService.baseCtx));
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        if (this.mouseDown) {
+            const RENDERS = new Array<ShapeRenderer<BoxShape>>();
+            RENDERS.push(this.renderer.clone());
+            this.history.do(new UserActionRenderShape(RENDERS, this.drawingService.baseCtx));
+            this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        }
+        this.mouseDown = false;
     }
     onToolDeselect(): void {
         this.history.isLocked = false;
