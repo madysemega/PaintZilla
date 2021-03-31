@@ -2,7 +2,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { Shape } from './shape';
 
 export class TextShape extends Shape {
-    static readonly DEFAULT_TEXT: string = 'Entrez votre texte';
+    static readonly DEFAULT_TEXT: string = '';
     static readonly DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
     static readonly DEFAULT_FONT_SIZE: number = 12;
 
