@@ -15,6 +15,6 @@ export class TextShape extends Shape {
     }
 
     clone(): Shape {
-        return new TextShape(this.text, this.position, this.fontSize);
+        return new TextShape(this.text, { x: this.position.x, y: this.position.y }, this.fontSize);
     }
 }
