@@ -243,7 +243,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.isShiftDown = true;
         spyOn<any>(service, 'isSelectionBeingResizedDiagonally').and.returnValue('true');
         service.onKeyUp(keyboardEvent);
-        expect(resizeSelectionSpy).toHaveBeenCalled;
+        expect(resizeSelectionSpy).toHaveBeenCalled();
     });
 
     it('onKeyDown should call singleMove if event.key === ArrowDown, ()', () => {
