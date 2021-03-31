@@ -104,7 +104,7 @@ describe('EditorComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot(), MatIconModule, CommonModule, MatTooltipModule],
-            declarations: [],
+            declarations: [EditorComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
