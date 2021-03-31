@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
@@ -16,6 +18,7 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { BehaviorSubject } from 'rxjs';
+import { ClipboardService } from '../selection/clipboard/clipboard.service';
 
 @Injectable({
     providedIn: 'root',
@@ -92,7 +95,73 @@ export class ToolSelectorService {
         }
         return undefined;
     }
+
+    private registerKeyboardShortcuts(): void {
+        this.tools.forEach((toolMetaData) => {
+            this.keyboardService.registerAction({
+                trigger: toolMetaData.keyboardShortcut,
+                invoke: () => this.selectTool(toolMetaData.tool.key),
+                uniqueName: `Change tool to ${toolMetaData.tool.key}`,
+                contexts: ['editor'],
+            });
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+a',
+            invoke: () => {
+                this.selectTool('rectangle-selection');
+                (this.selectedTool.tool as RectangleSelectionCreatorService).selectEntireCanvas();
+            },
+            uniqueName: 'Select all',
+            contexts: ['editor'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+c',
+            invoke: () => {
+                const isCurrentToolSelection =
+                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+
+                if (isCurrentToolSelection) {
+                    const selectionService = this.selectedTool.tool as SelectionCreatorService;
+                    selectionService.copy();
+                }
+            },
+            uniqueName: 'Copy clipboard content',
+            contexts: ['editor'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+x',
+            invoke: () => {
+                const isCurrentToolSelection =
+                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+
+                if (isCurrentToolSelection) {
+                    const selectionService = this.selectedTool.tool as SelectionCreatorService;
+                    selectionService.cut();
+                }
+            },
+            uniqueName: 'Cut clipboard content',
+            contexts: ['editor'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+v',
+            invoke: () => {
+                this.selectTool(this.clipboardService.copyOwner.key);
+                this.clipboardService.paste();
+                this.history.isLocked = true;
+            },
+            uniqueName: 'Paste clipboard content',
+            contexts: ['editor'],
+        });
+    }
+
     constructor(
+        private keyboardService: KeyboardService,
+        private clipboardService: ClipboardService,
+        private history: HistoryService,
         pencilService: PencilService,
         pipetteService: PipetteService,
         sprayService: SprayService,
@@ -176,5 +245,7 @@ export class ToolSelectorService {
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
         this.onToolChangedObservers = new Array<() => void>();
+
+        this.registerKeyboardShortcuts();
     }
 }
