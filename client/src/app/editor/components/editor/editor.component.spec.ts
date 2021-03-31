@@ -35,6 +35,8 @@ import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FakeMatIconRegistry } from '@angular/material/icon/testing';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // tslint:disable:no-any
 // tslint:disable: max-classes-per-file
@@ -101,7 +103,7 @@ describe('EditorComponent', () => {
         configurationPanelDrawerStub.open.and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot(), MatIconModule],
+            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot(), MatIconModule, CommonModule, MatTooltipModule],
             declarations: [],
             providers: [
                 { provide: PencilService, useValue: toolStub },

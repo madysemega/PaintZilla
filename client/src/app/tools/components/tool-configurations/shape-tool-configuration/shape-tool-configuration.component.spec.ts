@@ -2,6 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@ang
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { FakeMatIconRegistry } from '@angular/material/icon/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
@@ -38,7 +39,7 @@ describe('ShapeToolConfigurationComponent', () => {
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, MatIconModule],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [
             { provide: EllipseService, useValue: ellipseToolStub },

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImgurLinkDialogComponent } from './imgur-link-dialog.component';
 
 describe('ImgurLinkDialogComponent', () => {
@@ -12,7 +13,7 @@ describe('ImgurLinkDialogComponent', () => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close']);
         TestBed.configureTestingModule({
             declarations: [ImgurLinkDialogComponent],
-            imports: [MatDialogModule, MatIconModule],
+            imports: [MatDialogModule, MatIconModule, MatTooltipModule],
             providers: [{ provide: MatDialogRef, useValue: matDialogRefSpy }],
         }).compileComponents();
     }));

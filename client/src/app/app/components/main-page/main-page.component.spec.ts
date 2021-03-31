@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -34,7 +35,7 @@ describe('MainPageComponent', () => {
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot(), CommonModule],
             declarations: [MainPageComponent],
             providers: [
                 { provide: IndexService, useValue: indexServiceSpy },

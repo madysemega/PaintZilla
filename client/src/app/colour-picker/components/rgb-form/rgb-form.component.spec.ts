@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -79,6 +80,7 @@ describe('RgbFormComponent', () => {
             rgbaFormGroup: rgbaFormGroupSpy,
         });
         TestBed.configureTestingModule({
+            imports: [CommonModule],
             declarations: [RgbFormComponent],
             providers: [
                 { providers: ColourPickerService, useValue: colourPickerServiceSpy },

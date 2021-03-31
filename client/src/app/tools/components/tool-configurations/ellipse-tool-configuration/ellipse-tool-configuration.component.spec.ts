@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
 
@@ -7,7 +8,8 @@ describe('EllipseToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [EllipseToolConfigurationComponent]
+            declarations: [EllipseToolConfigurationComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
