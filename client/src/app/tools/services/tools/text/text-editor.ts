@@ -73,7 +73,32 @@ export class TextEditor {
     }
 
     write(text: string): void {
-        this.shape.text = this.shape.text + text;
+        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition);
+        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition);
+
+        this.shape.text = `${prefix}${text}${sufix}`;
+
+        this.moveCursorRight();
+    }
+
+    backspace(): void {
+        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition - 1);
+        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition);
+
+        this.shape.text = `${prefix}${sufix}`;
+
+        if (this.cursorRenderer.cursorPosition > 0) {
+            this.moveCursorLeft();
+        } else {
+            this.render();
+        }
+    }
+
+    delete(): void {
+        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition);
+        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition + 1);
+
+        this.shape.text = `${prefix}${sufix}`;
 
         this.render();
     }
@@ -88,5 +113,9 @@ export class TextEditor {
 
     getTextRenderer(): TextRenderer {
         return this.renderer.clone();
+    }
+
+    isEmpty(): boolean {
+        return this.shape.text.length === 0;
     }
 }
