@@ -1,1 +1,12 @@
-<app-shape-tool-configuration [toolService]="stampTool"></app-shape-tool-configuration>
+<div class="vertical">
+    <mat-label class="margin-bottom-small">Taille de l'étampe</mat-label>
+    <mat-slider
+        thumbLabel
+        [matTooltip]="info"
+        step="10"
+        min="10"
+        max="500"
+        [value]="imageSize"
+        (valueChange)="stampTool.changeSize($event)"
+    ></mat-slider>
+</div>

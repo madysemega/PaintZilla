@@ -7,5 +7,9 @@ import { StampService } from '@app/tools/services/tools/stamp.service';
     styleUrls: ['./stamp.component.scss'],
 })
 export class StampComponent {
+    info: string = "Taille de l'étampe";
     constructor(public stampTool: StampService) {}
+    get imageSize(): number {
+        return this.stampTool.imageSize;
+    }
 }
