@@ -26,10 +26,11 @@ export class MainPageComponent {
 
     resetCanvasDimensions(): void {
         this.resizingService.resetCanvasDimensions();
+        this.automaticSavingService.saveDrawingLocally();
     }
 
     drawingIsSavedLocally(): boolean {
-        return this.automaticSavingService.currentDrawing !== null;
+        return localStorage.length !== 0;
     }
 
     loadMostRecentDrawing(): void {

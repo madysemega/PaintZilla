@@ -9,12 +9,21 @@ export class AutomaticSavingService {
     currentDrawing: string | null;
 
     constructor(private drawingService: DrawingService, private historyService: HistoryService) {
-        this.drawingService.onDrawingLoadedFromServer.subscribe(() => {
+        this.drawingService.onDrawingLoaded.subscribe(() => {
             this.saveDrawingLocally();
         });
+
         this.historyService.onDrawingModification.subscribe(() => {
             this.saveDrawingLocally();
         });
+
+        window.onbeforeunload = () => {
+            this.saveDrawingLocally();
+        };
+
+        window.onload = () => {
+            this.loadMostRecentDrawing();
+        };
     }
 
     loadMostRecentDrawing(): void {
@@ -24,5 +33,9 @@ export class AutomaticSavingService {
 
     saveDrawingLocally(): void {
         localStorage.setItem('drawing', this.drawingService.canvas.toDataURL());
+    }
+
+    clearSavedDrawing(): void {
+        localStorage.removeItem('drawing');
     }
 }
