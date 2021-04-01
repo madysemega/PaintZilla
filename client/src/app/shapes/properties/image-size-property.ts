@@ -1,10 +1,10 @@
 import { ShapeProperty } from './shape-property';
 
 export class ImageSizeProperty extends ShapeProperty {
-    static readonly DEFAULT_WIDTH: number = 1;
+    static readonly DEFAULT_WIDTH: number = 10;
 
     apply(ctx: CanvasRenderingContext2D): void {
-        // ctx.scale(this.imageSize, this.imageSize);
+        ctx.scale(this.imageSize, this.imageSize);
     }
 
     clone(): ShapeProperty {
