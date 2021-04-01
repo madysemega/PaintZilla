@@ -33,6 +33,6 @@ export class MainPageComponent {
     }
 
     loadMostRecentDrawing(): void {
-        if (this.drawingIsSavedLocally()) this.automaticSavingService.loadMostRecentDrawing();
+        this.automaticSavingService.loadMostRecentDrawing();
     }
 }

@@ -18,12 +18,11 @@ export class AutomaticSavingService {
     }
 
     loadMostRecentDrawing(): void {
-        this.currentDrawing = localStorage.getItem('drawing');
+        this.currentDrawing = localStorage.getItem('drawing') as string;
         if (this.currentDrawing) this.drawingService.setImageSavedLocally(this.currentDrawing);
     }
 
     saveDrawingLocally(): void {
-        localStorage.clear();
-        localStorage.setItem('drawing', this.drawingService.currentDrawing);
+        localStorage.setItem('drawing', this.drawingService.canvas.toDataURL());
     }
 }

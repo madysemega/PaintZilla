@@ -110,11 +110,15 @@ export class DrawingService {
         const image = new Image();
         image.src = imageSrc;
 
-        this.initialSize.x = image.width;
-        this.initialSize.y = image.height;
-        this.initialImage = image;
+        image.onload = async () => {
+            this.initialSize.x = image.width;
+            this.initialSize.y = image.height;
+            this.initialImage = image;
 
-        image.onload = () => {
+            this.resetDrawingSurfaceDimensions();
+            await sleep();
+            this.resetDrawingSurfaceColour();
+
             if (this.initialImage != undefined) {
                 this.baseCtx.drawImage(this.initialImage, 0, 0);
             }
