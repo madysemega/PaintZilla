@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
-
 import { MagnetismComponent } from './magnetism.component';
+
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -39,6 +39,26 @@ describe('MagnetismComponent', () => {
         component.toggleMagnetism();
         component.toggleMagnetism();
         expect(component.isActivated).toEqual(false);
+    });
+    it('toggling magnetism twice should not change initial value', () => {
+        component.isGridActivated = false;
+        component.toggleGrid();
+        component.toggleGrid();
+        expect(component.isGridActivated).toEqual(false);
+    });
+    it('draw grid should call stroke', () => {
+        component.drawGrid()
+        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+    });
+    it('no activate grid should not call', () => {
+        component.isGridActivated = false;
+        component.toggleGrid();
+        expect(component.drawGrid()).toHaveBeenCalled();
+    });
+    it('activate grid should draw', () => {
+        component.isGridActivated = true;
+        component.toggleGrid();
+        expect(component.drawGrid()).toHaveBeenCalled();
     });
 
     it('toggling magnetism twice should not change initial value', () => {
