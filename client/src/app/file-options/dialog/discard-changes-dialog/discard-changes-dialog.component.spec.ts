@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MaterialModule } from '@app/material.module';
 import { DiscardChangesDialogComponent } from './discard-changes-dialog.component';
 
@@ -12,7 +14,7 @@ describe('DiscardChangesDialogComponent', () => {
     beforeEach(async(() => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['close']);
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, CommonModule, MatTooltipModule],
             declarations: [DiscardChangesDialogComponent],
             providers: [{ provide: MatDialogRef, useValue: matDialogRefSpy }],
         }).compileComponents();

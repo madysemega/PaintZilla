@@ -1,9 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
@@ -32,13 +35,14 @@ describe('SaveDrawingDialogComponent', () => {
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
         TestBed.configureTestingModule({
             declarations: [SaveDrawingDialogComponent],
-            imports: [MatDialogModule],
+            imports: [MatDialogModule, ReactiveFormsModule, CommonModule, MatTooltipModule],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
                 { provide: MatSnackBar, useValue: snackBarSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: ServerService, useValue: serverServiceSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 
