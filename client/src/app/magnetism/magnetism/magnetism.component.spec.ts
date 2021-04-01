@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { MagnetismComponent } from './magnetism.component';
@@ -13,6 +14,10 @@ describe('MagnetismComponent', () => {
     let component: MagnetismComponent;
     let fixture: ComponentFixture<MagnetismComponent>;
     let rectangleSelectionCreator: RectangleSelectionCreatorService;
+    let ctxStub: HTMLCanvasElement;
+    let canvasTestHelper: CanvasTestHelper;
+    //let drawingStub: DrawingService;
+    //let historyServiceStub: jasmine.SpyObj<HistoryService>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -24,9 +29,13 @@ describe('MagnetismComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(MagnetismComponent);
         component = fixture.componentInstance;
+        canvasTestHelper = new CanvasTestHelper();
         fixture.detectChanges();
         component.toolSelector = TestBed.inject(ToolSelectorService);
         rectangleSelectionCreator = TestBed.inject(RectangleSelectionCreatorService);
+        ctxStub = canvasTestHelper.canvas;
+        //drawingStub = new DrawingService(historyServiceStub);
+        
     });
 
     it('should create', () => {
@@ -39,25 +48,12 @@ describe('MagnetismComponent', () => {
         component.toggleMagnetism();
         expect(component.isActivated).toEqual(false);
     });
-    it('toggling magnetism twice should not change initial value', () => {
+    it('toggling grid twice should not change initial value', () => {
         component.isGridActivated = false;
+        component.drawingService.canvas = ctxStub;
         component.toggleGrid();
         component.toggleGrid();
         expect(component.isGridActivated).toEqual(false);
-    });
-    it('draw grid should call stroke', () => {
-        component.drawGrid();
-        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
-    });
-    it('no activate grid should not call', () => {
-        component.isGridActivated = false;
-        component.toggleGrid();
-        expect(component.drawGrid()).toHaveBeenCalled();
-    });
-    it('activate grid should draw', () => {
-        component.isGridActivated = true;
-        component.toggleGrid();
-        expect(component.drawGrid()).toHaveBeenCalled();
     });
 
     it('toggling magnetism twice should not change initial value', () => {
