@@ -14,7 +14,7 @@ export class MagnetismComponent {
     isActivated: boolean = false;
     isGridActivated: boolean=false;
     gridCellSize: number=50;
-    opacite: number=10;
+    opacite: number=100;
     constructor(public selectionManipulator: SelectionManipulatorService, public toolSelector: ToolSelectorService, public drawingService: DrawingService) {}
 
     toggleMagnetism(): void {
@@ -39,6 +39,8 @@ export class MagnetismComponent {
     drawGrid(): void{
                 for (let i: number=0; i<this.drawingService.canvasSize.x; i=i+this.gridCellSize){
                     this.drawingService.gridCtx.moveTo(i, 0);
+                    this.opacite.toString(16);
+                    this.drawingService.gridCtx.strokeStyle = "#000000"+ this.opacite;
                     this.drawingService.gridCtx.lineTo(i, this.drawingService.canvasSize.y);
                 }
                 for (let i: number=0; i<this.drawingService.canvasSize.y; i=i+this.gridCellSize){
