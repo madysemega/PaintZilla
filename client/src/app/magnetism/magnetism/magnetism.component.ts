@@ -11,6 +11,9 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 })
 export class MagnetismComponent {
     static readonly DEFAULT_MAX_OPACITY: number = 100;
+    static readonly INCREMENT: number = 5;
+    static readonly DECREMENT: number = 5;
+    static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
     isGridActivated: boolean = false;
     gridCellSize: number = 50;
@@ -35,18 +38,18 @@ export class MagnetismComponent {
         const isEqual: boolean = event.key === '=';
         const isG: boolean = event.key === 'g';
         if (isPlus) {
-            if (this.gridCellSize<100){
-                this.gridCellSizeChange(this.gridCellSize+5);
+            if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
+                this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
             }
         }
         if (isEqual) {
-            if (this.gridCellSize<100){
-                this.gridCellSizeChange(this.gridCellSize+5);
+            if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
+                this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
             }
         }
         if (isMoins) {
-            if (this.gridCellSize>10){
-                this.gridCellSizeChange(this.gridCellSize-5);
+            if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
+                this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
             }
         }
         if (isG) {
@@ -58,13 +61,13 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isGridActive = this.isGridActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isGridActive = this.isGridActivated
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isGridActive = this.isGridActivated;
         if (this.isGridActivated === true) {
             this.drawGrid();
         } else if (this.isGridActivated === false) {
             this.deleteGrid();
         }
-        }
+    }
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
             this.drawingService.gridCtx.moveTo(i, 0);

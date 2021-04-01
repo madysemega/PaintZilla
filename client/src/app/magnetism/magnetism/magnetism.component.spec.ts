@@ -4,7 +4,6 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { MagnetismComponent } from './magnetism.component';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
@@ -47,7 +46,7 @@ describe('MagnetismComponent', () => {
         expect(component.isGridActivated).toEqual(false);
     });
     it('draw grid should call stroke', () => {
-        component.drawGrid()
+        component.drawGrid();
         expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
     it('no activate grid should not call', () => {
