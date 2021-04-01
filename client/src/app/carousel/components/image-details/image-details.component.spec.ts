@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
@@ -22,7 +24,7 @@ describe('ImageDetailsComponent', () => {
         historyService = new HistoryService();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
             declarations: [ImageDetailsComponent],
             providers: [
                 { provide: Router, useValue: routerSpy },

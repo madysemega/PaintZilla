@@ -108,6 +108,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
             );
         this.matDialogRef.close();
     }
+
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
             duration: this.SNACK_BAR_DURATION,

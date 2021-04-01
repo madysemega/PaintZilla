@@ -1,6 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
@@ -33,7 +36,15 @@ describe('MainPageComponent', () => {
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule, MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [
+                RouterTestingModule,
+                HttpClientModule,
+                MaterialModule,
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                CommonModule,
+                MatTooltipModule,
+            ],
             declarations: [MainPageComponent],
             providers: [
                 { provide: IndexService, useValue: indexServiceSpy },
@@ -41,6 +52,7 @@ describe('MainPageComponent', () => {
                 { provide: MatDialog, useValue: dialogServiceStub },
                 { provide: KeyboardService },
             ],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
         resizingServiceStub = TestBed.inject(ResizingService);
     }));

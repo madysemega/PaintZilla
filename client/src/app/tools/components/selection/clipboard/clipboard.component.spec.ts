@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -35,7 +38,9 @@ describe('ClipboardComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule, CommonModule],
             declarations: [ClipboardComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         colourServiceStub = new ColourService({} as ColourPickerService);

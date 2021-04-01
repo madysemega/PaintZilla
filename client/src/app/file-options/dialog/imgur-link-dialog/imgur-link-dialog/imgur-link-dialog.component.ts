@@ -12,10 +12,7 @@ export class ImgurLinkDialogComponent {
 
     // Taken from https://stackoverflow.com/questions/49102724/angular-5-copy-to-clipboard
     copyLink(): void {
-        navigator.clipboard
-            .writeText(this.link)
-            .then()
-            .catch((e) => console.error(e));
+        navigator.clipboard.writeText(this.link);
         this.matDialogRef.close();
     }
 }

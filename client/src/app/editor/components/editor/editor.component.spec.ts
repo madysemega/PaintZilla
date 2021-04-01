@@ -1,15 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 import { MatDrawer } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
+// import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+// import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -21,8 +24,6 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
-import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
-import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -33,8 +34,9 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
-// tslint:disable:no-any
+
 // tslint:disable: max-classes-per-file
+// tslint:disable:no-any
 describe('EditorComponent', () => {
     @Component({
         selector: 'mat-icon',
@@ -64,6 +66,11 @@ describe('EditorComponent', () => {
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
 
+    /*class DrawingComponentMock extends DrawingComponent{};
+    class SidebarComponentMock extends SidebarComponent{};
+    class EllipseToolConfigurationComponentMock extends EllipseToolConfigurationComponent{};
+    class LineToolConfigurationComponentMock extends LineToolConfigurationComponent{};*/
+
     keyboardZEvent = {
         key: 'Z',
         preventDefault: () => {
@@ -90,8 +97,16 @@ describe('EditorComponent', () => {
         configurationPanelDrawerStub.open.and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
-            declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
+            imports: [
+                MaterialModule,
+                RouterTestingModule.withRoutes([]),
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                MatIconModule,
+                CommonModule,
+                MatTooltipModule,
+            ],
+            declarations: [EditorComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
@@ -114,8 +129,9 @@ describe('EditorComponent', () => {
                 { provide: SaveDrawingService },
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
             ],
-            // schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

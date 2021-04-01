@@ -158,7 +158,7 @@ describe('PipetteService', () => {
         expect(service['strokeWidthProperty'].strokeWidth).toEqual(NEW_LINE_WIDTH);
     });
 
-    it('when primary colour changes, it should be reflected in the colour property', () => {
+    it('when primary colour changes, it should be reflected in the colour property', (done) => {
         const GIVEN_COLOUR = Colour.hexToRgb('ABC');
 
         colourServiceStub.setPrimaryColour(GIVEN_COLOUR);
@@ -166,5 +166,6 @@ describe('PipetteService', () => {
         colourServiceStub.primaryColourChanged.subscribe(() => {
             expect(service['colourProperty'].colour).toEqual(GIVEN_COLOUR);
         });
+        done();
     });
 });

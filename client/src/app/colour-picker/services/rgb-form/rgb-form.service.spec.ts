@@ -1,5 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
@@ -56,6 +56,7 @@ describe('RgbaFormService', () => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['setCurrentColour']);
         spyOn(Colour, 'hexToRgb').and.returnValue(DEFAULT_COLOUR);
         TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule],
             providers: [{ provide: RgbaFormService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy }],
         });
         service = TestBed.inject(RgbaFormService);
