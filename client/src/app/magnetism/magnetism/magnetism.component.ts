@@ -35,13 +35,19 @@ export class MagnetismComponent {
         const isEqual: boolean = event.key === '=';
         const isG: boolean = event.key === 'g';
         if (isPlus) {
-            this.gridCellSizeChange(this.gridCellSize+5);
+            if (this.gridCellSize<100){
+                this.gridCellSizeChange(this.gridCellSize+5);
+            }
         }
         if (isEqual) {
-            this.gridCellSizeChange(this.gridCellSize+5);
+            if (this.gridCellSize<100){
+                this.gridCellSizeChange(this.gridCellSize+5);
+            }
         }
         if (isMoins) {
-            this.gridCellSizeChange(this.gridCellSize-5);
+            if (this.gridCellSize>10){
+                this.gridCellSizeChange(this.gridCellSize-5);
+            }
         }
         if (isG) {
             this.toggleGrid();
@@ -82,12 +88,6 @@ export class MagnetismComponent {
     }
     gridCellSizeChange(gridCellSize: number): void {
         this.gridCellSize = gridCellSize;
-        if (this.gridCellSize<10){
-            this.gridCellSize=10;
-        }
-        if (this.gridCellSize>100){
-            this.gridCellSize=100;
-        }
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridCellSize = gridCellSize;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
