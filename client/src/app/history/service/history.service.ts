@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { sleep } from '@app/app/classes/sleep';
 import { IUserAction } from '@app/history/user-actions/user-action';
 
@@ -12,7 +12,10 @@ export class HistoryService {
         this.undoEventObservers = new Array<() => void>();
 
         this.isLocked = false;
+
+        this.onDrawingModification = new EventEmitter();
     }
+    onDrawingModification: EventEmitter<boolean>;
 
     private undoEventObservers: (() => void)[];
 
@@ -28,6 +31,7 @@ export class HistoryService {
     do(action: IUserAction): void {
         this.register(action);
         action.apply();
+        this.onDrawingModification.emit();
     }
 
     register(action: IUserAction): void {
@@ -49,6 +53,8 @@ export class HistoryService {
                 await sleep();
                 action.apply();
             }
+
+            this.onDrawingModification.emit();
         }
     }
 
@@ -59,6 +65,8 @@ export class HistoryService {
             this.past.push(lastUndoneAction);
 
             lastUndoneAction.apply();
+
+            this.onDrawingModification.emit();
         }
     }
 
