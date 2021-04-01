@@ -64,14 +64,14 @@
         </div>
     </div>
     <div class="center">
-        <mat-slide-toggle id="toggle" (click)='toggleGrid()'></mat-slide-toggle>
+        <mat-slide-toggle id="toggle2" (click)='toggleGrid()'></mat-slide-toggle>
     </div>
     <div class="vertical">
         <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
         <mat-slider thumbLabel
                     matTooltip="Largeur de la grille"
                     matTooltipPosition="right"
-                    step="10"
+                    step="5"
                     min="10"
                     max="100"
                     [value]="gridCellSize"
@@ -83,7 +83,7 @@
         <mat-slider thumbLabel
                     matTooltip="Opacite de la grille"
                     matTooltipPosition="right"
-                    step="10"
+                    step="5"
                     min="10"
                     max="100"
                     [value]="opacite"
