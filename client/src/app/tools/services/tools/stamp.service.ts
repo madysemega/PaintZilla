@@ -25,21 +25,31 @@ export class StampService extends ShapeTool implements ISelectableTool {
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'stamp';
-        this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
         this.shape = new BoxShape({ x: 0, y: 0 }, { x: 0, y: 0 });
+        this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
         this.renderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
     }
     onToolSelect(): void {
-        this.drawingService.setCursorType(CursorType.CROSSHAIR);
+        this.drawingService.setCursorType(CursorType.NONE);
     }
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
-            this.shape.topLeft = this.getPositionFromMouse(event);
+            this.mouseDownCoord = this.getPositionFromMouse(event);
+            this.shape.topLeft = this.mouseDownCoord;
             this.shape.bottomRight = { x: this.shape.topLeft.x + this.imageSize, y: this.shape.topLeft.y + this.imageSize };
             this.history.isLocked = true;
-            this.finalize();
         }
+    }
+    onMouseUp(event: MouseEvent): void {
+        this.finalize();
+    }
+    onMouseMove(event: MouseEvent): void {
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.mouseDownCoord = this.getPositionFromMouse(event);
+        this.shape.topLeft = this.mouseDownCoord;
+        this.shape.bottomRight = { x: this.shape.topLeft.x + this.imageSize, y: this.shape.topLeft.y + this.imageSize };
+        this.renderer.render(this.drawingService.previewCtx);
     }
     changeSize(size: number): void {
         this.imageSize = size;
@@ -50,8 +60,8 @@ export class StampService extends ShapeTool implements ISelectableTool {
             const RENDERS = new Array<ShapeRenderer<BoxShape>>();
             RENDERS.push(this.renderer.clone());
             this.history.do(new UserActionRenderShape(RENDERS, this.drawingService.baseCtx));
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
         }
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.mouseDown = false;
     }
     onToolDeselect(): void {
