@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PolygonComponent } from './polygon.component';
 
 describe('PolygonComponent', () => {
@@ -7,7 +10,9 @@ describe('PolygonComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule, CommonModule],
             declarations: [PolygonComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 

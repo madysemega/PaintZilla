@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { MaterialModule } from '@app/material.module';
@@ -20,7 +22,7 @@ describe('EraserToolConfigurationComponent', () => {
         eraserServiceStub = new EraserService(drawingServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, CommonModule, MatTooltipModule],
             declarations: [EraserToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [
                 { provide: EraserService, useValue: eraserServiceStub },

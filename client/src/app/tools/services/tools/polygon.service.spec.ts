@@ -248,7 +248,7 @@ describe('PolygonService', () => {
         });
     });
 
-    it('when secondary colour changes, so should stroke style', () => {
+    it('when secondary colour changes, so should stroke style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
 
         colourService.setSecondaryColour(COLOUR);
@@ -256,6 +256,7 @@ describe('PolygonService', () => {
         colourService.secondaryColourChanged.subscribe(() => {
             expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
         });
+        done();
     });
 
     it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {

@@ -1,7 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpHandler } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FilterLabelComponent } from '@app/carousel/components/filter-label/filter-label.component';
 import { ImageCarouselComponent } from '@app/carousel/components/image-carousel/image-carousel.component';
@@ -40,7 +43,7 @@ describe('ImageNavigationComponent', () => {
         serverServiceSpy.deleteDrawing.and.returnValue(of());
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [MaterialModule, BrowserAnimationsModule, HotkeyModule.forRoot(), ReactiveFormsModule, CommonModule, MatTooltipModule],
             declarations: [ImageNavigationComponent, ImageCarouselComponent, ImageDetailsComponent, FilterLabelComponent],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },
@@ -152,7 +155,7 @@ describe('ImageNavigationComponent', () => {
         expect(snackBarOpenSpy).toHaveBeenCalled();
     });
 
-    it('should restore the keyboard context after dialog is closed', () => {
+    it('should restore the keyboard context after dialog is closed', (done) => {
         const keyboardRestoreContextSpy = spyOn(fixture.debugElement.injector.get(KeyboardService), 'restoreContext').and.stub();
 
         matDialogRefSpy.close();
@@ -160,5 +163,6 @@ describe('ImageNavigationComponent', () => {
         matDialogRefSpy.afterClosed().subscribe(() => {
             expect(keyboardRestoreContextSpy).toHaveBeenCalled();
         });
+        done();
     });
 });

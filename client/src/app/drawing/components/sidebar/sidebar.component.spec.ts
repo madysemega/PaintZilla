@@ -1,7 +1,9 @@
-import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -161,7 +163,7 @@ describe('SidebarComponent', () => {
         );
 
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule],
+            imports: [MatTooltipModule, CommonModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule, MatIconModule],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
@@ -196,8 +198,9 @@ describe('SidebarComponent', () => {
                 { provide: RectangleSelectionManipulatorService },
                 { provide: RectangleSelectionHelperService },
                 { provide: RectangleSelectionCreatorService },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

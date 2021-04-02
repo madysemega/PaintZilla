@@ -164,13 +164,14 @@ describe('SprayService', () => {
         expect(service['lastMousePosition']).toEqual(EXPECTED_LAST_MOUSE_POSITION);
     });
 
-    it('When primary colour changed, it should be reflected in the colour property of the spray tool', () => {
+    it('When primary colour changed, it should be reflected in the colour property of the spray tool', (done) => {
         const NEW_PRIMARY_COLOUR = Colour.hexToRgb('424242');
 
         colourServiceSpy.setPrimaryColour(NEW_PRIMARY_COLOUR);
         colourServiceSpy.primaryColourChanged.subscribe(() => {
             expect(service['colourProperty'].colour).toEqual(NEW_PRIMARY_COLOUR);
         });
+        done();
     });
 
     it('onToolDeselect should call finalizePaint', () => {

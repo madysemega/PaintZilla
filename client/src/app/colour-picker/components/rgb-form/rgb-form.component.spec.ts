@@ -1,6 +1,8 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
@@ -79,12 +81,13 @@ describe('RgbFormComponent', () => {
             rgbaFormGroup: rgbaFormGroupSpy,
         });
         TestBed.configureTestingModule({
+            imports: [CommonModule, MatTooltipModule],
             declarations: [RgbFormComponent],
             providers: [
                 { providers: ColourPickerService, useValue: colourPickerServiceSpy },
                 { providers: RgbaFormService, useValue: rgbaFormServiceSpy },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

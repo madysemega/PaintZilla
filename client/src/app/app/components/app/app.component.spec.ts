@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MainPageComponent } from '@app/app/components/main-page/main-page.component';
@@ -57,7 +59,15 @@ describe('AppComponent', () => {
         dialogServiceStub.open.and.returnValue(dialogRefStub);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, MaterialModule, HttpClientModule, BrowserAnimationsModule, HotkeyModule.forRoot()],
+            imports: [
+                RouterTestingModule,
+                MaterialModule,
+                HttpClientModule,
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                CommonModule,
+                MatTooltipModule,
+            ],
             declarations: [
                 AppComponent,
                 MainPageComponent,
@@ -87,6 +97,7 @@ describe('AppComponent', () => {
                 { provide: KeyboardService },
                 // { provide: KeyboardService, useValue: keyboardServiceStub },
             ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {
