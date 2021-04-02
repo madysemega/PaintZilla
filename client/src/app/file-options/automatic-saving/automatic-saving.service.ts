@@ -34,8 +34,4 @@ export class AutomaticSavingService {
     saveDrawingLocally(): void {
         localStorage.setItem('drawing', this.drawingService.canvas.toDataURL());
     }
-
-    clearSavedDrawing(): void {
-        localStorage.removeItem('drawing');
-    }
 }
