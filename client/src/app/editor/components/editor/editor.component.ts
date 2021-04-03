@@ -51,15 +51,16 @@ export class EditorComponent implements AfterViewInit {
         setTimeout(() => {
             this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
         });
-        this.route.params.subscribe((parameters) => {
-            const imageId = parameters.imageId;
+        this.route.params.subscribe((parameters) => this.initializeImage(parameters.imageId));
+        this.historyService.clear();
+    }
+
+    private initializeImage(imageId: string | undefined): void {
             if (imageId) {
                 this.drawingLoader.loadFromServer(imageId);
             } else {
                 this.drawingService.initialImage = undefined;
             }
-        });
-        this.historyService.clear();
     }
 
     @HostListener('document:keydown', ['$event'])

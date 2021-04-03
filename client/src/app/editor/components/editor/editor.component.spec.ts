@@ -49,7 +49,7 @@ describe('EditorComponent', () => {
     }
 
     class ToolStub extends Tool {}
-    
+
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
@@ -64,11 +64,6 @@ describe('EditorComponent', () => {
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
-
-    /*class DrawingComponentMock extends DrawingComponent{};
-    class SidebarComponentMock extends SidebarComponent{};
-    class EllipseToolConfigurationComponentMock extends EllipseToolConfigurationComponent{};
-    class LineToolConfigurationComponentMock extends LineToolConfigurationComponent{};*/
 
     keyboardZEvent = {
         key: 'Z',
@@ -222,6 +217,16 @@ describe('EditorComponent', () => {
         expect(component.showColourPicker).toBeFalse();
     });
 
+    it('Mouse down should not hide colour picket if user is on colour picker', () => {
+        colourServiceStub.showColourPicker = true;
+        colourServiceStub.onColourPicker = true;
+        component.showColourPicker = true;
+        component.onMouseDown({} as MouseEvent);
+
+        expect(colourServiceStub.onColourPicker).toBeTrue();
+        expect(component.showColourPicker).toBeTrue();
+    });
+
     it('updateColour() should propagate event to colour service', () => {
         const colourServiceUpdateColourSpy = spyOn(colourServiceStub, 'updateColour').and.stub();
         component.updateColour();
@@ -230,5 +235,15 @@ describe('EditorComponent', () => {
 
     it('height property should be the innerHeight of the window', () => {
         expect(component.height).toEqual(window.innerHeight);
+    });
+
+    it('when initializing image, if image id is set, should load image from server', () => {
+        const loadFromServerSpy = spyOn(TestBed.inject(DrawingLoaderService), 'loadFromServer').and.stub();
+        const METHOD_NAME = 'initializeImage';
+        const IMAGE_VALUE = '123';
+
+        component[METHOD_NAME](IMAGE_VALUE);
+
+        expect(loadFromServerSpy).toHaveBeenCalledWith(IMAGE_VALUE);
     });
 });
