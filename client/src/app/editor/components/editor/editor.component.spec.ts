@@ -32,7 +32,7 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
-import { HotkeyModule } from 'angular2-hotkeys';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 
 // tslint:disable: max-classes-per-file
@@ -49,9 +49,7 @@ describe('EditorComponent', () => {
     }
 
     class ToolStub extends Tool {}
-
-    class E {}
-
+    
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
@@ -60,6 +58,7 @@ describe('EditorComponent', () => {
     let drawingStub: DrawingService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let colourServiceStub: ColourService;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let keyboardZEvent: KeyboardEvent;
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
@@ -82,6 +81,8 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo', 'clear']);
         drawingStub = new DrawingService(historyServiceStub);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
@@ -130,6 +131,7 @@ describe('EditorComponent', () => {
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
                 { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
@@ -186,45 +188,6 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });
-
-    it('Ctrl+a should select the rectangle-selection tool from the tool selector', () => {
-        const dumbFunction: (x: number, y: number) => number = (x: number, y: number) => x + y;
-        const keyboardEvent = {
-            ctrlKey: true,
-            key: 'a',
-            preventDefault: dumbFunction,
-        } as E;
-        component.onKeyDown(keyboardEvent as KeyboardEvent);
-        expect(toolSelectorStub.selectTool).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Z should call history service undo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: false,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.undo).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Shift+Z should call history service redo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: true,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.redo).toHaveBeenCalled();
-    });
-
-    it('Ctrl+G should open the carousel', () => {
-        const keyboardService = fixture.debugElement.injector.get(KeyboardService);
-
-        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
-            action.invoke();
-        });
     });
 
     it("When colour picker visibility state changes, so should the editor component's internal flag", () => {

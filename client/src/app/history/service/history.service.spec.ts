@@ -1,16 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 import { IUserAction } from '@app/history/user-actions/user-action';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { HistoryService } from './history.service';
 
 // tslint:disable:no-string-literal
 describe('HistoryService', () => {
     let service: HistoryService;
 
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     const NB_USER_ACTIONS_TO_GENERATE = 5;
     let userActions: jasmine.SpyObj<IUserAction>[];
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
+        TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+        });
         service = TestBed.inject(HistoryService);
 
         userActions = new Array<jasmine.SpyObj<IUserAction>>();

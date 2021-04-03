@@ -64,6 +64,8 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
+        this.toolSelector.getSelectedTool().onKeyDown(event);
+
         this.drawingCreatorService.onKeyDown(event);
         this.exportDrawingService.onKeyDown(event);
         this.saveDrawingService.onKeyDown(event);

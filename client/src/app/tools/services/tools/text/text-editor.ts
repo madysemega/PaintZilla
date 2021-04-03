@@ -55,7 +55,7 @@ export class TextEditor {
     }
 
     enableCursor(): void {
-        this.cursorTimerHandle = setInterval(() => {
+        this.cursorTimerHandle = window.setInterval(() => {
             this.showCursor = !this.showCursor;
             this.render();
         }, this.CURSOR_BLINK_DELAI_MS);

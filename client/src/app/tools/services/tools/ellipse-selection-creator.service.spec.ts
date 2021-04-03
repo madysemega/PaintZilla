@@ -9,6 +9,7 @@ import { EllipseSelectionHelperService } from '@app/tools/services/selection/ell
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
 
 // tslint:disable:no-any
@@ -24,6 +25,8 @@ describe('EllipseSelectionCreatorService', () => {
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
@@ -44,6 +47,8 @@ describe('EllipseSelectionCreatorService', () => {
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
         drawServiceSpy.canvasSize = { x: 1000, y: 500 };
+
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         ellipseSelectionManipulatorMock = jasmine.createSpyObj('EllipseSelectionManipulatorService', [
             'onKeyDown',
@@ -84,11 +89,13 @@ describe('EllipseSelectionCreatorService', () => {
         ellipseSelectionHelperMock.isSelectionBeingManipulated = new BehaviorSubject(true);
 
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
                 { provide: SelectionHelperService, useValue: selectionServiceMock },
                 { provide: EllipseSelectionManipulatorService, useValue: ellipseSelectionManipulatorMock },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

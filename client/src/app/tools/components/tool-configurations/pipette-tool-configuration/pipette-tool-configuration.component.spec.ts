@@ -6,6 +6,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
@@ -19,9 +20,14 @@ describe('PipetteToolConfigurationComponent', () => {
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
     let pipetteServiceStub: PipetteService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         pipetteServiceStub = new PipetteService(drawingServiceStub, colourServiceStub, historyServiceStub);

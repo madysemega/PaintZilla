@@ -41,6 +41,7 @@ describe('KeyboardService', () => {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
             invoke: () => (hasActionBeenInvoked = true),
+            uniqueName: 'test',
             contexts: [CURRENT_CONTEXT],
         } as KeyboardAction;
 
@@ -63,6 +64,7 @@ describe('KeyboardService', () => {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
             invoke: () => (hasActionBeenInvoked = true),
+            uniqueName: 'test',
             contexts: ['test'],
         } as KeyboardAction;
 

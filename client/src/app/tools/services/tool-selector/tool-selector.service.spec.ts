@@ -4,6 +4,7 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -13,7 +14,15 @@ import { LineService } from '@app/tools/services/tools/line.service';
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     beforeEach(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
+        TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+        });
         service = TestBed.inject(ToolSelectorService);
     });
 

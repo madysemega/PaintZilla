@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionHandlerService } from './rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
+
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -10,6 +11,7 @@ describe('RectangleSelectionHandlerService', () => {
     let service: RectangleSelectionHandlerService;
 
     let rectangleSelectionHelperService: jasmine.SpyObj<RectangleSelectionHelperService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let drawImageSpy: jasmine.Spy<any>;
     let fillSpy: jasmine.Spy<any>;
@@ -21,8 +23,14 @@ describe('RectangleSelectionHandlerService', () => {
             'setIsSelectionBeingManipulated',
         ]);
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            providers: [{ provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService }],
+            imports: [HotkeyModule.forRoot()],
+            providers: [
+                { provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
         });
         service = TestBed.inject(RectangleSelectionHandlerService);
 

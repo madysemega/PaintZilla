@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
+
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -11,6 +12,8 @@ import { EllipseSelectionHelperService } from './ellipse-selection-helper.servic
 describe('EllipseSelectionHelperService', () => {
     let service: EllipseSelectionHelperService;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     let canvasTestHelper: CanvasTestHelper;
     let canvas: HTMLCanvasElement;
     // let canvasPosition: Vec2;
@@ -22,7 +25,15 @@ describe('EllipseSelectionHelperService', () => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
         drawServiceSpy.canvasSize = { x: 1000, y: 500 };
 
-        TestBed.configureTestingModule({ providers: [{ provide: DrawingService, useValue: drawServiceSpy }] });
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
+        TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
+        });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         baseCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCtxStub = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;

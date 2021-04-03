@@ -4,9 +4,10 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
+
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -21,6 +22,7 @@ describe('EllipseSelectionHandlerService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHandlerService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
     let hasSelectionBeenManipulatedSpy: jasmine.Spy<any>;
@@ -58,11 +60,15 @@ describe('EllipseSelectionHandlerService', () => {
             'getSquareAjustedPerimeter',
         ]);
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
                 { provide: SelectionHelperService, useValue: selectionServiceMock },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

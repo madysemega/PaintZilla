@@ -6,10 +6,12 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 
 describe('PencilToolConfigurationComponent', () => {
     let component: PencilToolConfigurationComponent;
@@ -19,17 +21,28 @@ describe('PencilToolConfigurationComponent', () => {
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
     let pencilServiceStub: PencilService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
+
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         pencilServiceStub = new PencilService(drawingServiceStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, MatTooltipModule, CommonModule],
+            imports: [MaterialModule, MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [PencilToolConfigurationComponent, ResizableToolConfigurationComponent],
-            providers: [{ provide: PencilService, useValue: pencilServiceStub }],
+            providers: [
+                { provide: PencilService, useValue: pencilServiceStub },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

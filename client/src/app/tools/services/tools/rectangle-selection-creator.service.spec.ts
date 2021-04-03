@@ -3,8 +3,8 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
-
 import { RectangleSelectionCreatorService } from './rectangle-selection-creator.service';
 
 // tslint:disable:no-any
@@ -14,12 +14,11 @@ import { RectangleSelectionCreatorService } from './rectangle-selection-creator.
 describe('RectangleSelectionCreatorService', () => {
     let service: RectangleSelectionCreatorService;
 
-    // let selectionServiceMock: jasmine.SpyObj<SelectionService>;
     let rectangleSelectionHelperService: jasmine.SpyObj<RectangleSelectionHelperService>;
 
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
-
     let createSelectionSpy: jasmine.Spy<any>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let canvasTestHelper: CanvasTestHelper;
     let canvas: HTMLCanvasElement;
@@ -39,11 +38,14 @@ describe('RectangleSelectionCreatorService', () => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
         drawServiceSpy.canvasSize = { x: 1000, y: 500 };
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
-                // { provide: SelectionService, useValue: selectionServiceMock },
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
 
@@ -80,22 +82,26 @@ describe('RectangleSelectionCreatorService', () => {
     });
 
     it('pressing ctrl + a should create selection the same size as the canvas ', () => {
-        const keyboardEvent = {
-            key: 'a',
-            ctrlKey: true,
-        } as KeyboardEvent;
-        service.isShiftDown = false;
-        service.onKeyDown(keyboardEvent);
-        expect(createSelectionSpy).toHaveBeenCalledWith({ x: 0, y: 0 }, { x: drawServiceSpy.canvasSize.x, y: drawServiceSpy.canvasSize.y });
-    });
-
-    it('if ctrl + a is not pressed it should not create selection', () => {
-        const keyboardEvent = {
+        const keyboardEventZ = new KeyboardEvent('keydown', {
             key: 'z',
             ctrlKey: true,
-        } as KeyboardEvent;
+        });
+
+        const keyboardEventA = new KeyboardEvent('keydown', {
+            key: 'a',
+            ctrlKey: true,
+        });
+
         service.isShiftDown = false;
-        service.onKeyDown(keyboardEvent);
-        expect(createSelectionSpy).not.toHaveBeenCalled();
+
+        document.body.dispatchEvent(keyboardEventZ);
+        document.body.addEventListener('keydown', () => {
+            expect(createSelectionSpy).not.toHaveBeenCalled();
+        });
+
+        document.body.dispatchEvent(keyboardEventA);
+        document.body.addEventListener('keydown', () => {
+            expect(createSelectionSpy).toHaveBeenCalledWith({ x: 0, y: 0 }, { x: drawServiceSpy.canvasSize.x, y: drawServiceSpy.canvasSize.y });
+        });
     });
 });

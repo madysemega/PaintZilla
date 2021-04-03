@@ -26,12 +26,18 @@ describe('MainPageComponent', () => {
     let historyServiceStub: HistoryService;
     let resizingServiceStub: ResizingService;
     let dialogServiceStub: jasmine.SpyObj<MatDialog>;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     beforeEach(async(() => {
         indexServiceSpy = jasmine.createSpyObj('IndexService', ['basicGet', 'basicPost']);
         indexServiceSpy.basicGet.and.returnValue(of({ title: '', body: '' }));
         indexServiceSpy.basicPost.and.returnValue(of());
-        historyServiceStub = new HistoryService();
+        
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
 
