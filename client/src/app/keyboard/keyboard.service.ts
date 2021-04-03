@@ -11,16 +11,16 @@ export class KeyboardService {
     context: string;
     private savedContextStack: string[];
 
-    private registeredShortcutsName: string[];
+    private registeredShortcutNames: string[];
 
     constructor(private hotkeysService: HotkeysService) {
         this.context = KeyboardService.DEFAULT_CONTEXT;
         this.savedContextStack = new Array<string>();
-        this.registeredShortcutsName = new Array<string>();
+        this.registeredShortcutNames = new Array<string>();
     }
-
+ 
     registerAction(action: KeyboardAction): void {
-        const actionHasAlreadyBeenRegistered = this.registeredShortcutsName.find((name) => name === action.uniqueName) !== undefined;
+        const actionHasAlreadyBeenRegistered = this.registeredShortcutNames.find((name) => name === action.uniqueName) !== undefined;
 
         if (!actionHasAlreadyBeenRegistered) {
             this.hotkeysService.add(
@@ -33,6 +33,8 @@ export class KeyboardService {
                     return false;
                 }),
             );
+
+            this.registeredShortcutNames.push(action.uniqueName);
         }
     }
 
