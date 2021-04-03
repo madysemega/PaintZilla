@@ -4,7 +4,7 @@ export class ImageSizeProperty extends ShapeProperty {
     static readonly DEFAULT_WIDTH: number = 10;
 
     apply(ctx: CanvasRenderingContext2D): void {
-        ctx.scale(this.imageSize, this.imageSize);
+        // ctx.rotate((20 * Math.PI) / 180);
     }
 
     clone(): ShapeProperty {

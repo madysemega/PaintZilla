@@ -1,20 +1,23 @@
-import { BoxShape } from '@app/shapes/box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { StampShape } from '@app/shapes/stamp-shape';
 import { ShapeRenderer } from './shape-renderer';
 
-export class StampRenderer extends ShapeRenderer<BoxShape> {
-    constructor(shape: BoxShape, properties: ShapeProperty[]) {
+export class StampRenderer extends ShapeRenderer<StampShape> {
+    constructor(shape: StampShape, properties: ShapeProperty[]) {
         super(shape, properties);
     }
     draw(ctx: CanvasRenderingContext2D): void {
-        const BASE_IMAGE = new Image();
         const SIZE = this.shape.bottomRight.x - this.shape.topLeft.x;
-        BASE_IMAGE.src = './assets/icons/black-stamp.svg';
-        // ctx.drawImage(BASE_IMAGE, this.shape.topLeft.x, this.shape.topLeft.y, SIZE, SIZE);
-        BASE_IMAGE.onload = () => ctx.drawImage(BASE_IMAGE, this.shape.topLeft.x, this.shape.topLeft.y, SIZE, SIZE);
-        console.log(this.shape);
+        const CENTER_X = this.shape.topLeft.x - SIZE / 2;
+        const CENTER_Y = this.shape.topLeft.y - SIZE / 2;
+        ctx.save();
+        ctx.translate(this.shape.topLeft.x, this.shape.topLeft.y);
+        ctx.rotate(this.shape.angle);
+        ctx.translate(-this.shape.topLeft.x, -this.shape.topLeft.y);
+        ctx.drawImage(this.shape.image, CENTER_X, CENTER_Y, SIZE, SIZE);
+        ctx.restore();
     }
-    clone(): ShapeRenderer<BoxShape> {
+    clone(): ShapeRenderer<StampShape> {
         return new StampRenderer(this.getShapeCopy(), this.getPropertiesCopy());
     }
 }

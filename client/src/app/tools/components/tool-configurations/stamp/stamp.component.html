@@ -9,9 +9,13 @@
         [value]="imageSize"
         (valueChange)="stampTool.changeSize($event)"
     ></mat-slider>
+    <mat-slider
+        thumbLabel
+        [matTooltip]="infoAngle"
+        step="15"
+        min="0"
+        max="360"
+        [value]="angle"
+        (valueChange)="stampTool.changeAngle($event)"
+    ></mat-slider>
 </div>
-<style>
-    * {
-        cursor: url('./assets/icons/black-stamp.svg'), default;
-    }
-</style>
