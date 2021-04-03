@@ -25,13 +25,20 @@ export class HistoryService {
     isLocked: boolean;
 
     private registerKeyboardShortcuts(): void {
+        this.registerUndoKeyboardShortcut();
+        this.registerRedoKeyboardShortcut();
+    }
+
+    private registerUndoKeyboardShortcut(): void {
         this.keyboardService.registerAction({
             trigger: 'ctrl+z',
             invoke: () => this.undo(),
             uniqueName: 'Undo last action',
             contexts: ['editor'],
         });
+    }
 
+    private registerRedoKeyboardShortcut(): void {
         this.keyboardService.registerAction({
             trigger: 'ctrl+shift+z',
             invoke: () => this.redo(),

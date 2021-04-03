@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { IUserAction } from '@app/history/user-actions/user-action';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { HistoryService } from './history.service';
 
 // tslint:disable:no-string-literal
+// tslint:disable:no-any
 describe('HistoryService', () => {
     let service: HistoryService;
 
@@ -12,14 +14,20 @@ describe('HistoryService', () => {
     const NB_USER_ACTIONS_TO_GENERATE = 5;
     let userActions: jasmine.SpyObj<IUserAction>[];
 
+    let undoSpy: jasmine.Spy<any>;
+    let redoSpy: jasmine.Spy<any>;
+
     beforeEach(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }, { provide: KeyboardService }],
         });
         service = TestBed.inject(HistoryService);
+
+        undoSpy = spyOn(service, 'undo').and.callThrough();
+        redoSpy = spyOn(service, 'redo').and.callThrough();
 
         userActions = new Array<jasmine.SpyObj<IUserAction>>();
         for (let i = 0; i < NB_USER_ACTIONS_TO_GENERATE; ++i) {
@@ -142,5 +150,31 @@ describe('HistoryService', () => {
         service.clear();
 
         expect(service.isLocked).toBeFalse();
+    });
+
+    it('Ctrl+Z should call undo() when in editor', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        keyboardService.context = 'editor';
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            action.invoke();
+        });
+
+        service['registerUndoKeyboardShortcut']();
+
+        expect(undoSpy).toHaveBeenCalled();
+    });
+
+    it('Ctrl+Shift+Z should call redo() when in editor', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        keyboardService.context = 'editor';
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            action.invoke();
+        });
+
+        service['registerRedoKeyboardShortcut']();
+
+        expect(redoSpy).toHaveBeenCalled();
     });
 });
