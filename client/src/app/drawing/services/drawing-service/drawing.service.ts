@@ -110,13 +110,14 @@ export class DrawingService {
         const image = new Image();
         image.src = imageSrc;
 
-        image.onload = async () => {
-            this.initialSize.x = image.width;
-            this.initialSize.y = image.height;
-            this.initialImage = image;
-
-            this.resetDrawingSurface();
-        };
+        return new Promise(
+            (image.onload = async () => {
+                this.initialSize.x = image.width;
+                this.initialSize.y = image.height;
+                this.initialImage = image;
+                this.resetDrawingSurface();
+            }),
+        );
     }
 
     constructor(historyService: HistoryService) {

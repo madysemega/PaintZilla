@@ -16,14 +16,6 @@ export class AutomaticSavingService {
         this.historyService.onDrawingModification.subscribe(() => {
             this.saveDrawingLocally();
         });
-
-        window.onbeforeunload = () => {
-            this.saveDrawingLocally();
-        };
-
-        window.onload = () => {
-            this.loadMostRecentDrawing();
-        };
     }
 
     loadMostRecentDrawing(): void {

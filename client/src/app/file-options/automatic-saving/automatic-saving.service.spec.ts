@@ -43,12 +43,6 @@ describe('AutomaticSavingService', () => {
         expect(service).toBeTruthy();
     });
 
-    // it('should call loadMostRecentDrawing() when the page is refreshed', () => {
-    //     const loadMostRecentDrawingSpy = spyOn(service, 'loadMostRecentDrawing').and.stub();
-    //     window.dispatchEvent(new Event('onload'));
-    //     expect(loadMostRecentDrawingSpy).toHaveBeenCalled();
-    // });
-
     it('should call saveDrawingLocally() when drawings are loaded', () => {
         const saveDrawingLocallySpy = spyOn(service, 'saveDrawingLocally').and.stub();
         drawingStub.onDrawingLoaded.emit();
@@ -58,12 +52,6 @@ describe('AutomaticSavingService', () => {
     it('should call saveDrawingLocally() when the drawing is modified', () => {
         const saveDrawingLocallySpy = spyOn(service, 'saveDrawingLocally').and.stub();
         historyServiceStub.onDrawingModification.emit();
-        expect(saveDrawingLocallySpy).toHaveBeenCalled();
-    });
-
-    it('should call saveDrawingLocally() when the page is refreshed', () => {
-        const saveDrawingLocallySpy = spyOn(service, 'saveDrawingLocally').and.stub();
-        window.dispatchEvent(new Event('beforeunload'));
         expect(saveDrawingLocallySpy).toHaveBeenCalled();
     });
 
