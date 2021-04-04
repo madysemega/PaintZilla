@@ -32,6 +32,6 @@ export class AutomaticSavingService {
     }
 
     saveDrawingLocally(): void {
-        localStorage.setItem('drawing', this.drawingService.canvas.toDataURL());
+        localStorage.setItem('drawing', this.drawingService.currentDrawing);
     }
 }

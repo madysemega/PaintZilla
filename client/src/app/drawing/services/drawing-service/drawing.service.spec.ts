@@ -113,6 +113,13 @@ describe('DrawingService', () => {
         expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
     });
 
+    it('setImageSavedLocally() should reset the drawing surface', () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+
+        service.setImageSavedLocally(IMAGE_SRC_BASE_64);
+        expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
+    });
+
     it('drawInitialImage() should draw the initial image if there is one', () => {
         service.initialImage = new Image();
 
