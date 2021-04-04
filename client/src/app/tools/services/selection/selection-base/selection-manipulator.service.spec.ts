@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
-
 describe('SelectionManipulatorService', () => {
     let service: SelectionManipulatorService;
 

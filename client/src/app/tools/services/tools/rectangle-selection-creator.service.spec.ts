@@ -104,4 +104,15 @@ describe('RectangleSelectionCreatorService', () => {
             expect(createSelectionSpy).toHaveBeenCalledWith({ x: 0, y: 0 }, { x: drawServiceSpy.canvasSize.x, y: drawServiceSpy.canvasSize.y });
         });
     });
+
+    it('When selecting the entire canvas, a selection covering the entire canvas should be created', () => {
+        const TOP_LEFT = { x: 0, y: 0 };
+        const BOTTOM_RIGHT = {
+            x: drawServiceSpy.canvasSize.x,
+            y: drawServiceSpy.canvasSize.y,
+        };
+
+        service.selectEntireCanvas();
+        expect(createSelectionSpy).toHaveBeenCalledWith(TOP_LEFT, BOTTOM_RIGHT);
+    });
 });

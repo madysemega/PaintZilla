@@ -21,7 +21,7 @@ import {
     MOVEMENT_UP,
     NUMBER_OF_ARROW_TYPES,
     TIME_BEFORE_START_MOV,
-    TIME_BETWEEN_MOV,
+    TIME_BETWEEN_MOV
 } from './selection-constants';
 import { SelectionHandlerService } from './selection-handler.service';
 
