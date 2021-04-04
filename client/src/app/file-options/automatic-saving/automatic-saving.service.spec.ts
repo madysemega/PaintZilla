@@ -16,7 +16,7 @@ describe('AutomaticSavingService', () => {
         drawingStub = new DrawingService(historyServiceStub);
 
         // Taken from https://stackoverflow.com/questions/11485420/how-to-mock-localstorage-in-javascript-unit-tests
-        let store: Map<string, string> = new Map<string, string>();
+        const store: Map<string, string> = new Map<string, string>();
 
         spyOn(localStorage, 'getItem').and.callFake((key: string) => {
             return store.get(key) as string;
