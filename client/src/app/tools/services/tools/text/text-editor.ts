@@ -62,7 +62,7 @@ export class TextEditor {
     }
 
     disableCursor(): void {
-        clearInterval(this.cursorTimerHandle);
+        window.clearInterval(this.cursorTimerHandle);
     }
 
     moveCursorRight(): void {
