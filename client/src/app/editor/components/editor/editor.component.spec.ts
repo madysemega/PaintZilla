@@ -22,9 +22,12 @@ import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-draw
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -65,6 +68,8 @@ describe('EditorComponent', () => {
 
     let keyboardZEvent: KeyboardEvent;
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
+    let clipboardServiceStub: jasmine.SpyObj<ClipboardService>;
+    let magnetismeServiceStub: jasmine.SpyObj<MagnetismService>;
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
 
@@ -86,6 +91,7 @@ describe('EditorComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
         automaticSavingService = jasmine.createSpyObj('AutomaticSavingService', ['saveDrawingLocally', 'loadMostRecentDrawing']);
+        magnetismeServiceStub = jasmine.createSpyObj('MagnetismService', ['toggleMagnetism']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
             return true;
@@ -95,6 +101,11 @@ describe('EditorComponent', () => {
 
         toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'onToolChanged', 'fromKeyboardShortcut']);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+        toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+
+        clipboardServiceStub = jasmine.createSpyObj('ClipboardService', ['paste']);
+        clipboardServiceStub.copyOwner = toolStub as SelectionCreatorService;
+        clipboardServiceStub.copyOwner.key = 'dummyKey';
 
         configurationPanelDrawerStub = jasmine.createSpyObj('MatDrawer', ['open']);
         configurationPanelDrawerStub.open.and.stub();
@@ -134,6 +145,8 @@ describe('EditorComponent', () => {
                 { provide: ColourService, useValue: colourServiceStub },
                 { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
                 { provide: AutomaticSavingService, useValue: automaticSavingService },
+                { provide: ClipboardService, useValue: clipboardServiceStub },
+                { provide: MagnetismService, useValue: magnetismeServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
@@ -223,12 +236,45 @@ describe('EditorComponent', () => {
         expect(historyServiceStub.redo).toHaveBeenCalled();
     });
 
+    it('Ctrl+V should paste if clipboard is not empty', () => {
+        clipboardServiceStub.isEmpty = false;
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: false,
+            key: 'v',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(clipboardServiceStub.paste).toHaveBeenCalled();
+    });
+
+    it('Ctrl+V should not paste if clipboard is  empty', () => {
+        clipboardServiceStub.isEmpty = true;
+        const keyboardEvent = {
+            ctrlKey: true,
+            shiftKey: false,
+            key: 'v',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(clipboardServiceStub.paste).not.toHaveBeenCalled();
+    });
+
     it('Ctrl+G should open the carousel', () => {
         const keyboardService = fixture.debugElement.injector.get(KeyboardService);
 
         spyOn(keyboardService, 'registerAction').and.callFake((action) => {
             action.invoke();
         });
+    });
+
+    it('M should toggle magnetism', () => {
+        clipboardServiceStub.isEmpty = true;
+        const keyboardEvent = {
+            ctrlKey: false,
+            shiftKey: false,
+            key: 'm',
+        } as KeyboardEvent;
+        component.onKeyUp(keyboardEvent);
+        expect(magnetismeServiceStub.toggleMagnetism).toHaveBeenCalled();
     });
 
     it("When colour picker visibility state changes, so should the editor component's internal flag", () => {
