@@ -7,6 +7,7 @@ import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
+import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { TextEditor } from './text-editor';
@@ -119,12 +120,14 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     onMouseClick(event: MouseEvent): void {
-        if (this.isEditing) {
-            this.finalize();
-        } else {
-            this.startEditing(this.getPositionFromMouse(event));
+        if(event.button === MouseButton.Left) {
+            if (this.isEditing) {
+                this.finalize();
+            } else {
+                this.startEditing(this.getPositionFromMouse(event));
+            }
+    
+            this.isEditing = !this.isEditing;
         }
-
-        this.isEditing = !this.isEditing;
     }
 }
