@@ -7,6 +7,7 @@ import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawi
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
+import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
@@ -33,6 +34,7 @@ export class EditorComponent implements AfterViewInit {
         private drawingLoader: DrawingLoaderService,
         private drawingService: DrawingService,
         private clipboardService: ClipboardService,
+        private automaticSavingService: AutomaticSavingService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -133,6 +135,16 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('window:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.toolSelector.getSelectedTool().onMouseUp(event);
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    onBeforeUnload(event: Event): void {
+        this.automaticSavingService.saveDrawingLocally();
+    }
+
+    @HostListener('window:load', ['$event'])
+    onLoad(event: Event): void {
+        this.automaticSavingService.loadMostRecentDrawing();
     }
 
     updateColour(): void {

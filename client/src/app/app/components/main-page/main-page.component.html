@@ -3,7 +3,9 @@
 
     <button mat-raised-button color="primary" class="button" routerLink="/editor" (click)="resetCanvasDimensions()">Créer un nouveau dessin</button>
     <button mat-raised-button color="primary" class="button" (click)="openCarousel()">Ouvrir le carrousel de dessins</button>
-    <button mat-raised-button color="primary" class="button" *ngIf="false">Continuer un dessin</button>
+    <button mat-raised-button color="primary" class="button" *ngIf="drawingIsSavedLocally()" (click)="loadMostRecentDrawing()" routerLink="/editor">
+        Continuer un dessin
+    </button>
 
     <div class="footer-item">
         <h4 class="team-name">L'Équipe 201</h4>

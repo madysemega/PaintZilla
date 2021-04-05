@@ -19,6 +19,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
+import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
@@ -60,6 +61,7 @@ describe('EditorComponent', () => {
     let drawingStub: DrawingService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let colourServiceStub: ColourService;
+    let automaticSavingService: jasmine.SpyObj<any>;
 
     let keyboardZEvent: KeyboardEvent;
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
@@ -83,6 +85,7 @@ describe('EditorComponent', () => {
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo', 'clear']);
         drawingStub = new DrawingService(historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
+        automaticSavingService = jasmine.createSpyObj('AutomaticSavingService', ['saveDrawingLocally', 'loadMostRecentDrawing']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
             return true;
@@ -130,6 +133,7 @@ describe('EditorComponent', () => {
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
                 { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+                { provide: AutomaticSavingService, useValue: automaticSavingService },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
@@ -267,5 +271,15 @@ describe('EditorComponent', () => {
 
     it('height property should be the innerHeight of the window', () => {
         expect(component.height).toEqual(window.innerHeight);
+    });
+
+    it('beforeunload event should call automaticSavingService.saveDrawingLocally', () => {
+        component.onBeforeUnload({} as Event);
+        expect(automaticSavingService.saveDrawingLocally).toHaveBeenCalled();
+    });
+
+    it('onload event should call automaticSavingService.loadMostRecentDrawing', () => {
+        component.onLoad({} as Event);
+        expect(automaticSavingService.loadMostRecentDrawing).toHaveBeenCalled();
     });
 });
