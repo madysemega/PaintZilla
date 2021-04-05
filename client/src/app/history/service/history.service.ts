@@ -39,6 +39,8 @@ export class HistoryService {
         this.past.push(action);
 
         this.isLocked = false;
+
+        this.onDrawingModification.emit();
     }
 
     async undo(): Promise<void> {
