@@ -3,6 +3,7 @@ import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 
 @Component({
     selector: 'app-magnetism',
@@ -10,11 +11,13 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    isActivated: boolean = false;
-    constructor(public selectionManipulator: SelectionManipulatorService, public toolSelector: ToolSelectorService) {}
 
-    toggleMagnetism(): void {
-        this.isActivated = !this.isActivated;
+    public isActivated: boolean = false;
+    constructor(public selectionManipulator: SelectionManipulatorService, public toolSelector: ToolSelectorService, public magnetismService: MagnetismService) {
+        this.magnetismService.isActivated.subscribe(value => { this.isActivated = value; this.notifyManipulators(); });
+    }
+
+    notifyManipulators() {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)

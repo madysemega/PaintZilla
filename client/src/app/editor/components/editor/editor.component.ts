@@ -10,6 +10,7 @@ import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-draw
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 
@@ -35,6 +36,7 @@ export class EditorComponent implements AfterViewInit {
         private drawingService: DrawingService,
         private clipboardService: ClipboardService,
         private automaticSavingService: AutomaticSavingService,
+        private magnetismService: MagnetismService,
     ) {
         this.colourService.showColourPickerChange.subscribe((flag: boolean) => {
             this.showColourPicker = flag;
@@ -91,6 +93,7 @@ export class EditorComponent implements AfterViewInit {
             const isCtrl: boolean = event.ctrlKey;
             const isZ: boolean = event.key.toUpperCase() === 'Z';
             const isV: boolean = event.key === 'v';
+            const isM: boolean = event.key === 'm';
             const isShift: boolean = event.shiftKey;
 
             if (isCtrl) {
@@ -109,6 +112,9 @@ export class EditorComponent implements AfterViewInit {
                     return;
                 }
             } else {
+                if(isM){
+                    this.magnetismService.toggleMagnetism();
+                }
                 this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));
             }
 

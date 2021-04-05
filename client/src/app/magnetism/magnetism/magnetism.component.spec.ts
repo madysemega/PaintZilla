@@ -38,14 +38,13 @@ describe('MagnetismComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('toggling magnetism twice should not change initial value', () => {
-        component.isActivated = false;
-        component.toggleMagnetism();
-        component.toggleMagnetism();
-        expect(component.isActivated).toEqual(false);
+    it('notifying the manipulators should change the isMagnetismActivated property in the selection Manipulator ', () => {
+        component.isActivated = true;
+        component.notifyManipulators();
+        expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
 
-    it('toggling magnetism twice should not change initial value', () => {
+    it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
         const dummyAnchor = 5;
         component.setGridAnchor(dummyAnchor);
         expect(rectangleSelectionCreator.selectionManipulator.gridMovementAnchor).toEqual(dummyAnchor);
