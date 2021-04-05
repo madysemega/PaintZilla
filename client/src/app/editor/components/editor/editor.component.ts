@@ -112,7 +112,7 @@ export class EditorComponent implements AfterViewInit {
                     return;
                 }
             } else {
-                if(isM){
+                if (isM) {
                     this.magnetismService.toggleMagnetism();
                 }
                 this.toolSelector.selectTool(this.toolSelector.fromKeyboardShortcut(event.key));

@@ -104,7 +104,7 @@ describe('EditorComponent', () => {
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
 
         clipboardServiceStub = jasmine.createSpyObj('ClipboardService', ['paste']);
-        clipboardServiceStub.copyOwner = (toolStub as SelectionCreatorService); 
+        clipboardServiceStub.copyOwner = toolStub as SelectionCreatorService;
         clipboardServiceStub.copyOwner.key = 'dummyKey';
 
         configurationPanelDrawerStub = jasmine.createSpyObj('MatDrawer', ['open']);
@@ -145,8 +145,8 @@ describe('EditorComponent', () => {
                 { provide: ColourService, useValue: colourServiceStub },
                 { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
                 { provide: AutomaticSavingService, useValue: automaticSavingService },
-                { provide: ClipboardService, useValue: clipboardServiceStub},
-                { provide: MagnetismService, useValue: magnetismeServiceStub}
+                { provide: ClipboardService, useValue: clipboardServiceStub },
+                { provide: MagnetismService, useValue: magnetismeServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })

@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class MagnetismService {
-  public isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  constructor() { }
+    isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  public toggleMagnetism(): void{
-    this.isActivated.next(!this.isActivated.value);
-  }
+    toggleMagnetism(): void {
+        this.isActivated.next(!this.isActivated.value);
+    }
 }
