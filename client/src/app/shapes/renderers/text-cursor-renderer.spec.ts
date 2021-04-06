@@ -1,7 +1,7 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { FontProperty } from '@app/shapes/properties/font-property';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { TextShape } from '@app/shapes/text-shape';
-import { FontProperty } from '../properties/font-property';
 import { TextCursorRenderer } from './text-cursor-renderer';
 import { TextRenderer } from './text-renderer';
 
