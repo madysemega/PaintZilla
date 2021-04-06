@@ -34,13 +34,12 @@ describe('TextShape', () => {
         expect(split[2]).toEqual('abc');
     });
 
-    it('If text ends in \\n, split should add an empty string as last line', () => {
+    it('If text ends in \\n, split should not add an empty string as last line', () => {
         shape.text = '123\n';
 
         const split = shape.splitTextInMultipleLines();
-        expect(split.length).toEqual(2);
+        expect(split.length).toEqual(1);
         expect(split[0]).toEqual('123');
-        expect(split[1]).toEqual('');
     });
 
     it('clone should return an identical copy', () => {
