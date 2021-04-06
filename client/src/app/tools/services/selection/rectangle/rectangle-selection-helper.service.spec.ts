@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 
 // tslint:disable:no-any
@@ -11,6 +11,7 @@ import { RectangleSelectionHelperService } from './rectangle-selection-helper.se
 describe('RectangleSelectionHelperService', () => {
     let service: RectangleSelectionHelperService;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let canvasTestHelper: CanvasTestHelper;
 
@@ -23,8 +24,14 @@ describe('RectangleSelectionHelperService', () => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 0, y: 0 };
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            providers: [{ provide: DrawingService, useValue: drawServiceSpy }],
+            imports: [HotkeyModule.forRoot()],
+            providers: [
+                { provide: DrawingService, useValue: drawServiceSpy },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
         });
 
         canvasTestHelper = TestBed.inject(CanvasTestHelper);

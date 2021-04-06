@@ -3,6 +3,7 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { UserActionRenderSelection } from './user-action-render-selection';
 
 describe('UserActionRenderSelection', () => {
@@ -12,9 +13,18 @@ describe('UserActionRenderSelection', () => {
     let handlerMemento: HandlerMemento;
     let topLeft: Vec2;
 
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     beforeEach(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         selectionHandlerSpy = jasmine.createSpyObj('SelectionHandlerService', ['restoreFromMemento', 'drawSelection', 'whiteFillAtOriginalLocation']);
+
+        TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+        });
         drawingService = TestBed.inject(DrawingService);
+
         const width = 100;
         const height = 200;
         handlerMemento = new HandlerMemento(width, height);

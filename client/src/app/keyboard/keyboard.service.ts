@@ -9,25 +9,33 @@ export class KeyboardService {
     static readonly DEFAULT_CONTEXT: string = 'default';
 
     context: string;
-
     private savedContextStack: string[];
+
+    private registeredShortcutNames: string[];
 
     constructor(private hotkeysService: HotkeysService) {
         this.context = KeyboardService.DEFAULT_CONTEXT;
         this.savedContextStack = new Array<string>();
+        this.registeredShortcutNames = new Array<string>();
     }
 
     registerAction(action: KeyboardAction): void {
-        this.hotkeysService.add(
-            new Hotkey(action.trigger, (event: KeyboardEvent): boolean => {
-                event.preventDefault();
-                event.stopPropagation();
-                if (action.contexts.includes(this.context) || action.contexts.includes('always')) {
-                    action.invoke();
-                }
-                return false;
-            }),
-        );
+        const actionHasAlreadyBeenRegistered = this.registeredShortcutNames.find((name) => name === action.uniqueName) !== undefined;
+
+        if (!actionHasAlreadyBeenRegistered) {
+            this.hotkeysService.add(
+                new Hotkey(action.trigger, (event: KeyboardEvent): boolean => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (action.contexts.includes(this.context) || action.contexts.includes('always')) {
+                        action.invoke();
+                    }
+                    return false;
+                }),
+            );
+
+            this.registeredShortcutNames.push(action.uniqueName);
+        }
     }
 
     saveContext(): void {

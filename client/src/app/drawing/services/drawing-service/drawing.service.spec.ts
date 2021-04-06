@@ -7,6 +7,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable:no-any
@@ -14,6 +15,7 @@ describe('DrawingService', () => {
     let service: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
     let historyServiceStub: HistoryService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let baseCtxDrawImageSpy: jasmine.Spy<any>;
     let resetDrawingSurfaceSpy: jasmine.Spy<any>;
@@ -22,7 +24,11 @@ describe('DrawingService', () => {
     const WIDTH_2 = 10;
 
     beforeEach(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],
             providers: [{ provide: HistoryService, useValue: historyServiceStub }],

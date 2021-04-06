@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ImageDetailsComponent } from './image-details.component';
 
@@ -15,13 +16,18 @@ describe('ImageDetailsComponent', () => {
 
     let routerSpy: jasmine.SpyObj<Router>;
     let historyService: HistoryService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     beforeEach(async(() => {
         routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
         // tslint:disable-next-line: no-empty
         routerSpy.navigateByUrl.and.returnValue(new Promise(() => {}));
 
-        historyService = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyService = new HistoryService(keyboardServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],

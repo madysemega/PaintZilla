@@ -41,6 +41,7 @@ describe('KeyboardService', () => {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
             invoke: () => (hasActionBeenInvoked = true),
+            uniqueName: 'test',
             contexts: [CURRENT_CONTEXT],
         } as KeyboardAction;
 
@@ -63,6 +64,7 @@ describe('KeyboardService', () => {
             trigger: 'a',
             // tslint:disable-next-line: no-empty
             invoke: () => (hasActionBeenInvoked = true),
+            uniqueName: 'test',
             contexts: ['test'],
         } as KeyboardAction;
 
@@ -109,5 +111,25 @@ describe('KeyboardService', () => {
         service.restoreContext();
 
         expect(service.context).toEqual(DEFAULT_CONTEXT);
+    });
+
+    it('When registering an action, if an action has already been registered with given name, registeration should do nothing', () => {
+        hotkeysServiceStub.add.and.stub();
+
+        const ACTION = {
+            trigger: 'ctrl+shift+alt+p+y',
+            // tslint:disable-next-line: no-empty
+            invoke: () => {},
+            uniqueName: 'that one is unique',
+            contexts: ['always'],
+        };
+
+        const NB_ACTIONS_TO_REGISTER = 3;
+
+        for (let i = 0; i < NB_ACTIONS_TO_REGISTER; ++i) {
+            service.registerAction(ACTION);
+        }
+
+        expect(hotkeysServiceStub.add).toHaveBeenCalledTimes(1);
     });
 });

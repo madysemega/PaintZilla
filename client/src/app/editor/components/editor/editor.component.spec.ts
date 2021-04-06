@@ -36,7 +36,7 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
-import { HotkeyModule } from 'angular2-hotkeys';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
 
 // tslint:disable: max-classes-per-file
@@ -54,8 +54,6 @@ describe('EditorComponent', () => {
 
     class ToolStub extends Tool {}
 
-    class E {}
-
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
@@ -65,6 +63,7 @@ describe('EditorComponent', () => {
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let colourServiceStub: ColourService;
     let automaticSavingService: jasmine.SpyObj<any>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let keyboardZEvent: KeyboardEvent;
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
@@ -72,11 +71,6 @@ describe('EditorComponent', () => {
     let magnetismeServiceStub: jasmine.SpyObj<MagnetismService>;
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
-
-    /*class DrawingComponentMock extends DrawingComponent{};
-    class SidebarComponentMock extends SidebarComponent{};
-    class EllipseToolConfigurationComponentMock extends EllipseToolConfigurationComponent{};
-    class LineToolConfigurationComponentMock extends LineToolConfigurationComponent{};*/
 
     keyboardZEvent = {
         key: 'Z',
@@ -89,6 +83,8 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo', 'clear']);
         drawingStub = new DrawingService(historyServiceStub);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
         automaticSavingService = jasmine.createSpyObj('AutomaticSavingService', ['saveDrawingLocally', 'loadMostRecentDrawing']);
         magnetismeServiceStub = jasmine.createSpyObj('MagnetismService', ['toggleMagnetism']);
@@ -147,6 +143,7 @@ describe('EditorComponent', () => {
                 { provide: AutomaticSavingService, useValue: automaticSavingService },
                 { provide: ClipboardService, useValue: clipboardServiceStub },
                 { provide: MagnetismService, useValue: magnetismeServiceStub },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
@@ -205,76 +202,12 @@ describe('EditorComponent', () => {
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
     });
 
-    it('Ctrl+a should select the rectangle-selection tool from the tool selector', () => {
-        const dumbFunction: (x: number, y: number) => number = (x: number, y: number) => x + y;
-        const keyboardEvent = {
-            ctrlKey: true,
-            key: 'a',
-            preventDefault: dumbFunction,
-        } as E;
-        component.onKeyDown(keyboardEvent as KeyboardEvent);
-        expect(toolSelectorStub.selectTool).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Z should call history service undo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: false,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.undo).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Shift+Z should call history service redo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: true,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.redo).toHaveBeenCalled();
-    });
-
-    it('Ctrl+V should paste if clipboard is not empty', () => {
-        clipboardServiceStub.isEmpty = false;
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: false,
-            key: 'v',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(clipboardServiceStub.paste).toHaveBeenCalled();
-    });
-
-    it('Ctrl+V should not paste if clipboard is  empty', () => {
-        clipboardServiceStub.isEmpty = true;
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: false,
-            key: 'v',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(clipboardServiceStub.paste).not.toHaveBeenCalled();
-    });
-
     it('Ctrl+G should open the carousel', () => {
         const keyboardService = fixture.debugElement.injector.get(KeyboardService);
 
         spyOn(keyboardService, 'registerAction').and.callFake((action) => {
             action.invoke();
         });
-    });
-
-    it('M should toggle magnetism', () => {
-        clipboardServiceStub.isEmpty = true;
-        const keyboardEvent = {
-            ctrlKey: false,
-            shiftKey: false,
-            key: 'm',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(magnetismeServiceStub.toggleMagnetism).toHaveBeenCalled();
     });
 
     it("When colour picker visibility state changes, so should the editor component's internal flag", () => {
@@ -309,6 +242,16 @@ describe('EditorComponent', () => {
         expect(component.showColourPicker).toBeFalse();
     });
 
+    it('Mouse down should not hide colour picket if user is on colour picker', () => {
+        colourServiceStub.showColourPicker = true;
+        colourServiceStub.onColourPicker = true;
+        component.showColourPicker = true;
+        component.onMouseDown({} as MouseEvent);
+
+        expect(colourServiceStub.onColourPicker).toBeTrue();
+        expect(component.showColourPicker).toBeTrue();
+    });
+
     it('updateColour() should propagate event to colour service', () => {
         const colourServiceUpdateColourSpy = spyOn(colourServiceStub, 'updateColour').and.stub();
         component.updateColour();
@@ -327,5 +270,15 @@ describe('EditorComponent', () => {
     it('onload event should call automaticSavingService.loadMostRecentDrawing', () => {
         component.onLoad({} as Event);
         expect(automaticSavingService.loadMostRecentDrawing).toHaveBeenCalled();
+    });
+
+    it('when initializing image, if image id is set, should load image from server', () => {
+        const loadFromServerSpy = spyOn(TestBed.inject(DrawingLoaderService), 'loadFromServer').and.stub();
+        const METHOD_NAME = 'initializeImage';
+        const IMAGE_VALUE = '123';
+
+        component[METHOD_NAME](IMAGE_VALUE);
+
+        expect(loadFromServerSpy).toHaveBeenCalledWith(IMAGE_VALUE);
     });
 });

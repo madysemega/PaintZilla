@@ -2,17 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { AutomaticSavingService } from './automatic-saving.service';
 
 describe('AutomaticSavingService', () => {
     let service: AutomaticSavingService;
 
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
 
     beforeEach(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction']);
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingStub = new DrawingService(historyServiceStub);
 
         // Taken from https://stackoverflow.com/questions/11485420/how-to-mock-localstorage-in-javascript-unit-tests
