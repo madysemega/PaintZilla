@@ -5,7 +5,7 @@ import { TextCursorRenderer } from './text-cursor-renderer';
 import { TextRenderer } from './text-renderer';
 
 // tslint:disable:no-any
-// tslint:disable:no-string-litteral
+// tslint:disable:no-string-literal
 describe('TextCursorRenderer', () => {
     const TEXT = 'Test';
     const POSITION = { x: 42, y: 32 };
@@ -41,17 +41,17 @@ describe('TextCursorRenderer', () => {
 
     it('offset should reset x when \\n is reached', () => {
         const CURSOR_POSITION = 4;
-        
+
         renderer['shape'].text = '123\n321';
         expect(renderer['getOffsetsAt'](CURSOR_POSITION, ctxStub).x).toEqual(0);
     });
 
     it('Y offset should correspond to the nb. of \\n in the text before the cursor (times fontSize)', () => {
-        ctxStub.font = '12px serif';
+        ctxStub.font = `${FONT_SIZE}px serif`;
 
         const CURSOR_POSITION = 6;
         const EXPECTED_NB_RETURNS = 2;
-        const EXPECTED_Y_OFFSET = EXPECTED_NB_RETURNS * 12;
+        const EXPECTED_Y_OFFSET = EXPECTED_NB_RETURNS * FONT_SIZE;
 
         renderer['shape'].text = '123\n321\nabc\n';
         expect(renderer['getOffsetsAt'](CURSOR_POSITION, ctxStub).y).toEqual(EXPECTED_Y_OFFSET);
