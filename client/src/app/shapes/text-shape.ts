@@ -14,6 +14,23 @@ export class TextShape extends Shape {
         super();
     }
 
+    splitTextInMultipleLines(): string[] {
+        const result: string[] = [];
+        let currentText = '';
+        for (const character of this.text) {
+            if (character === '\n') {
+                result.push(currentText);
+                currentText = '';
+            } else {
+                currentText += character;
+            }
+        }
+        if (currentText !== '') {
+            result.push(currentText);
+        }
+        return result;
+    }
+
     clone(): Shape {
         return new TextShape(this.text, { x: this.position.x, y: this.position.y }, this.fontSize);
     }
