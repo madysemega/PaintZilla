@@ -47,6 +47,10 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.editor.setFontSize(size);
     }
 
+    getFontSize(): number {
+        return this.editor.getFontSize();
+    }
+
     private reset(): void {
         this.editor.reset();
         this.isEditing = false;

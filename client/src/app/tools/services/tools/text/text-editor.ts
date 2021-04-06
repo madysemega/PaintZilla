@@ -54,6 +54,10 @@ export class TextEditor {
         this.shape.fontSize = size;
     }
 
+    getFontSize(): number {
+        return this.shape.fontSize;
+    }
+
     enableCursor(): void {
         this.cursorTimerHandle = window.setInterval(() => {
             this.showCursor = !this.showCursor;
