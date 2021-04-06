@@ -50,13 +50,7 @@ describe('DrawingComponent', () => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            imports: [
-                MaterialModule,
-                BrowserAnimationsModule,
-                CommonModule,
-                MatTooltipModule,
-                HotkeyModule.forRoot(),
-            ],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },

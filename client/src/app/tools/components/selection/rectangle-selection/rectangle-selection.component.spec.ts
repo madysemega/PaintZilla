@@ -4,7 +4,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionComponent } from './rectangle-selection.component';
 
-
 describe('RectangleSelectionComponent', () => {
     let component: RectangleSelectionComponent;
     let fixture: ComponentFixture<RectangleSelectionComponent>;

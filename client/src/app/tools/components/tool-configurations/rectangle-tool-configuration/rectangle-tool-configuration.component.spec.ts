@@ -17,9 +17,7 @@ describe('RectangleToolConfigurationComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [RectangleToolConfigurationComponent],
-            providers: [
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-            ],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));

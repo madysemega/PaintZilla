@@ -18,7 +18,7 @@ export class KeyboardService {
         this.savedContextStack = new Array<string>();
         this.registeredShortcutNames = new Array<string>();
     }
- 
+
     registerAction(action: KeyboardAction): void {
         const actionHasAlreadyBeenRegistered = this.registeredShortcutNames.find((name) => name === action.uniqueName) !== undefined;
 

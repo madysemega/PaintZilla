@@ -8,9 +8,9 @@ import { TextService } from '@app/tools/services/tools/text/text.service';
     styleUrls: ['./text-tool-configuration.component.scss'],
 })
 export class TextToolConfigurationComponent implements AfterViewInit {
-    private readonly MAX_SIZE = 300;
-    private readonly MIN_SIZE = 12;
-    private readonly STEP = 12;
+    private readonly MAX_SIZE: number = 300;
+    private readonly MIN_SIZE: number = 12;
+    private readonly STEP: number = 12;
 
     fontSize: number;
     fontSizesAvailable: number[];

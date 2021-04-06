@@ -32,7 +32,7 @@ describe('MainPageComponent', () => {
         indexServiceSpy = jasmine.createSpyObj('IndexService', ['basicGet', 'basicPost']);
         indexServiceSpy.basicGet.and.returnValue(of({ title: '', body: '' }));
         indexServiceSpy.basicPost.and.returnValue(of());
-        
+
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         keyboardServiceStub.registerAction.and.stub();
         keyboardServiceStub.saveContext.and.stub();

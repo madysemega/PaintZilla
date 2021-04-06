@@ -8,6 +8,8 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
+        const CURSOR_BOTTOM_SIZE_DIVIDEND = 3;
+
         const xOffset = ctx.measureText(this.shape.text.substr(0, this.cursorPosition)).width;
         const xPosition = this.shape.position.x + xOffset;
 
@@ -15,7 +17,7 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
 
         ctx.beginPath();
         ctx.moveTo(xPosition, this.shape.position.y - fontSize);
-        ctx.lineTo(xPosition, this.shape.position.y + fontSize / 3);
+        ctx.lineTo(xPosition, this.shape.position.y + fontSize / CURSOR_BOTTOM_SIZE_DIVIDEND);
         ctx.stroke();
     }
 

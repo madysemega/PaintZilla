@@ -8,7 +8,7 @@ import { HistoryControlsComponent } from './history-controls.component';
 describe('HistoryControlsComponent', () => {
     let component: HistoryControlsComponent;
     let fixture: ComponentFixture<HistoryControlsComponent>;
-    
+
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
@@ -17,9 +17,7 @@ describe('HistoryControlsComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [HistoryControlsComponent],
-            providers: [
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-            ],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

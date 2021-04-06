@@ -3,7 +3,6 @@ import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionHandlerService } from './rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty

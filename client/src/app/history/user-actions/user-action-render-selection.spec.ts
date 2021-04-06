@@ -22,7 +22,7 @@ describe('UserActionRenderSelection', () => {
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
             providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
-        })
+        });
         drawingService = TestBed.inject(DrawingService);
 
         const width = 100;

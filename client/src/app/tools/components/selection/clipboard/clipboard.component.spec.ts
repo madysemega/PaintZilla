@@ -18,7 +18,6 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardComponent } from './clipboard.component';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty

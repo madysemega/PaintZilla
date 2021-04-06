@@ -4,7 +4,6 @@ import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from './rectangle-selection-manipulator.service';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty

@@ -29,7 +29,7 @@ describe('Tool', () => {
                 };
             },
         } as HTMLCanvasElement;
-        
+
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         keyboardServiceStub.registerAction.and.stub();
         keyboardServiceStub.saveContext.and.stub();

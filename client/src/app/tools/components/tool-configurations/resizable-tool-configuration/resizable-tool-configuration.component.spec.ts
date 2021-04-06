@@ -34,15 +34,9 @@ describe('ResizableToolConfigurationComponent', () => {
 
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
-        
+
         TestBed.configureTestingModule({
-            imports: [
-                MaterialModule,
-                MatIconModule,
-                MatTooltipModule,
-                CommonModule,
-                HotkeyModule.forRoot(),
-            ],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [ResizableToolConfigurationComponent],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
             providers: [

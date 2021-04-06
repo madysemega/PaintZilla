@@ -5,7 +5,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SelectionComponent } from './selection.component';
 
-
 describe('SelectionComponent', () => {
     let component: SelectionComponent;
     let fixture: ComponentFixture<SelectionComponent>;

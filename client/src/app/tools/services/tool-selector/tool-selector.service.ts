@@ -5,6 +5,7 @@ import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
@@ -18,7 +19,6 @@ import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { BehaviorSubject } from 'rxjs';
-import { ClipboardService } from '../selection/clipboard/clipboard.service';
 
 @Injectable({
     providedIn: 'root',

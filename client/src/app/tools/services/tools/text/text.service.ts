@@ -120,13 +120,13 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     onMouseClick(event: MouseEvent): void {
-        if(event.button === MouseButton.Left) {
+        if (event.button === MouseButton.Left) {
             if (this.isEditing) {
                 this.finalize();
             } else {
                 this.startEditing(this.getPositionFromMouse(event));
             }
-    
+
             this.isEditing = !this.isEditing;
         }
     }

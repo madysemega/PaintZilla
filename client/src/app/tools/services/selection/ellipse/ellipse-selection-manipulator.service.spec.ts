@@ -11,7 +11,6 @@ import { EllipseSelectionHandlerService } from './ellipse-selection-handler-serv
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from './ellipse-selection-manipulator.service';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty

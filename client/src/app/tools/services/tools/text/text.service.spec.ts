@@ -7,6 +7,9 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { HotkeyModule, HotkeyOptions, HotkeysService } from 'angular2-hotkeys';
 import { TextService } from './text.service';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-string-literal
 describe('TextService', () => {
     let service: TextService;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
@@ -16,9 +19,7 @@ describe('TextService', () => {
 
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [
-                { provide: HotkeyOptions, useValue: hotkeysServiceStub },
-            ]
+            providers: [{ provide: HotkeyOptions, useValue: hotkeysServiceStub }],
         });
         service = TestBed.inject(TextService);
     });
@@ -47,10 +48,10 @@ describe('TextService', () => {
 
     it('When font size changes, the event should be propagated to editor', () => {
         const editorSetFontSizeSpy = spyOn(service['editor'], 'setFontSize').and.stub();
-        
+
         const NEW_FONT_SIZE = 32;
         service.updateFontSize(NEW_FONT_SIZE);
-        
+
         expect(editorSetFontSizeSpy).toHaveBeenCalled();
     });
 
@@ -61,12 +62,7 @@ describe('TextService', () => {
     });
 
     it('Letters should be allowed in text', () => {
-        const LETTERS = [
-            'KeyA',
-            'KeyB',
-            'KeyG',
-            'KeyZ',
-        ];
+        const LETTERS = ['KeyA', 'KeyB', 'KeyG', 'KeyZ'];
         LETTERS.forEach((letter) => {
             expect(service['isCharAllowed'](letter)).toBeTrue();
         });
@@ -139,7 +135,7 @@ describe('TextService', () => {
         spyOn(service['editor'], 'render').and.stub();
 
         service['startEditing'](GIVEN_POSITION);
-        
+
         expect(editorResetSpy).toHaveBeenCalledWith(GIVEN_POSITION);
     });
 
@@ -150,7 +146,7 @@ describe('TextService', () => {
         spyOn(service['editor'], 'render').and.stub();
 
         service['startEditing'](GIVEN_POSITION);
-        
+
         expect(enableCursorSpy).toHaveBeenCalled();
     });
 
@@ -161,7 +157,7 @@ describe('TextService', () => {
         const renderSpy = spyOn(service['editor'], 'render').and.stub();
 
         service['startEditing'](GIVEN_POSITION);
-        
+
         expect(renderSpy).toHaveBeenCalled();
     });
 
@@ -174,7 +170,7 @@ describe('TextService', () => {
         spyOn(service['editor'], 'render').and.stub();
 
         service['startEditing'](GIVEN_POSITION);
-        
+
         expect(keyboardService.context).toEqual('editing-text');
     });
 
@@ -196,81 +192,80 @@ describe('TextService', () => {
     });
 
     it('If editing, right arrow key should move cursor to the right', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'ArrowRight'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'ArrowRight' });
         const moveCursorRightSpy = spyOn(service['editor'], 'moveCursorRight').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(moveCursorRightSpy).toHaveBeenCalled();
     });
-    
+
     it('If editing, left arrow key should move cursor to the left', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'ArrowLeft'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'ArrowLeft' });
         const moveCursorLeftSpy = spyOn(service['editor'], 'moveCursorLeft').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(moveCursorLeftSpy).toHaveBeenCalled();
     });
 
     it('If editing, backspace key should remove character to the left of the cursor in the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'Backspace'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Backspace' });
         const backspaceSpy = spyOn(service['editor'], 'backspace').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(backspaceSpy).toHaveBeenCalled();
     });
 
     it('If editing, delete key should remove character to the right of the cursor in the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'Delete'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Delete' });
         const deleteSpy = spyOn(service['editor'], 'delete').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(deleteSpy).toHaveBeenCalled();
     });
 
     it('If editing, enter key should write \\n to the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'Enter'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Enter' });
         const writeSpy = spyOn(service['editor'], 'write').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(writeSpy).toHaveBeenCalledWith('\n');
     });
 
     it('If editing, when allowed character is input, it should be written to the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'a', code: 'KeyA'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'a', code: 'KeyA' });
         const writeSpy = spyOn(service['editor'], 'write').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(writeSpy).toHaveBeenCalledWith('a');
     });
 
-    
     it('If editing, when forbidden character is input, it should not be written to the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'a', code: 'Invalid'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'a', code: 'Invalid' });
         const writeSpy = spyOn(service['editor'], 'write').and.stub();
-        
+
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(writeSpy).not.toHaveBeenCalled();
     });
 
     it('If not editing, should not write text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', {key: 'a', code: 'Invalid'});
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'a', code: 'Invalid' });
         const writeSpy = spyOn(service['editor'], 'write').and.stub();
-        
+
         service['isEditing'] = false;
         service.onKeyUp(keyboardEvent);
         expect(writeSpy).not.toHaveBeenCalled();
     });
 
     it('When left clicking, isEditing should be toggled', () => {
-        const mouseEvent = new MouseEvent('onMouseClick', {button: MouseButton.Left});
-        
+        const mouseEvent = new MouseEvent('onMouseClick', { button: MouseButton.Left });
+
         spyOn<any>(service, 'finalize').and.stub();
         spyOn<any>(service, 'startEditing').and.stub();
         spyOn<any>(service, 'getPositionFromMouse').and.stub();
@@ -285,8 +280,8 @@ describe('TextService', () => {
     });
 
     it('When left clicking, if editing, should finalize shape', () => {
-        const mouseEvent = new MouseEvent('onMouseClick', {button: MouseButton.Left});
-        
+        const mouseEvent = new MouseEvent('onMouseClick', { button: MouseButton.Left });
+
         const finalizeSpy = spyOn<any>(service, 'finalize').and.stub();
         spyOn<any>(service, 'startEditing').and.stub();
         spyOn<any>(service, 'getPositionFromMouse').and.stub();
@@ -297,8 +292,8 @@ describe('TextService', () => {
     });
 
     it('When left clicking, if not editing, should start editing shape', () => {
-        const mouseEvent = new MouseEvent('onMouseClick', {button: MouseButton.Left});
-        
+        const mouseEvent = new MouseEvent('onMouseClick', { button: MouseButton.Left });
+
         spyOn<any>(service, 'finalize').and.stub();
         const startEditingSpy = spyOn<any>(service, 'startEditing').and.stub();
         spyOn<any>(service, 'getPositionFromMouse').and.stub();
@@ -309,8 +304,8 @@ describe('TextService', () => {
     });
 
     it('When right clicking, should not toggle isEditing', () => {
-        const mouseEvent = new MouseEvent('onMouseClick', {button: MouseButton.Right});
-        
+        const mouseEvent = new MouseEvent('onMouseClick', { button: MouseButton.Right });
+
         spyOn<any>(service, 'finalize').and.stub();
         spyOn<any>(service, 'startEditing').and.stub();
         spyOn<any>(service, 'getPositionFromMouse').and.stub();

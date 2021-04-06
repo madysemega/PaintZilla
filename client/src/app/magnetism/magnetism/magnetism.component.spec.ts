@@ -8,7 +8,6 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { MagnetismComponent } from './magnetism.component';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
@@ -23,14 +22,9 @@ describe('MagnetismComponent', () => {
 
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
-        
+
         TestBed.configureTestingModule({
-            imports: [
-                MatMenuModule,
-                CommonModule,
-                MatTooltipModule,
-                HotkeyModule.forRoot()
-            ],
+            imports: [MatMenuModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [MagnetismComponent],
             providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],

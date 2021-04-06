@@ -3,17 +3,18 @@ import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { Tool } from '@app/tools/classes/tool';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
-import { ClipboardService } from '../selection/clipboard/clipboard.service';
-import { RectangleSelectionCreatorService } from '../tools/rectangle-selection-creator.service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 // tslint:disable:max-line-length
+// tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;

@@ -50,13 +50,7 @@ describe('ShapeToolConfigurationComponent', () => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            imports: [
-                MaterialModule,
-                MatIconModule,
-                MatTooltipModule,
-                CommonModule,
-                HotkeyModule.forRoot(),
-            ],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [
                 { provide: EllipseService, useValue: ellipseToolStub },

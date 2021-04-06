@@ -5,6 +5,9 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { TextShape } from '@app/shapes/text-shape';
 import { TextEditor } from './text-editor';
 
+// tslint:disable:no-any
+// tslint:disable:no-magic-numbers
+// tslint:disable:no-string-literal
 describe('TextEditor', () => {
     let editor: TextEditor;
 
@@ -17,7 +20,7 @@ describe('TextEditor', () => {
 
         editor = new TextEditor({
             drawingService: drawingServiceStub,
-            colourService: colourService,
+            colourService,
         });
     });
 
@@ -51,9 +54,10 @@ describe('TextEditor', () => {
     });
 
     it('When cursor is enabled, it should blink', () => {
+        // tslint:disable-next-line: ban-types
         spyOn(window, 'setInterval').and.callFake((callback: Function) => callback());
         const renderSpy = spyOn(editor, 'render').and.stub();
-        
+
         const SHOW_CURSOR_INITIAL_VALUE = false;
         editor['showCursor'] = SHOW_CURSOR_INITIAL_VALUE;
         editor.enableCursor();
@@ -63,7 +67,7 @@ describe('TextEditor', () => {
 
         expect(renderSpy).toHaveBeenCalledTimes(2);
     });
-    
+
     it('Moving cursor right should show cursor', () => {
         spyOn(editor, 'render').and.stub();
 
@@ -82,7 +86,7 @@ describe('TextEditor', () => {
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
         editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
-        
+
         editor.moveCursorRight();
         expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION + 1);
     });
@@ -93,7 +97,7 @@ describe('TextEditor', () => {
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 10;
         editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
-        
+
         editor.moveCursorRight();
         expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
     });
@@ -122,7 +126,7 @@ describe('TextEditor', () => {
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
         editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
-        
+
         editor.moveCursorLeft();
         expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION - 1);
     });
@@ -133,7 +137,7 @@ describe('TextEditor', () => {
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 0;
         editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
-        
+
         editor.moveCursorLeft();
         expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
     });
@@ -194,7 +198,7 @@ describe('TextEditor', () => {
 
     it('Backspace should remove the character left to the cursor in the text', () => {
         spyOn(editor, 'render').and.stub();
-        
+
         const INITIAL_TEXT = '1234567890';
         editor.write(INITIAL_TEXT);
 
@@ -207,7 +211,7 @@ describe('TextEditor', () => {
 
     it('Backspace should not remove any character if cursor in at beginning of text', () => {
         spyOn(editor, 'render').and.stub();
-        
+
         const INITIAL_TEXT = '1234567890';
         editor.write(INITIAL_TEXT);
 
@@ -220,7 +224,7 @@ describe('TextEditor', () => {
 
     it('Delete should remove the character right to the cursor in the text', () => {
         spyOn(editor, 'render').and.stub();
-        
+
         const INITIAL_TEXT = '1234567890';
         editor.write(INITIAL_TEXT);
 
@@ -233,7 +237,7 @@ describe('TextEditor', () => {
 
     it('Delete should not remove any character if cursor in at end of text', () => {
         spyOn(editor, 'render').and.stub();
-        
+
         const INITIAL_TEXT = '123';
         editor.write(INITIAL_TEXT);
 

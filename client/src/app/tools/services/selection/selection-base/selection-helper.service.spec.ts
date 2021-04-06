@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionHelperService } from './selection-helper.service';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty

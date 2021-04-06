@@ -56,11 +56,11 @@ export class EditorComponent implements AfterViewInit {
     }
 
     private initializeImage(imageId: string | undefined): void {
-            if (imageId) {
-                this.drawingLoader.loadFromServer(imageId);
-            } else {
-                this.drawingService.initialImage = undefined;
-            }
+        if (imageId) {
+            this.drawingLoader.loadFromServer(imageId);
+        } else {
+            this.drawingService.initialImage = undefined;
+        }
     }
 
     @HostListener('document:keydown', ['$event'])

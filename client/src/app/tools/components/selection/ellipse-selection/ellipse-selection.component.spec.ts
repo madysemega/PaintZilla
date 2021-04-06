@@ -6,7 +6,6 @@ import { ResizingMode } from '@app/tools/services/selection/selection-base/resiz
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseSelectionComponent } from './ellipse-selection.component';
 
-
 describe('EllipseSelectionComponent', () => {
     let component: EllipseSelectionComponent;
     let fixture: ComponentFixture<EllipseSelectionComponent>;
@@ -19,10 +18,7 @@ describe('EllipseSelectionComponent', () => {
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [EllipseSelectionComponent],
-            providers: [
-                { provide: EllipseSelectionManipulatorService },
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-            ],
+            providers: [{ provide: EllipseSelectionManipulatorService }, { provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

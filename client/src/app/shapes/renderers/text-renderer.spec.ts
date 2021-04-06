@@ -1,6 +1,6 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { TextShape } from '../text-shape';
+import { TextShape } from '@app/shapes/text-shape';
 import { TextRenderer } from './text-renderer';
 
 // tslint:disable:no-any

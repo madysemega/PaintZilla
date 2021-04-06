@@ -16,7 +16,6 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardService } from './clipboard.service';
 
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
@@ -48,9 +47,7 @@ describe('ClipboardService', () => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-            ],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
         });
         service = TestBed.inject(ClipboardService);
 
