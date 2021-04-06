@@ -1,5 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import { Component } from '@angular/core';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 
 @Component({
@@ -7,32 +6,14 @@ import { TextService } from '@app/tools/services/tools/text/text.service';
     templateUrl: './text-tool-configuration.component.html',
     styleUrls: ['./text-tool-configuration.component.scss'],
 })
-export class TextToolConfigurationComponent implements AfterViewInit {
-    private readonly MAX_SIZE: number = 300;
-    private readonly MIN_SIZE: number = 12;
-    private readonly STEP: number = 12;
+export class TextToolConfigurationComponent {
+    constructor(private service: TextService) {}
 
-    fontSize: number;
-    fontSizesAvailable: number[];
-
-    constructor(private service: TextService) {
-        this.generateSizes();
-    }
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.fontSize = this.MIN_SIZE;
-        });
+    get fontSize(): number {
+        return this.service.getFontSize();
     }
 
-    private generateSizes(): void {
-        this.fontSizesAvailable = new Array<number>();
-
-        for (let i = this.MIN_SIZE; i <= this.MAX_SIZE; i += this.STEP) {
-            this.fontSizesAvailable.push(i);
-        }
-    }
-
-    updateFontSize(event: MatSelectChange): void {
-        this.service.updateFontSize(event.value);
+    updateFontSize(fontSize: number): void {
+        this.service.updateFontSize(fontSize);
     }
 }

@@ -1,10 +1,8 @@
-<mat-form-field appearance="fill">
-  <mat-label>Taille de la police</mat-label>
-  <mat-select [(value)]="fontSize" (selectionChange)="updateFontSize($event)">
-    <mat-option
-                *ngFor="let size of fontSizesAvailable"
-                value="{{size}}">
-        {{size}}px
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<mat-label>Taille de la police</mat-label>
+<mat-slider thumbLabel
+            matTooltip="Taille de la police"
+            matTooltipPosition="right"
+            step="12" min="12" max="150"
+            [value]="fontSize"
+            (valueChange)="updateFontSize($event)">
+</mat-slider>
