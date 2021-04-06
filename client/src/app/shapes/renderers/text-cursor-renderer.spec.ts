@@ -1,6 +1,7 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { TextShape } from '@app/shapes/text-shape';
+import { FontProperty } from '../properties/font-property';
 import { TextCursorRenderer } from './text-cursor-renderer';
 import { TextRenderer } from './text-renderer';
 
@@ -23,6 +24,7 @@ describe('TextCursorRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
+        properties.push(new FontProperty(FONT_SIZE));
         shape = new TextShape(TEXT, POSITION, FONT_SIZE);
         renderer = new TextCursorRenderer(shape, properties, INITIAL_CURSOR_POSITION);
 
@@ -47,11 +49,10 @@ describe('TextCursorRenderer', () => {
     });
 
     it('Y offset should correspond to the nb. of \\n in the text before the cursor (times fontSize)', () => {
-        ctxStub.font = `${FONT_SIZE}px serif`;
-
         const CURSOR_POSITION = 6;
         const EXPECTED_NB_RETURNS = 2;
-        const EXPECTED_Y_OFFSET = EXPECTED_NB_RETURNS * FONT_SIZE;
+        const DEFAULT_FONT_SIZE = 12;
+        const EXPECTED_Y_OFFSET = EXPECTED_NB_RETURNS * DEFAULT_FONT_SIZE;
 
         renderer['shape'].text = '123\n321\nabc\n';
         expect(renderer['getOffsetsAt'](CURSOR_POSITION, ctxStub).y).toEqual(EXPECTED_Y_OFFSET);
