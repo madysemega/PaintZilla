@@ -12,9 +12,7 @@ describe('MagnetismService', () => {
     beforeEach(() => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction']);
         TestBed.configureTestingModule({
-            providers: [
-                { provide: KeyboardService, useValue: keyboardServiceStub },
-            ],
+            providers: [{ provide: KeyboardService, useValue: keyboardServiceStub }],
         });
         service = TestBed.inject(MagnetismService);
     });
@@ -32,7 +30,7 @@ describe('MagnetismService', () => {
 
     it("Pressing the 'm' key should toggle magnetism", () => {
         const toggleMagnetismSpy = spyOn(service, 'toggleMagnetism').and.stub();
-        
+
         keyboardServiceStub.registerAction.and.callFake((action) => action.invoke());
         service['registerKeyboardShortcuts']();
 
