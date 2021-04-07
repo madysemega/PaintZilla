@@ -38,6 +38,7 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { TextToolConfigurationComponent } from '@app/tools/components/tool-configurations/text-tool-configuration/text-tool-configuration.component';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { FilterLabelComponent } from './carousel/components/filter-label/filter-label.component';
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
@@ -85,6 +86,7 @@ import { ClipboardComponent } from './tools/components/selection/clipboard/clipb
         ClipboardComponent,
         MagnetismComponent,
         ImgurLinkDialogComponent,
+        TextToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,

@@ -5,10 +5,10 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { interval } from 'rxjs';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
-
 import { EllipseSelectionManipulatorService } from './ellipse-selection-manipulator.service';
 
 // tslint:disable:no-any
@@ -28,6 +28,7 @@ describe('EllipseSelectionManipulatorService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionHandlerMock: jasmine.SpyObj<SelectionHandlerService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHelperService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let stopManipulationSpy: jasmine.Spy<any>;
     let resizeSelectionSpy: jasmine.Spy<any>;
@@ -66,11 +67,15 @@ describe('EllipseSelectionManipulatorService', () => {
             'sub',
         ]);
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: EllipseSelectionHandlerService, useValue: selectionHandlerMock },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -187,7 +192,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.isShiftDown = true;
         spyOn<any>(service, 'isSelectionBeingResizedDiagonally').and.returnValue('true');
         service.onKeyDown(keyboardEvent);
-        expect(resizeSelectionSpy).toHaveBeenCalled;
+        expect(resizeSelectionSpy).toHaveBeenCalled();
     });
 
     it('onKeyDown should call moveIfPressLongEnough if event.key === ArrowDown !arrowKeyDown[Arrow.Down]', () => {
@@ -243,7 +248,7 @@ describe('EllipseSelectionManipulatorService', () => {
         service.isShiftDown = true;
         spyOn<any>(service, 'isSelectionBeingResizedDiagonally').and.returnValue('true');
         service.onKeyUp(keyboardEvent);
-        expect(resizeSelectionSpy).toHaveBeenCalled;
+        expect(resizeSelectionSpy).toHaveBeenCalled();
     });
 
     it('onKeyDown should call singleMove if event.key === ArrowDown, ()', () => {
@@ -401,6 +406,13 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
     });
 
+    it('addMovementToPosition should call add 3 times if isMouseMovement is true even if magnetism is activated ', () => {
+        const mouseMovement = { x: 10, y: 11 };
+        service.isMagnetismActivated = true;
+        service.addMovementToPositions(mouseMovement, true);
+        expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
+    });
+
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
         const mouseDownLastPos: Vec2 = { x: 1, y: 2 };
         const mouseMovement: Vec2 = { x: 10, y: 11 };
@@ -419,7 +431,7 @@ describe('EllipseSelectionManipulatorService', () => {
         const deltaX = bottomRight.x - topLeft.x;
         const diagonalSlope = deltaY / deltaX;
         service.computeDiagonalEquation();
-        expect((service.diagonalSlope = -diagonalSlope));
+        expect(service.diagonalSlope).toEqual(-diagonalSlope);
     });
 
     it('getMousePosOnDiagonal should output a position that belongs to the diagonal', () => {

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
-
 import { RectangleSelectionManipulatorService } from './rectangle-selection-manipulator.service';
 
 // tslint:disable:no-any
@@ -11,10 +11,12 @@ describe('RectangleSelectionManipulatorService', () => {
     let service: RectangleSelectionManipulatorService;
 
     let rectangleSelectionHelperService: jasmine.SpyObj<RectangleSelectionHelperService>;
-
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         rectangleSelectionHelperService = jasmine.createSpyObj('RectangleSelectionHelperService', [
             'getSquareAdjustedPerimeter',
             'drawPerimeter',
@@ -24,10 +26,11 @@ describe('RectangleSelectionManipulatorService', () => {
         drawServiceSpy.canvasSize = { x: 1000, y: 500 };
 
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
-                // { provide: SelectionService, useValue: selectionServiceMock },
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: RectangleSelectionHelperService, useValue: rectangleSelectionHelperService },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
         service = TestBed.inject(RectangleSelectionManipulatorService);

@@ -10,6 +10,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { PolygonService } from './polygon.service';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
@@ -21,6 +22,7 @@ describe('PolygonService', () => {
     let mouseEvent: MouseEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
@@ -37,9 +39,13 @@ describe('PolygonService', () => {
     let fillRenderSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
         colourService = new ColourService({} as ColourPickerService);
-        historyService = new HistoryService();
+        historyService = new HistoryService(keyboardServiceStub);
 
         TestBed.configureTestingModule({
             providers: [
@@ -248,7 +254,7 @@ describe('PolygonService', () => {
         });
     });
 
-    it('when secondary colour changes, so should stroke style', () => {
+    it('when secondary colour changes, so should stroke style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
 
         colourService.setSecondaryColour(COLOUR);
@@ -256,6 +262,7 @@ describe('PolygonService', () => {
         colourService.secondaryColourChanged.subscribe(() => {
             expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
         });
+        done();
     });
 
     it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {

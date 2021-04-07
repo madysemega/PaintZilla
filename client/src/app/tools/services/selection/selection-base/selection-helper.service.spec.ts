@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Vec2 } from '@app/app/classes/vec2';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
 import { GridMovementAnchor } from './selection-constants';
-
 import { SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any
@@ -15,11 +15,18 @@ describe('SelectionHelperService', () => {
     let service: SelectionHelperService;
     let ellipseServiceMock: jasmine.SpyObj<EllipseService>;
 
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     beforeEach(() => {
         ellipseServiceMock = jasmine.createSpyObj('EllipseService', ['getSquareAdjustedPerimeter', 'drawRectangle']);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: EllipseService, useValue: ellipseServiceMock }],
+            imports: [HotkeyModule.forRoot()],
+            providers: [
+                { provide: EllipseService, useValue: ellipseServiceMock },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
         });
         service = TestBed.inject(SelectionHelperService);
     });

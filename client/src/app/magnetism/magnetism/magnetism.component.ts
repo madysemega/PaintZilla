@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -21,11 +22,16 @@ export class MagnetismComponent {
     constructor(
         public selectionManipulator: SelectionManipulatorService,
         public toolSelector: ToolSelectorService,
+        public magnetismService: MagnetismService,
         public drawingService: DrawingService,
-    ) {}
+    ) {
+        this.magnetismService.isActivated.subscribe((value) => {
+            this.isActivated = value;
+            this.notifyManipulators();
+        });
+    }
 
-    toggleMagnetism(): void {
-        this.isActivated = !this.isActivated;
+    notifyManipulators(): void {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)

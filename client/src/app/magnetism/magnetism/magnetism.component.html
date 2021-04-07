@@ -55,7 +55,7 @@
         </mat-menu>
     </div>
     <div class="center">
-        <mat-slide-toggle id="toggle" (click)='toggleMagnetism()'></mat-slide-toggle>
+        <mat-slide-toggle id="toggle" [ngModel] ="isActivated" (ngModelChange)="isActivated = $event; notifyManipulators();"></mat-slide-toggle>
     </div>
     <mat-divider></mat-divider>
     

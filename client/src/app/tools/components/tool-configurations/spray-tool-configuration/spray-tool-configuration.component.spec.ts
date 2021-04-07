@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
@@ -16,18 +18,23 @@ describe('SprayToolConfigurationComponent', () => {
     let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
     let colourServiceStub: ColourService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let sprayServiceStub: SprayService;
     // tslint:disable-next-line: no-magic-numbers
     const SAMPLE_DIAMETERS = [5, 1, 52, 42];
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         sprayServiceStub = new SprayService(drawingServiceStub, colourServiceStub, historyServiceStub);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule],
+            imports: [MaterialModule, BrowserAnimationsModule, MatTooltipModule],
             declarations: [SprayToolConfigurationComponent, ResizableToolConfigurationComponent],
             providers: [{ provide: SprayService, useValue: sprayServiceStub }],
         }).compileComponents();

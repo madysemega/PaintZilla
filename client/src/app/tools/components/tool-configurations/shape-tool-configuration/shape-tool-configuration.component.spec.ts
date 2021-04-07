@@ -1,14 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ShapeType } from '@app/app/classes/shape-type';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ShapeToolConfigurationComponent } from './shape-tool-configuration.component';
 
 // tslint:disable:no-any
@@ -28,18 +33,31 @@ describe('ShapeToolConfigurationComponent', () => {
     let historyServiceStub: HistoryService;
     let drawingStub: DrawingService;
     let colourServiceStub: ColourService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let ellipseToolStub: EllipseService;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, MatIconModule, MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [ShapeToolConfigurationComponent, ResizableToolConfigurationComponent],
-            providers: [{ provide: EllipseService, useValue: ellipseToolStub }],
+            providers: [
+                { provide: EllipseService, useValue: ellipseToolStub },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

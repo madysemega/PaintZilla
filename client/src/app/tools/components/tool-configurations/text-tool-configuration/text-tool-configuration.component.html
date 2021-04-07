@@ -1,0 +1,23 @@
+<mat-label>Taille de la police</mat-label>
+<mat-slider thumbLabel
+            matTooltip="Taille de la police"
+            matTooltipPosition="right"
+            step="12" min="12" max="150"
+            [value]="fontSize"
+            (valueChange)="updateFontSize($event)">
+</mat-slider>
+
+<mat-form-field appearance="fill">
+    <mat-label>Police d'écriture</mat-label>
+    <mat-select [value]="fontName" (valueChange)="updateFontName($event)">
+        <mat-option value="Arial">Arial</mat-option>
+        <mat-option value="Verdana">Verdana</mat-option>
+        <mat-option value="Tahoma">Tahoma</mat-option>
+        <mat-option value="Trebuchet MS">Trebuchet MS</mat-option>
+        <mat-option value="Times New Roman">Times New Roman</mat-option>
+        <mat-option value="Georgia">Georgia</mat-option>
+        <mat-option value="Garamond">Garamond</mat-option>
+        <mat-option value="Courier New">Courier New</mat-option>
+    </mat-select>
+  </mat-form-field>
+

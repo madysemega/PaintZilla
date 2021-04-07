@@ -1,6 +1,7 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { Tool } from './tool';
 
 class ToolStub extends Tool {}
@@ -15,6 +16,7 @@ describe('Tool', () => {
 
     let historyServiceStub: HistoryService;
     let drawingService: DrawingService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let fakeCanvas: HTMLCanvasElement;
 
@@ -28,7 +30,11 @@ describe('Tool', () => {
             },
         } as HTMLCanvasElement;
 
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingService = new DrawingService(historyServiceStub);
         drawingService.canvas = fakeCanvas;
 

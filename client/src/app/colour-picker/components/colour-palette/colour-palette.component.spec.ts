@@ -1,5 +1,7 @@
-import { ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourPaletteComponent } from '@app/colour-picker/components/colour-palette/colour-palette.component';
 import * as Constants from '@app/colour-picker/constants/colour-palette.component.constants';
@@ -40,11 +42,13 @@ describe('ColourPaletteComponent', () => {
             nativeElement: nativeElementSpy,
         });
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule, CommonModule],
             declarations: [ColourPaletteComponent],
             providers: [
                 { provide: ColourPickerService, useValue: colourPickerServiceSpy },
                 { provide: SliderService, useValue: sliderServiceSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 
