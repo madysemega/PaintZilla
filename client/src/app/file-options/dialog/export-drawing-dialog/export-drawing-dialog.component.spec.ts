@@ -16,6 +16,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { Observable, of, Subject, throwError } from 'rxjs';
 import { ExportDrawingDialogComponent } from './export-drawing-dialog.component';
 
@@ -26,6 +27,7 @@ describe('ExportDrawingDialogComponent', () => {
     let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
     let resizingServiceSpy: ResizingService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     // tslint:disable:no-any
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
@@ -39,7 +41,11 @@ describe('ExportDrawingDialogComponent', () => {
     let canvasSizeStub: Vec2;
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceSpy = new DrawingService(historyServiceStub);
         resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
         postSubject = new Subject<any>();

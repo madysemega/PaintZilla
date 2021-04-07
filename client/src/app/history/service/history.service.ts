@@ -1,12 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { sleep } from '@app/app/classes/sleep';
 import { IUserAction } from '@app/history/user-actions/user-action';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class HistoryService {
-    constructor() {
+    constructor(private keyboardService: KeyboardService) {
         this.past = new Array<IUserAction>();
         this.future = new Array<IUserAction>();
         this.undoEventObservers = new Array<() => void>();
@@ -14,6 +15,7 @@ export class HistoryService {
         this.isLocked = false;
 
         this.onDrawingModification = new EventEmitter();
+        this.registerKeyboardShortcuts();
     }
     onDrawingModification: EventEmitter<boolean>;
 
@@ -23,6 +25,29 @@ export class HistoryService {
     private future: IUserAction[];
 
     isLocked: boolean;
+
+    private registerKeyboardShortcuts(): void {
+        this.registerUndoKeyboardShortcut();
+        this.registerRedoKeyboardShortcut();
+    }
+
+    private registerUndoKeyboardShortcut(): void {
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+z',
+            invoke: () => this.undo(),
+            uniqueName: 'Undo last action',
+            contexts: ['editor'],
+        });
+    }
+
+    private registerRedoKeyboardShortcut(): void {
+        this.keyboardService.registerAction({
+            trigger: 'ctrl+shift+z',
+            invoke: () => this.redo(),
+            uniqueName: 'Redo last action',
+            contexts: ['editor'],
+        });
+    }
 
     onUndo(callback: () => void): void {
         this.undoEventObservers.push(callback);

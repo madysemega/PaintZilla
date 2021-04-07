@@ -7,6 +7,7 @@ import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
@@ -14,13 +15,19 @@ describe('ResizingService', () => {
     let service: ResizingService;
     let historyServiceStub: HistoryService;
     let drawingServiceStub: DrawingService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let canvasTestHelper: CanvasTestHelper;
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
     let canvasSizeStub: Vec2;
     let testMouseEvent: MouseEvent;
+
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],

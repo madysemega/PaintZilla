@@ -1,0 +1,8 @@
+<mat-label>Taille de la police</mat-label>
+<mat-slider thumbLabel
+            matTooltip="Taille de la police"
+            matTooltipPosition="right"
+            step="12" min="12" max="150"
+            [value]="fontSize"
+            (valueChange)="updateFontSize($event)">
+</mat-slider>

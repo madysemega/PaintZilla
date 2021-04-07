@@ -2,16 +2,22 @@ import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseToolConfigurationComponent } from './ellipse-tool-configuration.component';
 
 describe('EllipseToolConfigurationComponent', () => {
     let component: EllipseToolConfigurationComponent;
     let fixture: ComponentFixture<EllipseToolConfigurationComponent>;
 
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     beforeEach(async(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, CommonModule],
+            imports: [MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [EllipseToolConfigurationComponent],
+            providers: [{ provide: HotkeysService, hotkeysServiceStub }],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));

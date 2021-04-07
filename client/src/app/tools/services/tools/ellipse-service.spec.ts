@@ -7,6 +7,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { EllipseService } from './ellipse-service';
 
 // tslint:disable:no-any
@@ -22,6 +23,7 @@ describe('EllipseService', () => {
 
     let historyService: HistoryService;
     let colourService: ColourService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
@@ -37,8 +39,12 @@ describe('EllipseService', () => {
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
-        historyService = new HistoryService();
+        historyService = new HistoryService(keyboardServiceStub);
         colourService = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({

@@ -33,6 +33,7 @@ export class AppComponent {
                     this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
                 }
             },
+            uniqueName: 'Open carousel',
             contexts: ['editor', 'main-page'],
         });
     }

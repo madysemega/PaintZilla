@@ -6,6 +6,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
@@ -14,7 +15,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardComponent } from './clipboard.component';
 
 // tslint:disable:no-any
@@ -35,17 +36,25 @@ describe('ClipboardComponent', () => {
     let colourServiceStub: ColourService;
     let ellipseToolStub: EllipseService;
     let pencilService: PencilService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, CommonModule],
+            imports: [MatTooltipModule, CommonModule, HotkeyModule.forRoot()],
             declarations: [ClipboardComponent],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
         colourServiceStub = new ColourService({} as ColourPickerService);
-
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
 
         drawingStub = new DrawingService(historyServiceStub);
         drawingStub.canvasSize = { x: 500, y: 600 };
