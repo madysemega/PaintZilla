@@ -9,6 +9,14 @@ import { TextService } from '@app/tools/services/tools/text/text.service';
 export class TextToolConfigurationComponent {
     constructor(private service: TextService) {}
 
+    get fontIsItalic(): boolean {
+        return this.service.getFontIsItalic();
+    }
+
+    updateFontIsItalic(value: boolean): void {
+        this.service.updateFontIsItalic(value);
+    }
+
     get fontIsBold(): boolean {
         return this.service.getFontIsBold();
     }
