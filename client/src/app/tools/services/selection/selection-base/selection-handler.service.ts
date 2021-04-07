@@ -17,7 +17,7 @@ export enum ResizingMode {
 })
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
-    protected readonly CANVAS_SIZE: number = 5000;
+    protected readonly CANVAS_SIZE: number = 1000;
 
     selection: HTMLCanvasElement;
     originalSelection: HTMLCanvasElement;
