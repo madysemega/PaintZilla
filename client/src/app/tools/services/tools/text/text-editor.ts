@@ -26,15 +26,6 @@ export class TextEditor {
     private showCursor: boolean;
     private cursorRenderer: TextCursorRenderer;
 
-    get fontName(): string {
-        return this.shape.fontName;
-    }
-
-    set fontName(name: string) {
-        this.fontProperty.fontName = name;
-        this.shape.fontName = name;
-    }
-
     private initialize(): void {
         this.shape = new TextShape();
         this.initializeProperties();
@@ -56,6 +47,15 @@ export class TextEditor {
         this.shape.text = TextShape.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
+    }
+
+    setFontName(name: string): void {
+        this.fontProperty.fontName = name;
+        this.shape.fontName = name;
+    }
+
+    getFontName(): string {
+        return this.shape.fontName;
     }
 
     setFontSize(size: number): void {

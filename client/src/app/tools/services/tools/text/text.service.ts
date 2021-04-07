@@ -44,11 +44,11 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     updateFontName(name: string): void {
-        this.editor.fontName = name;
+        this.editor.setFontName(name);
     }
 
     getFontName(): string {
-        return this.editor.fontName;
+        return this.editor.getFontName();
     }
 
     updateFontSize(size: number): void {
