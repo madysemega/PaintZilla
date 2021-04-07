@@ -10,6 +10,7 @@ import { TextService } from './text.service';
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-string-literal
+// tslint:disable:max-file-line-count
 describe('TextService', () => {
     let service: TextService;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
