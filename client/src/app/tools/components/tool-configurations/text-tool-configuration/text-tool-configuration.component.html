@@ -9,7 +9,7 @@
 
 <mat-form-field appearance="fill">
     <mat-label>Police d'écriture</mat-label>
-    <mat-select [value]="fontName" (value)="updateFontName">
+    <mat-select [value]="fontName" (valueChange)="updateFontName($event)">
         <mat-option value="Arial">Arial</mat-option>
         <mat-option value="Verdana">Verdana</mat-option>
         <mat-option value="Tahoma">Tahoma</mat-option>
@@ -20,3 +20,4 @@
         <mat-option value="Courier New">Courier New</mat-option>
     </mat-select>
   </mat-form-field>
+
