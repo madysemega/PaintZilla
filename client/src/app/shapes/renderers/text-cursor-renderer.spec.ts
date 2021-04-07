@@ -11,7 +11,7 @@ describe('TextCursorRenderer', () => {
     const TEXT = 'Test';
     const POSITION = { x: 42, y: 32 };
     const FONT_SIZE = 24;
-    const FONT_NAME = 'Ubuntu';
+    const FONT_NAME = 'Arial';
 
     const INITIAL_CURSOR_POSITION = 0;
 

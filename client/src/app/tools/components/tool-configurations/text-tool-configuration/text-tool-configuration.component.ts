@@ -10,11 +10,11 @@ export class TextToolConfigurationComponent {
     constructor(private service: TextService) {}
 
     get fontName(): string {
-        return this.service.fontName;
+        return this.service.getFontName();
     }
 
-    set fontName(name: string) {
-        this.service.fontName = name;
+    updateFontName(name: string): void {
+        this.service.updateFontName(name);
     }
 
     get fontSize(): number {

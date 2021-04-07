@@ -5,7 +5,7 @@ export class TextShape extends Shape {
     static readonly DEFAULT_TEXT: string = '';
     static readonly DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
     static readonly DEFAULT_FONT_SIZE: number = 12;
-    static readonly DEFAULT_FONT_NAME: string = 'Helvetica';
+    static readonly DEFAULT_FONT_NAME: string = 'Arial';
 
     constructor(
         public text: string = TextShape.DEFAULT_TEXT,

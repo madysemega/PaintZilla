@@ -36,4 +36,12 @@ describe('TextToolConfigurationComponent', () => {
         component.updateFontSize(NEW_FONT_SIZE);
         expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_SIZE);
     });
+
+    it('When font name is updated, event should be propagated to service', () => {
+        const SERVICE_METHOD_SPY = spyOn(TestBed.inject(TextService), 'updateFontName').and.stub();
+        const NEW_FONT_NAME = 'Times New Roman';
+
+        component.updateFontName(NEW_FONT_NAME);
+        expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_NAME);
+    });
 });
