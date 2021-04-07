@@ -37,7 +37,6 @@ describe('MagnetismComponent', () => {
         fixture.detectChanges();
         component.toolSelector = TestBed.inject(ToolSelectorService);
         rectangleSelectionCreator = TestBed.inject(RectangleSelectionCreatorService);
-        
     });
 
     it('should create', () => {
@@ -49,7 +48,6 @@ describe('MagnetismComponent', () => {
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
-
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
         const dummyAnchor = 5;
