@@ -84,6 +84,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyDown(event: KeyboardEvent): void {
+        
         if (event.key === 'Escape') {
             this.resetProperties();
             this.stopManipulatingSelection();
@@ -105,17 +106,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        const isDel: boolean = event.key === 'Delete';
-
-        if (this.isSelectionBeingManipulated()) {
-
-            if (isDel) {
-                this.selectionManipulator.delete();
-            }
-
-            this.selectionManipulator.onKeyUp(event);
-            return;
-        }
 
         if (event.key === 'Shift') {
             this.isShiftDown = false;
@@ -124,6 +114,12 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         if (event.key === 'Shift' && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSelectionOutline(this.lastMousePosition);
+        }
+    }
+
+    delete(): void{
+        if (this.isSelectionBeingManipulated()) {
+            this.selectionManipulator.delete();
         }
     }
 

@@ -147,6 +147,21 @@ export class ToolSelectorService {
         });
 
         this.keyboardService.registerAction({
+            trigger: 'del',
+            invoke: () => {
+                const isCurrentToolSelection =
+                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+
+                if (isCurrentToolSelection) {
+                    const selectionService = this.selectedTool.tool as SelectionCreatorService;
+                    selectionService.delete();
+                }
+            },
+            uniqueName: 'Delete clipboard content',
+            contexts: ['editor'],
+        });
+
+        this.keyboardService.registerAction({
             trigger: 'ctrl+v',
             invoke: () => {
                 this.selectTool(this.clipboardService.copyOwner.key);
