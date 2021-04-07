@@ -105,21 +105,9 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        const isCtrl: boolean = event.ctrlKey;
-        const isC: boolean = event.key === 'c';
-        const isX: boolean = event.key === 'x';
         const isDel: boolean = event.key === 'Delete';
 
         if (this.isSelectionBeingManipulated()) {
-            if (isCtrl && isC) {
-                this.copy();
-                return;
-            }
-
-            if (isCtrl && isX) {
-                this.cut();
-                return;
-            }
 
             if (isDel) {
                 this.selectionManipulator.delete();
@@ -140,16 +128,20 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     copy(): void {
-        const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
-        const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
-        this.clipboardService.copy(manipulatorMemento, handlerMemento, this);
+        if (this.isSelectionBeingManipulated()) {
+            const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+            const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+            this.clipboardService.copy(manipulatorMemento, handlerMemento, this);
+        }
     }
 
     cut(): void {
-        const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
-        const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
-        this.clipboardService.cut(manipulatorMemento, handlerMemento, this);
-        this.selectionManipulator.stopManipulation(false);
+        if (this.isSelectionBeingManipulated()) {
+            const manipulatorMemento: ManipulatorMemento = this.selectionManipulator.createMemento();
+            const handlerMemento: HandlerMemento = this.selectionManipulator.selectionHandler.createMemento();
+            this.clipboardService.cut(manipulatorMemento, handlerMemento, this);
+            this.selectionManipulator.stopManipulation(false);
+        }
     }
 
     onToolSelect(): void {
