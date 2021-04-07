@@ -43,6 +43,14 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    updateFontIsBold(value: boolean): void {
+        this.editor.setFontIsBold(value);
+    }
+
+    getFontIsBold(): boolean {
+        return this.editor.getFontIsBold();
+    }
+
     updateFontName(name: string): void {
         this.editor.setFontName(name);
     }

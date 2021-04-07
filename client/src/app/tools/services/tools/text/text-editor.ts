@@ -35,10 +35,12 @@ export class TextEditor {
     }
 
     private initializeProperties(): void {
+        const DEFAULT_IS_BOLD = false;
+
         this.colourProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
         this.ctx.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
-        this.fontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName);
+        this.fontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName, DEFAULT_IS_BOLD);
     }
 
     reset(position: Vec2 = { x: 0, y: 0 }): void {
@@ -47,6 +49,14 @@ export class TextEditor {
         this.shape.text = TextShape.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
+    }
+
+    setFontIsBold(value: boolean): void {
+        this.fontProperty.isBold = value;
+    }
+
+    getFontIsBold(): boolean {
+        return this.fontProperty.isBold;
     }
 
     setFontName(name: string): void {

@@ -64,6 +64,15 @@ describe('TextService', () => {
         expect(editorSetFontNameSpy).toHaveBeenCalled();
     });
 
+    it('When font isBold changes, the event should be propagated to editor', () => {
+        const editorSetFontIsBoldSpy = spyOn(service['editor'], 'setFontIsBold').and.stub();
+
+        const NEW_FONT_IS_BOLD = true;
+        service.updateFontIsBold(NEW_FONT_IS_BOLD);
+
+        expect(editorSetFontIsBoldSpy).toHaveBeenCalled();
+    });
+
     it('Resetting service should reset editor', () => {
         const editorResetSpy = spyOn(service['editor'], 'reset').and.stub();
         service['reset']();
