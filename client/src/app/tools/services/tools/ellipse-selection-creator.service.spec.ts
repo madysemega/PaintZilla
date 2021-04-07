@@ -41,8 +41,8 @@ describe('EllipseSelectionCreatorService', () => {
     let resetPropertiesSpy: jasmine.Spy<any>;
     let drawSelectionOutlineSpy: jasmine.Spy<any>;
     let stopManipulatingSelectionSpy: jasmine.Spy<any>;
-    let copySpy: jasmine.Spy<any>;
-    let cutSpy: jasmine.Spy<any>;
+    /*let copySpy: jasmine.Spy<any>;
+    let cutSpy: jasmine.Spy<any>;*/
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -129,8 +129,8 @@ describe('EllipseSelectionCreatorService', () => {
         resetPropertiesSpy = spyOn<any>(service, 'resetProperties').and.callThrough();
         drawSelectionOutlineSpy = spyOn<any>(service, 'drawSelectionOutline').and.callThrough();
         stopManipulatingSelectionSpy = spyOn<any>(service, 'stopManipulatingSelection').and.callThrough();
-        copySpy = spyOn<any>(service, 'copy').and.callThrough();
-        cutSpy = spyOn<any>(service, 'cut').and.callThrough();
+        /*copySpy = spyOn<any>(service, 'copy').and.callThrough();
+        cutSpy = spyOn<any>(service, 'cut').and.callThrough();*/
 
         /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
         moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
@@ -279,7 +279,7 @@ describe('EllipseSelectionCreatorService', () => {
         expect(ellipseSelectionManipulatorMock.onKeyUp).toHaveBeenCalled();
     });
 
-    it('releasing Ctrl + C should copy', () => {
+    /*it('releasing Ctrl + C should copy', () => {
         keyboardEvent = {
             ctrlKey: true,
             key: 'c',
@@ -306,7 +306,7 @@ describe('EllipseSelectionCreatorService', () => {
         isSelectionBeingManipulatedSpy.and.returnValue(true);
         service.onKeyUp(keyboardEvent);
         expect(ellipseSelectionManipulatorMock.delete).toHaveBeenCalled();
-    });
+    });*/
 
     it('releasing shift should set isShiftDown to true if isSelectionBeingManipulated returns false', () => {
         keyboardEvent = {
@@ -538,5 +538,23 @@ describe('EllipseSelectionCreatorService', () => {
     it('cutting should cancel current selection ', () => {
         service.cut();
         expect(ellipseSelectionManipulatorMock.stopManipulation).toHaveBeenCalled();
+    });
+
+    it('cutting should not cancel current selection if the selection is not being manipulated ', () => {
+        isSelectionBeingManipulatedSpy.and.returnValue(false);
+        service.cut();
+        expect(ellipseSelectionManipulatorMock.stopManipulation).not.toHaveBeenCalled();
+    });
+
+    it('delete should dispath to the manipulator delete function ', () => {
+        isSelectionBeingManipulatedSpy.and.returnValue(true);
+        service.delete();
+        expect(ellipseSelectionManipulatorMock.delete).toHaveBeenCalled();
+    });
+
+    it('delete should not dispath to the manipulator delete function if the selection is not being manipulated ', () => {
+        isSelectionBeingManipulatedSpy.and.returnValue(false);
+        service.delete();
+        expect(ellipseSelectionManipulatorMock.delete).not.toHaveBeenCalled();
     });
 });

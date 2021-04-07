@@ -331,15 +331,52 @@ describe('ToolSelectorService', () => {
         expect(cutSpy).not.toHaveBeenCalled();
     });
 
+    it('If tool is a selection tool, del should delete selection', () => {
+        service.selectTool('rectangle-selection');
+
+        const keyboardService = TestBed.inject(KeyboardService);
+        const selectionService = service.selectedTool.tool as SelectionCreatorService;
+        const delSpy = spyOn(selectionService, 'delete').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'del') {
+                action.invoke();
+            }
+        });
+
+        service['registerKeyboardShortcuts']();
+
+        expect(delSpy).toHaveBeenCalled();
+    });
+
+    it('If tool is not a selection tool, del should not delete selection', () => {
+        service.selectTool('line');
+
+        const keyboardService = TestBed.inject(KeyboardService);
+        const deleteSpy = jasmine.createSpy('del').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'del') {
+                action.invoke();
+            }
+        });
+
+        service['registerKeyboardShortcuts']();
+
+        expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
     it('Ctrl+V should paste clipboard content to drawing surface', () => {
         service.selectTool('rectangle-selection');
 
         const selectionService = service.selectedTool.tool as SelectionCreatorService;
         const keyboardService = TestBed.inject(KeyboardService);
         const clipboardService = TestBed.inject(ClipboardService);
-        const pasteSpy = spyOn(clipboardService, 'paste').and.stub();
+        const pasteSpy = spyOn(clipboardService, 'paste').and.returnValue();
 
         clipboardService.copyOwner = selectionService;
+        clipboardService.copyOwner = selectionService;
+        clipboardService.isEmpty = false;
 
         spyOn(service, 'selectTool').and.stub();
 
@@ -354,7 +391,7 @@ describe('ToolSelectorService', () => {
         expect(pasteSpy).toHaveBeenCalled();
     });
 
-    it('Ctrl+V should lock history service', () => {
+    it('Ctrl+V should lock history service if clipboard is not empty', () => {
         service.selectTool('rectangle-selection');
 
         const selectionService = service.selectedTool.tool as SelectionCreatorService;
@@ -363,8 +400,10 @@ describe('ToolSelectorService', () => {
         const historyService = TestBed.inject(HistoryService);
 
         clipboardService.copyOwner = selectionService;
+        clipboardService.isEmpty = false;
 
         spyOn(service, 'selectTool').and.stub();
+        spyOn(clipboardService, 'paste').and.returnValue();
 
         spyOn(keyboardService, 'registerAction').and.callFake((action) => {
             if (action.trigger === 'ctrl+v') {
@@ -375,5 +414,30 @@ describe('ToolSelectorService', () => {
         service['registerKeyboardShortcuts']();
 
         expect(historyService.isLocked).toBeTrue();
+    });
+
+    it('Ctrl+V should not lock history service if clipboard is empty', () => {
+        service.selectTool('rectangle-selection');
+
+        const selectionService = service.selectedTool.tool as SelectionCreatorService;
+        const keyboardService = TestBed.inject(KeyboardService);
+        const clipboardService = TestBed.inject(ClipboardService);
+        const historyService = TestBed.inject(HistoryService);
+
+        clipboardService.copyOwner = selectionService;
+        clipboardService.isEmpty = true;
+
+        spyOn(service, 'selectTool').and.stub();
+        spyOn(clipboardService, 'paste').and.returnValue();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'ctrl+v') {
+                action.invoke();
+            }
+        });
+
+        service['registerKeyboardShortcuts']();
+
+        expect(historyService.isLocked).not.toBeTrue();
     });
 });

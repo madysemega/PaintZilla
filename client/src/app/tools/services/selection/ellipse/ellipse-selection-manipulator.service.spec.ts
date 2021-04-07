@@ -406,6 +406,13 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
     });
 
+    it('addMovementToPosition should call add 3 times if isMouseMovement is true even if magnetism is activated ', () => {
+        const mouseMovement = { x: 10, y: 11 };
+        service.isMagnetismActivated = true;
+        service.addMovementToPositions(mouseMovement, true);
+        expect(ellipseSelectionHelperMock.addInPlace).toHaveBeenCalledTimes(3);
+    });
+
     it('registerMousePos should update mouseDownLastPos correctly if isMouseDown is true ', () => {
         const mouseDownLastPos: Vec2 = { x: 1, y: 2 };
         const mouseMovement: Vec2 = { x: 10, y: 11 };
