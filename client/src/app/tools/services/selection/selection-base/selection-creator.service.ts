@@ -105,7 +105,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     onKeyUp(event: KeyboardEvent): void {
-       
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.onKeyUp(event);
             return;
@@ -121,7 +120,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
         }
     }
 
-    delete(): void{
+    delete(): void {
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.delete();
         }
