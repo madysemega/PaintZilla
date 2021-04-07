@@ -7,12 +7,13 @@ describe('FontProperty', () => {
     const FONT_SIZE = 32;
     const FONT_NAME = 'Arial';
     const FONT_IS_BOLD = false;
+    const FONT_IS_ITALIC = false;
 
     let canvasTestHelper: CanvasTestHelper;
     let ctxStub: CanvasRenderingContext2D;
 
     beforeEach(() => {
-        property = new FontProperty(FONT_SIZE, FONT_NAME, FONT_IS_BOLD);
+        property = new FontProperty(FONT_SIZE, FONT_NAME, FONT_IS_BOLD, FONT_IS_ITALIC);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -27,6 +28,12 @@ describe('FontProperty', () => {
         property.isBold = true;
         property.apply(ctxStub);
         expect(ctxStub.font.includes('bold')).toBeTrue();
+    });
+
+    it("If text is italic, font property string should include the 'italic' keyword", () => {
+        property.isItalic = true;
+        property.apply(ctxStub);
+        expect(ctxStub.font.includes('italic')).toBeTrue();
     });
 
     it('clone should return an identical copy', () => {

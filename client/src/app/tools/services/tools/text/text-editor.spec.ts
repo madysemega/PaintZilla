@@ -54,10 +54,16 @@ describe('TextEditor', () => {
         expect(editor['shape'].fontName).toEqual(NEW_NAME);
     });
 
-    it('setFontName() should set the font name in the property', () => {
+    it('setFontIsBold() should set font isBold in the property', () => {
         const NEW_IS_BOLD = true;
         editor.setFontIsBold(NEW_IS_BOLD);
         expect(editor['fontProperty'].isBold).toEqual(NEW_IS_BOLD);
+    });
+
+    it('setFontIsItalic() should set font isItalic in the property', () => {
+        const NEW_IS_ITALIC = true;
+        editor.setFontIsItalic(NEW_IS_ITALIC);
+        expect(editor['fontProperty'].isItalic).toEqual(NEW_IS_ITALIC);
     });
 
     it('Enabling the cursor should start an interval', () => {

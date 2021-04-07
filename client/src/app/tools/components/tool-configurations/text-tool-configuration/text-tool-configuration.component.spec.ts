@@ -52,4 +52,12 @@ describe('TextToolConfigurationComponent', () => {
         component.updateFontIsBold(NEW_FONT_IS_BOLD);
         expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_IS_BOLD);
     });
+
+    it('When font isItalic is updated, event should be propagated to service', () => {
+        const SERVICE_METHOD_SPY = spyOn(TestBed.inject(TextService), 'updateFontIsItalic').and.stub();
+        const NEW_FONT_IS_ITALIC = true;
+
+        component.updateFontIsItalic(NEW_FONT_IS_ITALIC);
+        expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_IS_ITALIC);
+    });
 });
