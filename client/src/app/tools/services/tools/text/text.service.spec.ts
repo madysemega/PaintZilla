@@ -55,6 +55,15 @@ describe('TextService', () => {
         expect(editorSetFontSizeSpy).toHaveBeenCalled();
     });
 
+    it('When font name changes, the event should be propagated to editor', () => {
+        const editorSetFontNameSpy = spyOn(service['editor'], 'setFontName').and.stub();
+
+        const NEW_FONT_NAME = 'Times New Roman';
+        service.updateFontName(NEW_FONT_NAME);
+
+        expect(editorSetFontNameSpy).toHaveBeenCalled();
+    });
+
     it('Resetting service should reset editor', () => {
         const editorResetSpy = spyOn(service['editor'], 'reset').and.stub();
         service['reset']();

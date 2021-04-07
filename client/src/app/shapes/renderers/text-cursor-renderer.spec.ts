@@ -11,6 +11,7 @@ describe('TextCursorRenderer', () => {
     const TEXT = 'Test';
     const POSITION = { x: 42, y: 32 };
     const FONT_SIZE = 24;
+    const FONT_NAME = 'Arial';
 
     const INITIAL_CURSOR_POSITION = 0;
 
@@ -24,7 +25,7 @@ describe('TextCursorRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
-        properties.push(new FontProperty(FONT_SIZE));
+        properties.push(new FontProperty(FONT_SIZE, FONT_NAME));
         shape = new TextShape(TEXT, POSITION, FONT_SIZE);
         renderer = new TextCursorRenderer(shape, properties, INITIAL_CURSOR_POSITION);
 

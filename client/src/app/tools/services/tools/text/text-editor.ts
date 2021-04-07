@@ -38,7 +38,7 @@ export class TextEditor {
         this.colourProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
         this.ctx.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
-        this.fontProperty = new FontProperty(this.shape.fontSize);
+        this.fontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName);
     }
 
     reset(position: Vec2 = { x: 0, y: 0 }): void {
@@ -47,6 +47,15 @@ export class TextEditor {
         this.shape.text = TextShape.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
+    }
+
+    setFontName(name: string): void {
+        this.fontProperty.fontName = name;
+        this.shape.fontName = name;
+    }
+
+    getFontName(): string {
+        return this.shape.fontName;
     }
 
     setFontSize(size: number): void {

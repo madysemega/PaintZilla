@@ -9,6 +9,14 @@ import { TextService } from '@app/tools/services/tools/text/text.service';
 export class TextToolConfigurationComponent {
     constructor(private service: TextService) {}
 
+    get fontName(): string {
+        return this.service.getFontName();
+    }
+
+    updateFontName(name: string): void {
+        this.service.updateFontName(name);
+    }
+
     get fontSize(): number {
         return this.service.getFontSize();
     }
