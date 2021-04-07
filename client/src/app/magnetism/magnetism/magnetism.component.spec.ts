@@ -3,7 +3,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
@@ -18,10 +17,6 @@ describe('MagnetismComponent', () => {
     let component: MagnetismComponent;
     let fixture: ComponentFixture<MagnetismComponent>;
     let rectangleSelectionCreator: RectangleSelectionCreatorService;
-    let ctxStub: HTMLCanvasElement;
-    let canvasTestHelper: CanvasTestHelper;
-    //let drawingStub: DrawingService;
-    //let historyServiceStub: jasmine.SpyObj<HistoryService>;
 
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
@@ -39,12 +34,9 @@ describe('MagnetismComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(MagnetismComponent);
         component = fixture.componentInstance;
-        canvasTestHelper = new CanvasTestHelper();
         fixture.detectChanges();
         component.toolSelector = TestBed.inject(ToolSelectorService);
         rectangleSelectionCreator = TestBed.inject(RectangleSelectionCreatorService);
-        ctxStub = canvasTestHelper.canvas;
-        //drawingStub = new DrawingService(historyServiceStub);
         
     });
 
@@ -57,13 +49,7 @@ describe('MagnetismComponent', () => {
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
-    it('toggling grid twice should not change initial value', () => {
-        component.isGridActivated = false;
-        component.drawingService.canvas = ctxStub;
-        component.toggleGrid();
-        component.toggleGrid();
-        expect(component.isGridActivated).toEqual(false);
-    });
+
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
         const dummyAnchor = 5;
