@@ -8,7 +8,10 @@ export class TextRenderer extends ShapeRenderer<TextShape> {
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-        ctx.fillText(this.shape.text, this.shape.position.x, this.shape.position.y);
+        const lines = this.shape.splitTextInMultipleLines();
+        lines.forEach((line, lineNb) => {
+            ctx.fillText(line, this.shape.position.x, this.shape.position.y + lineNb * this.shape.fontSize);
+        });
     }
 
     clone(): ShapeRenderer<TextShape> {
