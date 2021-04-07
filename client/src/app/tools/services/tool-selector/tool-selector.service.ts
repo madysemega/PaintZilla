@@ -164,9 +164,11 @@ export class ToolSelectorService {
         this.keyboardService.registerAction({
             trigger: 'ctrl+v',
             invoke: () => {
-                this.selectTool(this.clipboardService.copyOwner.key);
-                this.clipboardService.paste();
-                this.history.isLocked = true;
+                if (!this.clipboardService.isEmpty) {
+                    this.selectTool(this.clipboardService.copyOwner.key);
+                    this.clipboardService.paste();
+                    this.history.isLocked = true;
+                }
             },
             uniqueName: 'Paste clipboard content',
             contexts: ['editor'],
