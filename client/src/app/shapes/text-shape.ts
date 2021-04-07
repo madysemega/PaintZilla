@@ -5,11 +5,13 @@ export class TextShape extends Shape {
     static readonly DEFAULT_TEXT: string = '';
     static readonly DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
     static readonly DEFAULT_FONT_SIZE: number = 12;
+    static readonly DEFAULT_FONT_NAME: string = 'Helvetica';
 
     constructor(
         public text: string = TextShape.DEFAULT_TEXT,
         public position: Vec2 = TextShape.DEFAULT_POSITION,
         public fontSize: number = TextShape.DEFAULT_FONT_SIZE,
+        public fontName: string = TextShape.DEFAULT_FONT_NAME,
     ) {
         super();
     }

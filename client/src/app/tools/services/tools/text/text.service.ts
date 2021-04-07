@@ -33,6 +33,14 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.editor = new TextEditor({ drawingService: this.drawingService, colourService: this.colourService });
     }
 
+    get fontName(): string {
+        return this.editor.fontName;
+    }
+
+    set fontName(name: string) {
+        this.editor.fontName = name;
+    }
+
     onToolSelect(): void {
         this.reset();
         this.drawingService.setCursorType(CursorType.TEXT);
