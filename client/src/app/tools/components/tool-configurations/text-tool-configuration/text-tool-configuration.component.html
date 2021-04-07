@@ -19,5 +19,6 @@
         <mat-option value="Garamond">Garamond</mat-option>
         <mat-option value="Courier New">Courier New</mat-option>
     </mat-select>
-  </mat-form-field>
+</mat-form-field>
 
+<mat-slide-toggle [ngModel]="fontIsBold" (ngModelChange)="updateFontIsBold($event)">Gras</mat-slide-toggle>
