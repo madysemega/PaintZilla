@@ -44,4 +44,12 @@ describe('TextToolConfigurationComponent', () => {
         component.updateFontName(NEW_FONT_NAME);
         expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_NAME);
     });
+
+    it('When font isBold is updated, event should be propagated to service', () => {
+        const SERVICE_METHOD_SPY = spyOn(TestBed.inject(TextService), 'updateFontIsBold').and.stub();
+        const NEW_FONT_IS_BOLD = true;
+
+        component.updateFontIsBold(NEW_FONT_IS_BOLD);
+        expect(SERVICE_METHOD_SPY).toHaveBeenCalledWith(NEW_FONT_IS_BOLD);
+    });
 });
