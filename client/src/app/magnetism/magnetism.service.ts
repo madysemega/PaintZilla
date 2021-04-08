@@ -9,8 +9,10 @@ export class MagnetismService {
     constructor(private keyboardService: KeyboardService) {
         this.registerKeyboardShortcuts();
     }
-
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    isGridActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     private registerKeyboardShortcuts(): void {
         this.keyboardService.registerAction({
@@ -19,9 +21,36 @@ export class MagnetismService {
             uniqueName: 'Toggle magnetism',
             contexts: ['editor'],
         });
+        this.keyboardService.registerAction({
+            trigger: 'g',
+            invoke: () => this.toggleGrid(),
+            uniqueName: 'Toggle grid',
+            contexts: ['editor'],
+        });
+        this.keyboardService.registerAction({
+            trigger: '=',
+            invoke: () => this.incrementGrid(),
+            uniqueName: 'Toggle grid +',
+            contexts: ['editor'],
+        });
+        this.keyboardService.registerAction({
+            trigger: '-',
+            invoke: () => this.decrementGrid(),
+            uniqueName: 'Toggle grid -',
+            contexts: ['editor'],
+        });
     }
 
     toggleMagnetism(): void {
         this.isActivated.next(!this.isActivated.value);
+    }
+    toggleGrid(): void {
+        this.isGridActivated.next(!this.isGridActivated.value);
+    }
+    incrementGrid() : void {
+        this.isIncrement.next(!this.isIncrement.value);
+    }
+    decrementGrid() : void {
+        this.isDecrement.next(!this.isDecrement.value);
     }
 }

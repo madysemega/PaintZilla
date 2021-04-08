@@ -62,7 +62,7 @@
         <mat-label>Grille</mat-label>
     </div>
     <div class="center">
-        <mat-slide-toggle id="toggleGrid" [ngModel] ="isGridActivated" (ngModelChange)="toggleGrid()"></mat-slide-toggle>
+        <mat-slide-toggle id="toggleGrid" [ngModel] ="isGridActivated" (ngModelChange)="isGridActivated = $event; toggleGrid();"></mat-slide-toggle>
     </div>
     <div class="vertical">
         <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
@@ -25,49 +25,42 @@ export class MagnetismComponent {
         public magnetismService: MagnetismService,
         public drawingService: DrawingService,
     ) {
+        this.magnetismService.isGridActivated.subscribe((value) => {
+            this.isGridActivated = value;
+            this.toggleGrid();
+        });
         this.magnetismService.isActivated.subscribe((value) => {
             this.isActivated = value;
             this.notifyManipulators();
         });
+        this.magnetismService.isIncrement.subscribe((value) => {
+            this.incrementGrid();
+        });
+        this.magnetismService.isDecrement.subscribe((value) => {
+            this.decrementGrid();
+        });
     }
-
     notifyManipulators(): void {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
     }
-    @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        const isPlus: boolean = event.key === '+';
-        const isMoins: boolean = event.key === '-';
-        const isEqual: boolean = event.key === '=';
-        const isG: boolean = event.key === 'g';
-        if (isPlus) {
-            if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
-                this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
-            }
-        }
-        if (isEqual) {
-            if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
-                this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
-            }
-        }
-        if (isMoins) {
-            if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
-                this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
-            }
-        }
-        if (isG) {
-            this.toggleGrid();
-        }
-    }
     toggleGrid(): void {
-        this.isGridActivated = !this.isGridActivated;
         if (this.isGridActivated === true) {
             this.drawGrid();
         } else if (this.isGridActivated === false) {
             this.deleteGrid();
+        }
+    }
+    incrementGrid(): void {
+        if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
+            this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
+        }
+    }
+    decrementGrid(): void {
+        if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
+            this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
         }
     }
     drawGrid(): void {

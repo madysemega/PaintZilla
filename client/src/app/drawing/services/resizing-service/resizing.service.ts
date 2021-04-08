@@ -16,6 +16,7 @@ export class ResizingService {
     rightDownResizerEnabled: boolean = false;
     canvasResize: Vec2;
     image: ImageData;
+    imageGrid: ImageData;
 
     constructor(public drawingService: DrawingService, private historyService: HistoryService) {
         this.canvasResize = this.drawingService.canvasResize;
@@ -38,6 +39,7 @@ export class ResizingService {
 
         this.drawingService.updateCanvasStyle();
         this.restorePreviewImageData();
+        this.restoreGridImageData();
     }
 
     canBeResizedHorizontally(event: MouseEvent): boolean {
@@ -61,6 +63,7 @@ export class ResizingService {
 
     saveCurrentImage(): void {
         this.image = this.drawingService.baseCtx.getImageData(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
+        this.imageGrid = this.drawingService.gridCtx.getImageData(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
     }
 
     disableResizer(): void {
@@ -70,6 +73,7 @@ export class ResizingService {
         this.updateCanvasSize();
         this.drawingService.restoreCanvasStyle();
         this.restoreBaseImageData();
+        this.restoreGridImageData();
     }
 
     finalizeResizingEvent(): void {
@@ -82,6 +86,7 @@ export class ResizingService {
 
                 this.drawingService.resetDrawingSurfaceColour();
                 this.restoreBaseImageData();
+                this.restoreGridImageData();
             }),
         );
     }
@@ -93,6 +98,9 @@ export class ResizingService {
 
     restoreBaseImageData(): void {
         this.drawingService.baseCtx.putImageData(this.image, 0, 0);
+    }
+    restoreGridImageData(): void {
+        this.drawingService.gridCtx.putImageData(this.imageGrid, 0, 0);
     }
 
     resetCanvasDimensions(): void {
