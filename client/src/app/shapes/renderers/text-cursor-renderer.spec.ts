@@ -73,11 +73,11 @@ describe('TextCursorRenderer', () => {
 
     it('getRealPosition() should return the start value if alignment is left', () => {
         const START_POSITION = { x: 3, y: 4 };
-        
+
         properties[0].apply(ctxStub);
         shape.text = '1234567890';
         shape.textAlignment = 'left';
-        
+
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
     });
 
@@ -110,7 +110,7 @@ describe('TextCursorRenderer', () => {
     it('getRealPosition() should return the start value if alignment is not left, right nor center', () => {
         const START_POSITION = { x: 3, y: 4 };
         const CURSOR_POSITION = 6;
-        
+
         shape.text = '1234\n1234\n';
         renderer.cursorPosition = CURSOR_POSITION;
         shape.textAlignment = 'start';
