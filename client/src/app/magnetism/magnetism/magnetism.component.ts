@@ -17,7 +17,7 @@ export class MagnetismComponent {
     static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
     isGridActivated: boolean = false;
-    gridCellSize: number = 75;
+    gridCellSize: number = 50;
     opacite: number = 100;
     constructor(
         public selectionManipulator: SelectionManipulatorService,

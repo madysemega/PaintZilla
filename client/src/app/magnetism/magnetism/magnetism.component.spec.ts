@@ -72,6 +72,24 @@ describe('MagnetismComponent', () => {
         component.deleteGrid();
         expect( component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
+    it('drawGrid should draw', () => {
+        component.drawingService.canvasSize.x=100;
+        component.drawingService.canvasSize.y=100;
+        component.drawGrid();
+        expect( component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+    });
+    it('change opacity should change opacity', () => {
+        component.opaciteChange(10);
+        component.isGridActivated=true;
+        expect( component.opacite).toEqual(10);
+        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+    });
+    it('change opacity should change opacity', () => {
+        component.gridCellSizeChange(10);
+        component.isGridActivated=true;
+        expect(component.gridCellSize).toEqual(10);
+        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+    });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
         const dummyAnchor = 5;
