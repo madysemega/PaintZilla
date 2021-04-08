@@ -10,6 +10,7 @@ import { TextService } from './text.service';
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-string-literal
+// tslint:disable:max-file-line-count
 describe('TextService', () => {
     let service: TextService;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
@@ -107,6 +108,28 @@ describe('TextService', () => {
         const clearCanvasSpy = spyOn(TestBed.inject(DrawingService), 'clearCanvas').and.stub();
         service['finalize']();
         expect(clearCanvasSpy).toHaveBeenCalled();
+    });
+
+    it('Cancelling the shape should disable the cursor', () => {
+        const editorDisableCursorSpy = spyOn(service['editor'], 'disableCursor').and.stub();
+        spyOn(TestBed.inject(DrawingService), 'clearCanvas').and.stub();
+        service['cancel']();
+        expect(editorDisableCursorSpy).toHaveBeenCalled();
+    });
+
+    it('Cancelling the shape should clear canvas', () => {
+        spyOn(service['editor'], 'disableCursor').and.stub();
+        const clearCanvasSpy = spyOn(TestBed.inject(DrawingService), 'clearCanvas').and.stub();
+        service['cancel']();
+        expect(clearCanvasSpy).toHaveBeenCalled();
+    });
+
+    it('Cancelling the shape should reset the service', () => {
+        spyOn(service['editor'], 'disableCursor').and.stub();
+        spyOn(TestBed.inject(DrawingService), 'clearCanvas').and.stub();
+        const resetSpy = spyOn<any>(service, 'reset').and.stub();
+        service['cancel']();
+        expect(resetSpy).toHaveBeenCalled();
     });
 
     it('If editor is not empty, a user action should be registered to the history service upon finalization', () => {
@@ -252,6 +275,15 @@ describe('TextService', () => {
         service['isEditing'] = true;
         service.onKeyUp(keyboardEvent);
         expect(deleteSpy).toHaveBeenCalled();
+    });
+
+    it('If editing, delete key should remove character to the right of the cursor in the text', () => {
+        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Escape' });
+        const cancelSpy = spyOn<any>(service, 'cancel').and.stub();
+
+        service['isEditing'] = true;
+        service.onKeyUp(keyboardEvent);
+        expect(cancelSpy).toHaveBeenCalled();
     });
 
     it('If editing, enter key should write \\n to the text', () => {
