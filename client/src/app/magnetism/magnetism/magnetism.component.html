@@ -58,7 +58,12 @@
         <mat-slide-toggle id="toggle" [ngModel] ="isActivated" (ngModelChange)="isActivated = $event; notifyManipulators();"></mat-slide-toggle>
     </div>
     <mat-divider></mat-divider>
-    
+    <div>
+        <mat-label>Grille</mat-label>
+    </div>
+    <div class="center">
+        <mat-slide-toggle id="toggleGrid" [ngModel] ="isGridActivated" (ngModelChange)="toggleGrid()"></mat-slide-toggle>
+    </div>
     <div class="vertical">
         <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
         <mat-slider thumbLabel

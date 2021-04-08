@@ -64,10 +64,6 @@ export class MagnetismComponent {
     }
     toggleGrid(): void {
         this.isGridActivated = !this.isGridActivated;
-        ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isGridActive = this.isGridActivated;
-        ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isGridActive = this.isGridActivated;
         if (this.isGridActivated === true) {
             this.drawGrid();
         } else if (this.isGridActivated === false) {
