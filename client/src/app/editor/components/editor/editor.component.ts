@@ -20,7 +20,6 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class EditorComponent implements AfterViewInit {
     @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
     showColourPicker: boolean;
-
     constructor(
         private route: ActivatedRoute,
         public toolSelector: ToolSelectorService,
@@ -63,7 +62,13 @@ export class EditorComponent implements AfterViewInit {
         });
         this.historyService.clear();
     }
-
+    @HostListener('document:wheel', ['$event'])
+    onWheel(event: WheelEvent): void {
+        if (this.toolSelector.getSelectedTool().key === 'stamp') {
+            console.log('called');
+            this.toolSelector.stampService.rollAngle(event);
+        }
+    }
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         if (this.drawingCreatorService.noDialogsOpen() && this.exportDrawingService.noDialogsOpen() && this.saveDrawingService.noDialogsOpen()) {

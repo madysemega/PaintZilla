@@ -103,7 +103,7 @@ export class ToolSelectorService {
         polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
-        stampService: StampService,
+        public stampService: StampService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
