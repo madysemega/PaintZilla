@@ -86,13 +86,13 @@ export class DrawingService {
         await sleep();
         this.resetDrawingSurfaceColour();
         this.drawInitialImage();
+        this.onDrawingLoaded.emit();
     }
 
     drawInitialImage(): void {
         if (this.initialImage != undefined) {
             this.baseCtx.drawImage(this.initialImage, 0, 0);
         }
-        this.onDrawingLoaded.emit();
     }
 
     async setImageFromBase64(imageSrc: string): Promise<void> {

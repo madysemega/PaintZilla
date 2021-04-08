@@ -24,7 +24,7 @@ export class MainPageComponent {
         this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
     }
 
-    resetCanvasDimensions(): void {
+    async resetCanvasDimensions(): Promise<void> {
         this.resizingService.resetCanvasDimensions();
         this.automaticSavingService.saveDrawingLocally();
     }
