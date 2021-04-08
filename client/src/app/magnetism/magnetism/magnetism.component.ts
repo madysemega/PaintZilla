@@ -25,7 +25,7 @@ export class MagnetismComponent {
         public magnetismService: MagnetismService,
         public drawingService: DrawingService,
     ) {
-        this.magnetismService.isGridActivated.subscribe((value) => {
+        this.magnetismService.isGrid.subscribe((value) => {
             this.isGridActivated = value;
             this.toggleGrid();
         });

@@ -10,7 +10,7 @@ export class MagnetismService {
         this.registerKeyboardShortcuts();
     }
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    isGridActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    isGrid: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -45,7 +45,7 @@ export class MagnetismService {
         this.isActivated.next(!this.isActivated.value);
     }
     toggleGrid(): void {
-        this.isGridActivated.next(!this.isGridActivated.value);
+        this.isGrid.next(!this.isGrid.value);
     }
     incrementGrid() : void {
         this.isIncrement.next(!this.isIncrement.value);
