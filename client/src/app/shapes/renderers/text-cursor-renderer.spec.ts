@@ -61,6 +61,62 @@ describe('TextCursorRenderer', () => {
         expect(renderer['getOffsetsAt'](CURSOR_POSITION, ctxStub).y).toEqual(EXPECTED_Y_OFFSET);
     });
 
+    it('getTextCurrentLineWidth() should return width of full text in no \\n is present', () => {
+        shape.text = '1234567890';
+        expect(renderer['getTextCurrentLineWidth'](ctxStub)).toEqual(ctxStub.measureText(shape.text).width);
+    });
+
+    it('getTextCurrentLineWidth() should return 0 if line is empty', () => {
+        shape.text = '';
+        expect(renderer['getTextCurrentLineWidth'](ctxStub)).toEqual(0);
+    });
+
+    it('getRealPosition() should return the start value if alignment is left', () => {
+        const START_POSITION = { x: 3, y: 4 };
+        
+        properties[0].apply(ctxStub);
+        shape.text = '1234567890';
+        shape.textAlignment = 'left';
+        
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
+    });
+
+    it("getRealPosition() should offset by the current line's length if alignment is right", () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const LINE_WIDTH = 32;
+
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        shape.textAlignment = 'right';
+
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
+            x: START_POSITION.x - LINE_WIDTH,
+            y: START_POSITION.y,
+        });
+    });
+
+    it("getRealPosition() should offset by half the current line's length if alignment is center", () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const LINE_WIDTH = 32;
+
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        shape.textAlignment = 'center';
+
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
+            x: START_POSITION.x - LINE_WIDTH / 2,
+            y: START_POSITION.y,
+        });
+    });
+
+    it('getRealPosition() should return the start value if alignment is not left, right nor center', () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const CURSOR_POSITION = 6;
+        
+        shape.text = '1234\n1234\n';
+        renderer.cursorPosition = CURSOR_POSITION;
+        shape.textAlignment = 'start';
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
+    });
+
     it('clone should return an identical copy', () => {
         const clone = renderer.clone() as TextRenderer;
         expect(clone).toEqual(renderer);
