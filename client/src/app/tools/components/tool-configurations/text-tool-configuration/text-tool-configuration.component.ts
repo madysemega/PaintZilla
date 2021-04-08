@@ -9,6 +9,14 @@ import { TextService } from '@app/tools/services/tools/text/text.service';
 export class TextToolConfigurationComponent {
     constructor(private service: TextService) {}
 
+    get alignment(): CanvasTextAlign {
+        return this.service.getAlignment();
+    }
+
+    set alignment(value: CanvasTextAlign) {
+        this.service.updateAlignment(value);
+    }
+
     get fontIsItalic(): boolean {
         return this.service.getFontIsItalic();
     }

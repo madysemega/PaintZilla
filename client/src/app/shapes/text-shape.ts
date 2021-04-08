@@ -12,6 +12,7 @@ export class TextShape extends Shape {
         public position: Vec2 = TextShape.DEFAULT_POSITION,
         public fontSize: number = TextShape.DEFAULT_FONT_SIZE,
         public fontName: string = TextShape.DEFAULT_FONT_NAME,
+        public textAlignment: CanvasTextAlign = 'left',
     ) {
         super();
     }
