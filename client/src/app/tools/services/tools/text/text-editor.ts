@@ -2,6 +2,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { FontProperty } from '@app/shapes/properties/font-property';
+import { TextAlignmentProperty } from '@app/shapes/properties/text-alignment-property';
 import { TextCursorRenderer } from '@app/shapes/renderers/text-cursor-renderer';
 import { TextRenderer } from '@app/shapes/renderers/text-renderer';
 import { TextShape } from '@app/shapes/text-shape';
@@ -22,6 +23,7 @@ export class TextEditor {
 
     private colourProperty: FillStyleProperty;
     private fontProperty: FontProperty;
+    private textAlignmentProperty: TextAlignmentProperty;
 
     private showCursor: boolean;
     private cursorRenderer: TextCursorRenderer;
@@ -29,7 +31,7 @@ export class TextEditor {
     private initialize(): void {
         this.shape = new TextShape();
         this.initializeProperties();
-        this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty]);
+        this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty, this.textAlignmentProperty]);
 
         this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.DEFAULT_CURSOR_POSITION);
     }
@@ -42,6 +44,7 @@ export class TextEditor {
         this.ctx.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
         this.fontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName, DEFAULT_IS_BOLD, DEFAULT_IS_ITALIC);
+        this.textAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
     }
 
     reset(position: Vec2 = { x: 0, y: 0 }): void {
@@ -50,6 +53,15 @@ export class TextEditor {
         this.shape.text = TextShape.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
+    }
+
+    setAlignment(value: CanvasTextAlign): void {
+        this.textAlignmentProperty.value = value;
+        this.shape.textAlignment = value;
+    }
+
+    getAlignment(): CanvasTextAlign {
+        return this.shape.textAlignment;
     }
 
     setFontIsItalic(value: boolean): void {

@@ -43,6 +43,14 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    updateAlignment(value: CanvasTextAlign): void {
+        this.editor.setAlignment(value);
+    }
+
+    getAlignment(): CanvasTextAlign {
+        return this.editor.getAlignment();
+    }
+
     updateFontIsItalic(value: boolean): void {
         this.editor.setFontIsItalic(value);
     }
