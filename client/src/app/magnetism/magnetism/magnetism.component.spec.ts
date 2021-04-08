@@ -3,6 +3,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
@@ -17,16 +19,18 @@ describe('MagnetismComponent', () => {
     let component: MagnetismComponent;
     let fixture: ComponentFixture<MagnetismComponent>;
     let rectangleSelectionCreator: RectangleSelectionCreatorService;
-
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
-
+    let canvasTestHelper: CanvasTestHelper;
+    let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let gridCtxStub: CanvasRenderingContext2D;
+    let canvas: HTMLCanvasElement;
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
-
+        
         TestBed.configureTestingModule({
             imports: [MatMenuModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [MagnetismComponent],
-            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }, { provide: DrawingService, useValue: drawServiceSpy }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
@@ -35,8 +39,14 @@ describe('MagnetismComponent', () => {
         fixture = TestBed.createComponent(MagnetismComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         component.toolSelector = TestBed.inject(ToolSelectorService);
         rectangleSelectionCreator = TestBed.inject(RectangleSelectionCreatorService);
+        canvasTestHelper = TestBed.inject(CanvasTestHelper);
+        gridCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
+        canvas = canvasTestHelper.canvas;
+        component['drawingService'].gridCtx = gridCtxStub;
+        component['drawingService'].canvas = canvas;
     });
 
     it('should create', () => {
@@ -47,6 +57,20 @@ describe('MagnetismComponent', () => {
         component.isActivated = true;
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
+    });
+    it('toogle the grid should draw ', () => {
+        component.isGridActivated = true;
+        component.toggleGrid();
+        expect(component.drawGrid()).toHaveBeenCalled();
+    });
+    it('toogle the grid with no activate should not draw ', () => {
+        component.isGridActivated = false;
+        component.toggleGrid();
+        expect(component.deleteGrid()).toHaveBeenCalled();
+    });
+    it('delete grid should remove grid ', () => {
+        component.deleteGrid();
+        expect( component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
