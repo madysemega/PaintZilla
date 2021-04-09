@@ -33,11 +33,11 @@ export class StampService extends ShapeTool implements ISelectableTool {
         super(drawingService);
         this.key = 'stamp';
         this.imagePaths = [
-            './assets/icons/black-stamp.svg',
-            './assets/icons/stamp1.svg',
-            './assets/icons/stamp2.svg',
-            './assets/icons/stamp3.svg',
-            './assets/icons/stamp4.svg',
+            './assets/icons/spade-symbol.svg',
+            './assets/icons/heart.svg',
+            './assets/icons/clubs.svg',
+            './assets/icons/diamond.svg',
+            './assets/icons/cancel.svg',
         ];
         this.shape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
         this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
@@ -78,7 +78,6 @@ export class StampService extends ShapeTool implements ISelectableTool {
     rollAngle(event: WheelEvent): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         let degreesToAdd = 0;
-        if (!this.angle) this.angle = 0;
         const scrollValue = event.deltaY;
         if (scrollValue > 0) {
             degreesToAdd = event.altKey ? MIN_DEGREES_INCREMENT : MAX_DEGREES_INCREMENT;
