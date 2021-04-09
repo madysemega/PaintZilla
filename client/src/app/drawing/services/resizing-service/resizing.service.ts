@@ -6,6 +6,7 @@ import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +19,7 @@ export class ResizingService {
     image: ImageData;
     imageGrid: ImageData;
 
-    constructor(public drawingService: DrawingService, private historyService: HistoryService) {
+    constructor(public drawingService: DrawingService, private historyService: HistoryService, public magnetism:MagnetismService) {
         this.canvasResize = this.drawingService.canvasResize;
     }
 
@@ -87,6 +88,8 @@ export class ResizingService {
                 this.drawingService.resetDrawingSurfaceColour();
                 this.restoreBaseImageData();
                 this.restoreGridImageData();
+                this.magnetism.toggleGrid();
+                this.magnetism.toggleGrid();
             }),
         );
     }
