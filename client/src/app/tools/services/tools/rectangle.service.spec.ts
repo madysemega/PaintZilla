@@ -8,6 +8,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { RectangleService } from './rectangle.service';
 
 // tslint:disable: no-any
@@ -22,6 +23,7 @@ describe('RectangleService', () => {
     let keyboardSpaceEvent: KeyboardEvent;
     let canvasTestHelper: CanvasTestHelper;
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCtxStub: CanvasRenderingContext2D;
@@ -36,8 +38,12 @@ describe('RectangleService', () => {
     let canvasPosition: Vec2;
 
     beforeEach(() => {
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
-        history = new HistoryService();
+        history = new HistoryService(keyboardServiceStub);
         colourService = new ColourService({} as ColourPickerService);
 
         TestBed.configureTestingModule({

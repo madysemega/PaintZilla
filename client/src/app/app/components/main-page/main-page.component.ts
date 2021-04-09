@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 
 @Component({
@@ -10,7 +11,12 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    constructor(private resizingService: ResizingService, public dialog: MatDialog, keyboardService: KeyboardService) {
+    constructor(
+        private resizingService: ResizingService,
+        public dialog: MatDialog,
+        keyboardService: KeyboardService,
+        private automaticSavingService: AutomaticSavingService,
+    ) {
         keyboardService.context = 'main-page';
     }
 
@@ -18,7 +24,16 @@ export class MainPageComponent {
         this.dialog.open(ImageNavigationComponent, { panelClass: 'custom-modalbox' });
     }
 
-    resetCanvasDimensions(): void {
+    async resetCanvasDimensions(): Promise<void> {
         this.resizingService.resetCanvasDimensions();
+        this.automaticSavingService.saveDrawingLocally();
+    }
+
+    drawingIsSavedLocally(): boolean {
+        return localStorage.length !== 0;
+    }
+
+    loadMostRecentDrawing(): void {
+        this.automaticSavingService.loadMostRecentDrawing();
     }
 }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
@@ -31,8 +32,11 @@ export class DrawingComponent implements AfterViewInit {
         private drawingCreatorService: DrawingCreatorService,
     ) {
         this.wasResizing = false;
-        this.drawingCreatorService.drawingRestored.subscribe(() => {
-            this.drawingService.resetDrawingSurface();
+        this.drawingCreatorService.drawingRestored.subscribe(async () => {
+            this.drawingService.resetDrawingSurfaceDimensions();
+            await sleep();
+            this.drawingService.resetDrawingSurfaceColour();
+            this.drawingService.onDrawingLoaded.emit();
         });
 
         this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {

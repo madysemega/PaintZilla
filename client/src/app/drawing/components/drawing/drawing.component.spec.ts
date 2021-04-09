@@ -15,6 +15,7 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { DrawingComponent } from './drawing.component';
 
 class ToolStub extends Tool {}
@@ -31,6 +32,8 @@ describe('DrawingComponent', () => {
     let creatorStub: SelectionCreatorService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<DrawingCreatorService>;
     let drawingRestoredStub: EventEmitter<void>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+
     beforeEach(async(() => {
         drawingRestoredStub = new EventEmitter<void>();
         toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'fromKeyboardShortcut', 'getActiveSelectionTool']);
@@ -44,9 +47,10 @@ describe('DrawingComponent', () => {
         drawingStub = new DrawingService(historyServiceStub);
         resizingServiceStub = new ResizingService(drawingStub, historyServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [DrawingComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
@@ -55,6 +59,7 @@ describe('DrawingComponent', () => {
                 { provide: ToolSelectorService, useValue: toolSelectorStub },
                 { provide: MatDialogRef, useValue: {} },
                 { provide: DrawingCreatorService, useValue: drawingCreatorServiceSpy },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -77,9 +82,9 @@ describe('DrawingComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should call drawingService.resetDrawingSurface on drawingRestored emit', () => {
-        const resetDrawingSurfaceStub = spyOn(drawingStub, 'resetDrawingSurface').and.callThrough();
+        const resetDrawingSurfaceDimensionStub = spyOn(drawingStub, 'resetDrawingSurfaceDimensions').and.callThrough();
         drawingCreatorServiceSpy.drawingRestored.emit();
-        expect(resetDrawingSurfaceStub).toHaveBeenCalled();
+        expect(resetDrawingSurfaceDimensionStub).toHaveBeenCalled();
     });
 
     it("onMouseMove(): should call the resizingService's resizeCanvas method when receiving a mouse move event and the canvas is resizing", () => {

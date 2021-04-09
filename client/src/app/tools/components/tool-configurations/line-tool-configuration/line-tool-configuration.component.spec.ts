@@ -9,6 +9,7 @@ import { MaterialModule } from '@app/material.module';
 import { LineType } from '@app/shapes/types/line-type';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { LineToolConfigurationComponent } from './line-tool-configuration.component';
 
 describe('LineToolConfigurationComponent', () => {
@@ -29,15 +30,21 @@ describe('LineToolConfigurationComponent', () => {
 
     let component: LineToolConfigurationComponent;
     let fixture: ComponentFixture<LineToolConfigurationComponent>;
+
     let lineServiceStub: jasmine.SpyObj<LineService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
         lineServiceStub = jasmine.createSpyObj('LineService', ['setLineType', 'setJointsDiameter']);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
-            providers: [{ provide: LineService, useValue: lineServiceStub }],
+            providers: [
+                { provide: LineService, useValue: lineServiceStub },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {

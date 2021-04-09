@@ -73,6 +73,7 @@ export class StampService extends ShapeTool implements ISelectableTool {
     }
     changeAngle(degrees: number): void {
         this.angle = (degrees * Math.PI) / PI_TO_DEGREE;
+        this.degree = degrees;
     }
     rollAngle(event: WheelEvent): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);

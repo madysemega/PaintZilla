@@ -6,7 +6,9 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { of } from 'rxjs';
 
 // tslint:disable:no-any
@@ -14,6 +16,8 @@ describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
     let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
+    let automaticSavingService: AutomaticSavingService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let canvasTestHelper: CanvasTestHelper;
     let baseCtxStub: CanvasRenderingContext2D;
@@ -28,9 +32,14 @@ describe('DrawingCreatorService', () => {
 
     let keyboardEvent: KeyboardEvent;
     beforeEach(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceSpy = new DrawingService(historyServiceStub);
         resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
+        automaticSavingService = new AutomaticSavingService(drawingServiceSpy, historyServiceStub);
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['clear']);
 
@@ -46,6 +55,7 @@ describe('DrawingCreatorService', () => {
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceSpy },
                 { provide: HistoryService, useValue: historyServiceStub },
+                { provide: AutomaticSavingService, useValue: automaticSavingService },
             ],
         });
 
@@ -156,6 +166,15 @@ describe('DrawingCreatorService', () => {
         drawingServiceSpy.canvasIsEmpty = false;
         service.createNewDrawing();
         expect(historyServiceStub.clear).toHaveBeenCalled();
+    });
+
+    it('createNewDrawing() should call saveDrawingLocally()', () => {
+        matDialogRefSpy.afterClosed.and.returnValue(of('save'));
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        spyOn(automaticSavingService, 'saveDrawingLocally').and.stub();
+        drawingServiceSpy.canvasIsEmpty = false;
+        service.createNewDrawing();
+        expect(automaticSavingService.saveDrawingLocally).toHaveBeenCalled();
     });
 
     it('noDialogsOpen should return true if there are no dialogs', () => {

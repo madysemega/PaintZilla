@@ -96,6 +96,10 @@ export class IconsMetaData {
                 name: 'black-stamp',
                 path: './assets/icons/black-stamp.svg',
             },
+            {
+                name: 'text-format',
+                path: './assets/icons/text-format.svg',
+            },
         ];
     }
 }

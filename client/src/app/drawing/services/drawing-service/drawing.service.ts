@@ -18,6 +18,7 @@ export class DrawingService {
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
     onDrawingSurfaceResize: EventEmitter<Vec2>;
+    onDrawingLoaded: EventEmitter<boolean>;
 
     initialSize: Vec2;
     initialImage: CanvasImageSource | undefined;
@@ -85,6 +86,7 @@ export class DrawingService {
         await sleep();
         this.resetDrawingSurfaceColour();
         this.drawInitialImage();
+        this.onDrawingLoaded.emit();
     }
 
     drawInitialImage(): void {
@@ -104,8 +106,24 @@ export class DrawingService {
         this.resetDrawingSurface();
     }
 
+    async setImageSavedLocally(imageSrc: string): Promise<void> {
+        const image = new Image();
+        image.src = imageSrc;
+
+        return new Promise(
+            (image.onload = async () => {
+                this.initialSize.x = image.width;
+                this.initialSize.y = image.height;
+                this.initialImage = image;
+                this.resetDrawingSurface();
+            }),
+        );
+    }
+
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => this.resetDrawingSurface());
+
+        this.onDrawingLoaded = new EventEmitter();
 
         this.onDrawingSurfaceResize = new EventEmitter();
         this.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
