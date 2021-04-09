@@ -9,8 +9,8 @@ export class MagnetismService {
     constructor(private keyboardService: KeyboardService) {
         this.registerKeyboardShortcuts();
     }
-    isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isGrid: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
