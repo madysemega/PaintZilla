@@ -1,48 +1,50 @@
-<div id="border">
-    <div class="container">
-        <div class="colour-section">
-            <mat-label>Couleur</mat-label>
-            <app-colours class="vertical"></app-colours>
+<div class="container">
+    <div class="colour-section">
+        <mat-label>Couleur</mat-label>
+        <app-colours class="vertical"></app-colours>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="vertical">
+        <mat-label>Historique</mat-label>
+        <div class="center">
+            <app-history-controls></app-history-controls>
         </div>
+    </div>
 
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <div class="vertical">
-            <mat-label>Historique</mat-label>
-            <div class="center">
-                <app-history-controls></app-history-controls>
-            </div>
+    <div>
+        <mat-label>Selection</mat-label>
+        <div class="center">
+            <app-clipboard></app-clipboard>
         </div>
+    </div>
 
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <div>
-            <mat-label>Selection</mat-label>
-            <div class="center">
-                <app-clipboard></app-clipboard>
-            </div>
-        </div>
+    <div>
+        <mat-label>Magnetisme</mat-label>
+        <app-magnetism></app-magnetism>
+    </div>
 
-        <mat-divider></mat-divider>
-        
-        <div>
-            <mat-label>Magnetisme</mat-label>
-            <app-magnetism></app-magnetism>
-            <div class="center">
-            </div>
-        </div>
+    <mat-divider></mat-divider>
 
-        <mat-divider></mat-divider>
-
-        <div>
-            <app-ellipse-tool-configuration   class="vertical" *ngIf="selectedToolName === 'ellipse'"></app-ellipse-tool-configuration>
-            <app-pencil-tool-configuration    class="vertical" *ngIf="selectedToolName === 'pencil'"></app-pencil-tool-configuration>
-            <app-eraser-tool-configuration    class="vertical" *ngIf="selectedToolName === 'eraser'"></app-eraser-tool-configuration>
-            <app-spray-tool-configuration     class="vertical" *ngIf="selectedToolName === 'spray'"></app-spray-tool-configuration>
-            <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'"></app-rectangle-tool-configuration>
-            <app-pipette-tool-configuration   class="vertical" *ngIf="selectedToolName === 'pipette'"></app-pipette-tool-configuration>
-            <app-line-tool-configuration      class="vertical" *ngIf="selectedToolName === 'line'"></app-line-tool-configuration>
-            <app-polygon                      class="vertical" *ngIf="selectedToolName === 'polygon'"></app-polygon>
-            <app-text-tool-configuration      class="vertical" *ngIf="selectedToolName === 'text'"></app-text-tool-configuration>
-        </div>
-</div>
+    <div>
+        <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'">
+        </app-ellipse-tool-configuration>
+        <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'">
+        </app-pencil-tool-configuration>
+        <app-eraser-tool-configuration class="vertical" *ngIf="selectedToolName === 'eraser'">
+        </app-eraser-tool-configuration>
+        <app-spray-tool-configuration class="vertical" *ngIf="selectedToolName === 'spray'">
+        </app-spray-tool-configuration>
+        <app-rectangle-tool-configuration class="vertical" *ngIf="selectedToolName === 'rectangle'">
+        </app-rectangle-tool-configuration>
+        <app-pipette-tool-configuration class="vertical" *ngIf="selectedToolName === 'pipette'">
+        </app-pipette-tool-configuration>
+        <app-line-tool-configuration class="vertical" *ngIf="selectedToolName === 'line'"></app-line-tool-configuration>
+        <app-polygon class="vertical" *ngIf="selectedToolName === 'polygon'"></app-polygon>
+        <app-text-tool-configuration class="vertical" *ngIf="selectedToolName === 'text'"></app-text-tool-configuration>
+    </div>
