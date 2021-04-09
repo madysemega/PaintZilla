@@ -37,10 +37,10 @@ export class MagnetismComponent {
             this.notifyManipulators();
         });
         this.magnetismService.isIncrement.subscribe((value) => {
-            //this.incrementGrid();
+            this.incrementGrid();
         });
         this.magnetismService.isDecrement.subscribe((value) => {
-            //this.decrementGrid();
+            this.decrementGrid();
         });
     }
     notifyManipulators(): void {
