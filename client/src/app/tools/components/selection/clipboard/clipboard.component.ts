@@ -12,7 +12,6 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 })
 export class ClipboardComponent {
     constructor(public clipboardService: ClipboardService, public historyService: HistoryService, public toolSelector: ToolSelectorService) {
-        // console.log(manipulator.isReversedX);
     }
 
     isSelectionBeingManipulated(): boolean {
@@ -27,24 +26,32 @@ export class ClipboardComponent {
     }
 
     copy(): void {
-        const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-        creator.copy();
+        if (this.isSelectionBeingManipulated()) {
+            const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+            creator.copy();
+        }
     }
 
     cut(): void {
-        const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-        creator.cut();
+        if (this.isSelectionBeingManipulated()) {
+            const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+            creator.cut();
+        }
     }
 
     paste(): void {
-        this.toolSelector.selectTool(this.clipboardService.copyOwner.key);
-        this.clipboardService.paste();
-        this.historyService.isLocked = true;
+        if (!this.isClipboardEmpty()) {
+            this.toolSelector.selectTool(this.clipboardService.copyOwner.key);
+            this.clipboardService.paste();
+            this.historyService.isLocked = true;
+        }
     }
 
     delete(): void {
-        const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
-        creator.selectionManipulator.delete();
+        if (this.isSelectionBeingManipulated()) {
+            const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
+            creator.selectionManipulator.delete();
+        }
     }
 
     selectTheEntireCanvas(): void {
