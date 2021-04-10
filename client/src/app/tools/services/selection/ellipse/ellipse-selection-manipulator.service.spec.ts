@@ -38,7 +38,7 @@ describe('EllipseSelectionManipulatorService', () => {
     let singleMoveSpy: jasmine.Spy<any>;
     let getMousePosOnDiagonalSpy: jasmine.Spy<any>;
     let registerActionSpy: jasmine.Spy<any>;
-
+  
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawServiceSpy.canvasSize = { x: 0, y: 0 };

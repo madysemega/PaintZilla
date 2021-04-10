@@ -270,12 +270,7 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
-        const toolName = 'rectangle-selection';
-        spyOn(rectangleSelectionCreatorService, 'selectEntireCanvas').and.returnValue();
-        component.selectTheEntireCanvas();
-        expect(component.selectedToolName).toBe(toolName);
-    });
+    
 
     it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = '<Outil inconnu>';

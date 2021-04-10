@@ -15,6 +15,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardComponent } from './clipboard.component';
 
@@ -23,6 +24,13 @@ import { ClipboardComponent } from './clipboard.component';
 // tslint:disable:no-empty
 // tslint:disable:max-file-line-count
 // tslint:disable:no-unused-expression
+class RectangleCreatorMock{
+
+    selectEntireCanvas() : void{
+    
+    }
+}
+
 describe('ClipboardComponent', () => {
     let component: ClipboardComponent;
     let fixture: ComponentFixture<ClipboardComponent>;
@@ -48,6 +56,8 @@ describe('ClipboardComponent', () => {
             providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
+
+       
 
         colourServiceStub = new ColourService({} as ColourPickerService);
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
@@ -115,21 +125,38 @@ describe('ClipboardComponent', () => {
         expect(component.isClipboardEmpty()).toEqual(false);
     });
 
-    it('copy should call copy from the selectionCreator', () => {
-        const copySpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'copy').and.callThrough();
+    it('copy should call copy from the selectionCreator  if the currently selected tool is a selection tool', () => {
         spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        const copySpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'copy').and.callThrough();
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(true);
         component.copy();
         expect(copySpy).toHaveBeenCalled();
     });
 
-    it('cut should call cut from the selectionCreator', () => {
-        const cutSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'cut').and.callThrough().and.returnValue(undefined);
+    it('copy should not call copy from the selectionCreator  if the currently selected tool is not a selection tool', () => {
+        const copySpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'copy').and.callThrough();
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(false);
+        component.copy();
+        expect(copySpy).not.toHaveBeenCalled();
+    });
+
+    it('cut should call cut from the selectionCreator if the currently selected tool is a selection tool', () => {
         spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        const cutSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'cut').and.callThrough().and.returnValue(undefined);
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(true);
         component.cut();
         expect(cutSpy).toHaveBeenCalled();
     });
 
-    it('pasting should lock the history', () => {
+    it('cut should not call cut from the selectionCreator if the currently selected tool is not a selection tool', () => {
+        const cutSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionCreatorService, 'cut').and.callThrough().and.returnValue(undefined);
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(false);
+        component.cut();
+        expect(cutSpy).not.toHaveBeenCalled();
+    });
+
+    it('pasting should lock the history if clipboard is not empty', () => {
+        spyOn<any>(component, 'isClipboardEmpty').and.returnValue(false);
         spyOn<any>(clipboardService, 'paste').and.callThrough().and.returnValue(undefined);
         component.historyService = historyServiceStub;
         component.clipboardService.copyOwner = ellipseSelectionCreatorService;
@@ -137,10 +164,40 @@ describe('ClipboardComponent', () => {
         expect(historyServiceStub.isLocked).toEqual(true);
     });
 
-    it('delete should call delete from the selection manipulator', () => {
+    it('pasting should not lock the history if clipboard is empty', () => {
+        spyOn<any>(component, 'isClipboardEmpty').and.returnValue(true);
+        spyOn<any>(clipboardService, 'paste').and.callThrough().and.returnValue(undefined);
+        component.historyService = historyServiceStub;
+        component.clipboardService.copyOwner = ellipseSelectionCreatorService;
+        component.paste();
+        expect(historyServiceStub.isLocked).toEqual(false);
+    });
+
+    it('delete should call delete from the selection manipulator if the currently selected tool is a selection tool', () => {
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(true);
         const deleteSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionManipulatorService, 'delete').and.returnValue(undefined);
         spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
         component.delete();
         expect(deleteSpy).toHaveBeenCalled();
+    });
+
+    it('delete should not call delete from the selection manipulator if the currently selected tool is not a selection tool ', () => {
+        spyOn<any>(component, 'isSelectionToolCurrentlySelected').and.returnValue(false);
+        const deleteSpy: jasmine.Spy<any> = spyOn<any>(ellipseSelectionManipulatorService, 'delete').and.returnValue(undefined);
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        component.delete();
+        expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
+   it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+        let dummyRectangleCreator: RectangleCreatorMock = new RectangleCreatorMock();
+        spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(dummyRectangleCreator as RectangleSelectionCreatorService);
+        component.selectTheEntireCanvas();
+    });
+
+    it('isSelectionToolCurrentlySelected should call getSelectedTool', () => {
+        let getSelectedToolSpy: jasmine.Spy<any> = spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        component.isSelectionToolCurrentlySelected();
+        expect(getSelectedToolSpy).toHaveBeenCalled();
     });
 });

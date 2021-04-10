@@ -64,7 +64,6 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('document:wheel', ['$event'])
     onWheel(event: WheelEvent): void {
         if (this.toolSelector.getSelectedTool().key === 'stamp' && this.isInCanvas) {
-            console.log('called');
             this.toolSelector.stampService.rollAngle(event);
         }
     }
