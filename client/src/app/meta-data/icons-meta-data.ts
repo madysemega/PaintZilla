@@ -93,6 +93,10 @@ export class IconsMetaData {
                 path: './assets/icons/polygon-contoured-and-filled.svg',
             },
             {
+                name: 'black-stamp',
+                path: './assets/icons/black-stamp.svg',
+            },
+            {
                 name: 'text-format',
                 path: './assets/icons/text-format.svg',
             },

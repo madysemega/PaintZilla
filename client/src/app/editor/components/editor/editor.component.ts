@@ -20,7 +20,6 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class EditorComponent implements AfterViewInit {
     @ViewChild('configurationPanelDrawer') configurationPanelDrawer: MatDrawer;
     showColourPicker: boolean;
-
     constructor(
         private route: ActivatedRoute,
         public toolSelector: ToolSelectorService,

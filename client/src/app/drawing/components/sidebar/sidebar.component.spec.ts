@@ -44,6 +44,7 @@ import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { StampService } from '@app/tools/services/tools/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SidebarComponent } from './sidebar.component';
@@ -74,6 +75,7 @@ describe('SidebarComponent', () => {
     let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
     let textServiceStub: TextService;
+    let stampServiceStub: StampService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
     let ellipseSelectionManipulatorService: EllipseSelectionManipulatorService;
@@ -122,6 +124,7 @@ describe('SidebarComponent', () => {
         saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         textServiceStub = new TextService(drawingStub, colourServiceStub, historyServiceStub, keyboardServiceStub);
+        stampServiceStub = new StampService(drawingStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
@@ -174,6 +177,7 @@ describe('SidebarComponent', () => {
             polygonService,
             ellipseSelectionCreatorService,
             rectangleSelectionCreatorService,
+            stampServiceStub,
             textServiceStub,
         );
 

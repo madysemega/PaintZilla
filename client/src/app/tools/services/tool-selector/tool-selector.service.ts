@@ -17,6 +17,7 @@ import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { StampService } from '@app/tools/services/tools/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -189,6 +190,7 @@ export class ToolSelectorService {
         polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
+        public stampService: StampService,
         textService: TextService,
     ) {
         this.tools.set(pencilService.key, {
@@ -238,6 +240,12 @@ export class ToolSelectorService {
             icon: 'polygon-shape',
             keyboardShortcut: '3',
             tool: polygonService,
+        });
+        this.tools.set(stampService.key, {
+            displayName: 'Étampe',
+            icon: 'black-stamp',
+            keyboardShortcut: 'd',
+            tool: stampService,
         });
         this.tools.set(rectangleSelectionCreatorService.key, {
             displayName: 'Sélection par rectangle',
