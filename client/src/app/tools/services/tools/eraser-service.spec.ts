@@ -4,6 +4,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { EraserService } from './eraser-service';
 
 // tslint:disable:no-any
@@ -20,13 +21,18 @@ describe('EraserService', () => {
 
     let drawVerticesSpy: jasmine.Spy<any>;
     let historyStub: HistoryService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let canvasPosition: Vec2;
     let canvas: HTMLCanvasElement;
 
     beforeEach(() => {
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
-        historyStub = new HistoryService();
+        historyStub = new HistoryService(keyboardServiceStub);
 
         TestBed.configureTestingModule({
             providers: [

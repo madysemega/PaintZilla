@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { Vec2 } from '@app/app/classes/vec2';
+// import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable:no-any
@@ -12,6 +15,7 @@ describe('DrawingService', () => {
     let service: DrawingService;
     let canvasTestHelper: CanvasTestHelper;
     let historyServiceStub: HistoryService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     let baseCtxDrawImageSpy: jasmine.Spy<any>;
     let resetDrawingSurfaceSpy: jasmine.Spy<any>;
@@ -20,7 +24,11 @@ describe('DrawingService', () => {
     const WIDTH_2 = 10;
 
     beforeEach(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],
             providers: [{ provide: HistoryService, useValue: historyServiceStub }],
@@ -49,6 +57,26 @@ describe('DrawingService', () => {
         const pixelBuffer = new Uint32Array(service.baseCtx.getImageData(0, 0, service.canvas.width, service.canvas.height).data.buffer);
         const hasColoredPixels = pixelBuffer.some((color) => color !== 0);
         expect(hasColoredPixels).toBeFalse();
+    });
+
+    it('clearCanvas() should not affect the portion outside the one passed in param if there is any', () => {
+        const size = 1000;
+        service.canvas.width = size;
+        service.canvas.height = size;
+        service.baseCtx.fillStyle = 'blue';
+        service.baseCtx.fillRect(0, 0, service.canvasSize.x, service.canvasSize.y);
+        const clearArea: Vec2 = { x: 200, y: 200 };
+        service.clearCanvas(service.baseCtx, clearArea);
+        const pixelBuffer = new Uint32Array(
+            service.baseCtx.getImageData(
+                clearArea.x + 1,
+                clearArea.y + 1,
+                service.canvasSize.x - clearArea.x - 1,
+                service.canvasSize.y - clearArea.y - 1,
+            ).data.buffer,
+        );
+        const hasPixelWithoutColor = pixelBuffer.some((color) => color === 0);
+        expect(hasPixelWithoutColor).toBeFalse();
     });
 
     it('isCanvasEmpty should be true if canvas is empty', () => {
@@ -89,6 +117,14 @@ describe('DrawingService', () => {
 
         service.setImageFromBase64(IMAGE_SRC_BASE_64);
         expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
+    });
+
+    it('setImageSavedLocally() should reset the drawing surface', async () => {
+        const IMAGE_SRC_BASE_64 = '1234567890';
+
+        service.setImageSavedLocally(IMAGE_SRC_BASE_64).then(() => {
+            expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
+        });
     });
 
     it('drawInitialImage() should draw the initial image if there is one', () => {

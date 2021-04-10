@@ -1,5 +1,7 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
@@ -34,9 +36,10 @@ describe('ColoursComponent', () => {
         colourServiceSpy.getSecondaryColour.and.returnValue(DEFAULT_COLOUR);
         colourServiceSpy.getPreviousColours.and.returnValue([DEFAULT_COLOUR]);
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule, CommonModule],
             declarations: [ColoursComponent],
             providers: [{ provide: ColourService, useValue: colourServiceSpy }],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
     beforeEach(async(() => {

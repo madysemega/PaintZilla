@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ILineWidthChangeListener } from '@app/app/classes/line-width-change-listener';
 import { ResizableTool } from '@app/app/classes/resizable-tool';
+import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { CursorType } from '@app/drawing/classes/cursor-type';
@@ -21,15 +22,19 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     private strokeWidthProperty: StrokeWidthProperty;
     private shape: VerticesShape;
     mouseRightDown: boolean = false;
-    zoomWidth: number = 10;
-    circleWidth: number = 6;
-    zoomSize: number = 200;
-    rectangleWidth: number = 3;
-    rectangleSize: number = 20;
+
     zoomctx: CanvasRenderingContext2D;
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
     outputCouleur: string;
+
+    readonly RECTANGLE_WIDTH: number = 3;
+    readonly RECTANGLE_SIZE: number = 20;
+    readonly ZOOM_WIDTH: number = 10;
+    readonly CIRCLE_WIDTH: number = 6;
+    readonly ZOOM_SIZE: number = 201;
+    readonly ZOOM_CENTER_POS: number = 8;
+
     constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
         this.key = 'pipette';
@@ -38,6 +43,17 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
 
         this.shape = new VerticesShape([]);
+    }
+
+    setCtx(ctx: CanvasRenderingContext2D): void {
+        this.zoomctx = ctx;
+
+        this.zoomctx.save();
+        this.fillTheEntireCanvasInBlue();
+        this.fillTheCircleInWhite();
+        this.drawHorizontalLines();
+        this.drawVerticalLines();
+        this.zoomctx.restore();
     }
 
     onLineWidthChanged(): void {
@@ -87,50 +103,157 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getPositionFromMouse(event);
         this.shape.vertices.push(mousePosition);
-        const zoomCenterPos = 8;
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
+
+        this.getCouleur(mousePosition);
+
+        this.zoomctx.save();
+
+        if (
+            this.drawingService.canvasSize.x > mousePosition.x &&
+            mousePosition.x > 0 &&
+            this.drawingService.canvasSize.y > mousePosition.y &&
+            mousePosition.y > 0
+        ) {
+            this.extractAPortionOfCanvas(mousePosition);
+            this.fillTheEntireCanvasInBlue();
+            this.pasteThePortionOfCanvas();
+            this.drawHorizontalLines();
+            this.drawVerticalLines();
+        } else {
+            this.fillTheCircleInWhite();
+            this.drawHorizontalLines();
+            this.drawVerticalLines();
+        }
+
+        this.drawPixelSelector();
+        this.zoomctx.restore();
+    }
+
+    private clearVertices(): void {
+        this.shape.clear();
+    }
+
+    getCouleur(mousePosition: Vec2): void {
         this.couleur = this.drawingService.baseCtx.getImageData(
-            mousePosition.x - this.rectangleWidth,
-            mousePosition.y - this.rectangleWidth,
+            mousePosition.x - this.RECTANGLE_WIDTH,
+            mousePosition.y - this.RECTANGLE_WIDTH,
             1,
             1,
         ).data;
         const R = Colour.toHex(this.couleur[0]);
         const G = Colour.toHex(this.couleur[1]);
         const B = Colour.toHex(this.couleur[2]);
+
         this.outputCouleur = '#' + R + G + B;
-        if (this.drawingService.canvasSize.x > mousePosition.x && this.drawingService.canvasSize.y > mousePosition.y) {
-            this.cerclePreview = this.drawingService.baseCtx.getImageData(
-                mousePosition.x - zoomCenterPos,
-                mousePosition.y - zoomCenterPos,
-                this.zoomWidth,
-                this.zoomWidth,
-            );
-            this.zoomctx.fillStyle = 'white';
-            this.zoomctx.fillRect(0, 0, this.zoomSize, this.zoomSize);
-            this.zoomctx.putImageData(this.cerclePreview, this.zoomSize / 2, this.zoomSize / 2);
-            this.zoomctx.imageSmoothingEnabled = false;
-            this.zoomctx.drawImage(
-                this.zoomctx.canvas,
-                this.zoomSize / 2,
-                this.zoomSize / 2,
-                this.zoomWidth,
-                this.zoomWidth,
-                0,
-                0,
-                this.zoomSize,
-                this.zoomSize,
-            );
-            this.zoomctx.beginPath();
-            this.zoomctx.lineWidth = this.rectangleWidth;
-            this.zoomctx.arc(this.zoomSize / 2, this.zoomSize / 2, this.zoomSize / 2, 0, 2 * Math.PI);
-            this.zoomctx.clip();
-            this.zoomctx.strokeRect(this.zoomSize / 2, this.zoomSize / 2, this.rectangleSize, this.rectangleSize);
-            this.zoomctx.lineWidth = this.circleWidth;
-            this.zoomctx.stroke();
-        }
     }
-    private clearVertices(): void {
-        this.shape.clear();
+
+    extractAPortionOfCanvas(mousePosition: Vec2): void {
+        this.cerclePreview = this.drawingService.baseCtx.getImageData(
+            mousePosition.x - this.ZOOM_CENTER_POS,
+            mousePosition.y - this.ZOOM_CENTER_POS,
+            this.ZOOM_WIDTH + 1,
+            this.ZOOM_WIDTH + 1,
+        );
+    }
+
+    fillTheCircleInWhite(): void {
+        this.zoomctx.beginPath();
+        this.zoomctx.arc(this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, 0, 2 * Math.PI);
+        this.zoomctx.clip();
+        this.zoomctx.fillStyle = 'white';
+        this.zoomctx.fillRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.closePath();
+    }
+
+    fillTheEntireCanvasInBlue(): void {
+        this.zoomctx.clearRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.save();
+        this.zoomctx.beginPath();
+        this.zoomctx.fillStyle = 'rgba(40, 82, 145, 0.932)';
+        this.zoomctx.fillRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.closePath();
+        this.zoomctx.restore();
+    }
+
+    pasteThePortionOfCanvas(): void {
+        this.zoomctx.beginPath();
+        this.zoomctx.lineWidth = this.RECTANGLE_WIDTH;
+        this.zoomctx.arc(this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, 0, 2 * Math.PI);
+        this.zoomctx.clip();
+        this.zoomctx.putImageData(this.cerclePreview, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2);
+        this.zoomctx.imageSmoothingEnabled = false;
+        this.zoomctx.drawImage(
+            this.zoomctx.canvas,
+            this.ZOOM_SIZE / 2,
+            this.ZOOM_SIZE / 2,
+            this.ZOOM_WIDTH,
+            this.ZOOM_WIDTH,
+            0,
+            0,
+            this.ZOOM_SIZE,
+            this.ZOOM_SIZE,
+        );
+    }
+
+    drawHorizontalLines(): void {
+        const PIXEL_WIDTH = 20;
+        const OFFSET = 10;
+        const N_LINES = 12;
+        const GRID_WIDTH = 1.0;
+
+        this.zoomctx.beginPath();
+        this.zoomctx.lineTo(0, OFFSET);
+        this.zoomctx.lineWidth = GRID_WIDTH;
+        this.zoomctx.strokeStyle = 'rgba(18, 37, 59, 0.932)';
+
+        let i = 0;
+        while (i < N_LINES) {
+            this.zoomctx.lineTo(this.ZOOM_SIZE, i * PIXEL_WIDTH + OFFSET);
+            this.zoomctx.lineTo(this.ZOOM_SIZE, (i + 1) * PIXEL_WIDTH + OFFSET);
+            this.zoomctx.lineTo(0, (i + 1) * PIXEL_WIDTH + OFFSET);
+            i++;
+        }
+        this.zoomctx.stroke();
+        this.zoomctx.closePath();
+    }
+
+    drawVerticalLines(): void {
+        const PIXEL_HEIGHT = 20;
+        const OFFSET = 10;
+        const N_LINES = 12;
+        const GRID_WIDTH = 1.0;
+
+        this.zoomctx.beginPath();
+        this.zoomctx.lineTo(OFFSET, 0);
+        this.zoomctx.lineWidth = GRID_WIDTH;
+        this.zoomctx.strokeStyle = 'rgba(18, 37, 59, 0.932)';
+
+        let j = 0;
+        while (j < N_LINES) {
+            this.zoomctx.lineTo(j * PIXEL_HEIGHT + OFFSET, this.ZOOM_SIZE);
+            this.zoomctx.lineTo((j + 1) * PIXEL_HEIGHT + OFFSET, this.ZOOM_SIZE);
+            this.zoomctx.lineTo((j + 1) * PIXEL_HEIGHT + OFFSET, 0);
+            j++;
+        }
+        this.zoomctx.stroke();
+        this.zoomctx.closePath();
+    }
+
+    drawPixelSelector(): void {
+        this.zoomctx.save();
+        this.zoomctx.beginPath();
+        this.zoomctx.lineWidth = 2;
+        this.zoomctx.strokeStyle = 'rgb(230, 255, 6)';
+        this.zoomctx.strokeRect(
+            this.ZOOM_SIZE / 2 - this.RECTANGLE_SIZE / 2,
+            this.ZOOM_SIZE / 2 - this.RECTANGLE_SIZE / 2,
+            this.RECTANGLE_SIZE,
+            this.RECTANGLE_SIZE,
+        );
+        this.zoomctx.lineWidth = this.CIRCLE_WIDTH;
+        this.zoomctx.stroke();
+        this.zoomctx.closePath();
+        this.zoomctx.restore();
     }
 }

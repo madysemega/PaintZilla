@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DiscardChangesModalData } from '@app/carousel/interfaces/discard-changes-modal-data';
 import { MaterialModule } from '@app/material.module';
 import { DiscardChangesModalComponent } from './discard-changes-modal.component';
@@ -29,7 +31,7 @@ describe('DiscardChangesModalComponent', () => {
         confirmCallbackSpy = spyOn(matDialogData, 'confirmCallback').and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, MatTooltipModule, CommonModule],
             declarations: [DiscardChangesModalComponent],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },

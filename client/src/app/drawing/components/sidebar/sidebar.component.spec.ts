@@ -1,7 +1,9 @@
-import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +15,7 @@ import { ExportDrawingService } from '@app/drawing/services/export-drawing/expor
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -22,6 +25,7 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { ShapeToolConfigurationComponent } from '@app/tools/components/tool-configurations/shape-tool-configuration/shape-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
@@ -40,6 +44,9 @@ import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
+import { StampService } from '@app/tools/services/tools/stamp.service';
+import { TextService } from '@app/tools/services/tools/text/text.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable:no-any
@@ -56,6 +63,9 @@ describe('SidebarComponent', () => {
     let rectangleService: RectangleService;
     let polygonService: PolygonService;
     let lineServiceStub: LineService;
+    let clipboardService: ClipboardService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let pencilStoolStub: PencilService;
     let pipetteStoolStub: PipetteService;
@@ -64,6 +74,8 @@ describe('SidebarComponent', () => {
     let exportDrawingServiceSpy: jasmine.SpyObj<any>;
     let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
+    let textServiceStub: TextService;
+    let stampServiceStub: StampService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
     let ellipseSelectionManipulatorService: EllipseSelectionManipulatorService;
@@ -92,7 +104,11 @@ describe('SidebarComponent', () => {
     }
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingStub = new DrawingService(historyServiceStub);
         drawingStub.canvasSize = { x: 500, y: 600 };
         colourServiceStub = new ColourService({} as ColourPickerService);
@@ -107,6 +123,8 @@ describe('SidebarComponent', () => {
         exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
         saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
+        textServiceStub = new TextService(drawingStub, colourServiceStub, historyServiceStub, keyboardServiceStub);
+        stampServiceStub = new StampService(drawingStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
@@ -120,6 +138,7 @@ describe('SidebarComponent', () => {
             drawingStub,
             ellipseSelectionManipulatorService,
             ellipseSelectionHelperService,
+            clipboardService,
         );
 
         rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -139,11 +158,15 @@ describe('SidebarComponent', () => {
             drawingStub,
             rectangleSelectionManipulatorService,
             rectangleSelectionHelperService,
+            clipboardService,
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         toolSelectorServiceStub = new ToolSelectorService(
+            keyboardServiceStub,
+            clipboardService,
+            historyServiceStub,
             pencilStoolStub,
             pipetteStoolStub,
             sprayStoolStub,
@@ -154,10 +177,23 @@ describe('SidebarComponent', () => {
             polygonService,
             ellipseSelectionCreatorService,
             rectangleSelectionCreatorService,
+            stampServiceStub,
+            textServiceStub,
         );
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, MatIconModule, MatSliderModule, MatDividerModule, BrowserAnimationsModule],
+            imports: [
+                MatTooltipModule,
+                CommonModule,
+                MatIconModule,
+                MatSliderModule,
+                MatDividerModule,
+                BrowserAnimationsModule,
+                MatIconModule,
+                HotkeyModule.forRoot(),
+            ],
             declarations: [
                 SidebarComponent,
                 EllipseToolConfigurationComponent,
@@ -192,8 +228,10 @@ describe('SidebarComponent', () => {
                 { provide: RectangleSelectionManipulatorService },
                 { provide: RectangleSelectionHelperService },
                 { provide: RectangleSelectionCreatorService },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {
@@ -206,6 +244,8 @@ describe('SidebarComponent', () => {
                 },
             })
             .compileComponents();
+
+        clipboardService = TestBed.inject(ClipboardService);
     }));
 
     beforeEach(() => {

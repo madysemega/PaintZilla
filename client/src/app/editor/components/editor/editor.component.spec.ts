@@ -1,28 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { FakeMatIconRegistry } from '@angular/material/icon/testing';
 import { MatDrawer } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
+// import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+// import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ExportDrawingService } from '@app/drawing/services/export-drawing/export-drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-drawing.service';
+import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MaterialModule } from '@app/material.module';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Tool } from '@app/tools/classes/tool';
-import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
-import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
+import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
@@ -31,10 +36,11 @@ import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray-service';
-import { HotkeyModule } from 'angular2-hotkeys';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EditorComponent } from './editor.component';
-// tslint:disable:no-any
+
 // tslint:disable: max-classes-per-file
+// tslint:disable:no-any
 describe('EditorComponent', () => {
     @Component({
         selector: 'mat-icon',
@@ -48,8 +54,6 @@ describe('EditorComponent', () => {
 
     class ToolStub extends Tool {}
 
-    class E {}
-
     let component: EditorComponent;
     let fixture: ComponentFixture<EditorComponent>;
     let toolStub: ToolStub;
@@ -58,9 +62,13 @@ describe('EditorComponent', () => {
     let drawingStub: DrawingService;
     let drawingCreatorServiceSpy: jasmine.SpyObj<any>;
     let colourServiceStub: ColourService;
+    let automaticSavingService: jasmine.SpyObj<any>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let keyboardZEvent: KeyboardEvent;
     let toolSelectorStub: jasmine.SpyObj<ToolSelectorService>;
+    let clipboardServiceStub: jasmine.SpyObj<ClipboardService>;
+    let magnetismeServiceStub: jasmine.SpyObj<MagnetismService>;
 
     let configurationPanelDrawerStub: jasmine.SpyObj<MatDrawer>;
 
@@ -75,7 +83,11 @@ describe('EditorComponent', () => {
         toolStub = new ToolStub({} as DrawingService);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['do', 'register', 'undo', 'redo', 'onUndo', 'clear']);
         drawingStub = new DrawingService(historyServiceStub);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['setDefaultCanvasSize', 'onKeyDown', 'noDialogsOpen']);
+        automaticSavingService = jasmine.createSpyObj('AutomaticSavingService', ['saveDrawingLocally', 'loadMostRecentDrawing']);
+        magnetismeServiceStub = jasmine.createSpyObj('MagnetismService', ['toggleMagnetism']);
 
         drawingCreatorServiceSpy.noDialogsOpen.and.callFake(() => {
             return true;
@@ -85,13 +97,26 @@ describe('EditorComponent', () => {
 
         toolSelectorStub = jasmine.createSpyObj('ToolSelector', ['selectTool', 'getSelectedTool', 'onToolChanged', 'fromKeyboardShortcut']);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+        toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
+
+        clipboardServiceStub = jasmine.createSpyObj('ClipboardService', ['paste']);
+        clipboardServiceStub.copyOwner = toolStub as SelectionCreatorService;
+        clipboardServiceStub.copyOwner.key = 'dummyKey';
 
         configurationPanelDrawerStub = jasmine.createSpyObj('MatDrawer', ['open']);
         configurationPanelDrawerStub.open.and.stub();
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, RouterTestingModule.withRoutes([]), BrowserAnimationsModule, HotkeyModule.forRoot()],
-            declarations: [DrawingComponent, SidebarComponent, EllipseToolConfigurationComponent, LineToolConfigurationComponent],
+            imports: [
+                MaterialModule,
+                RouterTestingModule.withRoutes([]),
+                BrowserAnimationsModule,
+                HotkeyModule.forRoot(),
+                MatIconModule,
+                CommonModule,
+                MatTooltipModule,
+            ],
+            declarations: [EditorComponent],
             providers: [
                 { provide: PencilService, useValue: toolStub },
                 { provide: DrawingService, useValue: drawingStub },
@@ -114,8 +139,13 @@ describe('EditorComponent', () => {
                 { provide: SaveDrawingService },
                 { provide: DrawingLoaderService },
                 { provide: ColourService, useValue: colourServiceStub },
+                { provide: MatIconRegistry, useValue: FakeMatIconRegistry },
+                { provide: AutomaticSavingService, useValue: automaticSavingService },
+                { provide: ClipboardService, useValue: clipboardServiceStub },
+                { provide: MagnetismService, useValue: magnetismeServiceStub },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
-            // schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {
@@ -172,37 +202,6 @@ describe('EditorComponent', () => {
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
     });
 
-    it('Ctrl+a should select the rectangle-selection tool from the tool selector', () => {
-        const dumbFunction: (x: number, y: number) => number = (x: number, y: number) => x + y;
-        const keyboardEvent = {
-            ctrlKey: true,
-            key: 'a',
-            preventDefault: dumbFunction,
-        } as E;
-        component.onKeyDown(keyboardEvent as KeyboardEvent);
-        expect(toolSelectorStub.selectTool).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Z should call history service undo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: false,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.undo).toHaveBeenCalled();
-    });
-
-    it('Ctrl+Shift+Z should call history service redo method', () => {
-        const keyboardEvent = {
-            ctrlKey: true,
-            shiftKey: true,
-            key: 'Z',
-        } as KeyboardEvent;
-        component.onKeyUp(keyboardEvent);
-        expect(historyServiceStub.redo).toHaveBeenCalled();
-    });
-
     it('Ctrl+G should open the carousel', () => {
         const keyboardService = fixture.debugElement.injector.get(KeyboardService);
 
@@ -243,6 +242,16 @@ describe('EditorComponent', () => {
         expect(component.showColourPicker).toBeFalse();
     });
 
+    it('Mouse down should not hide colour picket if user is on colour picker', () => {
+        colourServiceStub.showColourPicker = true;
+        colourServiceStub.onColourPicker = true;
+        component.showColourPicker = true;
+        component.onMouseDown({} as MouseEvent);
+
+        expect(colourServiceStub.onColourPicker).toBeTrue();
+        expect(component.showColourPicker).toBeTrue();
+    });
+
     it('updateColour() should propagate event to colour service', () => {
         const colourServiceUpdateColourSpy = spyOn(colourServiceStub, 'updateColour').and.stub();
         component.updateColour();
@@ -251,5 +260,25 @@ describe('EditorComponent', () => {
 
     it('height property should be the innerHeight of the window', () => {
         expect(component.height).toEqual(window.innerHeight);
+    });
+
+    it('beforeunload event should call automaticSavingService.saveDrawingLocally', () => {
+        component.onBeforeUnload({} as Event);
+        expect(automaticSavingService.saveDrawingLocally).toHaveBeenCalled();
+    });
+
+    it('onload event should call automaticSavingService.loadMostRecentDrawing', () => {
+        component.onLoad({} as Event);
+        expect(automaticSavingService.loadMostRecentDrawing).toHaveBeenCalled();
+    });
+
+    it('when initializing image, if image id is set, should load image from server', () => {
+        const loadFromServerSpy = spyOn(TestBed.inject(DrawingLoaderService), 'loadFromServer').and.stub();
+        const METHOD_NAME = 'initializeImage';
+        const IMAGE_VALUE = '123';
+
+        component[METHOD_NAME](IMAGE_VALUE);
+
+        expect(loadFromServerSpy).toHaveBeenCalledWith(IMAGE_VALUE);
     });
 });

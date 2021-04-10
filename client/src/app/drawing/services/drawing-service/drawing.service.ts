@@ -18,6 +18,7 @@ export class DrawingService {
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
     onDrawingSurfaceResize: EventEmitter<Vec2>;
+    onDrawingLoaded: EventEmitter<boolean>;
 
     initialSize: Vec2;
     initialImage: CanvasImageSource | undefined;
@@ -28,8 +29,12 @@ export class DrawingService {
         }
     }
 
-    clearCanvas(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    clearCanvas(context: CanvasRenderingContext2D, size?: Vec2): void {
+        if (size != undefined) {
+            context.clearRect(0, 0, size.x, size.y);
+        } else {
+            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
     }
 
     // Taken from https://stackoverflow.com/questions/17386707/how-to-check-if-a-canvas-is-blank
@@ -81,6 +86,7 @@ export class DrawingService {
         await sleep();
         this.resetDrawingSurfaceColour();
         this.drawInitialImage();
+        this.onDrawingLoaded.emit();
     }
 
     drawInitialImage(): void {
@@ -100,8 +106,24 @@ export class DrawingService {
         this.resetDrawingSurface();
     }
 
+    async setImageSavedLocally(imageSrc: string): Promise<void> {
+        const image = new Image();
+        image.src = imageSrc;
+
+        return new Promise(
+            (image.onload = async () => {
+                this.initialSize.x = image.width;
+                this.initialSize.y = image.height;
+                this.initialImage = image;
+                this.resetDrawingSurface();
+            }),
+        );
+    }
+
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => this.resetDrawingSurface());
+
+        this.onDrawingLoaded = new EventEmitter();
 
         this.onDrawingSurfaceResize = new EventEmitter();
         this.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };

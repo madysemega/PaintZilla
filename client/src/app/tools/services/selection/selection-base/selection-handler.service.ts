@@ -17,6 +17,7 @@ export enum ResizingMode {
 })
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
+    protected readonly CANVAS_SIZE: number = 1000;
 
     selection: HTMLCanvasElement;
     originalSelection: HTMLCanvasElement;
@@ -39,7 +40,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionHelper: SelectionHelperService) {
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
         this.selection = document.createElement('canvas');
         this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
         this.originalSelection = document.createElement('canvas');
@@ -48,6 +49,14 @@ export abstract class SelectionHandlerService {
 
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
+
+    makeWhiteBehindSelection(): boolean {
+        if (this.needWhitePostDrawing) {
+            this.whiteFillAtOriginalLocation();
+            return true;
+        }
+        return false;
+    }
 
     initAllProperties(vertices: Vec2[]): void {
         this.originalVertices = vertices;
@@ -79,7 +88,9 @@ export abstract class SelectionHandlerService {
             return false;
         }
 
-        this.makeWhiteBehindSelection();
+        if (this.needWhitePostDrawing) {
+            this.whiteFillAtOriginalLocation();
+        }
 
         const topLeft: Vec2 = {
             x: topLeftOnDestination.x - this.topLeftRelativeToMiddle.x + this.offset.x,
@@ -102,8 +113,13 @@ export abstract class SelectionHandlerService {
             this.currentVerticalScaling = newlength / this.originalHeight;
             this.updateVerticalOffset(newlength);
         }
-
         this.overwriteACanvasWithAnother(this.originalSelection, this.selectionCtx, this.currentHorizontalScaling, this.currentVerticalScaling);
+    }
+
+    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
+        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
+        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
+        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
     }
 
     drawACanvasOnAnother(source: HTMLCanvasElement, destination: CanvasRenderingContext2D, topLeftOnDestination?: Vec2): void {
@@ -125,25 +141,13 @@ export abstract class SelectionHandlerService {
         horizontalScaling: number,
         verticalScaling: number,
     ): void {
-        this.drawingService.clearCanvas(destination);
+        this.drawingService.clearCanvas(destination, { x: this.CANVAS_SIZE, y: this.CANVAS_SIZE });
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
         destination.imageSmoothingEnabled = false;
         destination.drawImage(source, 0, 0);
         destination.closePath();
         destination.resetTransform();
-    }
-
-    transform(contextToTransform: CanvasRenderingContext2D, horizontalScaling: number, verticalScaling: number): void {
-        contextToTransform.translate(this.selection.width / 2, this.selection.height / 2);
-        contextToTransform.transform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
-        contextToTransform.translate(-this.selection.width / 2, -this.selection.height / 2);
-    }
-
-    makeWhiteBehindSelection(): void {
-        if (this.needWhitePostDrawing) {
-            this.whiteFillAtOriginalLocation();
-        }
     }
 
     updateHorizontalOffset(newWidth: number): void {
@@ -156,10 +160,10 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        this.selection.width = this.drawingService.canvas.width;
-        this.selection.height = this.drawingService.canvas.height;
-        this.originalSelection.width = this.drawingService.canvas.width;
-        this.originalSelection.height = this.drawingService.canvas.height;
+        this.selection.width = this.CANVAS_SIZE;
+        this.selection.height = this.CANVAS_SIZE;
+        this.originalSelection.width = this.CANVAS_SIZE;
+        this.originalSelection.height = this.CANVAS_SIZE;
     }
 
     hasSelectionBeenManipulated(topLeftOnDestination: Vec2): boolean {
@@ -171,7 +175,7 @@ export abstract class SelectionHandlerService {
     }
 
     createMemento(): HandlerMemento {
-        const memento: HandlerMemento = new HandlerMemento(this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
+        const memento: HandlerMemento = new HandlerMemento(this.CANVAS_SIZE, this.CANVAS_SIZE);
 
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };
@@ -198,10 +202,14 @@ export abstract class SelectionHandlerService {
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
+
         this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
         this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
 
-        this.topLeftRelativeToMiddle = { x: memento.topLeftRelativeToMiddle.x, y: memento.topLeftRelativeToMiddle.y };
+        this.topLeftRelativeToMiddle = {
+            x: memento.topLeftRelativeToMiddle.x,
+            y: memento.topLeftRelativeToMiddle.y,
+        };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
 
         this.originalWidth = memento.originalWidth;

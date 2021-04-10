@@ -1,12 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '@app/material.module';
 import { LineType } from '@app/shapes/types/line-type';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { LineToolConfigurationComponent } from './line-tool-configuration.component';
 
 describe('LineToolConfigurationComponent', () => {
@@ -27,15 +30,22 @@ describe('LineToolConfigurationComponent', () => {
 
     let component: LineToolConfigurationComponent;
     let fixture: ComponentFixture<LineToolConfigurationComponent>;
+
     let lineServiceStub: jasmine.SpyObj<LineService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
         lineServiceStub = jasmine.createSpyObj('LineService', ['setLineType', 'setJointsDiameter']);
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BrowserAnimationsModule],
+            imports: [MaterialModule, BrowserAnimationsModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [LineToolConfigurationComponent, ResizableToolConfigurationComponent],
-            providers: [{ provide: LineService, useValue: lineServiceStub }],
+            providers: [
+                { provide: LineService, useValue: lineServiceStub },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideModule(MatIconModule, {
                 remove: {

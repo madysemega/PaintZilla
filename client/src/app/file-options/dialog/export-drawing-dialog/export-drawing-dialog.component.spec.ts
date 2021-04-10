@@ -1,12 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { ExportDrawingDialogComponent } from './export-drawing-dialog.component';
 
 describe('ExportDrawingDialogComponent', () => {
@@ -16,8 +27,13 @@ describe('ExportDrawingDialogComponent', () => {
     let historyServiceStub: HistoryService;
     let drawingServiceSpy: DrawingService;
     let resizingServiceSpy: ResizingService;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     // tslint:disable:no-any
     let matDialogRefSpy: jasmine.SpyObj<any>;
+    let httpClientSpy: jasmine.SpyObj<HttpClient>;
+    let postSubject: Subject<any>;
+    let snackBarSpy: jasmine.SpyObj<any>;
+    let imgurServiceSpy: jasmine.SpyObj<any>;
 
     let canvasTestHelper: CanvasTestHelper;
     let ctx: CanvasRenderingContext2D;
@@ -25,18 +41,42 @@ describe('ExportDrawingDialogComponent', () => {
     let canvasSizeStub: Vec2;
 
     beforeEach(async(() => {
-        historyServiceStub = new HistoryService();
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceSpy = new DrawingService(historyServiceStub);
         resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
+        postSubject = new Subject<any>();
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close']);
+        httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+        snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+        httpClientSpy.post.and.returnValue(postSubject);
+        imgurServiceSpy = jasmine.createSpyObj('ImgurService', ['uploadToImgur', 'openImgurLinkDialog']);
+        imgurServiceSpy.openImgurLinkDialog.and.callFake(() => {
+            return;
+        });
 
         TestBed.configureTestingModule({
             declarations: [ExportDrawingDialogComponent],
-            imports: [MatDialogModule],
+            imports: [
+                MatDialogModule,
+                MatFormFieldModule,
+                MatSelectModule,
+                MatOptionModule,
+                MatInputModule,
+                BrowserAnimationsModule,
+                CommonModule,
+                MatTooltipModule,
+            ],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceSpy },
+                { provide: HttpClient, useValue: httpClientSpy },
+                { provide: MatSnackBar, useValue: snackBarSpy },
+                { provide: ImgurService, useValue: imgurServiceSpy },
             ],
         }).compileComponents();
 
@@ -183,5 +223,56 @@ describe('ExportDrawingDialogComponent', () => {
         component.downloadImage();
         expect(matDialogRefSpy.close).toHaveBeenCalled();
         expect(setAttributeSpy).toHaveBeenCalled();
+    });
+
+    it('uploadToImgur should do nothing if the image does not have a name', () => {
+        component.imageFormat = 'png';
+        component.imageName = undefined;
+        component.uploadToImgur();
+        expect(matDialogRefSpy.close).not.toHaveBeenCalled();
+    });
+
+    it('uploadToImgur should do nothing if the image does not have a format', () => {
+        component.imageFormat = undefined;
+        component.imageName = '123';
+        component.uploadToImgur();
+        expect(matDialogRefSpy.close).not.toHaveBeenCalled();
+    });
+
+    it('uploadToImgur should call ImgurService.uploadToImgur if the image has a name and a format', () => {
+        component.imageName = '123';
+        component.imageFormat = 'png';
+        imgurServiceSpy.uploadToImgur.and.callFake(() => {
+            return new Observable<any>();
+        });
+        component.uploadToImgur();
+        expect(imgurServiceSpy.uploadToImgur).toHaveBeenCalled();
+    });
+
+    it('uploadToImgur should call ImgurService.openImgurLinkDialog if the image has a name and a format', () => {
+        component.imageName = '123';
+        component.imageFormat = 'png';
+        imgurServiceSpy.uploadToImgur.and.returnValue(of({ data: { link: '' } }));
+        component.uploadToImgur();
+        expect(imgurServiceSpy.openImgurLinkDialog).toHaveBeenCalled();
+    });
+
+    it('uploadToImgur should call ImgurService.openImgurLinkDialog if the image has a name and a format', () => {
+        component.imageName = '123';
+        component.imageFormat = 'png';
+        const openSnackBarSpy = spyOn(component, 'openSnackBar').and.stub();
+        const error: HttpErrorResponse = new HttpErrorResponse({
+            error: '',
+        });
+        component.imageName = 'tree';
+        imgurServiceSpy.uploadToImgur.and.returnValue(throwError(error));
+        component.uploadToImgur();
+        expect(openSnackBarSpy).toHaveBeenCalled();
+    });
+
+    it('openSnackBar should call snackBar.open() and close the dialog', () => {
+        component.openSnackBar('test');
+        expect(snackBarSpy.open).toHaveBeenCalled();
+        expect(matDialogRefSpy.close).toHaveBeenCalled();
     });
 });

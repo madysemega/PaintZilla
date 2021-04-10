@@ -39,6 +39,7 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
     constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
+        this.key = 'line';
 
         this.initialize();
 

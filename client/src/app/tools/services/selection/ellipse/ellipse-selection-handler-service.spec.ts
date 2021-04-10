@@ -4,7 +4,7 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
-
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseSelectionHandlerService } from './ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 
@@ -21,14 +21,14 @@ describe('EllipseSelectionHandlerService', () => {
     let previewCtxStub: CanvasRenderingContext2D;
     let selectionServiceMock: jasmine.SpyObj<SelectionHelperService>;
     let ellipseSelectionHelperMock: jasmine.SpyObj<EllipseSelectionHandlerService>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let clearAndResetAllCanvasSpy: jasmine.Spy<any>;
     let hasSelectionBeenManipulatedSpy: jasmine.Spy<any>;
-    let whiteFillAtOriginalLocation: jasmine.Spy<any>;
+    let whiteFillAtOriginalLocationSpy: jasmine.Spy<any>;
     let updateHorizontalOffsetSpy: jasmine.Spy<any>;
     let updateVerticalOffsetSpy: jasmine.Spy<any>;
     let fillSpy: jasmine.Spy<any>;
-    // let drawImageSpy: jasmine.Spy<any>;
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
@@ -59,11 +59,15 @@ describe('EllipseSelectionHandlerService', () => {
             'getSquareAjustedPerimeter',
         ]);
 
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+
         TestBed.configureTestingModule({
+            imports: [HotkeyModule.forRoot()],
             providers: [
                 { provide: DrawingService, useValue: drawServiceSpy },
                 { provide: EllipseSelectionHelperService, useValue: ellipseSelectionHelperMock },
                 { provide: SelectionHelperService, useValue: selectionServiceMock },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         });
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -83,7 +87,7 @@ describe('EllipseSelectionHandlerService', () => {
 
         clearAndResetAllCanvasSpy = spyOn<any>(service, 'clearAndResetAllCanvas').and.callThrough();
         hasSelectionBeenManipulatedSpy = spyOn<any>(service, 'hasSelectionBeenManipulated').and.callThrough();
-        whiteFillAtOriginalLocation = spyOn<any>(service, 'whiteFillAtOriginalLocation').and.callThrough();
+        whiteFillAtOriginalLocationSpy = spyOn<any>(service, 'whiteFillAtOriginalLocation').and.callThrough();
         updateHorizontalOffsetSpy = spyOn<any>(service, 'updateHorizontalOffset').and.callThrough();
         updateVerticalOffsetSpy = spyOn<any>(service, 'updateVerticalOffset').and.callThrough();
         fillSpy = spyOn<any>(service.selectionCtx, 'fill').and.callThrough();
@@ -94,6 +98,8 @@ describe('EllipseSelectionHandlerService', () => {
         service['drawingService'].baseCtx = baseCtxStub; // Jasmine doesnt copy properties with underlying data
         service['drawingService'].previewCtx = previewCtxStub;
         service['drawingService'].canvas = canvas;
+        drawServiceSpy.canvas.width = 500;
+        drawServiceSpy.canvas.height = 500;
     });
 
     it('should be created', () => {
@@ -144,7 +150,7 @@ describe('EllipseSelectionHandlerService', () => {
         service.needWhitePostDrawing = true;
         hasSelectionBeenManipulatedSpy.and.returnValue(true);
         service.drawSelection(ctx, topLeftOnTarget);
-        expect(whiteFillAtOriginalLocation).toHaveBeenCalled();
+        expect(whiteFillAtOriginalLocationSpy).toHaveBeenCalled();
     });
 
     it('resizeSelection should calculate the new length based on \
@@ -170,29 +176,6 @@ describe('EllipseSelectionHandlerService', () => {
 
         expect(updateVerticalOffsetSpy).toHaveBeenCalledWith(newlength);
     });
-
-    /*it('transform should have a vertical scaling of 1 is isHorizontal is true', () => {
-        const isHorizontal = true;
-        const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
-        const ctx: CanvasRenderingContext2D = sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
-        const ctxTransformSpy: jasmine.Spy<any> = spyOn(ctx, 'transform');
-        // tslint:disable-next-line:no-magic-numbers
-        const scaling = 1.3;
-        // tslint:disable-next-line: no-magic-numbers
-        service.transform(ctx, 1.3, isHorizontal);
-        expect(ctxTransformSpy).toHaveBeenCalledWith(scaling, 0, 0, 1, 0, 0);
-    });
-
-    it('transform should have a horizontal scaling of 1 is isHorizontal is true', () => {
-        const isHorizontal = false;
-        const sourceCanvas: HTMLCanvasElement = document.createElement('canvas');
-        const ctx: CanvasRenderingContext2D = sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
-        const ctxTransformSpy: jasmine.Spy<any> = spyOn(ctx, 'transform');
-        // tslint:disable-next-line:no-magic-numbers
-        const scaling = 1.3;
-        service.transform(ctx, 1.3, isHorizontal);
-        expect(ctxTransformSpy).toHaveBeenCalledWith(1, 0, 0, scaling, 0, 0);
-    });*/
 
     it('drawACanvasOnAnother should call drawImage with the origin as position param if topLeft is not provided in param', () => {
         const origin: Vec2 = { x: 0, y: 0 };
@@ -244,7 +227,7 @@ describe('EllipseSelectionHandlerService', () => {
         expect(fillSpy).toHaveBeenCalled();
     });
 
-    it('creating a memento then restoring to that memento should not change any property', () => {
+    it('creating a memento then restoring to that memento should not change any property if canvas size has not changed meanwhile', () => {
         // tslint:disable-next-line: no-magic-numbers
         service.originalWidth = 10;
         // tslint:disable-next-line: no-magic-numbers
@@ -287,5 +270,17 @@ describe('EllipseSelectionHandlerService', () => {
         ]);
         expect(service.hasBeenManipulated).toEqual(true);
         expect(service.needWhitePostDrawing).toEqual(true);
+    });
+
+    it('makeWhiteBehindSelection should call whiteFillAtOriginalLocation if needWhitePostDrawing is true', () => {
+        service.needWhitePostDrawing = true;
+        service.makeWhiteBehindSelection();
+        expect(whiteFillAtOriginalLocationSpy).toHaveBeenCalled();
+    });
+
+    it('makeWhiteBehindSelection should call whiteFillAtOriginalLocation if needWhitePostDrawing is true', () => {
+        service.needWhitePostDrawing = false;
+        service.makeWhiteBehindSelection();
+        expect(whiteFillAtOriginalLocationSpy).not.toHaveBeenCalled();
     });
 });

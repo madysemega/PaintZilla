@@ -1,0 +1,30 @@
+<div class="center spacing">
+    <mat-slide-toggle id="toggle" [ngModel]="isActivated" (ngModelChange)="isActivated = $event; notifyManipulators();">
+    </mat-slide-toggle>
+</div>
+
+<div class="spacing">
+    <p id="text">
+        Point d'ancrage:
+    </p>
+
+    <div id="rectangle">
+        <div class="horizontal-container">
+            <div id="top-left" class="resizingButton upperRow" (click)='setGridAnchor(0)'></div>
+            <div id="top-middle" class="resizingButton upperRow" (click)='setGridAnchor(7)'></div>
+            <div id="top-right" class="resizingButton upperRow" (click)='setGridAnchor(6)'></div>
+
+        </div>
+        <div class="horizontal-container">
+            <div id="middle-left" class="resizingButton" (click)='setGridAnchor(1)'></div>
+            <div id="middle-middle" class="resizingButton" (click)='setGridAnchor(8)'></div>
+            <div id="middle-right" class="resizingButton" (click)='setGridAnchor(5)'></div>
+        </div>
+        <div class="horizontal-container">
+            <div id="bottom-left" class="resizingButton lowerRow" (click)='setGridAnchor(2)'></div>
+            <div id="bottom-middle" class="resizingButton lowerRow" (click)='setGridAnchor(3)'></div>
+            <div id="bottom-right" class="resizingButton lowerRow" (click)='setGridAnchor(4)'></div>
+        </div>
+    </div>
+</div>
+
