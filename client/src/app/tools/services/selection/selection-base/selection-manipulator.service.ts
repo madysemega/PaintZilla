@@ -141,6 +141,7 @@ export abstract class SelectionManipulatorService extends Tool {
         this.bottomRight = { x: bottomRight.x, y: bottomRight.y };
         this.computeDiagonalEquation();
         this.selectionHandler.select(this.drawingService.canvas, vertices);
+        this.drawSelectionOutline();
     }
 
     moveSelection(movement: Vec2, isMouseMovement: boolean): void {
