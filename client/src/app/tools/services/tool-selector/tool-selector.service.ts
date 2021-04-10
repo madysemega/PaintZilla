@@ -135,6 +135,7 @@ export class ToolSelectorService {
         this.keyboardService.registerAction({
             trigger: 'ctrl+x',
             invoke: () => {
+                
                 const isCurrentToolSelection =
                     ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 

@@ -14,8 +14,12 @@ export class ClipboardComponent {
     constructor(public clipboardService: ClipboardService, public historyService: HistoryService, public toolSelector: ToolSelectorService) {
     }
 
+    isSelectionToolCurrentlySelected(): boolean{
+        return this.toolSelector.getSelectedTool() instanceof SelectionCreatorService;
+    }
+
     isSelectionBeingManipulated(): boolean {
-        if (this.toolSelector.getSelectedTool() instanceof SelectionCreatorService) {
+        if (this.isSelectionToolCurrentlySelected()) {
             return (this.toolSelector.getSelectedTool() as SelectionCreatorService).isSelectionBeingManipulated();
         }
         return false;
@@ -26,14 +30,14 @@ export class ClipboardComponent {
     }
 
     copy(): void {
-        if (this.isSelectionBeingManipulated()) {
+        if (this.isSelectionToolCurrentlySelected()) {
             const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
             creator.copy();
         }
     }
 
     cut(): void {
-        if (this.isSelectionBeingManipulated()) {
+        if (this.isSelectionToolCurrentlySelected()) {
             const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
             creator.cut();
         }
@@ -48,7 +52,7 @@ export class ClipboardComponent {
     }
 
     delete(): void {
-        if (this.isSelectionBeingManipulated()) {
+        if (this.isSelectionToolCurrentlySelected()) {
             const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
             creator.selectionManipulator.delete();
         }
