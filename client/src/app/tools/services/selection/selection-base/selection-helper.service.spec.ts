@@ -260,7 +260,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point middleL', () => {
@@ -283,7 +283,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height / 2 });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height / 2 });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomL', () => {
@@ -306,7 +306,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
+        expect(service.getAnchorPosition(anchor,[topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomM', () => {
@@ -329,7 +329,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width / 2,
             y: actualTopLeft.y + height,
         });
@@ -355,7 +355,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width,
             y: actualTopLeft.y + height,
         });
@@ -381,7 +381,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width,
             y: actualTopLeft.y + height / 2,
         });
@@ -406,7 +406,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point topM', () => {
@@ -429,7 +429,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point center', () => {
@@ -453,7 +453,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width / 2,
             y: actualTopLeft.y + height / 2,
         });
@@ -477,7 +477,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -501,7 +501,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -525,7 +525,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -549,7 +549,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });

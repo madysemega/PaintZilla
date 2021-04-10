@@ -88,12 +88,14 @@ export abstract class SelectionHelperService {
         let gridCellSize: number = gridMovement.gridCellSize;
         let anchor: GridMovementAnchor = gridMovement.anchor;
         let topLeft: Vec2 = gridMovement.topLeft;
-        let bottomRight: Vec2 = gridMovement.topLeft;
+        let bottomRight: Vec2 = gridMovement.bottomRight;
         let isReversed: boolean[] = gridMovement.isReversed;
-        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
+
+        let positions: Vec2[] = [topLeft, bottomRight];
+        const position: Vec2 = this.getAnchorPosition(anchor, positions, isReversed);
 
         let movementData: Vec2[] = [position, movement];
-
+      
         if (gridCellSize > 0 && isMouseMovement) {
             return this.computeMovementAlongGrid(movementData, gridCellSize, Math.round);
         }
@@ -108,7 +110,9 @@ export abstract class SelectionHelperService {
         return movement;
     }
 
-    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2, isReversed: boolean[]): Vec2 {
+    getAnchorPosition(anchor: GridMovementAnchor, positions:Vec2[], isReversed: boolean[]): Vec2 {
+        let topL = positions[0];
+        let bottomR = positions[1];
         const width: number = Math.abs(topL.x - bottomR.x);
         const height: number = Math.abs(topL.y - bottomR.y);
         const X = 0;
