@@ -2,4 +2,17 @@ img {
     cursor: pointer;
     width: 32px;
     height: 32px;
+    float: left;
+}
+.stampImage {
+    float: left;
+    width: 33.33%;
+}
+.clearfix::after {
+    content: '';
+    clear: both;
+    display: table;
+}
+.borderWall {
+    border: 1px solid black;
 }

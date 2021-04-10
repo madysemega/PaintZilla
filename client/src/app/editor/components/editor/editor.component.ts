@@ -55,13 +55,6 @@ export class EditorComponent implements AfterViewInit {
         this.route.params.subscribe((parameters) => this.initializeImage(parameters.imageId));
         this.historyService.clear();
     }
-    @HostListener('document:wheel', ['$event'])
-    onWheel(event: WheelEvent): void {
-        if (this.toolSelector.getSelectedTool().key === 'stamp') {
-            console.log('called');
-            this.toolSelector.stampService.rollAngle(event);
-        }
-    }
 
     private initializeImage(imageId: string | undefined): void {
         if (imageId) {

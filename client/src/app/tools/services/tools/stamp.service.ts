@@ -29,6 +29,7 @@ export class StampService extends ShapeTool implements ISelectableTool {
     imageSizeProperty: ImageSizeProperty;
     mouseDown: boolean;
     imagePaths: string[];
+    toBorder: boolean[] = [];
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'stamp';
@@ -42,6 +43,9 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.shape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
         this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
         this.renderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
+        for (let i = 0; i < this.imagePaths.length; i++) {
+            this.toBorder.push(false);
+        }
     }
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.NONE);
@@ -107,9 +111,14 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.history.isLocked = false;
         this.finalize();
     }
-    selectStamp(event: MouseEvent): void {
+    selectStamp(event: MouseEvent, index: number): void {
+        for (let i = 0; i < this.imagePaths.length; i++) {
+            this.toBorder[i] = false;
+        }
+        this.toBorder[index] = true;
         this.shape.src = (event.target as HTMLImageElement).src;
         this.shape.image = new Image();
         this.shape.image.src = this.shape.src;
+        console.log(this.toBorder[0]);
     }
 }
