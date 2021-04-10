@@ -4,7 +4,7 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
 import { GridMovementAnchor } from './selection-constants';
-import { SelectionHelperService } from './selection-helper.service';
+import { GridMovement, SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -157,8 +157,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.round);
+        let gridMovement: GridMovement = {
+            movement: movement,
+            isMouseMovement: isMouseMovement,
+            gridCellSize: gridCellSize,
+            anchor: anchor,
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            isReversed: isReversed,
+        }
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.round);
     });
 
     it('moveAlongTheGrid should call computeMovementAlongGrid with Math.ceil if magnetisme is on with a keyboardEvent and increase movement ', () => {
@@ -172,8 +181,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.ceil);
+        let gridMovement: GridMovement = {
+            movement: movement,
+            isMouseMovement: isMouseMovement,
+            gridCellSize: gridCellSize,
+            anchor: anchor,
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            isReversed: isReversed,
+        }
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.ceil);
     });
 
     it('moveAlongTheGrid should call computeMovementAlongGrid with Math.floor if magnetisme is on with a keyboardEvent and decrease movement ', () => {
@@ -187,8 +205,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.floor);
+        let gridMovement: GridMovement = {
+            movement: movement,
+            isMouseMovement: isMouseMovement,
+            gridCellSize: gridCellSize,
+            anchor: anchor,
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            isReversed: isReversed,
+        }
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.floor);
     });
 
     it('moveAlongTheGrid should not call computeMovementAlongGrid if magnetisme is off (<=> gridCellSize < 0) ', () => {
@@ -202,7 +229,16 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        let gridMovement: GridMovement = {
+            movement: movement,
+            isMouseMovement: isMouseMovement,
+            gridCellSize: gridCellSize,
+            anchor: anchor,
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            isReversed: isReversed,
+        }
+        service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).not.toHaveBeenCalled();
     });
 
@@ -531,7 +567,7 @@ describe('SelectionHelperService', () => {
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
         newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
         const correctMovement: Vec2 = { x: newPos.x - position.x, y: newPos.y - position.y };
-
-        expect(service.computeMovementAlongGrid(position, movement, gridCellSize, roundingFunction)).toEqual(correctMovement);
+        let movementData: Vec2[]= [position, movement];
+        expect(service.computeMovementAlongGrid(movementData, gridCellSize, roundingFunction)).toEqual(correctMovement);
     });
 });

@@ -7,7 +7,7 @@ import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderSelection } from '@app/history/user-actions/user-action-render-selection';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
-import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import { GridMovement, SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { ResizingMode } from './resizing-mode';
@@ -235,14 +235,16 @@ export abstract class SelectionManipulatorService extends Tool {
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
         const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : MAGNETISM_OFF;
-        movement = this.selectionHelper.moveAlongTheGrid(
-            movement,
-            isMouseMovement,
-            cellSize,
-            this.gridMovementAnchor,
-            this.topLeft,
-            this.bottomRight,
-            [this.isReversedX, this.isReversedY],
+        let gridMovement: GridMovement = {
+            movement: movement,
+            isMouseMovement: isMouseMovement,
+            gridCellSize: cellSize,
+            anchor: this.gridMovementAnchor,
+            topLeft: this.topLeft,
+            bottomRight: this.bottomRight,
+            isReversed: [this.isReversedX, this.isReversedY],
+        }
+        movement = this.selectionHelper.moveAlongTheGrid(gridMovement
         );
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);

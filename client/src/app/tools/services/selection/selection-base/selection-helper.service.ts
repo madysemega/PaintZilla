@@ -9,6 +9,16 @@ import { ResizingMode } from './resizing-mode';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
+export class GridMovement{
+    movement: Vec2;
+    isMouseMovement: boolean;
+    gridCellSize: number;
+    anchor: GridMovementAnchor;
+    topLeft: Vec2;
+    bottomRight: Vec2;
+    isReversed: boolean[];
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -71,26 +81,29 @@ export abstract class SelectionHelperService {
     }
 
     moveAlongTheGrid(
-        movement: Vec2,
-        isMouseMovement: boolean,
-        gridCellSize: number,
-        anchor: GridMovementAnchor,
-        topLeft: Vec2,
-        bottomRight: Vec2,
-        isReversed: boolean[],
+        gridMovement: GridMovement
     ): Vec2 {
+        let movement: Vec2 = gridMovement.movement;
+        let isMouseMovement: boolean = gridMovement.isMouseMovement;
+        let gridCellSize: number = gridMovement.gridCellSize;
+        let anchor: GridMovementAnchor = gridMovement.anchor;
+        let topLeft: Vec2 = gridMovement.topLeft;
+        let bottomRight: Vec2 = gridMovement.topLeft;
+        let isReversed: boolean[] = gridMovement.isReversed;
         const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
 
+        let movementData: Vec2[] = [position, movement];
+
         if (gridCellSize > 0 && isMouseMovement) {
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.round);
         }
         if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
             // increase movement by keyboard
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.ceil);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.ceil);
         }
         if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
             // decrease movement by keyboard
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.floor);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.floor);
         }
         return movement;
     }
@@ -142,7 +155,9 @@ export abstract class SelectionHelperService {
         }
     }
 
-    computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+    computeMovementAlongGrid(movementData: Vec2[], gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+        let position = movementData[0];
+        let movement = movementData[1];
         const newPos: Vec2 = { x: position.x, y: position.y };
         this.addInPlace(newPos, movement);
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
