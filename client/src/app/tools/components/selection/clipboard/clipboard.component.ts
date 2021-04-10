@@ -11,10 +11,9 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./clipboard.component.scss'],
 })
 export class ClipboardComponent {
-    constructor(public clipboardService: ClipboardService, public historyService: HistoryService, public toolSelector: ToolSelectorService) {
-    }
+    constructor(public clipboardService: ClipboardService, public historyService: HistoryService, public toolSelector: ToolSelectorService) {}
 
-    isSelectionToolCurrentlySelected(): boolean{
+    isSelectionToolCurrentlySelected(): boolean {
         return this.toolSelector.getSelectedTool() instanceof SelectionCreatorService;
     }
 

@@ -135,7 +135,6 @@ export class ToolSelectorService {
         this.keyboardService.registerAction({
             trigger: 'ctrl+x',
             invoke: () => {
-                
                 const isCurrentToolSelection =
                     ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
@@ -175,10 +174,6 @@ export class ToolSelectorService {
             uniqueName: 'Paste clipboard content',
             contexts: ['editor'],
         });
-    }
-
-    selectRectangleSelection(){
-        
     }
 
     constructor(

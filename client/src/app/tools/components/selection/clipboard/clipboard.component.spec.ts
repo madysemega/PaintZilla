@@ -24,11 +24,8 @@ import { ClipboardComponent } from './clipboard.component';
 // tslint:disable:no-empty
 // tslint:disable:max-file-line-count
 // tslint:disable:no-unused-expression
-class RectangleCreatorMock{
-
-    selectEntireCanvas() : void{
-    
-    }
+class RectangleCreatorMock {
+    selectEntireCanvas(): void {}
 }
 
 describe('ClipboardComponent', () => {
@@ -56,8 +53,6 @@ describe('ClipboardComponent', () => {
             providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
-
-       
 
         colourServiceStub = new ColourService({} as ColourPickerService);
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
@@ -189,14 +184,16 @@ describe('ClipboardComponent', () => {
         expect(deleteSpy).not.toHaveBeenCalled();
     });
 
-   it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
-        let dummyRectangleCreator: RectangleCreatorMock = new RectangleCreatorMock();
+    it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+        const dummyRectangleCreator: RectangleCreatorMock = new RectangleCreatorMock();
         spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(dummyRectangleCreator as RectangleSelectionCreatorService);
         component.selectTheEntireCanvas();
     });
 
     it('isSelectionToolCurrentlySelected should call getSelectedTool', () => {
-        let getSelectedToolSpy: jasmine.Spy<any> = spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(ellipseSelectionCreatorService);
+        const getSelectedToolSpy: jasmine.Spy<any> = spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(
+            ellipseSelectionCreatorService,
+        );
         component.isSelectionToolCurrentlySelected();
         expect(getSelectedToolSpy).toHaveBeenCalled();
     });
