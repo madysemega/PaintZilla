@@ -43,8 +43,9 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.shape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
         this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
         this.renderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
-        for (let i = 0; i < this.imagePaths.length; i++) {
-            this.toBorder.push(false);
+        this.toBorder = new Array(this.imagePaths.length);
+        for (let element of this.toBorder) {
+            element = false;
         }
     }
     onToolSelect(): void {

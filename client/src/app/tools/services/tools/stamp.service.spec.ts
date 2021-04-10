@@ -143,7 +143,7 @@ describe('StampService', () => {
         const TARGET = new Image();
         TARGET.src = 'test';
         const EVENT = { target: TARGET } as any;
-        service.selectStamp(EVENT);
+        service.selectStamp(EVENT, 0);
         expect(service['shape'].src).toBe(TARGET.src);
     });
 });
