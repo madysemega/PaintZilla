@@ -176,6 +176,10 @@ export class ToolSelectorService {
         });
     }
 
+    selectRectangleSelection(){
+        
+    }
+
     constructor(
         private keyboardService: KeyboardService,
         private clipboardService: ClipboardService,

@@ -3,6 +3,7 @@ import { HistoryService } from '@app/history/service/history.service';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 
 @Component({
     selector: 'app-clipboard',
@@ -44,5 +45,10 @@ export class ClipboardComponent {
     delete(): void {
         const creator: SelectionCreatorService = this.toolSelector.getSelectedTool() as SelectionCreatorService;
         creator.selectionManipulator.delete();
+    }
+
+    selectTheEntireCanvas(): void {
+        this.toolSelector.selectTool('rectangle-selection');
+        (this.toolSelector.getSelectedTool() as RectangleSelectionCreatorService).selectEntireCanvas();
     }
 }
