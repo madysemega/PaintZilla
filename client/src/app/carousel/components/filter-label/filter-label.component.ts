@@ -11,17 +11,31 @@ import { Observable } from 'rxjs';
     styleUrls: ['./filter-label.component.scss'],
 })
 export class FilterLabelComponent {
-    @Input()
-    availableLabels: string[] = [];
-    retainedLabels: string[] = [];
 
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-    labelCtrl: FormControl = new FormControl();
+    constructor() {
+        this.availableLabels = [];
+        this.retainedLabels = [];
+
+        this.separatorKeysCodes = [ENTER, COMMA];
+        this.labelCtrl = new FormControl();
+        this.filteredLabels;
+
+        this.removable = true;
+        this.selectable = true;
+        this.isAvailable = true;
+    }
+
+    @Input()
+    availableLabels: string[];
+    retainedLabels: string[];
+
+    separatorKeysCodes: number[];
+    labelCtrl: FormControl;
     filteredLabels: Observable<string[]>;
 
-    removable: boolean = true;
-    selectable: boolean = true;
-    isAvailable: boolean = true;
+    removable: boolean;
+    selectable: boolean;
+    isAvailable: boolean;
 
     @Output()
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
