@@ -8,12 +8,14 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
 describe('ResizingService', () => {
     let service: ResizingService;
     let historyServiceStub: HistoryService;
+    let magnetismServiceStub: MagnetismService;
     let drawingServiceStub: DrawingService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let canvasTestHelper: CanvasTestHelper;
@@ -34,6 +36,7 @@ describe('ResizingService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: HistoryService, useValue: historyServiceStub },
+                { provide: MagnetismService, useValue: magnetismServiceStub },
             ],
         }).compileComponents();
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -68,6 +71,10 @@ describe('ResizingService', () => {
     it('isResizing(): should return true if downResizerEnabled is true', () => {
         service.downResizerEnabled = true;
         expect(service.isResizing()).toBeTruthy();
+    });
+    it('final resizing: should call grid twice', () => {
+        service.finalizeResizingEvent();
+        expect(magnetismServiceStub.toggleGrid()).toHaveBeenCalled();
     });
     it('resizeCanvas(): should not change canvasResize.x if righResizerEnabled is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();

@@ -13,6 +13,7 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MaterialModule } from '@app/material.module';
 import { IndexService } from '@app/tools/services/index/index.service';
 import { HotkeyModule } from 'angular2-hotkeys';
@@ -26,6 +27,7 @@ describe('MainPageComponent', () => {
     let fixture: ComponentFixture<MainPageComponent>;
     let indexServiceSpy: SpyObj<IndexService>;
     let historyServiceStub: HistoryService;
+    let magnetismServiceStub: MagnetismService;
     let resizingServiceStub: ResizingService;
     let dialogServiceStub: jasmine.SpyObj<MatDialog>;
     let automaticSavingServiceStub: AutomaticSavingService;
@@ -43,7 +45,7 @@ describe('MainPageComponent', () => {
         keyboardServiceStub.saveContext.and.stub();
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
-        resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub);
+        resizingServiceStub = new ResizingService({} as DrawingService, historyServiceStub, magnetismServiceStub);
         dialogServiceStub = jasmine.createSpyObj('MatDialog', ['open']);
         drawingServiceStub = new DrawingService(historyServiceStub);
         automaticSavingServiceStub = new AutomaticSavingService(drawingServiceStub, historyServiceStub);
