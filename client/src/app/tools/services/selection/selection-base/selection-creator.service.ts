@@ -94,9 +94,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
             return;
         }
 
-        if (event.key === 'Shift') {
-            this.isShiftDown = true;
-        }
+        this.isShiftDown = event.key === 'Shift';
 
         if (this.isShiftDown && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -110,9 +108,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
             return;
         }
 
-        if (event.key === 'Shift') {
-            this.isShiftDown = false;
-        }
+        this.isShiftDown = event.key !== 'Shift';
 
         if (event.key === 'Shift' && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);

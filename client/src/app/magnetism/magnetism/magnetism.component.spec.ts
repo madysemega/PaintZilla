@@ -16,6 +16,7 @@ import { MagnetismComponent } from './magnetism.component';
 // tslint:disable:no-empty
 // tslint:disable:max-file-line-count
 // tslint:disable:no-unused-expression
+// tslint:disable:prefer-const
 describe('MagnetismComponent', () => {
     let component: MagnetismComponent;
     let fixture: ComponentFixture<MagnetismComponent>;

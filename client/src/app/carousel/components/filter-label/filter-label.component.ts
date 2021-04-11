@@ -12,21 +12,33 @@ import { Observable } from 'rxjs';
 })
 export class FilterLabelComponent {
     @Input()
-    availableLabels: string[] = [];
-    retainedLabels: string[] = [];
+    availableLabels: string[];
+    retainedLabels: string[];
 
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-    labelCtrl: FormControl = new FormControl();
+    separatorKeysCodes: number[];
+    labelCtrl: FormControl;
     filteredLabels: Observable<string[]>;
 
-    removable: boolean = true;
-    selectable: boolean = true;
-    isAvailable: boolean = true;
+    removable: boolean;
+    selectable: boolean;
+    isAvailable: boolean;
 
     @Output()
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
     filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
+
+    constructor() {
+        this.availableLabels = [];
+        this.retainedLabels = [];
+
+        this.separatorKeysCodes = [ENTER, COMMA];
+        this.labelCtrl = new FormControl();
+
+        this.removable = true;
+        this.selectable = true;
+        this.isAvailable = true;
+    }
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;

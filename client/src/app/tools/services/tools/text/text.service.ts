@@ -43,6 +43,30 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 
+    updateAlignment(value: CanvasTextAlign): void {
+        this.editor.setAlignment(value);
+    }
+
+    getAlignment(): CanvasTextAlign {
+        return this.editor.getAlignment();
+    }
+
+    updateFontIsItalic(value: boolean): void {
+        this.editor.setFontIsItalic(value);
+    }
+
+    getFontIsItalic(): boolean {
+        return this.editor.getFontIsItalic();
+    }
+
+    updateFontIsBold(value: boolean): void {
+        this.editor.setFontIsBold(value);
+    }
+
+    getFontIsBold(): boolean {
+        return this.editor.getFontIsBold();
+    }
+
     updateFontName(name: string): void {
         this.editor.setFontName(name);
     }
@@ -86,6 +110,15 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         this.history.isLocked = false;
     }
 
+    private cancel(): void {
+        this.editor.disableCursor();
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+        this.reset();
+
+        this.keyboardService.context = 'editor';
+        this.history.isLocked = false;
+    }
+
     private startEditing(position: Vec2): void {
         this.editor.reset(position);
         this.editor.enableCursor();
@@ -115,6 +148,10 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
 
                 case 'Delete':
                     this.editor.delete();
+                    break;
+
+                case 'Escape':
+                    this.cancel();
                     break;
 
                 case 'Enter':

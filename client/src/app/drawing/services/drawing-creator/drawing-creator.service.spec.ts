@@ -16,6 +16,7 @@ import { of } from 'rxjs';
 describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
     let historyServiceStub: HistoryService;
+    // tslint:disable:prefer-const
     let magnetismServiceStub: MagnetismService;
     let drawingServiceSpy: DrawingService;
     let automaticSavingService: AutomaticSavingService;

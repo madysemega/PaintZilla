@@ -22,6 +22,7 @@ import { MainPageComponent } from './main-page.component';
 
 import SpyObj = jasmine.SpyObj;
 
+// tslint:disable: prefer-const
 describe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;

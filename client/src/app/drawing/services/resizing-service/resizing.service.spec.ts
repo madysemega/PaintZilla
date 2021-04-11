@@ -350,7 +350,7 @@ describe('ResizingService', () => {
     it('finalizeResizingEvent should create, apply and register a user action', () => {
         spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
-        let test: boolean = magnetismServiceStub.isGrid.value;
+        const test: boolean = magnetismServiceStub.isGrid.value;
         service.finalizeResizingEvent();
 
         expect(historyServiceStub['past'].length).toEqual(1);

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
@@ -22,7 +23,7 @@ export class DrawingComponent implements AfterViewInit {
     private gridCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-    isInCanevas: boolean;
+    isInCanvas: boolean;
 
     wasResizing: boolean;
 
@@ -33,8 +34,11 @@ export class DrawingComponent implements AfterViewInit {
         private drawingCreatorService: DrawingCreatorService,
     ) {
         this.wasResizing = false;
-        this.drawingCreatorService.drawingRestored.subscribe(() => {
-            this.drawingService.resetDrawingSurface();
+        this.drawingCreatorService.drawingRestored.subscribe(async () => {
+            this.drawingService.resetDrawingSurfaceDimensions();
+            await sleep();
+            this.drawingService.resetDrawingSurfaceColour();
+            this.drawingService.onDrawingLoaded.emit();
         });
 
         this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
@@ -60,6 +64,13 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.initialSize.x = this.canvasSize.x;
         this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
+    }
+
+    @HostListener('document:wheel', ['$event'])
+    onWheel(event: WheelEvent): void {
+        if (this.toolSelector.getSelectedTool().key === 'stamp' && this.isInCanvas) {
+            this.toolSelector.stampService.rollAngle(event);
+        }
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -108,7 +119,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
-            this.isInCanevas = false;
+            this.isInCanvas = false;
         }
     }
 
@@ -116,7 +127,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseEnter(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
-            this.isInCanevas = true;
+            this.isInCanvas = true;
         }
     }
 

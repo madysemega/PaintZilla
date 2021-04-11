@@ -19,5 +19,20 @@
         <mat-option value="Garamond">Garamond</mat-option>
         <mat-option value="Courier New">Courier New</mat-option>
     </mat-select>
-  </mat-form-field>
+</mat-form-field>
 
+<mat-slide-toggle [ngModel]="fontIsBold" (ngModelChange)="updateFontIsBold($event)">Gras</mat-slide-toggle>
+<br>
+<mat-slide-toggle [ngModel]="fontIsItalic" (ngModelChange)="updateFontIsItalic($event)">Italique</mat-slide-toggle>
+<br>
+<mat-button-toggle-group [(value)]="alignment">
+    <mat-button-toggle value="left" aria-label="Text align left">
+      <mat-icon>format_align_left</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="center" aria-label="Text align center">
+      <mat-icon>format_align_center</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="right" aria-label="Text align right">
+      <mat-icon>format_align_right</mat-icon>
+    </mat-button-toggle>
+</mat-button-toggle-group>

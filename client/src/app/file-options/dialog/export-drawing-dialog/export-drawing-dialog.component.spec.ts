@@ -26,6 +26,7 @@ describe('ExportDrawingDialogComponent', () => {
     let fixture: ComponentFixture<ExportDrawingDialogComponent>;
 
     let historyServiceStub: HistoryService;
+    // tslint:disable:prefer-const
     let magnetismServiceStub: MagnetismService;
     let drawingServiceSpy: DrawingService;
     let resizingServiceSpy: ResizingService;

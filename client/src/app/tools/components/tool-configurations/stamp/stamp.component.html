@@ -1,0 +1,39 @@
+<div class="vertical">
+    <mat-label class="margin-bottom-small">Taille de l'étampe</mat-label>
+    <mat-slider
+        thumbLabel
+        [matTooltip]="info"
+        step="10"
+        min="10"
+        max="500"
+        [value]="imageSize"
+        (valueChange)="stampTool.changeSize($event)"
+    ></mat-slider>
+    <mat-label class="margin-bottom-small">Angle d'orientation</mat-label>
+    <mat-slider
+        thumbLabel
+        [matTooltip]="infoAngle"
+        step="15"
+        min="0"
+        max="360"
+        [value]="angle"
+        (valueChange)="stampTool.changeAngle($event)"
+    ></mat-slider>
+    <div class="clearfix">
+        <div class="stampImage">
+            <img src="./assets/icons/spade-symbol.svg" [ngClass]="{ borderWall: stampTool.toBorder[0] }" (click)="stampTool.selectStamp($event, 0)" />
+        </div>
+        <div class="stampImage">
+            <img src="./assets/icons/heart.svg" [ngClass]="{ borderWall: stampTool.toBorder[1] }" (click)="stampTool.selectStamp($event, 1)" />
+        </div>
+        <div class="stampImage">
+            <img src="./assets/icons/clubs.svg" [ngClass]="{ borderWall: stampTool.toBorder[2] }" (click)="stampTool.selectStamp($event, 2)" />
+        </div>
+        <div class="stampImage">
+            <img src="./assets/icons/diamond.svg" [ngClass]="{ borderWall: stampTool.toBorder[3] }" (click)="stampTool.selectStamp($event, 3)" />
+        </div>
+        <div class="stampImage">
+            <img src="./assets/icons/cancel.svg" [ngClass]="{ borderWall: stampTool.toBorder[4] }" (click)="stampTool.selectStamp($event, 4)" />
+        </div>
+    </div>
+</div>

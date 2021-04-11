@@ -44,6 +44,7 @@ import { FilterLabelComponent } from './carousel/components/filter-label/filter-
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 import { MagnetismComponent } from './magnetism/magnetism/magnetism.component';
 import { ClipboardComponent } from './tools/components/selection/clipboard/clipboard.component';
+import { StampComponent } from './tools/components/tool-configurations/stamp/stamp.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -86,6 +87,7 @@ import { ClipboardComponent } from './tools/components/selection/clipboard/clipb
         ClipboardComponent,
         MagnetismComponent,
         ImgurLinkDialogComponent,
+        StampComponent,
         TextToolConfigurationComponent,
     ],
     imports: [

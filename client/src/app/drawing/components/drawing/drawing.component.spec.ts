@@ -34,6 +34,7 @@ describe('DrawingComponent', () => {
     let drawingCreatorServiceSpy: jasmine.SpyObj<DrawingCreatorService>;
     let drawingRestoredStub: EventEmitter<void>;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+    // tslint:disable:prefer-const
     let magnetismServiceStub: MagnetismService;
 
     beforeEach(async(() => {
@@ -84,9 +85,9 @@ describe('DrawingComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should call drawingService.resetDrawingSurface on drawingRestored emit', () => {
-        const resetDrawingSurfaceStub = spyOn(drawingStub, 'resetDrawingSurface').and.callThrough();
+        const resetDrawingSurfaceDimensionStub = spyOn(drawingStub, 'resetDrawingSurfaceDimensions').and.callThrough();
         drawingCreatorServiceSpy.drawingRestored.emit();
-        expect(resetDrawingSurfaceStub).toHaveBeenCalled();
+        expect(resetDrawingSurfaceDimensionStub).toHaveBeenCalled();
     });
 
     it("onMouseMove(): should call the resizingService's resizeCanvas method when receiving a mouse move event and the canvas is resizing", () => {

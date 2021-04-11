@@ -12,6 +12,8 @@ describe('TextCursorRenderer', () => {
     const POSITION = { x: 42, y: 32 };
     const FONT_SIZE = 24;
     const FONT_NAME = 'Arial';
+    const FONT_IS_BOLD = false;
+    const FONT_IS_ITALIC = false;
 
     const INITIAL_CURSOR_POSITION = 0;
 
@@ -25,7 +27,7 @@ describe('TextCursorRenderer', () => {
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
-        properties.push(new FontProperty(FONT_SIZE, FONT_NAME));
+        properties.push(new FontProperty(FONT_SIZE, FONT_NAME, FONT_IS_BOLD, FONT_IS_ITALIC));
         shape = new TextShape(TEXT, POSITION, FONT_SIZE);
         renderer = new TextCursorRenderer(shape, properties, INITIAL_CURSOR_POSITION);
 
@@ -57,6 +59,62 @@ describe('TextCursorRenderer', () => {
 
         renderer['shape'].text = '123\n321\nabc\n';
         expect(renderer['getOffsetsAt'](CURSOR_POSITION, ctxStub).y).toEqual(EXPECTED_Y_OFFSET);
+    });
+
+    it('getTextCurrentLineWidth() should return width of full text in no \\n is present', () => {
+        shape.text = '1234567890';
+        expect(renderer['getTextCurrentLineWidth'](ctxStub)).toEqual(ctxStub.measureText(shape.text).width);
+    });
+
+    it('getTextCurrentLineWidth() should return 0 if line is empty', () => {
+        shape.text = '';
+        expect(renderer['getTextCurrentLineWidth'](ctxStub)).toEqual(0);
+    });
+
+    it('getRealPosition() should return the start value if alignment is left', () => {
+        const START_POSITION = { x: 3, y: 4 };
+
+        properties[0].apply(ctxStub);
+        shape.text = '1234567890';
+        shape.textAlignment = 'left';
+
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
+    });
+
+    it("getRealPosition() should offset by the current line's length if alignment is right", () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const LINE_WIDTH = 32;
+
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        shape.textAlignment = 'right';
+
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
+            x: START_POSITION.x - LINE_WIDTH,
+            y: START_POSITION.y,
+        });
+    });
+
+    it("getRealPosition() should offset by half the current line's length if alignment is center", () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const LINE_WIDTH = 32;
+
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        shape.textAlignment = 'center';
+
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
+            x: START_POSITION.x - LINE_WIDTH / 2,
+            y: START_POSITION.y,
+        });
+    });
+
+    it('getRealPosition() should return the start value if alignment is not left, right nor center', () => {
+        const START_POSITION = { x: 3, y: 4 };
+        const CURSOR_POSITION = 6;
+
+        shape.text = '1234\n1234\n';
+        renderer.cursorPosition = CURSOR_POSITION;
+        shape.textAlignment = 'start';
+        expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
     });
 
     it('clone should return an identical copy', () => {
