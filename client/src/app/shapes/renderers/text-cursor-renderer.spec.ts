@@ -83,26 +83,30 @@ describe('TextCursorRenderer', () => {
 
     it("getRealPosition() should offset by the current line's length if alignment is right", () => {
         const START_POSITION = { x: 3, y: 4 };
-        const LINE_WIDTH = 32;
+        const MAX_LINE_WIDTH = 64;
+        const CURRENT_LINE_WIDTH = 32;
 
-        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(CURRENT_LINE_WIDTH);
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH)
         shape.textAlignment = 'right';
 
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
-            x: START_POSITION.x - LINE_WIDTH,
+            x: START_POSITION.x + MAX_LINE_WIDTH - CURRENT_LINE_WIDTH,
             y: START_POSITION.y,
         });
     });
 
     it("getRealPosition() should offset by half the current line's length if alignment is center", () => {
         const START_POSITION = { x: 3, y: 4 };
-        const LINE_WIDTH = 32;
+        const MAX_LINE_WIDTH = 64;
+        const CURRENT_LINE_WIDTH = 32;
 
-        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(LINE_WIDTH);
+        spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(CURRENT_LINE_WIDTH);
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH)
         shape.textAlignment = 'center';
 
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
-            x: START_POSITION.x - LINE_WIDTH / 2,
+            x: START_POSITION.x + (MAX_LINE_WIDTH - CURRENT_LINE_WIDTH) / 2,
             y: START_POSITION.y,
         });
     });
