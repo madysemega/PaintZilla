@@ -491,6 +491,13 @@ describe('EllipseSelectionManipulatorService', () => {
         expect(isPressed).toEqual(true);
     });
 
+    it('isAnArrowKeyPressed should return false if no arrow key is pressed', () => {
+        const arrowKeyDown: boolean[] = [false,false,false];
+        service.arrowKeyDown = arrowKeyDown;
+        const isPressed: boolean = service.isAnArrowKeyPressed();
+        expect(isPressed).toEqual(false);
+    });
+
     it('delete should register an action in case white fill is applied', () => {
         (selectionHandlerMock.makeWhiteBehindSelection as jasmine.Spy<any>).and.returnValue(true);
         service.delete();
