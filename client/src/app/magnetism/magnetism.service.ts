@@ -47,10 +47,10 @@ export class MagnetismService {
     toggleGrid(): void {
         this.isGrid.next(!this.isGrid.value);
     }
-    incrementGrid() : void {
+    incrementGrid(): void {
         this.isIncrement.next(!this.isIncrement.value);
     }
-    decrementGrid() : void {
+    decrementGrid(): void {
         this.isDecrement.next(!this.isDecrement.value);
     }
 }

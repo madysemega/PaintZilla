@@ -26,11 +26,14 @@ describe('MagnetismComponent', () => {
     let canvas: HTMLCanvasElement;
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
-        
+
         TestBed.configureTestingModule({
             imports: [MatMenuModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [MagnetismComponent],
-            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }, { provide: DrawingService, useValue: drawServiceSpy }],
+            providers: [
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
+                { provide: DrawingService, useValue: drawServiceSpy },
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
@@ -45,8 +48,8 @@ describe('MagnetismComponent', () => {
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         gridCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas = canvasTestHelper.canvas;
-        component['drawingService'].gridCtx = gridCtxStub;
-        component['drawingService'].canvas = canvas;
+        component.drawingService.gridCtx = gridCtxStub;
+        component.drawingService.canvas = canvas;
     });
 
     it('should create', () => {
@@ -70,23 +73,23 @@ describe('MagnetismComponent', () => {
     });
     it('delete grid should remove grid ', () => {
         component.deleteGrid();
-        expect( component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
     it('drawGrid should draw', () => {
-        component.drawingService.canvasSize.x=100;
-        component.drawingService.canvasSize.y=100;
+        component.drawingService.canvasSize.x = 100;
+        component.drawingService.canvasSize.y = 100;
         component.drawGrid();
-        expect( component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
     it('change opacity should change opacity', () => {
         component.opaciteChange(10);
-        component.isGridActivated=true;
-        expect( component.opacite).toEqual(10);
+        component.isGridActivated = true;
+        expect(component.opacite).toEqual(10);
         expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });
     it('change opacity should change opacity', () => {
         component.gridCellSizeChange(10);
-        component.isGridActivated=true;
+        component.isGridActivated = true;
         expect(component.gridCellSize).toEqual(10);
         expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
     });

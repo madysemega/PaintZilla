@@ -26,13 +26,13 @@ export class MagnetismComponent {
         public drawingService: DrawingService,
     ) {
         this.magnetismService.isGrid.subscribe((value) => {
-            if(this.isGridActivated !=value){
+            if (this.isGridActivated !== value) {
                 this.isGridActivated = value;
                 this.toggleGrid();
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            console.log("helloFromMagnet");
+            console.log('helloFromMagnet');
             this.isActivated = value;
             this.notifyManipulators();
         });
@@ -82,7 +82,7 @@ export class MagnetismComponent {
         }
         this.drawingService.gridCtx.stroke();
     }
-    
+
     deleteGrid(): void {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
