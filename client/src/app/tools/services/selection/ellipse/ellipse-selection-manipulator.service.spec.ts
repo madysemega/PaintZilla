@@ -492,7 +492,7 @@ describe('EllipseSelectionManipulatorService', () => {
     });
 
     it('isAnArrowKeyPressed should return false if no arrow key is pressed', () => {
-        const arrowKeyDown: boolean[] = [false,false,false];
+        const arrowKeyDown: boolean[] = [false, false, false];
         service.arrowKeyDown = arrowKeyDown;
         const isPressed: boolean = service.isAnArrowKeyPressed();
         expect(isPressed).toEqual(false);

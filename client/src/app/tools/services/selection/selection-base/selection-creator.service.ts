@@ -96,7 +96,6 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
 
         this.isShiftDown = event.key === 'Shift';
 
-
         if (this.isShiftDown && this.mouseDown) {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawSelectionOutline(this.lastMousePosition);
