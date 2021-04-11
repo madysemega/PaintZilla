@@ -171,7 +171,7 @@ export class TextEditor {
     }
 
     getTextRenderer(): TextRenderer {
-        return this.renderer.clone();
+        return this.renderer.clone() as TextRenderer;
     }
 
     isEmpty(): boolean {
