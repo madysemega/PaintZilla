@@ -4,6 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
@@ -24,6 +25,7 @@ describe('MagnetismComponent', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawingService>;
     let gridCtxStub: CanvasRenderingContext2D;
     let canvas: HTMLCanvasElement;
+    let canvasSizeStub: Vec2;
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
@@ -50,6 +52,7 @@ describe('MagnetismComponent', () => {
         canvas = canvasTestHelper.canvas;
         component.drawingService.gridCtx = gridCtxStub;
         component.drawingService.canvas = canvas;
+        component.drawingService.canvasSize = canvasSizeStub;
     });
 
     it('should create', () => {
