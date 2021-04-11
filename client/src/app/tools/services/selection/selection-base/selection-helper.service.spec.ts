@@ -3,8 +3,9 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovement } from './grid-movement';
 import { GridMovementAnchor } from './selection-constants';
-import { GridMovement, SelectionHelperService } from './selection-helper.service';
+import { SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -157,15 +158,15 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        let gridMovement: GridMovement = {
-            movement: movement,
-            isMouseMovement: isMouseMovement,
-            gridCellSize: gridCellSize,
-            anchor: anchor,
-            topLeft: topLeft,
-            bottomRight: bottomRight,
-            isReversed: isReversed,
-        }
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
         service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.round);
     });
@@ -181,15 +182,15 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        let gridMovement: GridMovement = {
-            movement: movement,
-            isMouseMovement: isMouseMovement,
-            gridCellSize: gridCellSize,
-            anchor: anchor,
-            topLeft: topLeft,
-            bottomRight: bottomRight,
-            isReversed: isReversed,
-        }
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
         service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.ceil);
     });
@@ -205,15 +206,15 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        let gridMovement: GridMovement = {
-            movement: movement,
-            isMouseMovement: isMouseMovement,
-            gridCellSize: gridCellSize,
-            anchor: anchor,
-            topLeft: topLeft,
-            bottomRight: bottomRight,
-            isReversed: isReversed,
-        }
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
         service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.floor);
     });
@@ -229,15 +230,15 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        let gridMovement: GridMovement = {
-            movement: movement,
-            isMouseMovement: isMouseMovement,
-            gridCellSize: gridCellSize,
-            anchor: anchor,
-            topLeft: topLeft,
-            bottomRight: bottomRight,
-            isReversed: isReversed,
-        }
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
         service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).not.toHaveBeenCalled();
     });
@@ -283,7 +284,10 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height / 2 });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
+            x: actualTopLeft.x,
+            y: actualTopLeft.y + height / 2,
+        });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomL', () => {
@@ -306,7 +310,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor,[topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomM', () => {
@@ -567,7 +571,7 @@ describe('SelectionHelperService', () => {
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
         newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
         const correctMovement: Vec2 = { x: newPos.x - position.x, y: newPos.y - position.y };
-        let movementData: Vec2[]= [position, movement];
+        const movementData: Vec2[] = [position, movement];
         expect(service.computeMovementAlongGrid(movementData, gridCellSize, roundingFunction)).toEqual(correctMovement);
     });
 });

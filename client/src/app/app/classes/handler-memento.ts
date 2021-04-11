@@ -14,7 +14,7 @@ export class HandlerMemento {
         this.originalSelection.height = height;
 
         this.topLeftRelativeToMiddle = { x: 0, y: 0 };
-        this.offset = { x: 0, y: 0 }
+        this.offset = { x: 0, y: 0 };
         this.originalTopLeftOnBaseCanvas = { x: 0, y: 0 };
         this.originalCenter = { x: 0, y: 0 };
         this.originalVertices = [];

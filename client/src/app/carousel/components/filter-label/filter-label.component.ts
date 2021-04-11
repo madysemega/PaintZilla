@@ -11,20 +11,6 @@ import { Observable } from 'rxjs';
     styleUrls: ['./filter-label.component.scss'],
 })
 export class FilterLabelComponent {
-
-    constructor() {
-        this.availableLabels = [];
-        this.retainedLabels = [];
-
-        this.separatorKeysCodes = [ENTER, COMMA];
-        this.labelCtrl = new FormControl();
-        this.filteredLabels;
-
-        this.removable = true;
-        this.selectable = true;
-        this.isAvailable = true;
-    }
-
     @Input()
     availableLabels: string[];
     retainedLabels: string[];
@@ -41,6 +27,18 @@ export class FilterLabelComponent {
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
     filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
+
+    constructor() {
+        this.availableLabels = [];
+        this.retainedLabels = [];
+
+        this.separatorKeysCodes = [ENTER, COMMA];
+        this.labelCtrl = new FormControl();
+
+        this.removable = true;
+        this.selectable = true;
+        this.isAvailable = true;
+    }
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;

@@ -28,11 +28,13 @@ export class ImageDetailsComponent {
 
     imageContainerWidth: number;
     imageContainerHeight: number;
-    
+    readonly CONTAINER_WIDTH: number = 150;
+    readonly CONTAINER_HEIGHT: number = 150;
+
     constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
         this.delete = new EventEmitter();
-        this.imageContainerWidth = 150;
-        this.imageContainerHeight = 150;
+        this.imageContainerWidth = this.CONTAINER_WIDTH;
+        this.imageContainerHeight = this.CONTAINER_HEIGHT;
     }
 
     get imageSrc(): SafeResourceUrl {

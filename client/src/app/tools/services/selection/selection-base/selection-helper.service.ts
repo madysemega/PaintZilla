@@ -5,19 +5,10 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovement } from './grid-movement';
 import { ResizingMode } from './resizing-mode';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
-
-export class GridMovement{
-    movement: Vec2;
-    isMouseMovement: boolean;
-    gridCellSize: number;
-    anchor: GridMovementAnchor;
-    topLeft: Vec2;
-    bottomRight: Vec2;
-    isReversed: boolean[];
-}
 
 @Injectable({
     providedIn: 'root',
@@ -80,22 +71,20 @@ export abstract class SelectionHelperService {
         return mouseMovement;
     }
 
-    moveAlongTheGrid(
-        gridMovement: GridMovement
-    ): Vec2 {
-        let movement: Vec2 = gridMovement.movement;
-        let isMouseMovement: boolean = gridMovement.isMouseMovement;
-        let gridCellSize: number = gridMovement.gridCellSize;
-        let anchor: GridMovementAnchor = gridMovement.anchor;
-        let topLeft: Vec2 = gridMovement.topLeft;
-        let bottomRight: Vec2 = gridMovement.bottomRight;
-        let isReversed: boolean[] = gridMovement.isReversed;
+    moveAlongTheGrid(gridMovement: GridMovement): Vec2 {
+        const movement: Vec2 = gridMovement.movement;
+        const isMouseMovement: boolean = gridMovement.isMouseMovement;
+        const gridCellSize: number = gridMovement.gridCellSize;
+        const anchor: GridMovementAnchor = gridMovement.anchor;
+        const topLeft: Vec2 = gridMovement.topLeft;
+        const bottomRight: Vec2 = gridMovement.bottomRight;
+        const isReversed: boolean[] = gridMovement.isReversed;
 
-        let positions: Vec2[] = [topLeft, bottomRight];
+        const positions: Vec2[] = [topLeft, bottomRight];
         const position: Vec2 = this.getAnchorPosition(anchor, positions, isReversed);
 
-        let movementData: Vec2[] = [position, movement];
-      
+        const movementData: Vec2[] = [position, movement];
+
         if (gridCellSize > 0 && isMouseMovement) {
             return this.computeMovementAlongGrid(movementData, gridCellSize, Math.round);
         }
@@ -110,9 +99,9 @@ export abstract class SelectionHelperService {
         return movement;
     }
 
-    getAnchorPosition(anchor: GridMovementAnchor, positions:Vec2[], isReversed: boolean[]): Vec2 {
-        let topL = positions[0];
-        let bottomR = positions[1];
+    getAnchorPosition(anchor: GridMovementAnchor, positions: Vec2[], isReversed: boolean[]): Vec2 {
+        const topL = positions[0];
+        const bottomR = positions[1];
         const width: number = Math.abs(topL.x - bottomR.x);
         const height: number = Math.abs(topL.y - bottomR.y);
         const X = 0;
@@ -160,8 +149,8 @@ export abstract class SelectionHelperService {
     }
 
     computeMovementAlongGrid(movementData: Vec2[], gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
-        let position = movementData[0];
-        let movement = movementData[1];
+        const position = movementData[0];
+        const movement = movementData[1];
         const newPos: Vec2 = { x: position.x, y: position.y };
         this.addInPlace(newPos, movement);
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;

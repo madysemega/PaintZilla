@@ -7,9 +7,10 @@ import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderSelection } from '@app/history/user-actions/user-action-render-selection';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
-import { GridMovement, SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
+import { GridMovement } from './grid-movement';
 import { ResizingMode } from './resizing-mode';
 import {
     Arrow,
@@ -61,7 +62,6 @@ export abstract class SelectionManipulatorService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        const mousePos = this.getPositionFromMouse(event);
         if (!this.mouseDown) {
             return;
         }
@@ -70,7 +70,7 @@ export abstract class SelectionManipulatorService extends Tool {
             return;
         }
         this.computeDiagonalEquation();
-        this.registerMousePos(mousePos, true);
+        this.registerMousePos(this.getPositionFromMouse(event), true);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -160,7 +160,6 @@ export abstract class SelectionManipulatorService extends Tool {
             newPos = this.getMousePosOnDiagonal(newPos);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
         if (
             direction === ResizingMode.towardsBottom ||
             direction === ResizingMode.towardsBottomRight ||
@@ -235,17 +234,16 @@ export abstract class SelectionManipulatorService extends Tool {
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
         const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : MAGNETISM_OFF;
-        let gridMovement: GridMovement = {
-            movement: movement,
-            isMouseMovement: isMouseMovement,
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
             gridCellSize: cellSize,
             anchor: this.gridMovementAnchor,
             topLeft: this.topLeft,
             bottomRight: this.bottomRight,
             isReversed: [this.isReversedX, this.isReversedY],
-        }
-        movement = this.selectionHelper.moveAlongTheGrid(gridMovement
-        );
+        };
+        movement = this.selectionHelper.moveAlongTheGrid(gridMovement);
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);
         if (isMouseMovement) {
