@@ -83,20 +83,23 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Shift') {
-            this.shiftDown = true;
-            if (this.mouseDown) {
-                this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
-            }
+        if (event.key !== 'Shift') {
+            return;
+        }
+
+        this.shiftDown = true;
+        if (this.mouseDown) {
+            this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
         }
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.key === 'Shift') {
-            this.shiftDown = false;
-            if (this.mouseDown) {
-                this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
-            }
+        if (event.key !== 'Shift') {
+            return;
+        }
+        this.shiftDown = false;
+        if (this.mouseDown) {
+            this.draw(this.drawingService.previewCtx, this.lastMouseCoords.x, this.lastMouseCoords.y);
         }
     }
 
@@ -156,15 +159,23 @@ export class RectangleService extends ShapeTool implements ISelectableTool, IDes
     adjustRectSize(x: number, y: number): void {
         this.width = x - this.startingPos.x;
         this.height = y - this.startingPos.y;
-        if (this.shiftDown) {
-            if (Math.abs(this.width) > Math.abs(this.height)) {
-                if (this.width > 0) this.width = Math.abs(this.height);
-                else this.width = -Math.abs(this.height);
-            } else {
-                if (this.height > 0) this.height = Math.abs(this.width);
-                else this.height = -Math.abs(this.width);
-            }
+        if (!this.shiftDown) {
+            return;
         }
+
+        if (Math.abs(this.width) > Math.abs(this.height)) {
+            if (this.width > 0) {
+                this.width = Math.abs(this.height);
+                return;
+            }
+            this.width = -Math.abs(this.height);
+            return;
+        }
+        if (this.height > 0) {
+            this.height = Math.abs(this.width);
+            return;
+        }
+        this.height = -Math.abs(this.width);
     }
 
     private drawRect(ctx: CanvasRenderingContext2D): void {

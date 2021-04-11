@@ -181,7 +181,6 @@ export abstract class SelectionHandlerService {
         memento.offset = { x: this.offset.x, y: this.offset.y };
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
-
         memento.hasBeenManipulated = true;
         memento.needWhitePostDrawing = this.needWhitePostDrawing; //////
         memento.originalTopLeftOnBaseCanvas = { x: this.originalTopLeftOnBaseCanvas.x, y: this.originalTopLeftOnBaseCanvas.y };
@@ -192,7 +191,6 @@ export abstract class SelectionHandlerService {
 
         memento.currentHorizontalScaling = this.currentHorizontalScaling;
         memento.currentVerticalScaling = this.currentVerticalScaling;
-
         this.drawACanvasOnAnother(this.selection, memento.selectionCtx);
         this.drawACanvasOnAnother(this.originalSelection, memento.originalSelectionCtx);
 
@@ -201,7 +199,6 @@ export abstract class SelectionHandlerService {
 
     restoreFromMemento(memento: HandlerMemento): void {
         this.clearAndResetAllCanvas();
-
         this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
         this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
 
@@ -210,20 +207,16 @@ export abstract class SelectionHandlerService {
             y: memento.topLeftRelativeToMiddle.y,
         };
         this.offset = { x: memento.offset.x, y: memento.offset.y };
-
         this.originalWidth = memento.originalWidth;
         this.originalHeight = memento.originalHeight;
-
         this.hasBeenManipulated = true;
         this.needWhitePostDrawing = memento.needWhitePostDrawing; //////
         this.originalTopLeftOnBaseCanvas = { x: memento.originalTopLeftOnBaseCanvas.x, y: memento.originalTopLeftOnBaseCanvas.y };
-
         this.originalCenter = { x: memento.originalCenter.x, y: memento.originalCenter.y };
         this.originalVertices = [];
         memento.originalVertices.forEach((value) => {
             this.originalVertices.push({ x: value.x, y: value.y });
         });
-
         this.currentHorizontalScaling = memento.currentHorizontalScaling;
         this.currentVerticalScaling = memento.currentVerticalScaling;
     }
