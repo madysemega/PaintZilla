@@ -179,7 +179,6 @@ export abstract class SelectionHandlerService {
 
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };
-
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
 

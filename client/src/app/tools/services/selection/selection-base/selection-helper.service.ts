@@ -43,23 +43,33 @@ export abstract class SelectionHelperService {
         let xOutsideSelection: boolean;
         let yOutsideSelection: boolean;
 
-        if (isReversedX) {
-            xOutsideSelection =
-                mousePosition.x > topLeft.x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
-        } else {
-            xOutsideSelection =
-                mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
-        }
+        const rightLimit = isReversedX ? topLeft.x : bottomRight.x;
+        const leftLimit = isReversedX ? bottomRight.x : topLeft.x;
+        const upLimit = isReversedY ? bottomRight.y : topLeft.y;
+        const downLimit = isReversedY ? topLeft.y : bottomRight.y;
 
-        if (isReversedY) {
-            yOutsideSelection =
-                mousePosition.y > topLeft.y + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y < bottomRight.y - this.OUTSIDE_DETECTION_OFFSET_PX;
-        } else {
-            yOutsideSelection =
-                mousePosition.y < topLeft.y - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > bottomRight.y + this.OUTSIDE_DETECTION_OFFSET_PX;
-        }
+        xOutsideSelection =
+            mousePosition.x < leftLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+
+        yOutsideSelection =
+            mousePosition.y < upLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+
         return xOutsideSelection || yOutsideSelection;
     }
+
+    /* isNumberOutsideLimits(areLimitsReversed: boolean, number:number, limits:Vec2[]){
+         let isOutside: boolean;
+         let lowerLimit
+  
+         if (areLimitsReversed) {
+             isOutside =
+                 number > limits[0].x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
+         } else {
+             isOutside =
+                 mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
+         }
+     }
+ */
 
     addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;
