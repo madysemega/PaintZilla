@@ -165,27 +165,31 @@ export abstract class SelectionManipulatorService extends Tool {
             direction === ResizingMode.towardsBottomRight ||
             direction === ResizingMode.towardsBottomLeft
         ) {
-            this.bottomRight.y = newPos.y;
-            this.isReversedY = newPos.y < this.topLeft.y;
-            this.selectionHandler.resizeSelection(this.topLeft, newPos, false);
+            this.updatePositions(false, newPos, false);
         }
         if (direction === ResizingMode.towardsTop || direction === ResizingMode.towardsTopRight || direction === ResizingMode.towardsTopLeft) {
-            this.topLeft.y = newPos.y;
-            this.isReversedY = newPos.y > this.bottomRight.y;
-            this.selectionHandler.resizeSelection(newPos, this.bottomRight, false);
+            this.updatePositions(true, newPos, false);
         }
         if (direction === ResizingMode.towardsRight || direction === ResizingMode.towardsTopRight || direction === ResizingMode.towardsBottomRight) {
-            this.bottomRight.x = newPos.x;
-            this.isReversedX = newPos.x < this.topLeft.x;
-            this.selectionHandler.resizeSelection(this.topLeft, newPos, true);
+            this.updatePositions(false, newPos, true);
         }
         if (direction === ResizingMode.towardsLeft || direction === ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
-            this.topLeft.x = newPos.x;
-            this.isReversedX = newPos.x > this.bottomRight.x;
-            this.selectionHandler.resizeSelection(newPos, this.bottomRight, true);
+            this.updatePositions(true, newPos, true);
         }
         this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
         this.drawSelectionOutline();
+    }
+
+    updatePositions(isTopLeftUpdate: boolean, newPos: Vec2, isUpdateX: boolean): void {
+        const corners: Vec2[] = isTopLeftUpdate ? [this.topLeft, this.bottomRight] : [this.bottomRight, this.topLeft];
+        if (isUpdateX) {
+            corners[0].x = newPos.x;
+            this.isReversedX = this.topLeft.x > this.bottomRight.x;
+        } else {
+            corners[0].y = newPos.y;
+            this.isReversedY = this.topLeft.y > this.bottomRight.y;
+        }
+        this.selectionHandler.resizeSelection(this.topLeft, this.bottomRight, isUpdateX);
     }
 
     delete(): void {
@@ -274,9 +278,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
     registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean): void {
         this.mouseLastPos = { x: mousePos.x, y: mousePos.y };
-        if (isMouseDownLastPos) {
-            this.mouseDownLastPos = { x: mousePos.x, y: mousePos.y };
-        }
+        this.mouseDownLastPos = isMouseDownLastPos ? { x: mousePos.x, y: mousePos.y } : { x: this.mouseDownLastPos.x, y: this.mouseDownLastPos.y };
     }
 
     computeDiagonalEquation(): void {
@@ -310,13 +312,11 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     isAnArrowKeyPressed(): boolean {
-        let isAnyArrowKeyDown = false;
-        this.arrowKeyDown.forEach((element) => {
-            if (element) {
-                isAnyArrowKeyDown = true;
+        for (const b of this.arrowKeyDown)
+            if (b) {
+                return true;
             }
-        });
-        return isAnyArrowKeyDown;
+        return false;
     }
 
     resetProperties(): void {
