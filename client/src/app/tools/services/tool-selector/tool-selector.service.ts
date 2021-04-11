@@ -190,7 +190,7 @@ export class ToolSelectorService {
         polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
-        public stampService: StampService,
+        stampService: StampService,
         textService: TextService,
     ) {
         this.tools.set(pencilService.key, {

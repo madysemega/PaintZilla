@@ -87,6 +87,22 @@ describe('DrawingComponent', () => {
         expect(resetDrawingSurfaceDimensionStub).toHaveBeenCalled();
     });
 
+    it("onWheel() should call tool's onWheel if the mouse is in the canvas", () => {
+        const wheelEvent: WheelEvent = { deltaY: 125 } as WheelEvent;
+        const ROLL_SPY = spyOn<any>(toolStub, 'onWheel').and.callThrough();
+        component.isInCanvas = true;
+        component.onWheel(wheelEvent);
+        expect(ROLL_SPY).toHaveBeenCalled();
+    });
+
+    it("onWheel() should not call tool's onWheel if the mouse is not in the canvas", () => {
+        const wheelEvent: WheelEvent = { deltaY: 125 } as WheelEvent;
+        const ROLL_SPY = spyOn<any>(toolStub, 'onWheel').and.callThrough();
+        component.isInCanvas = false;
+        component.onWheel(wheelEvent);
+        expect(ROLL_SPY).not.toHaveBeenCalled();
+    });
+
     it("onMouseMove(): should call the resizingService's resizeCanvas method when receiving a mouse move event and the canvas is resizing", () => {
         const mouseEvent: MouseEvent = { clientX: 0, clientY: 0 } as MouseEvent;
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(true);
