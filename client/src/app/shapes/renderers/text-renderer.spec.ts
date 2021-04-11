@@ -4,6 +4,7 @@ import { TextShape } from '@app/shapes/text-shape';
 import { TextRenderer } from './text-renderer';
 
 // tslint:disable:no-any
+// tslint:disable:no-string-literal
 describe('TextRenderer', () => {
     const TEXT = 'Test';
     const POSITION = { x: 42, y: 32 };

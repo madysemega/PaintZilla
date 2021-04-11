@@ -87,7 +87,7 @@ describe('TextCursorRenderer', () => {
         const CURRENT_LINE_WIDTH = 32;
 
         spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(CURRENT_LINE_WIDTH);
-        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH)
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH);
         shape.textAlignment = 'right';
 
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
@@ -102,7 +102,7 @@ describe('TextCursorRenderer', () => {
         const CURRENT_LINE_WIDTH = 32;
 
         spyOn<any>(renderer, 'getTextCurrentLineWidth').and.returnValue(CURRENT_LINE_WIDTH);
-        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH)
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_WIDTH);
         shape.textAlignment = 'center';
 
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual({
