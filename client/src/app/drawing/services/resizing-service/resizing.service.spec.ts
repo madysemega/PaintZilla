@@ -31,6 +31,7 @@ describe('ResizingService', () => {
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
+        magnetismServiceStub = new MagnetismService(keyboardServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],
             providers: [
@@ -71,10 +72,6 @@ describe('ResizingService', () => {
     it('isResizing(): should return true if downResizerEnabled is true', () => {
         service.downResizerEnabled = true;
         expect(service.isResizing()).toBeTruthy();
-    });
-    it('final resizing: should call grid twice', () => {
-        service.finalizeResizingEvent();
-        expect(magnetismServiceStub.toggleGrid()).toHaveBeenCalled();
     });
     it('resizeCanvas(): should not change canvasResize.x if righResizerEnabled is false', () => {
         spyOn(service, 'restorePreviewImageData').and.returnValue();
@@ -353,9 +350,10 @@ describe('ResizingService', () => {
     it('finalizeResizingEvent should create, apply and register a user action', () => {
         spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
-
+        let test: boolean = magnetismServiceStub.isGrid.value;
         service.finalizeResizingEvent();
 
         expect(historyServiceStub['past'].length).toEqual(1);
+        expect(magnetismServiceStub.isGrid.value).toEqual(test);
     });
 });
