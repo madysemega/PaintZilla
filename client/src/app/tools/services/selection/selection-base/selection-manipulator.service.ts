@@ -10,6 +10,7 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
+import { GridMovement } from './grid-movement';
 import { ResizingMode } from './resizing-mode';
 import {
     Arrow,
@@ -61,7 +62,6 @@ export abstract class SelectionManipulatorService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-        const mousePos = this.getPositionFromMouse(event);
         if (!this.mouseDown) {
             return;
         }
@@ -70,7 +70,7 @@ export abstract class SelectionManipulatorService extends Tool {
             return;
         }
         this.computeDiagonalEquation();
-        this.registerMousePos(mousePos, true);
+        this.registerMousePos(this.getPositionFromMouse(event), true);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -160,33 +160,36 @@ export abstract class SelectionManipulatorService extends Tool {
             newPos = this.getMousePosOnDiagonal(newPos);
         }
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-
         if (
             direction === ResizingMode.towardsBottom ||
             direction === ResizingMode.towardsBottomRight ||
             direction === ResizingMode.towardsBottomLeft
         ) {
-            this.bottomRight.y = newPos.y;
-            this.isReversedY = newPos.y < this.topLeft.y;
-            this.selectionHandler.resizeSelection(this.topLeft, newPos, false);
+            this.updatePositions(false, newPos, false);
         }
         if (direction === ResizingMode.towardsTop || direction === ResizingMode.towardsTopRight || direction === ResizingMode.towardsTopLeft) {
-            this.topLeft.y = newPos.y;
-            this.isReversedY = newPos.y > this.bottomRight.y;
-            this.selectionHandler.resizeSelection(newPos, this.bottomRight, false);
+            this.updatePositions(true, newPos, false);
         }
         if (direction === ResizingMode.towardsRight || direction === ResizingMode.towardsTopRight || direction === ResizingMode.towardsBottomRight) {
-            this.bottomRight.x = newPos.x;
-            this.isReversedX = newPos.x < this.topLeft.x;
-            this.selectionHandler.resizeSelection(this.topLeft, newPos, true);
+            this.updatePositions(false, newPos, true);
         }
         if (direction === ResizingMode.towardsLeft || direction === ResizingMode.towardsTopLeft || direction === ResizingMode.towardsBottomLeft) {
-            this.topLeft.x = newPos.x;
-            this.isReversedX = newPos.x > this.bottomRight.x;
-            this.selectionHandler.resizeSelection(newPos, this.bottomRight, true);
+            this.updatePositions(true, newPos, true);
         }
         this.selectionHandler.drawSelection(this.drawingService.previewCtx, this.topLeft);
         this.drawSelectionOutline();
+    }
+
+    updatePositions(isTopLeftUpdate: boolean, newPos: Vec2, isUpdateX: boolean): void {
+        const corners: Vec2[] = isTopLeftUpdate ? [this.topLeft, this.bottomRight] : [this.bottomRight, this.topLeft];
+        if (isUpdateX) {
+            corners[0].x = newPos.x;
+            this.isReversedX = this.topLeft.x > this.bottomRight.x;
+        } else {
+            corners[0].y = newPos.y;
+            this.isReversedY = this.topLeft.y > this.bottomRight.y;
+        }
+        this.selectionHandler.resizeSelection(this.topLeft, this.bottomRight, isUpdateX);
     }
 
     delete(): void {
@@ -235,15 +238,16 @@ export abstract class SelectionManipulatorService extends Tool {
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
         const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : MAGNETISM_OFF;
-        movement = this.selectionHelper.moveAlongTheGrid(
+        const gridMovement: GridMovement = {
             movement,
             isMouseMovement,
-            cellSize,
-            this.gridMovementAnchor,
-            this.topLeft,
-            this.bottomRight,
-            [this.isReversedX, this.isReversedY],
-        );
+            gridCellSize: cellSize,
+            anchor: this.gridMovementAnchor,
+            topLeft: this.topLeft,
+            bottomRight: this.bottomRight,
+            isReversed: [this.isReversedX, this.isReversedY],
+        };
+        movement = this.selectionHelper.moveAlongTheGrid(gridMovement);
         this.selectionHelper.addInPlace(this.topLeft, movement);
         this.selectionHelper.addInPlace(this.bottomRight, movement);
         if (isMouseMovement) {
@@ -274,9 +278,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
     registerMousePos(mousePos: Vec2, isMouseDownLastPos: boolean): void {
         this.mouseLastPos = { x: mousePos.x, y: mousePos.y };
-        if (isMouseDownLastPos) {
-            this.mouseDownLastPos = { x: mousePos.x, y: mousePos.y };
-        }
+        this.mouseDownLastPos = isMouseDownLastPos ? { x: mousePos.x, y: mousePos.y } : { x: this.mouseDownLastPos.x, y: this.mouseDownLastPos.y };
     }
 
     computeDiagonalEquation(): void {
@@ -310,13 +312,11 @@ export abstract class SelectionManipulatorService extends Tool {
     }
 
     isAnArrowKeyPressed(): boolean {
-        let isAnyArrowKeyDown = false;
-        this.arrowKeyDown.forEach((element) => {
-            if (element) {
-                isAnyArrowKeyDown = true;
+        for (const b of this.arrowKeyDown)
+            if (b) {
+                return true;
             }
-        });
-        return isAnyArrowKeyDown;
+        return false;
     }
 
     resetProperties(): void {

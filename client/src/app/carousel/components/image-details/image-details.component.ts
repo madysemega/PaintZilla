@@ -15,8 +15,26 @@ import { Drawing } from '@common/models/drawing';
     styleUrls: ['./image-details.component.scss'],
 })
 export class ImageDetailsComponent {
+    @Input() data: Drawing = {
+        id: '',
+        name: '',
+        drawing: '',
+        labels: [],
+    };
+
+    @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
+
+    @Output() delete: EventEmitter<string>;
+
+    imageContainerWidth: number;
+    imageContainerHeight: number;
+    readonly CONTAINER_WIDTH: number = 150;
+    readonly CONTAINER_HEIGHT: number = 150;
+
     constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
         this.delete = new EventEmitter();
+        this.imageContainerWidth = this.CONTAINER_WIDTH;
+        this.imageContainerHeight = this.CONTAINER_HEIGHT;
     }
 
     get imageSrc(): SafeResourceUrl {
@@ -36,20 +54,6 @@ export class ImageDetailsComponent {
 
         return isHeightGreaterThanWidth ? this.imageContainerHeight : (this.imageContainerWidth / imageDimensions.x) * imageDimensions.y;
     }
-
-    @Input() data: Drawing = {
-        id: '',
-        name: '',
-        drawing: '',
-        labels: [],
-    };
-
-    @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
-
-    @Output() delete: EventEmitter<string>;
-
-    imageContainerWidth: number = 150;
-    imageContainerHeight: number = 150;
 
     private discardChangesModalData: DiscardChangesModalData = {
         confirmCallback: () => this.navigateToImage(),
