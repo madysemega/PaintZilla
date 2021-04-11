@@ -264,20 +264,14 @@ describe('SidebarComponent', () => {
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    it('should return <Outil inconnu>', () => {
-        const toolName = 'rectangle';
-        component.selectTool('rectangle');
-        expect(component.selectedToolName).toBe(toolName);
-    });
-
-    it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+    it('should not set selectedToolName to new toolName when calling selectTool', () => {
         const toolName = 'rectangle-selection';
-        spyOn(rectangleSelectionCreatorService, 'selectEntireCanvas').and.returnValue();
-        component.selectTheEntireCanvas();
+        component.selectTool('rectangle-selection');
+        component.selectTool('fbhsduubgvwehiogfvwruogfihwerguioerhgvuo;p');
         expect(component.selectedToolName).toBe(toolName);
     });
 
-    it('should return the display name of a tool when getDisplayName is called with a valid tool name', () => {
+    it('should not return the display name of a tool when getDisplayName is called with a valid tool name', () => {
         const expectedDisplayName = '<Outil inconnu>';
         const obtainedDisplayName: string = component.getDisplayName('fdfs');
         expect(obtainedDisplayName).toBe(expectedDisplayName);
@@ -292,6 +286,12 @@ describe('SidebarComponent', () => {
     it("should return '<Outil inconnu>' when asking for a keyboard shortcut of non-existing tool", () => {
         const expectedDisplayName = '<Outil inconnu>';
         const obtainedDisplayName: string = component.getKeyboardShortcut('invalid tool');
+        expect(obtainedDisplayName).toBe(expectedDisplayName);
+    });
+
+    it("should return '<Outil inconnu>' when asking for a keyboard shortcut of  an existing tool", () => {
+        const expectedDisplayName = 'c';
+        const obtainedDisplayName: string = component.getKeyboardShortcut('pencil');
         expect(obtainedDisplayName).toBe(expectedDisplayName);
     });
 
