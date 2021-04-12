@@ -85,18 +85,33 @@ describe('MagnetismComponent', () => {
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
     it('should notifyManipulators if next value is different than isGridActivated', () => {
-        let isTester: BehaviorSubject<boolean> = new BehaviorSubject(false);
+        let isTester: BehaviorSubject<boolean> = new BehaviorSubject(true);
         component.isGridActivated = false;
-        component.magnetismService.isGrid = isTester;
-        component.magnetismService.isGrid.next(true);
+        component.magnetismService.isGrid.next(isTester.value);
         expect(component.isGridActivated).toEqual(true);
+    });
+    it('should notifyManipulators if next value is different than isGridActivated', () => {
+        let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
+        component.isGridActivated = false;
+        component.magnetismService.isGrid.next(isTester2.value);
+        expect(component.isGridActivated).toEqual(false);
+    });
+    it('increment grid should not increment if max', () => {
+        component.gridCellSize = 120;
+        component.incrementGrid();
+        expect(component.increment).toEqual(true);
+    });
+    it('decrement grid should not decrement if min', () => {
+        component.gridCellSize = 5;
+        component.decrementGrid();
+        expect(component.decrement).toEqual(true);
     });
     it('toogle the grid should draw ', () => {
         component.isGridActivated = true;
         component.toggleGrid();
         expect(component.draw).toEqual(true);
     });
-    it('toogle the grid with no activate should not draw ', () => {
+    it('toogle the grid with no activate should deleate ', () => {
         component.isGridActivated = false;
         component.toggleGrid();
         expect(component.deleate).toEqual(true);
@@ -118,12 +133,26 @@ describe('MagnetismComponent', () => {
         expect(component.draw).toEqual(true);
         expect(component.deleate).toEqual(true);
     });
+    it('change opacity should change opacity', () => {
+        component.isGridActivated = false;
+        component.opaciteChange(10);
+        expect(component.opacite).toEqual(10);
+        expect(component.draw).toEqual(false);
+        expect(component.deleate).toEqual(false);
+    });
     it('change grid cell size should change size', () => {
         component.isGridActivated = true;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(true);
         expect(component.deleate).toEqual(true);
+    });
+    it('change grid cell size should change size', () => {
+        component.isGridActivated = false;
+        component.gridCellSizeChange(10);
+        expect(component.gridCellSize).toEqual(10);
+        expect(component.draw).toEqual(false);
+        expect(component.deleate).toEqual(false);
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {

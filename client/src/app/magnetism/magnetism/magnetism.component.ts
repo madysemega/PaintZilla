@@ -18,6 +18,8 @@ export class MagnetismComponent {
     isActivated: boolean = false;
     tester: number = 0;
     deleate: boolean = false;
+    increment: boolean = false;
+    decrement: boolean = false;
     draw: boolean = false;
     isGridActivated: boolean = false;
     gridCellSize: number = 50;
@@ -55,7 +57,7 @@ export class MagnetismComponent {
     toggleGrid(): void {
         if (this.isGridActivated === true) {
             this.drawGrid();
-        } else if (this.isGridActivated === false) {
+        } else {
             this.deleteGrid();
         }
     }
@@ -63,11 +65,13 @@ export class MagnetismComponent {
         if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
             this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
         }
+        this.increment = true;
     }
     decrementGrid(): void {
         if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
             this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
         }
+        this.decrement = true;
     }
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
