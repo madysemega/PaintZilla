@@ -61,8 +61,8 @@ export class DrawingController {
         this.router.post('/drawings', async (req: Request, res: Response, next: NextFunction) => {
             await this.drawingService
                 .saveDrawing(req.body.name, req.body.drawing, req.body.labels)
-                .then((drawing: Drawing) => {
-                    res.status(HttpStatusCode.Created).send(drawing);
+                .then(() => {
+                    res.status(HttpStatusCode.Created);
                 })
                 .catch((error) => {
                     res.status(HttpStatusCode.NotAcceptable).send('An error occurred while saving the drawing... ' + error.message);
