@@ -16,9 +16,9 @@ export class MagnetismComponent {
     static readonly DECREMENT: number = 5;
     static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
-    tester: number= 0;
-    deleate: boolean=false;
-    draw: boolean=false;
+    tester: number = 0;
+    deleate: boolean = false;
+    draw: boolean = false;
     isGridActivated: boolean = false;
     gridCellSize: number = 50;
     opacite: number = 100;
@@ -84,14 +84,14 @@ export class MagnetismComponent {
             this.drawingService.gridCtx.lineTo(this.drawingService.canvasSize.x, i);
         }
         this.drawingService.gridCtx.stroke();
-        this.draw=true;
+        this.draw = true;
     }
 
     deleteGrid(): void {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
         this.drawingService.gridCtx.stroke();
-        this.deleate=true;
+        this.deleate = true;
     }
 
     gridCellSizeChange(gridCellSize: number): void {

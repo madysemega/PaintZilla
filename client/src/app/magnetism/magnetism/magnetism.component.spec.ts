@@ -70,9 +70,9 @@ describe('MagnetismComponent', () => {
                 .createSpy('getBoundingClientRect')
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
-        component['drawingService'].canvasSize = canvasSizeStub;
-        component['drawingService'].gridCtx = gridCtxStub; // Jasmine doesnt copy properties with underlying data
-        component['drawingService'].canvas = canvas;
+        component.drawingService.canvasSize = canvasSizeStub;
+        component.drawingService.gridCtx = gridCtxStub; // Jasmine doesnt copy properties with underlying data
+        component.drawingService.canvas = canvas;
     });
 
     it('should create', () => {
@@ -87,9 +87,9 @@ describe('MagnetismComponent', () => {
     it('notifying the grid should change the isGridActivated (true)', () => {
         let isTester: BehaviorSubject<boolean> = new BehaviorSubject(true);
         let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
-        component.isGridActivated=true;
-        component.magnetismService.isGrid=isTester;
-        component.magnetismService.isGrid=isTester2;
+        component.isGridActivated = true;
+        component.magnetismService.isGrid = isTester;
+        component.magnetismService.isGrid = isTester2;
         expect(component.isGridActivated).toEqual(false);
     });
     it('toogle the grid should draw ', () => {
