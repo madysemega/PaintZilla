@@ -119,24 +119,24 @@ describe('StampService', () => {
         expect(service['shape'].angle).toEqual(service.angle);
         expect(historyService.isLocked).toBeTrue();
     });
-    it('rollAngle should increment and decrement angle by 15 when alt is not pressed', () => {
+    it('onWheel should increment and decrement angle by 15 when alt is not pressed', () => {
         const WHEEL_EVENT_POSITIVE = new WheelEvent('onwheel', { deltaY: -125, altKey: false });
         const WHEEL_EVENT_NEGATIVE = new WheelEvent('onwheel', { deltaY: 125, altKey: false });
         service.degree = service.angle = 0;
-        service.rollAngle(WHEEL_EVENT_POSITIVE);
+        service.onWheel(WHEEL_EVENT_POSITIVE);
         expect(service.degree).toBe(MAX_DEGREES_INCREMENT);
         service.degree = service.angle = 0;
-        service.rollAngle(WHEEL_EVENT_NEGATIVE);
+        service.onWheel(WHEEL_EVENT_NEGATIVE);
         expect(service.degree).toBe((-MAX_DEGREES_INCREMENT % MAX_DEGREE) + MAX_DEGREE);
     });
-    it('rollAngle should increment and decrement angle by 1 when alt is pressed', () => {
+    it('onWheel should increment and decrement angle by 1 when alt is pressed', () => {
         const WHEEL_EVENT_POSITIVE = new WheelEvent('onwheel', { deltaY: -125, altKey: true });
         const WHEEL_EVENT_NEGATIVE = new WheelEvent('onwheel', { deltaY: 125, altKey: true });
         service.degree = service.angle = 0;
-        service.rollAngle(WHEEL_EVENT_POSITIVE);
+        service.onWheel(WHEEL_EVENT_POSITIVE);
         expect(service.degree).toBe(MIN_DEGREE_INCREMENT);
         service.degree = service.angle = 0;
-        service.rollAngle(WHEEL_EVENT_NEGATIVE);
+        service.onWheel(WHEEL_EVENT_NEGATIVE);
         expect(service.degree).toBe((-MIN_DEGREE_INCREMENT % MAX_DEGREE) + MAX_DEGREE);
     });
     it('selectStamp sets the shape src to the src of the image clicked', () => {
