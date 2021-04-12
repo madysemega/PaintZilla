@@ -11,6 +11,7 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
+import { BehaviorSubject } from 'rxjs';
 import { MagnetismComponent } from './magnetism.component';
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -63,12 +64,13 @@ describe('MagnetismComponent', () => {
         gridCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas = canvasTestHelper.canvas;
         canvasPosition = { x: 50, y: 40 };
+        canvasSizeStub = { x: 50, y: 40 };
         spyOn(canvas, 'getBoundingClientRect').and.callFake(
             jasmine
                 .createSpy('getBoundingClientRect')
                 .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
         );
-        component.drawingService.canvasSize = canvasSizeStub;
+        component['drawingService'].canvasSize = canvasSizeStub;
         component['drawingService'].gridCtx = gridCtxStub; // Jasmine doesnt copy properties with underlying data
         component['drawingService'].canvas = canvas;
     });
@@ -82,37 +84,47 @@ describe('MagnetismComponent', () => {
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
+    it('notifying the grid should change the isGridActivated (true)', () => {
+        let isTester: BehaviorSubject<boolean> = new BehaviorSubject(true);
+        let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
+        component.isGridActivated=true;
+        component.magnetismService.isGrid=isTester;
+        component.magnetismService.isGrid=isTester2;
+        expect(component.isGridActivated).toEqual(false);
+    });
     it('toogle the grid should draw ', () => {
         component.isGridActivated = true;
         component.toggleGrid();
-        expect(component.drawGrid()).toHaveBeenCalled();
+        expect(component.draw).toEqual(true);
     });
     it('toogle the grid with no activate should not draw ', () => {
         component.isGridActivated = false;
         component.toggleGrid();
-        expect(component.deleteGrid()).toHaveBeenCalled();
+        expect(component.deleate).toEqual(true);
     });
     it('delete grid should remove grid ', () => {
         component.deleteGrid();
-        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.deleate).toEqual(true);
     });
     it('drawGrid should draw', () => {
         component.drawingService.canvasSize.x = 100;
         component.drawingService.canvasSize.y = 100;
         component.drawGrid();
-        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.draw).toEqual(true);
     });
     it('change opacity should change opacity', () => {
-        component.opaciteChange(10);
         component.isGridActivated = true;
+        component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
-        expect(component.drawGrid()).toHaveBeenCalled();
+        expect(component.draw).toEqual(true);
+        expect(component.deleate).toEqual(true);
     });
     it('change grid cell size should change size', () => {
-        component.gridCellSizeChange(10);
         component.isGridActivated = true;
+        component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
-        expect(component.drawGrid()).toHaveBeenCalled();
+        expect(component.draw).toEqual(true);
+        expect(component.deleate).toEqual(true);
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
