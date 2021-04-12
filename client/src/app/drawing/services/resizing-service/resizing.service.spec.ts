@@ -8,12 +8,14 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
 describe('ResizingService', () => {
     let service: ResizingService;
     let historyServiceStub: HistoryService;
+    let magnetismServiceStub: MagnetismService;
     let drawingServiceStub: DrawingService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let canvasTestHelper: CanvasTestHelper;
@@ -29,11 +31,13 @@ describe('ResizingService', () => {
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
+        magnetismServiceStub = new MagnetismService(keyboardServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: HistoryService, useValue: historyServiceStub },
+                { provide: MagnetismService, useValue: magnetismServiceStub },
             ],
         }).compileComponents();
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
@@ -346,9 +350,10 @@ describe('ResizingService', () => {
     it('finalizeResizingEvent should create, apply and register a user action', () => {
         spyOn(drawingServiceStub, 'updateCanvasStyle').and.returnValue();
         spyOn(drawingServiceStub, 'restoreCanvasStyle').and.returnValue();
-
+        const test: boolean = magnetismServiceStub.isGrid.value;
         service.finalizeResizingEvent();
 
         expect(historyServiceStub['past'].length).toEqual(1);
+        expect(magnetismServiceStub.isGrid.value).toEqual(test);
     });
 });

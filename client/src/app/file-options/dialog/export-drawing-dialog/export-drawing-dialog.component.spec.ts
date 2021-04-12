@@ -17,6 +17,7 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { Observable, of, Subject, throwError } from 'rxjs';
 import { ExportDrawingDialogComponent } from './export-drawing-dialog.component';
 
@@ -25,6 +26,8 @@ describe('ExportDrawingDialogComponent', () => {
     let fixture: ComponentFixture<ExportDrawingDialogComponent>;
 
     let historyServiceStub: HistoryService;
+    // tslint:disable:prefer-const
+    let magnetismServiceStub: MagnetismService;
     let drawingServiceSpy: DrawingService;
     let resizingServiceSpy: ResizingService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
@@ -47,7 +50,7 @@ describe('ExportDrawingDialogComponent', () => {
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceSpy = new DrawingService(historyServiceStub);
-        resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
+        resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub, magnetismServiceStub);
         postSubject = new Subject<any>();
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close']);
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);

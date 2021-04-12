@@ -11,8 +11,10 @@ import { HistoryService } from '@app/history/service/history.service';
 export class DrawingService {
     baseCtx: CanvasRenderingContext2D;
     previewCtx: CanvasRenderingContext2D;
+    gridCtx: CanvasRenderingContext2D;
     canvas: HTMLCanvasElement;
     previewCanvas: HTMLCanvasElement;
+    gridCanvas: HTMLCanvasElement;
     canvasIsEmpty: boolean = true;
     canvasSize: Vec2;
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };

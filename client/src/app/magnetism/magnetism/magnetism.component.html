@@ -26,5 +26,37 @@
             <div id="bottom-right" class="resizingButton lowerRow" (click)='setGridAnchor(4)'></div>
         </div>
     </div>
-</div>
+    <mat-divider></mat-divider>
 
+    
+    <div>
+        <mat-label>Grille</mat-label>
+    </div>
+    <div class="center">
+        <mat-slide-toggle id="toggleGrid" [ngModel] ="isGridActivated" (ngModelChange)="isGridActivated = $event; toggleGrid();"></mat-slide-toggle>
+    </div>
+    <div class="vertical">
+        <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
+        <mat-slider thumbLabel
+                    matTooltip="Largeur de la grille"
+                    matTooltipPosition="right"
+                    step="5"
+                    min="10"
+                    max="100"
+                    [value]="gridCellSize"
+                    (valueChange)="gridCellSizeChange($event)">
+        </mat-slider>
+    </div>
+    <div class="vertical">
+        <mat-label class="margin-bottom-small">Opacite de la grille</mat-label>
+        <mat-slider thumbLabel
+                    matTooltip="Opacite de la grille"
+                    matTooltipPosition="right"
+                    step="5"
+                    min="10"
+                    max="100"
+                    [value]="opacite"
+                    (valueChange)="opaciteChange($event)">
+        </mat-slider>
+    </div>
+</div>

@@ -31,7 +31,8 @@ import { SelectionHandlerService } from './selection-handler.service';
 })
 export abstract class SelectionManipulatorService extends Tool {
     isMagnetismActivated: boolean = false;
-    gridCellSize: number = 75;
+    isGridActive: boolean = false;
+    gridCellSize: number = 50;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
     topLeft: Vec2 = { x: 0, y: 0 };
     bottomRight: Vec2 = { x: 0, y: 0 };
@@ -261,7 +262,6 @@ export abstract class SelectionManipulatorService extends Tool {
             this.startMovingSelectionContinous(movement, arrowIndex);
         });
     }
-
     stopContinuousMovement(arrowIndex: number): void {
         this.subscriptions[arrowIndex].unsubscribe();
         if (this.isContinousMovementByKeyboardOn[arrowIndex]) {
