@@ -36,20 +36,20 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
     }
 
     private getRealPosition(start: Vec2, ctx: CanvasRenderingContext2D): Vec2 {
+        const maxLineWidth = this.shape.getMaxLineWidth(ctx);
         const currentLineWidth = this.getTextCurrentLineWidth(ctx);
-        console.log(currentLineWidth);
 
         switch (this.shape.textAlignment) {
             case 'left':
                 return start;
             case 'center':
                 return {
-                    x: start.x - currentLineWidth / 2,
+                    x: start.x + (maxLineWidth - currentLineWidth) / 2,
                     y: start.y,
                 };
             case 'right':
                 return {
-                    x: start.x - currentLineWidth,
+                    x: start.x + maxLineWidth - currentLineWidth,
                     y: start.y,
                 };
             default:
@@ -64,12 +64,8 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
 
         const realStart = this.getRealPosition(this.shape.position, ctx);
 
-        console.log(realStart.x);
-
         const xPosition = realStart.x + offsets.x;
         const yPosition = realStart.y + offsets.y;
-
-        console.log(xPosition);
 
         const fontSize = this.shape.fontSize;
 

@@ -17,6 +17,13 @@ export class TextShape extends Shape {
         super();
     }
 
+    getMaxLineWidth(ctx: CanvasRenderingContext2D): number {
+        return Math.max.apply(
+            Math,
+            this.splitTextInMultipleLines().map((line) => ctx.measureText(line).width),
+        );
+    }
+
     splitTextInMultipleLines(): string[] {
         const result: string[] = [];
         let currentText = '';
@@ -35,6 +42,6 @@ export class TextShape extends Shape {
     }
 
     clone(): Shape {
-        return new TextShape(this.text, { x: this.position.x, y: this.position.y }, this.fontSize);
+        return new TextShape(this.text, { x: this.position.x, y: this.position.y }, this.fontSize, this.fontName, this.textAlignment);
     }
 }

@@ -9,12 +9,15 @@ import { ResizingService } from '@app/drawing/services/resizing-service/resizing
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { of } from 'rxjs';
 
 // tslint:disable:no-any
 describe('DrawingCreatorService', () => {
     let service: DrawingCreatorService;
     let historyServiceStub: HistoryService;
+    // tslint:disable:prefer-const
+    let magnetismServiceStub: MagnetismService;
     let drawingServiceSpy: DrawingService;
     let automaticSavingService: AutomaticSavingService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
@@ -38,7 +41,7 @@ describe('DrawingCreatorService', () => {
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceSpy = new DrawingService(historyServiceStub);
-        resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub);
+        resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub, magnetismServiceStub);
         automaticSavingService = new AutomaticSavingService(drawingServiceSpy, historyServiceStub);
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<DiscardChangesDialogComponent>', ['afterClosed']);
         historyServiceStub = jasmine.createSpyObj('HistoryService', ['clear']);

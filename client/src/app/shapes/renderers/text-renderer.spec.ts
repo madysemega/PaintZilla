@@ -4,6 +4,7 @@ import { TextShape } from '@app/shapes/text-shape';
 import { TextRenderer } from './text-renderer';
 
 // tslint:disable:no-any
+// tslint:disable:no-string-literal
 describe('TextRenderer', () => {
     const TEXT = 'Test';
     const POSITION = { x: 42, y: 32 };
@@ -31,6 +32,39 @@ describe('TextRenderer', () => {
     it('should fillText with givent shape data', () => {
         renderer.render(ctxStub);
         expect(ctxFillTextSpy).toHaveBeenCalledWith(TEXT, POSITION.x, POSITION.y);
+    });
+
+    it('getAlignmentAjustedXPosition() should return shape position if alignment is left', () => {
+        const MAX_LINE_POSITION = 64;
+        const X_POSITION = 32;
+
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_POSITION);
+        shape.position.x = X_POSITION;
+        shape.textAlignment = 'left';
+
+        expect(renderer['getAlignmentAjustedXPosition'](ctxStub)).toEqual(X_POSITION);
+    });
+
+    it('getAlignmentAjustedXPosition() should offset shape position by the max line width if alignment is right', () => {
+        const MAX_LINE_POSITION = 64;
+        const X_POSITION = 32;
+
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_POSITION);
+        shape.position.x = X_POSITION;
+        shape.textAlignment = 'right';
+
+        expect(renderer['getAlignmentAjustedXPosition'](ctxStub)).toEqual(X_POSITION + MAX_LINE_POSITION);
+    });
+
+    it('getAlignmentAjustedXPosition() should offset shape position by half the max line width if alignment is center', () => {
+        const MAX_LINE_POSITION = 64;
+        const X_POSITION = 32;
+
+        spyOn<any>(shape, 'getMaxLineWidth').and.returnValue(MAX_LINE_POSITION);
+        shape.position.x = X_POSITION;
+        shape.textAlignment = 'center';
+
+        expect(renderer['getAlignmentAjustedXPosition'](ctxStub)).toEqual(X_POSITION + MAX_LINE_POSITION / 2);
     });
 
     it('clone should return an identical copy', () => {

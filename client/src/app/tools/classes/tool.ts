@@ -29,6 +29,8 @@ export abstract class Tool {
 
     onMouseEnter(event: MouseEvent): void {}
 
+    onWheel(event: WheelEvent): void {}
+
     getPositionFromMouse(event: MouseEvent): Vec2 {
         const clientX: number = event.clientX;
         const clientY: number = event.clientY;

@@ -5,6 +5,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovement } from './grid-movement';
 import { ResizingMode } from './resizing-mode';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
@@ -42,23 +43,33 @@ export abstract class SelectionHelperService {
         let xOutsideSelection: boolean;
         let yOutsideSelection: boolean;
 
-        if (isReversedX) {
-            xOutsideSelection =
-                mousePosition.x > topLeft.x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
-        } else {
-            xOutsideSelection =
-                mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
-        }
+        const rightLimit = isReversedX ? topLeft.x : bottomRight.x;
+        const leftLimit = isReversedX ? bottomRight.x : topLeft.x;
+        const upLimit = isReversedY ? bottomRight.y : topLeft.y;
+        const downLimit = isReversedY ? topLeft.y : bottomRight.y;
 
-        if (isReversedY) {
-            yOutsideSelection =
-                mousePosition.y > topLeft.y + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y < bottomRight.y - this.OUTSIDE_DETECTION_OFFSET_PX;
-        } else {
-            yOutsideSelection =
-                mousePosition.y < topLeft.y - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > bottomRight.y + this.OUTSIDE_DETECTION_OFFSET_PX;
-        }
+        xOutsideSelection =
+            mousePosition.x < leftLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+
+        yOutsideSelection =
+            mousePosition.y < upLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+
         return xOutsideSelection || yOutsideSelection;
     }
+
+    /* isNumberOutsideLimits(areLimitsReversed: boolean, number:number, limits:Vec2[]){
+         let isOutside: boolean;
+         let lowerLimit
+  
+         if (areLimitsReversed) {
+             isOutside =
+                 number > limits[0].x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
+         } else {
+             isOutside =
+                 mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
+         }
+     }
+ */
 
     addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;
@@ -70,32 +81,37 @@ export abstract class SelectionHelperService {
         return mouseMovement;
     }
 
-    moveAlongTheGrid(
-        movement: Vec2,
-        isMouseMovement: boolean,
-        gridCellSize: number,
-        anchor: GridMovementAnchor,
-        topLeft: Vec2,
-        bottomRight: Vec2,
-        isReversed: boolean[],
-    ): Vec2 {
-        const position: Vec2 = this.getAnchorPosition(anchor, topLeft, bottomRight, isReversed);
+    moveAlongTheGrid(gridMovement: GridMovement): Vec2 {
+        const movement: Vec2 = gridMovement.movement;
+        const isMouseMovement: boolean = gridMovement.isMouseMovement;
+        const gridCellSize: number = gridMovement.gridCellSize;
+        const anchor: GridMovementAnchor = gridMovement.anchor;
+        const topLeft: Vec2 = gridMovement.topLeft;
+        const bottomRight: Vec2 = gridMovement.bottomRight;
+        const isReversed: boolean[] = gridMovement.isReversed;
+
+        const positions: Vec2[] = [topLeft, bottomRight];
+        const position: Vec2 = this.getAnchorPosition(anchor, positions, isReversed);
+
+        const movementData: Vec2[] = [position, movement];
 
         if (gridCellSize > 0 && isMouseMovement) {
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.round);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.round);
         }
         if (gridCellSize > 0 && !isMouseMovement && Math.max(movement.x, movement.y) > 0) {
             // increase movement by keyboard
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.ceil);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.ceil);
         }
         if (gridCellSize > 0 && !isMouseMovement && Math.min(movement.x, movement.y) < 0) {
             // decrease movement by keyboard
-            return this.computeMovementAlongGrid(position, movement, gridCellSize, Math.floor);
+            return this.computeMovementAlongGrid(movementData, gridCellSize, Math.floor);
         }
         return movement;
     }
 
-    getAnchorPosition(anchor: GridMovementAnchor, topL: Vec2, bottomR: Vec2, isReversed: boolean[]): Vec2 {
+    getAnchorPosition(anchor: GridMovementAnchor, positions: Vec2[], isReversed: boolean[]): Vec2 {
+        const topL = positions[0];
+        const bottomR = positions[1];
         const width: number = Math.abs(topL.x - bottomR.x);
         const height: number = Math.abs(topL.y - bottomR.y);
         const X = 0;
@@ -142,7 +158,9 @@ export abstract class SelectionHelperService {
         }
     }
 
-    computeMovementAlongGrid(position: Vec2, movement: Vec2, gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+    computeMovementAlongGrid(movementData: Vec2[], gridCellSize: number, roundingFunction: (n: number) => number): Vec2 {
+        const position = movementData[0];
+        const movement = movementData[1];
         const newPos: Vec2 = { x: position.x, y: position.y };
         this.addInPlace(newPos, movement);
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;

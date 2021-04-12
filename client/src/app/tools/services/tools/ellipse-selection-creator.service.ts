@@ -28,6 +28,5 @@ export class EllipseSelectionCreatorService extends SelectionCreatorService {
         }
         this.selectionHelper.getEllipseParam(this.startPoint, endPoint, center, radii);
         this.selectionHelper.drawSelectionEllipse(center, radii);
-        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.startPoint, endPoint);
     }
 }

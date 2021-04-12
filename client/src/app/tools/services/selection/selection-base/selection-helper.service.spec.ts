@@ -3,6 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
+import { GridMovement } from './grid-movement';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionHelperService } from './selection-helper.service';
 
@@ -157,8 +158,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.round);
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.round);
     });
 
     it('moveAlongTheGrid should call computeMovementAlongGrid with Math.ceil if magnetisme is on with a keyboardEvent and increase movement ', () => {
@@ -172,8 +182,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.ceil);
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.ceil);
     });
 
     it('moveAlongTheGrid should call computeMovementAlongGrid with Math.floor if magnetisme is on with a keyboardEvent and decrease movement ', () => {
@@ -187,8 +206,17 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
-        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith(anchorPosition, movement, gridCellSize, Math.floor);
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
+        service.moveAlongTheGrid(gridMovement);
+        expect(computeMovementAlongGridSpy).toHaveBeenCalledWith([anchorPosition, movement], gridCellSize, Math.floor);
     });
 
     it('moveAlongTheGrid should not call computeMovementAlongGrid if magnetisme is off (<=> gridCellSize < 0) ', () => {
@@ -202,7 +230,16 @@ describe('SelectionHelperService', () => {
         const anchorPosition: Vec2 = { x: 5, y: 7 };
         spyOn<any>(service, 'getAnchorPosition').and.returnValue(anchorPosition);
         const computeMovementAlongGridSpy: jasmine.Spy<any> = spyOn<any>(service, 'computeMovementAlongGrid');
-        service.moveAlongTheGrid(movement, isMouseMovement, gridCellSize, anchor, topLeft, bottomRight, isReversed);
+        const gridMovement: GridMovement = {
+            movement,
+            isMouseMovement,
+            gridCellSize,
+            anchor,
+            topLeft,
+            bottomRight,
+            isReversed,
+        };
+        service.moveAlongTheGrid(gridMovement);
         expect(computeMovementAlongGridSpy).not.toHaveBeenCalled();
     });
 
@@ -224,7 +261,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point middleL', () => {
@@ -247,7 +284,10 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height / 2 });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
+            x: actualTopLeft.x,
+            y: actualTopLeft.y + height / 2,
+        });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomL', () => {
@@ -270,7 +310,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x, y: actualTopLeft.y + height });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point bottomM', () => {
@@ -293,7 +333,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width / 2,
             y: actualTopLeft.y + height,
         });
@@ -319,7 +359,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width,
             y: actualTopLeft.y + height,
         });
@@ -345,7 +385,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width,
             y: actualTopLeft.y + height / 2,
         });
@@ -370,7 +410,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x + width, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point topM', () => {
@@ -393,7 +433,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y });
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({ x: actualTopLeft.x + width / 2, y: actualTopLeft.y });
     });
 
     it('getAnchorPosition should return the correct position according to the given anchor point center', () => {
@@ -417,7 +457,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(anchor, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(anchor, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x + width / 2,
             y: actualTopLeft.y + height / 2,
         });
@@ -441,7 +481,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -465,7 +505,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -489,7 +529,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -513,7 +553,7 @@ describe('SelectionHelperService', () => {
             actualTopLeft.y = bottomRight.y;
         }
 
-        expect(service.getAnchorPosition(inexistingAnchorPoint, topLeft, bottomRight, isReversed)).toEqual({
+        expect(service.getAnchorPosition(inexistingAnchorPoint, [topLeft, bottomRight], isReversed)).toEqual({
             x: actualTopLeft.x,
             y: actualTopLeft.y,
         });
@@ -531,7 +571,7 @@ describe('SelectionHelperService', () => {
         newPos.x = roundingFunction(newPos.x / gridCellSize) * gridCellSize;
         newPos.y = roundingFunction(newPos.y / gridCellSize) * gridCellSize;
         const correctMovement: Vec2 = { x: newPos.x - position.x, y: newPos.y - position.y };
-
-        expect(service.computeMovementAlongGrid(position, movement, gridCellSize, roundingFunction)).toEqual(correctMovement);
+        const movementData: Vec2[] = [position, movement];
+        expect(service.computeMovementAlongGrid(movementData, gridCellSize, roundingFunction)).toEqual(correctMovement);
     });
 });

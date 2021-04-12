@@ -19,9 +19,11 @@ export class DrawingComponent implements AfterViewInit {
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
 
     private baseCtx: CanvasRenderingContext2D;
+    @ViewChild('gridCanvas', { static: false }) gridCanvas: ElementRef<HTMLCanvasElement>;
+    private gridCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-    isInCanevas: boolean;
+    isInCanvas: boolean;
 
     wasResizing: boolean;
 
@@ -55,14 +57,24 @@ export class DrawingComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.gridCtx = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawingService.baseCtx = this.baseCtx;
         this.drawingService.previewCtx = this.previewCtx;
+        this.drawingService.gridCtx = this.gridCtx;
         this.drawingService.canvas = this.baseCanvas.nativeElement;
         this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
+        this.drawingService.gridCanvas = this.gridCanvas.nativeElement;
         this.drawingService.canvasSize = this.canvasSize;
         this.drawingService.initialSize.x = this.canvasSize.x;
         this.drawingService.initialSize.y = this.canvasSize.y;
         this.drawingService.restoreCanvasStyle();
+    }
+
+    @HostListener('document:wheel', ['$event'])
+    onWheel(event: WheelEvent): void {
+        if (this.isInCanvas) {
+            this.toolSelector.getSelectedTool().onWheel(event);
+        }
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -111,7 +123,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseLeave(event);
-            this.isInCanevas = false;
+            this.isInCanvas = false;
         }
     }
 
@@ -119,7 +131,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseEnter(event: MouseEvent): void {
         if (!this.resizingService.isResizing()) {
             this.toolSelector.getSelectedTool().onMouseEnter(event);
-            this.isInCanevas = true;
+            this.isInCanvas = true;
         }
     }
 

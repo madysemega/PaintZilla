@@ -9,6 +9,7 @@ import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/dra
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { HistoryService } from '@app/history/service/history.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MaterialModule } from '@app/material.module';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
@@ -33,6 +34,8 @@ describe('DrawingComponent', () => {
     let drawingCreatorServiceSpy: jasmine.SpyObj<DrawingCreatorService>;
     let drawingRestoredStub: EventEmitter<void>;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+    // tslint:disable:prefer-const
+    let magnetismServiceStub: MagnetismService;
 
     beforeEach(async(() => {
         drawingRestoredStub = new EventEmitter<void>();
@@ -45,7 +48,7 @@ describe('DrawingComponent', () => {
         historyServiceStub.onUndo.and.stub();
         toolStub = new ToolStub({} as DrawingService);
         drawingStub = new DrawingService(historyServiceStub);
-        resizingServiceStub = new ResizingService(drawingStub, historyServiceStub);
+        resizingServiceStub = new ResizingService(drawingStub, historyServiceStub, magnetismServiceStub);
         toolSelectorStub.getSelectedTool.and.returnValue(toolStub);
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 
@@ -85,6 +88,22 @@ describe('DrawingComponent', () => {
         const resetDrawingSurfaceDimensionStub = spyOn(drawingStub, 'resetDrawingSurfaceDimensions').and.callThrough();
         drawingCreatorServiceSpy.drawingRestored.emit();
         expect(resetDrawingSurfaceDimensionStub).toHaveBeenCalled();
+    });
+
+    it("onWheel() should call tool's onWheel if the mouse is in the canvas", () => {
+        const wheelEvent: WheelEvent = { deltaY: 125 } as WheelEvent;
+        const ROLL_SPY = spyOn<any>(toolStub, 'onWheel').and.callThrough();
+        component.isInCanvas = true;
+        component.onWheel(wheelEvent);
+        expect(ROLL_SPY).toHaveBeenCalled();
+    });
+
+    it("onWheel() should not call tool's onWheel if the mouse is not in the canvas", () => {
+        const wheelEvent: WheelEvent = { deltaY: 125 } as WheelEvent;
+        const ROLL_SPY = spyOn<any>(toolStub, 'onWheel').and.callThrough();
+        component.isInCanvas = false;
+        component.onWheel(wheelEvent);
+        expect(ROLL_SPY).not.toHaveBeenCalled();
     });
 
     it("onMouseMove(): should call the resizingService's resizeCanvas method when receiving a mouse move event and the canvas is resizing", () => {
