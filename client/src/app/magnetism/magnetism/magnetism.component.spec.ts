@@ -6,11 +6,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { MagnetismComponent } from './magnetism.component';
-
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
@@ -27,14 +28,24 @@ describe('MagnetismComponent', () => {
     let gridCtxStub: CanvasRenderingContext2D;
     let canvas: HTMLCanvasElement;
     let canvasSizeStub: Vec2;
+    let canvasPosition: Vec2;
+    let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
+    let historyServiceStub: HistoryService;
     beforeEach(async(() => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
+        keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
+        keyboardServiceStub.registerAction.and.stub();
+        keyboardServiceStub.saveContext.and.stub();
+        keyboardServiceStub.restoreContext.and.stub();
+        drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        historyServiceStub = new HistoryService(keyboardServiceStub);
 
         TestBed.configureTestingModule({
             imports: [MatMenuModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             declarations: [MagnetismComponent],
             providers: [
                 { provide: HotkeysService, useValue: hotkeysServiceStub },
+                { provide: HistoryService, useValue: historyServiceStub },
                 { provide: DrawingService, useValue: drawServiceSpy },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -51,9 +62,15 @@ describe('MagnetismComponent', () => {
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         gridCtxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas = canvasTestHelper.canvas;
-        component.drawingService.gridCtx = gridCtxStub;
-        component.drawingService.canvas = canvas;
+        canvasPosition = { x: 50, y: 40 };
+        spyOn(canvas, 'getBoundingClientRect').and.callFake(
+            jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ top: 1, height: 100, left: 2, width: 200, right: 202, x: canvasPosition.x, y: canvasPosition.y }),
+        );
         component.drawingService.canvasSize = canvasSizeStub;
+        component['drawingService'].gridCtx = gridCtxStub; // Jasmine doesnt copy properties with underlying data
+        component['drawingService'].canvas = canvas;
     });
 
     it('should create', () => {
@@ -89,13 +106,13 @@ describe('MagnetismComponent', () => {
         component.opaciteChange(10);
         component.isGridActivated = true;
         expect(component.opacite).toEqual(10);
-        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.drawGrid()).toHaveBeenCalled();
     });
-    it('change opacity should change opacity', () => {
+    it('change grid cell size should change size', () => {
         component.gridCellSizeChange(10);
         component.isGridActivated = true;
         expect(component.gridCellSize).toEqual(10);
-        expect(component.drawingService.gridCtx.stroke()).toHaveBeenCalled();
+        expect(component.drawGrid()).toHaveBeenCalled();
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
