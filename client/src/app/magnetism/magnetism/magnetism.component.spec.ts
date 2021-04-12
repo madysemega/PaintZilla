@@ -84,13 +84,12 @@ describe('MagnetismComponent', () => {
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
-    it('notifying the grid should change the isGridActivated (true)', () => {
-        let isTester: BehaviorSubject<boolean> = new BehaviorSubject(true);
-        let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
-        component.isGridActivated = true;
+    it('should notifyManipulators if next value is different than isGridActivated', () => {
+        let isTester: BehaviorSubject<boolean> = new BehaviorSubject(false);
+        component.isGridActivated = false;
         component.magnetismService.isGrid = isTester;
-        component.magnetismService.isGrid = isTester2;
-        expect(component.isGridActivated).toEqual(false);
+        component.magnetismService.isGrid.next(true);
+        expect(component.isGridActivated).toEqual(true);
     });
     it('toogle the grid should draw ', () => {
         component.isGridActivated = true;
