@@ -273,6 +273,38 @@ describe('TextService', () => {
         expect(moveCursorLeftSpy).toHaveBeenCalled();
     });
 
+    it('If editing, down arrow key should move cursor downward', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        const moveCursorDownSpy = spyOn(service['editor'], 'moveCursorDown').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'down') {
+                action.invoke();
+            }
+        });
+
+        service['isEditing'] = true;
+        service['initializeKeyboardShortcuts']();
+
+        expect(moveCursorDownSpy).toHaveBeenCalled();
+    });
+
+    it('If editing, up arrow key should move cursor upward', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        const moveCursorUpSpy = spyOn(service['editor'], 'moveCursorUp').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'up') {
+                action.invoke();
+            }
+        });
+
+        service['isEditing'] = true;
+        service['initializeKeyboardShortcuts']();
+
+        expect(moveCursorUpSpy).toHaveBeenCalled();
+    });
+
     it('If editing, backspace key should remove character to the left of the cursor in the text', () => {
         const keyboardService = TestBed.inject(KeyboardService);
         const backspaceSpy = spyOn(service['editor'], 'backspace').and.stub();
