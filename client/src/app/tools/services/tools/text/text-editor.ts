@@ -50,6 +50,23 @@ export class TextEditor {
         this.textAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
     }
 
+    private makeAppliedCtx(): CanvasRenderingContext2D {
+        const WIDTH = 100;
+        const HEIGHT = 100;
+
+        const canvas: HTMLCanvasElement = document.createElement('canvas');
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        this.colourProperty.apply(ctx);
+        this.fontProperty.apply(ctx);
+        this.textAlignmentProperty.apply(ctx);
+        
+        return ctx;
+    }
+
     reset(position: Vec2 = { x: 0, y: 0 }): void {
         this.disableCursor();
 
@@ -136,14 +153,14 @@ export class TextEditor {
 
     moveCursorUp(): void {
         this.showCursor = true;
-        this.cursor.line = this.cursor.line - 1;
+        this.cursor.moveToLine(this.cursor.line - 1, this.makeAppliedCtx());
 
         this.render();
     }
 
     moveCursorDown(): void {
         this.showCursor = true;
-        this.cursor.line = this.cursor.line + 1;
+        this.cursor.moveToLine(this.cursor.line + 1, this.makeAppliedCtx());
 
         this.render();
     }

@@ -17,7 +17,7 @@ export class TextCursor {
         return lineNumber;
     }
 
-    set line(wantedLine: number) {
+    moveToLine(wantedLine: number, ctx: CanvasRenderingContext2D) {
         const lines = this.shape.splitTextInMultipleLines();
 
         if(wantedLine < 0) {
@@ -28,14 +28,26 @@ export class TextCursor {
             const positionInLine = this.positionInLine;
             switch (this.shape.textAlignment) {
                 case 'left':
-                    this.position = this.getAbsPositionFromLeft(wantedLine, positionInLine);
+                    {
+                        const pixelWiseOffset = ctx.measureText(lines[this.line].substring(0, positionInLine)).width;
+                        this.position = this.getAbsPositionFromLeft(wantedLine, pixelWiseOffset, ctx);
+                    }
                     break;
                 case 'center':
-                    const offset = Math.floor(positionInLine - ((lines[this.line].length - lines[wantedLine].length) / 2));
-                    this.position = this.getAbsPositionFromLeft(wantedLine, offset);
+                    {
+                        const pixelWiseOffsetInCurrentLine = ctx.measureText(lines[this.line].substring(0, positionInLine)).width;
+                        const currentLineLength = ctx.measureText(lines[this.line]).width;
+                        const wantedLineLength = ctx.measureText(lines[wantedLine]).width;
+                        const offset = pixelWiseOffsetInCurrentLine - ((currentLineLength - wantedLineLength) / 2);
+                        this.position = this.getAbsPositionFromLeft(wantedLine, offset, ctx);
+                    }
                     break;
                 case 'right':
-                    this.position = this.getAbsPositionFromRight(wantedLine, lines[this.line].length - positionInLine);
+                    {
+                        const pixelWiseOffsetInCurrentLine = ctx.measureText(lines[this.line].substring(0, positionInLine)).width;
+                        const currentLineLength = ctx.measureText(lines[this.line]).width;
+                        this.position = this.getAbsPositionFromRight(wantedLine, currentLineLength - pixelWiseOffsetInCurrentLine, ctx);
+                    }
                     break;
             }
         }
@@ -66,18 +78,36 @@ export class TextCursor {
         return currentPosition;
     }
 
-    private getAbsPositionFromLeft(line: number, offset: number): number {
-        const lines = this.shape.splitTextInMultipleLines();
-        const lineBeginning = this.getAbsPositionAtLineBeginning(line);
+    private pixelWiseOffsetToCharWiseOffset(pixelWiseOffset: number, text: string, ctx: CanvasRenderingContext2D): number {
+        let charWiseOffset = 0;
+        let pixelWiseAccumulator = 0;
 
-        return lineBeginning + Math.min(offset, lines[line].length);
+        while(pixelWiseAccumulator < pixelWiseOffset) {
+            pixelWiseAccumulator += ctx.measureText(text[charWiseOffset]).width;
+            ++charWiseOffset;
+        }
+
+        return charWiseOffset;
     }
 
-    private getAbsPositionFromRight(line: number, offset: number): number {
+    private getAbsPositionFromLeft(line: number, offsetInPx: number, ctx: CanvasRenderingContext2D): number {
         const lines = this.shape.splitTextInMultipleLines();
+        const lineWidthInPx = ctx.measureText(lines[line]).width;
         const lineBeginning = this.getAbsPositionAtLineBeginning(line);
 
-        return lineBeginning + Math.max(0, lines[line].length - offset);
+        const charWiseOffset = this.pixelWiseOffsetToCharWiseOffset(Math.min(offsetInPx, lineWidthInPx), lines[line], ctx);
+
+        return lineBeginning + charWiseOffset;
+    }
+
+    private getAbsPositionFromRight(line: number, offsetInPx: number, ctx: CanvasRenderingContext2D): number {
+        const lines = this.shape.splitTextInMultipleLines();
+        const lineWidthInPx = ctx.measureText(lines[line]).width;
+        const lineBeginning = this.getAbsPositionAtLineBeginning(line);
+
+        const charWiseOffset = this.pixelWiseOffsetToCharWiseOffset(Math.max(0, lineWidthInPx - offsetInPx), lines[line], ctx);
+
+        return lineBeginning + charWiseOffset;
     }
 
     clone(newShape: TextShape): TextCursor {
