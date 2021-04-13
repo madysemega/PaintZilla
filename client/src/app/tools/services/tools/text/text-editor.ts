@@ -6,6 +6,7 @@ import { TextAlignmentProperty } from '@app/shapes/properties/text-alignment-pro
 import { TextCursorRenderer } from '@app/shapes/renderers/text-cursor-renderer';
 import { TextRenderer } from '@app/shapes/renderers/text-renderer';
 import { TextShape } from '@app/shapes/text-shape';
+import { TextCursor } from './text-cursor';
 import { TextEditorContext } from './text-editor-context';
 
 export class TextEditor {
@@ -26,6 +27,7 @@ export class TextEditor {
     private textAlignmentProperty: TextAlignmentProperty;
 
     private showCursor: boolean;
+    private cursor: TextCursor;
     private cursorRenderer: TextCursorRenderer;
 
     private initialize(): void {
@@ -33,7 +35,8 @@ export class TextEditor {
         this.initializeProperties();
         this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty, this.textAlignmentProperty]);
 
-        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.DEFAULT_CURSOR_POSITION);
+        this.cursor = new TextCursor(this.shape, this.DEFAULT_CURSOR_POSITION);
+        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
     }
 
     private initializeProperties(): void {
@@ -112,9 +115,9 @@ export class TextEditor {
     moveCursorRight(): void {
         this.showCursor = true;
 
-        const canMoveRight = this.cursorRenderer.cursorPosition < this.shape.text.length;
+        const canMoveRight = this.cursor.position < this.shape.text.length;
         if (canMoveRight) {
-            ++this.cursorRenderer.cursorPosition;
+            ++this.cursor.position;
         }
 
         this.render();
@@ -123,17 +126,31 @@ export class TextEditor {
     moveCursorLeft(): void {
         this.showCursor = true;
 
-        const canMoveLeft = this.cursorRenderer.cursorPosition > 0;
+        const canMoveLeft = this.cursor.position > 0;
         if (canMoveLeft) {
-            --this.cursorRenderer.cursorPosition;
+            --this.cursor.position;
         }
 
         this.render();
     }
 
+    moveCursorUp(): void {
+        this.showCursor = true;
+        this.cursor.line = this.cursor.line - 1;
+
+        this.render();
+    }
+
+    moveCursorDown(): void {
+        this.showCursor = true;
+        this.cursor.line = this.cursor.line + 1;
+
+        this.render();
+    }
+
     write(text: string): void {
-        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition);
-        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition);
+        const prefix: string = this.shape.text.substring(0, this.cursor.position);
+        const sufix: string = this.shape.text.substring(this.cursor.position);
 
         this.shape.text = `${prefix}${text}${sufix}`;
 
@@ -141,12 +158,12 @@ export class TextEditor {
     }
 
     backspace(): void {
-        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition - 1);
-        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition);
+        const prefix: string = this.shape.text.substring(0, this.cursor.position - 1);
+        const sufix: string = this.shape.text.substring(this.cursor.position);
 
         this.shape.text = `${prefix}${sufix}`;
 
-        if (this.cursorRenderer.cursorPosition > 0) {
+        if (this.cursor.position > 0) {
             this.moveCursorLeft();
         } else {
             this.render();
@@ -154,8 +171,8 @@ export class TextEditor {
     }
 
     delete(): void {
-        const prefix: string = this.shape.text.substring(0, this.cursorRenderer.cursorPosition);
-        const sufix: string = this.shape.text.substring(this.cursorRenderer.cursorPosition + 1);
+        const prefix: string = this.shape.text.substring(0, this.cursor.position);
+        const sufix: string = this.shape.text.substring(this.cursor.position + 1);
 
         this.shape.text = `${prefix}${sufix}`;
 
