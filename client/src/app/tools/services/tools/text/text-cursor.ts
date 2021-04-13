@@ -17,12 +17,12 @@ export class TextCursor {
         return lineNumber;
     }
 
-    moveToLine(wantedLine: number, ctx: CanvasRenderingContext2D) {
+    moveToLine(wantedLine: number, ctx: CanvasRenderingContext2D): void {
         const lines = this.shape.splitTextInMultipleLines();
 
-        if(wantedLine < 0) {
+        if (wantedLine < 0) {
             this.position = 0;
-        } else if(wantedLine >= lines.length) {
+        } else if (wantedLine >= lines.length) {
             this.position = this.shape.text.length;
         } else {
             const positionInLine = this.positionInLine;
@@ -38,7 +38,7 @@ export class TextCursor {
                         const pixelWiseOffsetInCurrentLine = ctx.measureText(lines[this.line].substring(0, positionInLine)).width;
                         const currentLineLength = ctx.measureText(lines[this.line]).width;
                         const wantedLineLength = ctx.measureText(lines[wantedLine]).width;
-                        const offset = pixelWiseOffsetInCurrentLine - ((currentLineLength - wantedLineLength) / 2);
+                        const offset = pixelWiseOffsetInCurrentLine - (currentLineLength - wantedLineLength) / 2;
                         this.position = this.getAbsPositionFromLeft(wantedLine, offset, ctx);
                     }
                     break;
@@ -69,7 +69,7 @@ export class TextCursor {
 
     private getAbsPositionAtLineBeginning(line: number): number {
         const lines = this.shape.splitTextInMultipleLines();
-        
+
         let currentPosition = 0;
         for (let i = 0; i < line; ++i) {
             currentPosition += lines[i].length + 1;
@@ -82,7 +82,7 @@ export class TextCursor {
         let charWiseOffset = 0;
         let pixelWiseAccumulator = 0;
 
-        while(pixelWiseAccumulator < pixelWiseOffset) {
+        while (pixelWiseAccumulator < pixelWiseOffset) {
             pixelWiseAccumulator += ctx.measureText(text[charWiseOffset]).width;
             ++charWiseOffset;
         }

@@ -104,10 +104,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorRight();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION + 1);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION + 1);
     });
 
     it('Moving cursor right should not move right if at the end of text', () => {
@@ -115,10 +115,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 10;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorRight();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION);
     });
 
     it('Moving cursor right should render', () => {
@@ -144,10 +144,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorLeft();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION - 1);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION - 1);
     });
 
     it('Moving cursor left should not move left if at the beginning of text', () => {
@@ -155,10 +155,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 0;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorLeft();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION);
     });
 
     it('Moving cursor left should render', () => {

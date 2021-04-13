@@ -63,7 +63,7 @@ export class TextEditor {
         this.colourProperty.apply(ctx);
         this.fontProperty.apply(ctx);
         this.textAlignmentProperty.apply(ctx);
-        
+
         return ctx;
     }
 
