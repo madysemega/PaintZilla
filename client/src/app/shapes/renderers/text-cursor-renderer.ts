@@ -1,10 +1,11 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { TextShape } from '@app/shapes/text-shape';
+import { TextCursor } from '@app/tools/services/tools/text/text-cursor';
 import { ShapeRenderer } from './shape-renderer';
 
 export class TextCursorRenderer extends ShapeRenderer<TextShape> {
-    constructor(shape: TextShape, properties: ShapeProperty[], public cursorPosition: number) {
+    constructor(shape: TextShape, properties: ShapeProperty[], public cursor: TextCursor) {
         super(shape, properties);
     }
 
@@ -26,7 +27,7 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
 
     private getTextCurrentLineWidth(ctx: CanvasRenderingContext2D): number {
         let currentLineIndex = 0;
-        for (let position = 0; position < this.cursorPosition; ++position) {
+        for (let position = 0; position < this.cursor.position; ++position) {
             if (this.shape.text[position] === '\n') {
                 ++currentLineIndex;
             }
@@ -60,7 +61,7 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
     draw(ctx: CanvasRenderingContext2D): void {
         const CURSOR_BOTTOM_SIZE_DIVIDEND = 3;
 
-        const offsets = this.getOffsetsAt(this.cursorPosition, ctx);
+        const offsets = this.getOffsetsAt(this.cursor.position, ctx);
 
         const realStart = this.getRealPosition(this.shape.position, ctx);
 
@@ -76,6 +77,7 @@ export class TextCursorRenderer extends ShapeRenderer<TextShape> {
     }
 
     clone(): ShapeRenderer<TextShape> {
-        return new TextCursorRenderer(this.getShapeCopy(), this.getPropertiesCopy(), this.cursorPosition);
+        const shapeClone = this.getShapeCopy();
+        return new TextCursorRenderer(shapeClone, this.getPropertiesCopy(), this.cursor.clone(shapeClone));
     }
 }
