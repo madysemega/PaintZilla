@@ -8,6 +8,7 @@ import { TextEditor } from './text-editor';
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-string-literal
+// tslint:disable:max-file-line-count
 describe('TextEditor', () => {
     let editor: TextEditor;
 
@@ -165,6 +166,29 @@ describe('TextEditor', () => {
         const renderSpy = spyOn(editor, 'render').and.stub();
         editor.moveCursorLeft();
         expect(renderSpy).toHaveBeenCalled();
+    });
+
+    it('Moving cursor down should move cursor downward', () => {
+        const EXPECTED_LINE = 1;
+
+        spyOn(editor, 'render').and.stub();
+
+        editor.write('123\n321');
+        editor.moveCursorDown();
+
+        expect(editor['cursor'].line).toEqual(EXPECTED_LINE);
+    });
+
+    it('Moving cursor up should move cursor upward', () => {
+        const EXPECTED_LINE = 0;
+
+        spyOn(editor, 'render').and.stub();
+
+        editor.write('123\n321');
+        editor.moveCursorDown();
+        editor.moveCursorUp();
+
+        expect(editor['cursor'].line).toEqual(EXPECTED_LINE);
     });
 
     it('Should be able to write text in the middle of the text', () => {
