@@ -132,12 +132,10 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     get resizeWidth(): number {
-        // console.log('Called resizeWidth');
         return this.resizingService.canvasResize.x;
     }
 
     get resizeHeight(): number {
-        // console.log('Called resizeHeight');
         return this.resizingService.canvasResize.y;
     }
 

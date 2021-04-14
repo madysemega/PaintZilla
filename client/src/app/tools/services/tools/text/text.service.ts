@@ -31,6 +31,66 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
 
         this.key = 'text';
         this.editor = new TextEditor({ drawingService: this.drawingService, colourService: this.colourService });
+
+        this.initializeKeyboardShortcuts();
+    }
+
+    private initializeKeyboardShortcuts(): void {
+        this.keyboardService.registerAction({
+            trigger: 'left',
+            invoke: () => this.editor.moveCursorLeft(),
+            uniqueName: 'Move text cursor to the left',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'right',
+            invoke: () => this.editor.moveCursorRight(),
+            uniqueName: 'Move text cursor to the right',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'up',
+            invoke: () => this.editor.moveCursorUp(),
+            uniqueName: 'Move text cursor upward',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'down',
+            invoke: () => this.editor.moveCursorDown(),
+            uniqueName: 'Move text cursor downward',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'enter',
+            invoke: () => this.editor.write('\n'),
+            uniqueName: 'Add new line to text',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'backspace',
+            invoke: () => this.editor.backspace(),
+            uniqueName: 'Remove character to the left of the cursor in text',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'delete',
+            invoke: () => this.editor.delete(),
+            uniqueName: 'Remove character to the right of the cursor in text',
+            contexts: ['editing-text'],
+        });
+
+        this.keyboardService.registerAction({
+            trigger: 'escape',
+            invoke: () => this.cancel(),
+            uniqueName: 'Cancel the editing tool',
+            contexts: ['editing-text'],
+        });
     }
 
     onToolSelect(): void {
@@ -89,13 +149,13 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
     }
 
     private isCharAllowed(char: string): boolean {
-        let isAllowed = false;
+        let isInAllowedClass = false;
         this.ALLOWED_CHAR_CLASSES.forEach((allowedClass) => {
             if (char.startsWith(allowedClass)) {
-                isAllowed = true;
+                isInAllowedClass = true;
             }
         });
-        return isAllowed;
+        return isInAllowedClass;
     }
 
     private finalize(): void {
@@ -133,37 +193,9 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
             event.preventDefault();
             event.stopPropagation();
 
-            switch (event.key) {
-                case 'ArrowRight':
-                    this.editor.moveCursorRight();
-                    break;
-
-                case 'ArrowLeft':
-                    this.editor.moveCursorLeft();
-                    break;
-
-                case 'Backspace':
-                    this.editor.backspace();
-                    break;
-
-                case 'Delete':
-                    this.editor.delete();
-                    break;
-
-                case 'Escape':
-                    this.cancel();
-                    break;
-
-                case 'Enter':
-                    this.editor.write('\n');
-                    break;
-
-                default:
-                    const isCharAllowed = this.isCharAllowed(event.code);
-                    if (isCharAllowed) {
-                        this.editor.write(event.key);
-                    }
-                    break;
+            const isCharAllowed = this.isCharAllowed(event.code);
+            if (isCharAllowed) {
+                this.editor.write(event.key);
             }
         }
     }
