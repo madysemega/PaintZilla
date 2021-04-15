@@ -89,7 +89,9 @@ export class MagnetismComponent {
         this.drawingService.gridCtx.stroke();
         this.draw = true;
     }
-
+    notifyGrid(): void{
+        this.magnetismService.toggleGrid();
+    }
     deleteGrid(): void {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
