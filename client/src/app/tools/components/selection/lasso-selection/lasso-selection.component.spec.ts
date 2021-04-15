@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HotkeyModule } from 'angular2-hotkeys';
 import { LassoSelectionComponent } from './lasso-selection.component';
+
 
 describe('LassoSelectionComponent', () => {
   let component: LassoSelectionComponent;
@@ -8,7 +9,8 @@ describe('LassoSelectionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LassoSelectionComponent ]
+      imports: [HotkeyModule.forRoot()],
+      declarations: [ LassoSelectionComponent ],
     })
     .compileComponents();
   }));

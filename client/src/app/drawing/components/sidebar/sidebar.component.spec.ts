@@ -29,6 +29,9 @@ import { ClipboardService } from '@app/tools/services/selection/clipboard/clipbo
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
+import { LassoSelectionHandlerService } from '@app/tools/services/selection/lasso/lasso-selection-handler.service';
+import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso/lasso-selection-helper.service';
+import { LassoSelectionManipulatorService } from '@app/tools/services/selection/lasso/lasso-selection-manipulator.service';
 import { RectangleSelectionHandlerService } from '@app/tools/services/selection/rectangle/rectangle-selection-handler.service';
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
@@ -37,6 +40,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
@@ -86,6 +90,11 @@ describe('SidebarComponent', () => {
     let rectangleSelectionManipulatorService: RectangleSelectionManipulatorService;
     let rectangleSelectionHelperService: RectangleSelectionHelperService;
     let rectangleSelectionCreatorService: RectangleSelectionCreatorService;
+
+    let lassoSelectionHandlerService: LassoSelectionHandlerService;
+    let lassoSelectionManipulatorService: LassoSelectionManipulatorService;
+    let lassoSelectionHelperService: LassoSelectionHelperService;
+    let lassoSelectionCreatorService: LassoSelectionCreatorService;
 
     class RectangleServiceStub extends RectangleService {
         constructor(drawingService: DrawingService, colourService: ColourService, historyService: HistoryService) {
@@ -161,6 +170,21 @@ describe('SidebarComponent', () => {
             clipboardService,
         );
 
+        lassoSelectionHelperService = new LassoSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
+        lassoSelectionHandlerService = new LassoSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        lassoSelectionManipulatorService = new LassoSelectionManipulatorService(
+            drawingStub,
+            lassoSelectionHelperService,
+            lassoSelectionHandlerService,
+            historyServiceStub,
+        );
+        lassoSelectionCreatorService = new LassoSelectionCreatorService(
+            drawingStub,
+            lassoSelectionManipulatorService,
+            lassoSelectionHelperService,
+            clipboardService,
+        );
+
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
 
         toolSelectorServiceStub = new ToolSelectorService(
@@ -177,6 +201,7 @@ describe('SidebarComponent', () => {
             polygonService,
             ellipseSelectionCreatorService,
             rectangleSelectionCreatorService,
+            lassoSelectionCreatorService,
             stampServiceStub,
             textServiceStub,
         );
