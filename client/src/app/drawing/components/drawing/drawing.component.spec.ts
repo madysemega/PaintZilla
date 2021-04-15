@@ -18,6 +18,7 @@ import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellips
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { DrawingComponent } from './drawing.component';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 
 class ToolStub extends Tool {}
 
@@ -36,6 +37,8 @@ describe('DrawingComponent', () => {
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
     // tslint:disable:prefer-const
     let magnetismServiceStub: MagnetismService;
+    let canvasTestHelper: CanvasTestHelper;
+    let canvas: HTMLCanvasElement;
 
     beforeEach(async(() => {
         drawingRestoredStub = new EventEmitter<void>();
@@ -66,7 +69,8 @@ describe('DrawingComponent', () => {
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
-
+        canvasTestHelper = TestBed.inject(CanvasTestHelper);
+        canvas = canvasTestHelper.canvas;
         creatorStub = TestBed.inject(EllipseSelectionCreatorService);
     }));
 
@@ -309,5 +313,13 @@ describe('DrawingComponent', () => {
         });
 
         drawingCreatorService.drawingRestored.emit();
+    });
+
+    it('setCanvasDimensions(): should set canvas width and height', () => {
+        const expectedHeight = 10;
+        const expectedWidth = 10;
+        component.setCanvasDimensions(canvas, { x: expectedWidth, y: expectedHeight });
+        expect(canvas.width).toEqual(expectedWidth);
+        expect(canvas.height).toEqual(expectedHeight);
     });
 });
