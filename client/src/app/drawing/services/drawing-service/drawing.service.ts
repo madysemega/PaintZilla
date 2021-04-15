@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
@@ -84,8 +83,7 @@ export class DrawingService {
     }
 
     async resetDrawingSurface(): Promise<void> {
-        this.resetDrawingSurfaceDimensions();
-        await sleep();
+        this.resetDrawingSurfaceDimensions()
         this.resetDrawingSurfaceColour();
         this.drawInitialImage();
         this.onDrawingLoaded.emit();
