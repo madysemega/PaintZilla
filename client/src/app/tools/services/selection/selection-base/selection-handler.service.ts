@@ -3,21 +3,13 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
-
-export enum ResizingMode {
-    off = 0,
-    towardsRight = 1,
-    towardsLeft = 2,
-    towardsTop = 3,
-    towardsBottom = 4,
-}
+import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
-    protected readonly CANVAS_SIZE: number = 1000;
 
     selection: HTMLCanvasElement;
     originalSelection: HTMLCanvasElement;
@@ -141,7 +133,7 @@ export abstract class SelectionHandlerService {
         horizontalScaling: number,
         verticalScaling: number,
     ): void {
-        this.drawingService.clearCanvas(destination, { x: this.CANVAS_SIZE, y: this.CANVAS_SIZE });
+        this.drawingService.clearCanvas(destination, { x: CANVAS_SIZE, y: CANVAS_SIZE });
         destination.beginPath();
         this.transform(destination, horizontalScaling, verticalScaling);
         destination.imageSmoothingEnabled = false;
@@ -160,10 +152,10 @@ export abstract class SelectionHandlerService {
 
     clearAndResetAllCanvas(): void {
         // changing canvas size clears it
-        this.selection.width = this.CANVAS_SIZE;
-        this.selection.height = this.CANVAS_SIZE;
-        this.originalSelection.width = this.CANVAS_SIZE;
-        this.originalSelection.height = this.CANVAS_SIZE;
+        this.selection.width = CANVAS_SIZE;
+        this.selection.height = CANVAS_SIZE;
+        this.originalSelection.width = CANVAS_SIZE;
+        this.originalSelection.height = CANVAS_SIZE;
     }
 
     hasSelectionBeenManipulated(topLeftOnDestination: Vec2): boolean {
@@ -175,7 +167,7 @@ export abstract class SelectionHandlerService {
     }
 
     createMemento(): HandlerMemento {
-        const memento: HandlerMemento = new HandlerMemento(this.CANVAS_SIZE, this.CANVAS_SIZE);
+        const memento: HandlerMemento = new HandlerMemento(CANVAS_SIZE, CANVAS_SIZE);
 
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.offset = { x: this.offset.x, y: this.offset.y };

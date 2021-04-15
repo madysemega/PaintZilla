@@ -4,7 +4,9 @@ import * as Constants from '@app/magnetism/magnetism.constant';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
     selector: 'app-magnetism',
@@ -12,8 +14,10 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    isActivated: boolean = false;
-    deleate: boolean = false;
+    gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
+    isMagnetismActivated: boolean = false;
+    tester: number = 0;
+    delete: boolean = false;
     increment: boolean = false;
     decrement: boolean = false;
     draw: boolean = false;
@@ -33,21 +37,21 @@ export class MagnetismComponent {
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            this.isActivated = value;
+            this.isMagnetismActivated = value;
             this.notifyManipulators();
         });
-        this.magnetismService.isIncrement.subscribe((value) => {
+        this.magnetismService.isIncrement.subscribe(() => {
             this.incrementGrid();
         });
-        this.magnetismService.isDecrement.subscribe((value) => {
+        this.magnetismService.isDecrement.subscribe(() => {
             this.decrementGrid();
         });
     }
     notifyManipulators(): void {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
     }
     toggleGrid(): void {
         if (this.isGridActivated === true) {
@@ -90,7 +94,7 @@ export class MagnetismComponent {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
         this.drawingService.gridCtx.stroke();
-        this.deleate = true;
+        this.delete = true;
     }
 
     gridCellSizeChange(gridCellSize: number): void {
@@ -115,6 +119,15 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+            .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+    }
+
+    getCurrentGridAnchor(): GridMovementAnchor {
+        const invalid = -1;
+        if (!this.isMagnetismActivated) {
+            return invalid;
+        }
+        return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService)
+            .selectionManipulator.gridMovementAnchor;
     }
 }

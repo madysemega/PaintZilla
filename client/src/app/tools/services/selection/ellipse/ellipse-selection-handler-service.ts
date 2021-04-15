@@ -4,14 +4,6 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
 
-export enum ResizingMode {
-    off = 0,
-    towardsRight = 1,
-    towardsLeft = 2,
-    towardsTop = 3,
-    towardsBottom = 4,
-}
-
 @Injectable({
     providedIn: 'root',
 })
