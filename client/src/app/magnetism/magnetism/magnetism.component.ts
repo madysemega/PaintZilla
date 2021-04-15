@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import * as Constants from '@app/magnetism/magnetism.constant';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
@@ -11,10 +12,6 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    static readonly DEFAULT_MAX_OPACITY_AND_SIZE: number = 100;
-    static readonly INCREMENT: number = 5;
-    static readonly DECREMENT: number = 5;
-    static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
     deleate: boolean = false;
     increment: boolean = false;
@@ -60,21 +57,21 @@ export class MagnetismComponent {
         }
     }
     incrementGrid(): void {
-        if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY_AND_SIZE) {
-            this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
+        if (this.gridCellSize < Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
+            this.gridCellSizeChange(this.gridCellSize + Constants.INCREMENT);
         }
         this.increment = true;
     }
     decrementGrid(): void {
-        if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
-            this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
+        if (this.gridCellSize > Constants.MIN_SIZE) {
+            this.gridCellSizeChange(this.gridCellSize - Constants.DECREMENT);
         }
         this.decrement = true;
     }
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
             this.drawingService.gridCtx.moveTo(i, 0);
-            if (this.opacite === MagnetismComponent.DEFAULT_MAX_OPACITY_AND_SIZE) {
+            if (this.opacite === Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
                 this.drawingService.gridCtx.strokeStyle = '#000000FF';
             } else {
                 this.drawingService.gridCtx.strokeStyle = '#000000' + this.opacite;

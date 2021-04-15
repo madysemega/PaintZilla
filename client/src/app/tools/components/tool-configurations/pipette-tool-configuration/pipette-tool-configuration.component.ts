@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { PipetteService } from '@app/tools/services/tools/pipette-service';
+import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 
 @Component({
     selector: 'app-pipette-tool-configuration',

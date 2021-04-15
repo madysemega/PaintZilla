@@ -36,15 +36,15 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 // import { ColourToolService } from '@server/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
-import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
-import { PipetteService } from '@app/tools/services/tools/pipette-service';
+import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
-import { SprayService } from '@app/tools/services/tools/spray-service';
+import { SprayService } from '@app/tools/services/tools/spray/spray-service';
 import { StampService } from '@app/tools/services/tools/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
