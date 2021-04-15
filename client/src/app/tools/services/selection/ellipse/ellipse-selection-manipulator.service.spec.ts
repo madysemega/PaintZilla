@@ -3,7 +3,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { ManipulatorMemento } from '@app/app/classes/manipulator-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
+import { ResizingMode } from '@app/tools/services/selection/resizing-mode';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { interval } from 'rxjs';

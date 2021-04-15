@@ -4,6 +4,7 @@ import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
     selector: 'app-magnetism',
@@ -120,6 +121,11 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+            .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+    }
+
+    getCurrentGridAnchor(): number{
+        return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
+        .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor;
     }
 }

@@ -6,7 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
 import { GridMovement } from './grid-movement';
-import { ResizingMode } from './resizing-mode';
+import { ResizingMode } from '@app/tools/services/selection/resizing-mode';
 import { GridMovementAnchor } from './selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 

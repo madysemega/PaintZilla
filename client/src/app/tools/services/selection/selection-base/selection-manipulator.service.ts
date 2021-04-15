@@ -11,7 +11,7 @@ import { SelectionHelperService } from '@app/tools/services/selection/selection-
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { GridMovement } from './grid-movement';
-import { ResizingMode } from './resizing-mode';
+import { ResizingMode } from '@app/tools/services/selection/resizing-mode';
 import {
     Arrow,
     GridMovementAnchor,
