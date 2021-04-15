@@ -100,6 +100,10 @@ export class IconsMetaData {
                 name: 'text-format',
                 path: './assets/icons/text-format.svg',
             },
+            {
+                name: 'paint-bucket',
+                path: './assets/icons/paint-bucket.svg',
+            },
         ];
     }
 }

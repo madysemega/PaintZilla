@@ -31,6 +31,7 @@ import { SelectionComponent } from '@app/tools/components/selection/selection/se
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
+import { PaintBucketToolConfigurationComponent } from '@app/tools/components/tool-configurations/paint-bucket-tool-configuration/paint-bucket-tool-configuration.component';
 import { PencilToolConfigurationComponent } from '@app/tools/components/tool-configurations/pencil-tool-configuration/pencil-tool-configuration.component';
 import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { PolygonComponent } from '@app/tools/components/tool-configurations/polygon/polygon.component';
@@ -89,6 +90,7 @@ import { StampComponent } from './tools/components/tool-configurations/stamp/sta
         ImgurLinkDialogComponent,
         StampComponent,
         TextToolConfigurationComponent,
+        PaintBucketToolConfigurationComponent,
     ],
     imports: [
         BrowserModule,

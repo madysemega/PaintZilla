@@ -11,6 +11,7 @@ import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellips
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
@@ -192,6 +193,7 @@ export class ToolSelectorService {
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
         stampService: StampService,
         textService: TextService,
+        paintBucketService: PaintBucketService,
     ) {
         this.tools.set(pencilService.key, {
             displayName: 'Crayon',
@@ -266,6 +268,13 @@ export class ToolSelectorService {
             icon: 'text-format',
             keyboardShortcut: 't',
             tool: textService,
+        });
+
+        this.tools.set(paintBucketService.key, {
+            displayName: 'Sceau de peinture',
+            icon: 'paint-bucket',
+            keyboardShortcut: 'b',
+            tool: paintBucketService,
         });
 
         this.selectedTool = this.tools.get(pencilService.key) as MetaWrappedTool;
