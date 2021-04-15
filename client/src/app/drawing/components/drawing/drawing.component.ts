@@ -35,9 +35,13 @@ export class DrawingComponent implements AfterViewInit {
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(async () => {
+            this.drawingService.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
             this.drawingService.resetDrawingSurfaceDimensions();
             await sleep();
             this.drawingService.resetDrawingSurfaceColour();
+            const image = new Image();
+            image.src = this.drawingService.currentDrawing;
+            this.drawingService.initialImage = image;
             this.drawingService.onDrawingLoaded.emit();
         });
 
