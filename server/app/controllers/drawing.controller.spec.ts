@@ -13,23 +13,23 @@ describe('Drawing controller', () => {
     let app: Express.Application;
 
     beforeEach(async () => {
-       const [container, sandbox] = await testingContainer();
-       container.rebind(TYPES.DrawingService).toConstantValue({
-           saveDrawing: sandbox.stub(),
-           getAllDrawings: sandbox.stub(),
-           getDrawingById: sandbox.stub(),
-           getDrawingsByName: sandbox.stub(),
-           getAllLabels: sandbox.stub(),
-           getDrawingsByLabelsOne: sandbox.stub(),
-           getDrawingsByLabelsAll: sandbox.stub(),
-           updateDrawing: sandbox.stub(),
-           updateDrawingName: sandbox.stub(),
-           updateDrawingLabels: sandbox.stub(),
-           updateDrawingContent: sandbox.stub(),
-           deleteDrawing: sandbox.stub(),
-       });
-       drawingService = container.get(TYPES.DrawingService);
-       app = container.get<Application>(TYPES.Application).app;
+        const [container, sandbox] = await testingContainer();
+        container.rebind(TYPES.DrawingService).toConstantValue({
+            saveDrawing: sandbox.stub(),
+            getAllDrawings: sandbox.stub(),
+            getDrawingById: sandbox.stub(),
+            getDrawingsByName: sandbox.stub(),
+            getAllLabels: sandbox.stub(),
+            getDrawingsByLabelsOne: sandbox.stub(),
+            getDrawingsByLabelsAll: sandbox.stub(),
+            updateDrawing: sandbox.stub(),
+            updateDrawingName: sandbox.stub(),
+            updateDrawingLabels: sandbox.stub(),
+            updateDrawingContent: sandbox.stub(),
+            deleteDrawing: sandbox.stub(),
+        });
+        drawingService = container.get(TYPES.DrawingService);
+        app = container.get<Application>(TYPES.Application).app;
     });
 
     it('POST api/drawings: should return Created status on successful post/api/drawings request', async () => {
@@ -144,35 +144,35 @@ describe('Drawing controller', () => {
     it('PUT api/drawings/:id: should return an error as a message on service fail', async () => {
         drawingService.updateDrawing.rejects(new Error(''));
         return supertest(app).put('/api/drawings/id').expect(HttpStatusCode.NotModified).catch((error: Error) => {
-                console.log('Test failed, ' + error.message);
-            });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('PUT api/drawings/name/:id: should return Ok status on successful put/api/drawings/name/:id request', async () => {
         drawingService.updateDrawingName.resolves(Constants.DRAWING);
         return supertest(app).put('/api/drawings/name/id').send(Constants.DRAWING.name).expect(HttpStatusCode.Ok).catch((error: Error) => {
-                console.log('Test failed, ' + error.message);
-            });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('PUT api/drawings/name/:id: should return an error as a message on service fail', async () => {
         drawingService.updateDrawingName.rejects(new Error(''));
         return supertest(app).put('/api/drawings/name/id').send(Constants.DRAWING.name).expect(HttpStatusCode.NotModified).catch((error: Error) => {
-                console.log('Test failed, ' + error.message);
-            });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('PUT api/drawings/labels/:id: should return Ok status on successful put/api/drawings/labels/:id request', async () => {
         drawingService.updateDrawingLabels.resolves(Constants.DRAWING);
         return supertest(app).put('/api/drawings/labels/id')
             .set({
-            'Content-Type': 'text/plain',
-            Accept: '*/*',
-            'Cache-Control': 'no-cache',
-            'Accept-Encoding': 'gzip, deflate',
-            'Content-Length': Buffer.byteLength('lab1, lab2'),
-            Connection: 'keep-alive',
-        }).send('lab1, lab2').expect(HttpStatusCode.Ok).catch((error: Error) => {
+                'Content-Type': 'text/plain',
+                Accept: '*/*',
+                'Cache-Control': 'no-cache',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Length': Buffer.byteLength('lab1, lab2'),
+                Connection: 'keep-alive',
+            }).send('lab1, lab2').expect(HttpStatusCode.Ok).catch((error: Error) => {
                 console.log('Test failed, ' + error.message);
             });
     });
@@ -180,7 +180,7 @@ describe('Drawing controller', () => {
     it('PUT api/drawings/labels/:id: should return an error as a message on service fail', async () => {
         drawingService.updateDrawingLabels.rejects(new Error(''));
         return supertest(app).put('/api/drawings/labels/id')
-        .set({
+            .set({
                 'Content-Type': 'text/plain',
                 Accept: '*/*',
                 'Cache-Control': 'no-cache',
@@ -196,28 +196,28 @@ describe('Drawing controller', () => {
     it('PUT api/drawings/content/:id: should return Ok status on successful put/api/drawings/content/:id request', async () => {
         drawingService.updateDrawingContent.resolves(Constants.DRAWING);
         return supertest(app).put('/api/drawings/content/id').send(Constants.DRAWING.drawing).expect(HttpStatusCode.Ok).catch((error: Error) => {
-                console.log('Test failed, ' + error.message);
-            });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('PUT api/drawings/content/:id: should return an error as a message on service fail', async () => {
         drawingService.updateDrawingContent.rejects(new Error(''));
         return supertest(app).put('/api/drawings/content/id').send(Constants.DRAWING.drawing).expect(HttpStatusCode.NotModified).catch((error: Error) => {
-                console.log('Test failed, ' + error.message);
-            });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('DELETE api/drawings/:id: should return Ok status on successful put/api/drawings/content/:id request', async () => {
         drawingService.deleteDrawing.resolves();
         return supertest(app).delete('/api/drawings/id').expect(HttpStatusCode.Ok).catch((error: Error) => {
-                    console.log('Test failed, ' + error.message);
-                });
+            console.log('Test failed, ' + error.message);
+        });
     });
 
     it('DELETE api/drawings/:id: should return an error as a message on service fail', async () => {
         drawingService.deleteDrawing.rejects(new Error(''));
         return supertest(app).delete('/api/drawings/id').expect(HttpStatusCode.NotModified).catch((error: Error) => {
-                    console.log('Test failed, ' + error.message);
-                });
+            console.log('Test failed, ' + error.message);
+        });
     });
 });
