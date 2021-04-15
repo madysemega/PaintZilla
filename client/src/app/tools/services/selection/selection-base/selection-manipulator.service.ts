@@ -19,7 +19,6 @@ import { SelectionHandlerService } from './selection-handler.service';
 })
 export abstract class SelectionManipulatorService extends Tool {
     isMagnetismActivated: boolean = false;
-    isGridActive: boolean = false;
     gridCellSize: number = 50;
     gridMovementAnchor: GridMovementAnchor = GridMovementAnchor.topL;
     topLeft: Vec2 = { x: 0, y: 0 };

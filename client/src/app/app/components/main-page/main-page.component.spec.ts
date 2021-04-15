@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import { sleep } from '@app/app/classes/sleep';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
@@ -87,10 +88,11 @@ describe('MainPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('resetCanvasDimensions(): should call resizingService.resetCanvasDimensions() and automaticDrawingService.saveDrawingLocally()', () => {
+    it('resetCanvasDimensions(): should call resizingService.resetCanvasDimensions() and automaticDrawingService.saveDrawingLocally()', async () => {
         const resetStub = spyOn(resizingServiceStub, 'resetCanvasDimensions').and.stub();
         const saveDrawingLocallyStub = spyOn(automaticSavingServiceStub, 'saveDrawingLocally').and.stub();
         component.resetCanvasDimensions();
+        await sleep();
         expect(resetStub).toHaveBeenCalled();
         expect(saveDrawingLocallyStub).toHaveBeenCalled();
     });
