@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { Vec2 } from '@app/app/classes/vec2';
+import { OUTSIDE_DETECTION_OFFSET_PX } from '@app/tools/services/selection/selection-constants';
 import { GridMovement, GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
-import { OUTSIDE_DETECTION_OFFSET_PX } from '../selection-constants';
 import { SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any

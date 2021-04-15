@@ -8,10 +8,10 @@ import { EllipseSelectionHandlerService } from '@app/tools/services/selection/el
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import { MINIMUM_SELECTION_WIDTH } from '@app/tools/services/selection/selection-constants';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
-import { MINIMUM_SELECTION_WIDTH } from '../selection/selection-constants';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
