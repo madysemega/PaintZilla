@@ -3,10 +3,10 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { OUTSIDE_DETECTION_OFFSET_PX } from '@app/tools/services/selection/selection-constants';
 import { GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
-import { OUTSIDE_DETECTION_OFFSET_PX } from '../selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
@@ -45,11 +45,9 @@ export abstract class SelectionHelperService {
         const upLimit = isReversedY ? bottomRight.y : topLeft.y;
         const downLimit = isReversedY ? topLeft.y : bottomRight.y;
 
-        xOutsideSelection =
-            mousePosition.x < leftLimit - OUTSIDE_DETECTION_OFFSET_PX|| mousePosition.x > rightLimit + OUTSIDE_DETECTION_OFFSET_PX;
+        xOutsideSelection = mousePosition.x < leftLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
-        yOutsideSelection =
-            mousePosition.y < upLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + OUTSIDE_DETECTION_OFFSET_PX;
+        yOutsideSelection = mousePosition.y < upLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
         return xOutsideSelection || yOutsideSelection;
     }

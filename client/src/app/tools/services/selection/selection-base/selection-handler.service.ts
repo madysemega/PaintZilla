@@ -3,7 +3,7 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
-import { CANVAS_SIZE } from '../selection-constants';
+import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 
 @Injectable({
     providedIn: 'root',

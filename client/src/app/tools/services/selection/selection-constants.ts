@@ -10,5 +10,5 @@ export const MOVEMENT_UP: Constants = { x: 0, y: -MOVEMENT_PX };
 export const MOVEMENT_LEFT: Constants = { x: -MOVEMENT_PX, y: 0 };
 export const MOVEMENT_RIGHT: Constants = { x: MOVEMENT_PX, y: 0 };
 export const MAGNETISM_OFF = 1;
-export const MINIMUM_SELECTION_WIDTH: number = 5;
-export const CANVAS_SIZE: number = 1000;
+export const MINIMUM_SELECTION_WIDTH = 5;
+export const CANVAS_SIZE = 1000;
