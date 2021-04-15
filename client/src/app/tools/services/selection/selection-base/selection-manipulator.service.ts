@@ -11,19 +11,8 @@ import { SelectionHelperService } from '@app/tools/services/selection/selection-
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { GridMovement } from './grid-movement';
-import { ResizingMode } from '@app/tools/services/selection/resizing-mode';
-import {
-    Arrow,
-    GridMovementAnchor,
-    MAGNETISM_OFF,
-    MOVEMENT_DOWN,
-    MOVEMENT_LEFT,
-    MOVEMENT_RIGHT,
-    MOVEMENT_UP,
-    NUMBER_OF_ARROW_TYPES,
-    TIME_BEFORE_START_MOV,
-    TIME_BETWEEN_MOV,
-} from './selection-constants';
+import * as Constants from '@app/app/constants/selection-constants';
+import { ResizingMode, Arrow, GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { SelectionHandlerService } from './selection-handler.service';
 
 @Injectable({
@@ -58,7 +47,7 @@ export abstract class SelectionManipulatorService extends Tool {
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
-        this.subscriptions = new Array<Subscription>(NUMBER_OF_ARROW_TYPES);
+        this.subscriptions = new Array<Subscription>(Constants.NUMBER_OF_ARROW_TYPES);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -100,16 +89,16 @@ export abstract class SelectionManipulatorService extends Tool {
             this.resizeSelection(this.mouseLastPos, this.resizingMode);
         }
         if (event.key === 'ArrowUp' && !this.arrowKeyDown[Arrow.up]) {
-            this.moveIfPressLongEnough(MOVEMENT_UP, Arrow.up);
+            this.moveIfPressLongEnough(Constants.MOVEMENT_UP, Arrow.up);
         }
         if (event.key === 'ArrowDown' && !this.arrowKeyDown[Arrow.down]) {
-            this.moveIfPressLongEnough(MOVEMENT_DOWN, Arrow.down);
+            this.moveIfPressLongEnough(Constants.MOVEMENT_DOWN, Arrow.down);
         }
         if (event.key === 'ArrowLeft' && !this.arrowKeyDown[Arrow.left]) {
-            this.moveIfPressLongEnough(MOVEMENT_LEFT, Arrow.left);
+            this.moveIfPressLongEnough(Constants.MOVEMENT_LEFT, Arrow.left);
         }
         if (event.key === 'ArrowRight' && !this.arrowKeyDown[Arrow.right]) {
-            this.moveIfPressLongEnough(MOVEMENT_RIGHT, Arrow.right);
+            this.moveIfPressLongEnough(Constants.MOVEMENT_RIGHT, Arrow.right);
         }
     }
 
@@ -121,16 +110,16 @@ export abstract class SelectionManipulatorService extends Tool {
             this.resizeSelection(this.mouseLastPos, this.resizingMode);
         }
         if (event.key === 'ArrowDown') {
-            this.singleMove(Arrow.down, MOVEMENT_DOWN);
+            this.singleMove(Arrow.down, Constants.MOVEMENT_DOWN);
         }
         if (event.key === 'ArrowUp') {
-            this.singleMove(Arrow.up, MOVEMENT_UP);
+            this.singleMove(Arrow.up, Constants.MOVEMENT_UP);
         }
         if (event.key === 'ArrowLeft') {
-            this.singleMove(Arrow.left, MOVEMENT_LEFT);
+            this.singleMove(Arrow.left, Constants.MOVEMENT_LEFT);
         }
         if (event.key === 'ArrowRight') {
-            this.singleMove(Arrow.right, MOVEMENT_RIGHT);
+            this.singleMove(Arrow.right, Constants.MOVEMENT_RIGHT);
         }
     }
 
@@ -232,13 +221,13 @@ export abstract class SelectionManipulatorService extends Tool {
 
     startMovingSelectionContinous(movement: Vec2, arrowIndex: number): void {
         this.subscriptions[arrowIndex].unsubscribe();
-        const source = interval(TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
+        const source = interval(Constants.TIME_BETWEEN_MOV).pipe(takeWhile(() => this.arrowKeyDown[arrowIndex]));
         this.subscriptions[arrowIndex] = source.subscribe(() => this.moveSelection(movement, false));
         this.isContinousMovementByKeyboardOn[arrowIndex] = true;
     }
 
     addMovementToPositions(movement: Vec2, isMouseMovement: boolean): void {
-        const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : MAGNETISM_OFF;
+        const cellSize: number = this.isMagnetismActivated ? this.gridCellSize : Constants.MAGNETISM_OFF;
         const gridMovement: GridMovement = {
             movement,
             isMouseMovement,
@@ -258,7 +247,7 @@ export abstract class SelectionManipulatorService extends Tool {
 
     moveIfPressLongEnough(movement: Vec2, arrowIndex: number): void {
         this.arrowKeyDown[arrowIndex] = true;
-        this.subscriptions[arrowIndex] = interval(TIME_BEFORE_START_MOV).subscribe((val) => {
+        this.subscriptions[arrowIndex] = interval(Constants.TIME_BEFORE_START_MOV).subscribe((val) => {
             this.startMovingSelectionContinous(movement, arrowIndex);
         });
     }
