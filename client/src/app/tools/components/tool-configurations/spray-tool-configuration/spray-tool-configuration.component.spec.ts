@@ -9,7 +9,7 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { SprayToolConfigurationComponent } from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component';
-import { SprayService } from '@app/tools/services/tools/spray-service';
+import { SprayService } from '@app/tools/services/tools/spray/spray-service';
 
 describe('SprayToolConfigurationComponent', () => {
     let component: SprayToolConfigurationComponent;

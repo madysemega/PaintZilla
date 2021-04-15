@@ -10,7 +10,7 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { PipetteToolConfigurationComponent } from '@app/tools/components/tool-configurations/pipette-tool-configuration/pipette-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
-import { PipetteService } from '@app/tools/services/tools/pipette-service';
+import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 
 describe('PipetteToolConfigurationComponent', () => {
     let component: PipetteToolConfigurationComponent;

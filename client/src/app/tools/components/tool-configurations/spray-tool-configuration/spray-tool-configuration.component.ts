@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import * as Constants from '@app/tools/components/tool-configurations/spray-tool-configuration/spray-tool-configuration.component.constant';
-import { SprayService } from '@app/tools/services/tools/spray-service';
+import { SprayService } from '@app/tools/services/tools/spray/spray-service';
 @Component({
     selector: 'app-spray-tool-configuration',
     templateUrl: './spray-tool-configuration.component.html',
