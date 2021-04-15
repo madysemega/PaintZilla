@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { ResizingMode } from '@app/tools/services/selection/selection-utils';
 
 @Component({
     selector: 'app-selection',

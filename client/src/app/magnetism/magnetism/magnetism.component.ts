@@ -3,8 +3,8 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
-import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
+import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
@@ -125,11 +125,12 @@ export class MagnetismComponent {
             .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
     }
 
-    getCurrentGridAnchor(): GridMovementAnchor{
-        if(!this.isActivated){
-            return -1;
+    getCurrentGridAnchor(): GridMovementAnchor {
+        const invalid = -1;
+        if (!this.isActivated) {
+            return invalid;
         }
-        return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
-        .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor;
+        return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService)
+            .selectionManipulator.gridMovementAnchor;
     }
 }

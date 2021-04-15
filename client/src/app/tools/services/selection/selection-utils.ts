@@ -1,4 +1,4 @@
-import { Vec2 } from "@app/app/classes/vec2";
+import { Vec2 } from '@app/app/classes/vec2';
 
 export class GridMovement {
     movement: Vec2;
@@ -9,7 +9,6 @@ export class GridMovement {
     bottomRight: Vec2;
     isReversed: boolean[];
 }
-
 
 export enum ResizingMode {
     off = 0,
@@ -41,4 +40,3 @@ export enum GridMovementAnchor {
     topM = 7,
     center = 8,
 }
-

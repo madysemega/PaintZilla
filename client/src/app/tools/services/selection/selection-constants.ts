@@ -10,4 +10,3 @@ export const MOVEMENT_UP: Constants = { x: 0, y: -MOVEMENT_PX };
 export const MOVEMENT_LEFT: Constants = { x: -MOVEMENT_PX, y: 0 };
 export const MOVEMENT_RIGHT: Constants = { x: MOVEMENT_PX, y: 0 };
 export const MAGNETISM_OFF = 1;
-

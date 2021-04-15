@@ -3,9 +3,9 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
-import { ResizingMode, GridMovement, GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
@@ -54,7 +54,6 @@ export abstract class SelectionHelperService {
 
         return xOutsideSelection || yOutsideSelection;
     }
-
 
     addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;

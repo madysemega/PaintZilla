@@ -8,10 +8,10 @@ import { UserActionRenderSelection } from '@app/history/user-actions/user-action
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import * as Constants from '@app/tools/services/selection/selection-constants';
+import { Arrow, GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import * as Constants from '@app/tools/services/selection/selection-constants';
-import { ResizingMode, Arrow, GridMovementAnchor, GridMovement } from '@app/tools/services/selection/selection-utils';
 import { SelectionHandlerService } from './selection-handler.service';
 
 @Injectable({

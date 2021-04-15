@@ -163,16 +163,17 @@ describe('MagnetismComponent', () => {
     });
 
     it('getCurrentGridAnchor should return -1 if Grid is not activated', () => {
-        const invalid: number = -1;
+        const invalid = -1;
         component.isActivated = false;
         let actualValue: number = component.getCurrentGridAnchor();
         expect(actualValue).toEqual(invalid);
     });
 
     it('getCurrentGridAnchor should return correct anchorPoint if Grid is activated', () => {
-        const expectedValue: number = 5;
+        const expectedValue = 5;
         component.isActivated = true;
-        ((component.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor =5;
+        ((component.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = 5;
         let actualValue: number = component.getCurrentGridAnchor();
         expect(actualValue).toEqual(expectedValue);
     });
