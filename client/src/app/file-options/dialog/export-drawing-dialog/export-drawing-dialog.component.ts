@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
@@ -13,7 +14,6 @@ import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
     styleUrls: ['./export-drawing-dialog.component.scss'],
 })
 export class ExportDrawingDialogComponent implements AfterViewInit {
-    SNACK_BAR_DURATION: number = 6000;
     @ViewChild('downloadLink') downloadLink: ElementRef<HTMLLinkElement>;
     @ViewChild('imageCanvas') canvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas') previewCanvas: ElementRef<HTMLCanvasElement>;
@@ -111,7 +111,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: this.SNACK_BAR_DURATION,
+            duration: SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
