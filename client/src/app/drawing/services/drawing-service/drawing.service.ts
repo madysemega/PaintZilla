@@ -83,7 +83,7 @@ export class DrawingService {
     }
 
     async resetDrawingSurface(): Promise<void> {
-        this.resetDrawingSurfaceDimensions()
+        this.resetDrawingSurfaceDimensions();
         this.resetDrawingSurfaceColour();
         this.drawInitialImage();
         this.onDrawingLoaded.emit();

@@ -4,6 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -18,7 +19,6 @@ import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellips
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { DrawingComponent } from './drawing.component';
-import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 
 class ToolStub extends Tool {}
 
