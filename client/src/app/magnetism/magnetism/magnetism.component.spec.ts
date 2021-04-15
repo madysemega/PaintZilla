@@ -8,6 +8,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
@@ -159,5 +160,20 @@ describe('MagnetismComponent', () => {
         const dummyAnchor = 5;
         component.setGridAnchor(dummyAnchor);
         expect(rectangleSelectionCreator.selectionManipulator.gridMovementAnchor).toEqual(dummyAnchor);
+    });
+
+    it('getCurrentGridAnchor should return -1 if Grid is not activated', () => {
+        const invalid: number = -1;
+        component.isActivated = false;
+        let actualValue: number = component.getCurrentGridAnchor();
+        expect(actualValue).toEqual(invalid);
+    });
+
+    it('getCurrentGridAnchor should return correct anchorPoint if Grid is activated', () => {
+        const expectedValue: number = 5;
+        component.isActivated = true;
+        ((component.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor =5;
+        let actualValue: number = component.getCurrentGridAnchor();
+        expect(actualValue).toEqual(expectedValue);
     });
 });

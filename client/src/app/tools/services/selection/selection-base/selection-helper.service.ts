@@ -5,9 +5,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
-import { GridMovement } from './grid-movement';
-import { ResizingMode } from '@app/tools/services/selection/selection-utils';
-import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
+import { ResizingMode, GridMovement, GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({

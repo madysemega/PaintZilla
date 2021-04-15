@@ -4,6 +4,7 @@ import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
@@ -16,6 +17,7 @@ export class MagnetismComponent {
     static readonly INCREMENT: number = 5;
     static readonly DECREMENT: number = 5;
     static readonly MIN_SIZE: number = 10;
+    gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
     isActivated: boolean = false;
     tester: number = 0;
     delete: boolean = false;
@@ -124,7 +126,10 @@ export class MagnetismComponent {
             .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
     }
 
-    getCurrentGridAnchor(): number{
+    getCurrentGridAnchor(): GridMovementAnchor{
+        if(!this.isActivated){
+            return -1;
+        }
         return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
         .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor;
     }

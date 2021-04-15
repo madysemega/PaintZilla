@@ -38,8 +38,7 @@
     justify-content: space-between;
 }
 
-.resizingButton {
-    
+.resizingButton { 
     border: black 1px solid;
     height: 8px;
     width: 8px;
@@ -48,15 +47,15 @@
     border-radius: 50%;
 }
 
-.resizingButton:active {
+.yellow {
     transition: 0.25ms;
     background-color: rgb(230, 255, 6);
 }
 
-.resizingButton {
+/*.resizingButton {
     transition: 0.5s;
     background-color: teal;
-}
+}*/
 
 #top-middle {
     transform: translate(0, -50%);

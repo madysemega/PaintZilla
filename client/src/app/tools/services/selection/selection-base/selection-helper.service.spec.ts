@@ -3,8 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
-import { GridMovement } from './grid-movement';
-import { GridMovementAnchor } from './selection-constants';
+import { GridMovement, GridMovementAnchor } from '@app/tools/services/selection/selection-utils'
 import { SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any
