@@ -18,7 +18,7 @@
    inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)"><metadata
    id="metadata955"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
    id="defs953" /><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
@@ -33,16 +33,18 @@
    id="namedview951"
    showgrid="false"
    inkscape:zoom="3.1326481"
-   inkscape:cx="129.81562"
+   inkscape:cx="68.366011"
    inkscape:cy="131.62453"
    inkscape:window-x="-11"
    inkscape:window-y="49"
    inkscape:window-maximized="1"
-   inkscape:current-layer="Capa_1" />
+   inkscape:current-layer="Capa_1"
+   inkscape:document-rotation="0" />
 <g
-   id="g918">
+   id="g918"
+   style="fill:#ffffff;fill-opacity:1">
 	<path
-   style="fill:#010002"
+   style="fill:#ffffff;fill-opacity:1"
    d="m 71.915,9.271 c -12.358,-12.358 -32.39,-12.358 -44.747,0 l -17.9,17.9 c -12.358,12.358 -12.358,32.39 0,44.747 l 17.9,17.9 L 89.81,27.176 Z M 197.204,134.56 134.562,197.196 27.168,89.818 89.81,27.176 Z m -22.371,102.912 80.542,17.9 -17.9,-80.542 -40.271,-40.27 -62.642,62.636 z"
    id="path916"
    sodipodi:nodetypes="ccsccccccccccccccc" />

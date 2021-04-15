@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="-93.050121"
-     inkscape:cy="108.90175"
+     inkscape:cx="89.903808"
+     inkscape:cy="182.82813"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -34,7 +34,8 @@
      inkscape:window-height="986"
      inkscape:window-x="-11"
      inkscape:window-y="49"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:snap-global="true" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -43,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,9 +55,10 @@
      transform="translate(-8.7579205,-53.624433)">
     <g
        id="g918"
-       transform="matrix(0.14841354,0,0,0.14841354,8.7579947,53.624062)">
+       transform="matrix(0.14841354,0,0,0.14841354,8.7579947,53.624062)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1">
       <path
-         style="fill:#010002"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
          d="m 71.915,9.271 c -12.358,-12.358 -32.39,-12.358 -44.747,0 l -17.9,17.9 c -12.358,12.358 -12.358,32.39 0,44.747 l 17.9,17.9 L 89.81,27.176 Z M 197.204,134.56 134.562,197.196 27.168,89.818 89.81,27.176 Z m -22.371,102.912 80.542,17.9 -17.9,-80.542 -40.271,-40.27 -62.642,62.636 z"
          id="path916"
          sodipodi:nodetypes="ccsccccccccccccccc" />
@@ -107,7 +109,7 @@
        id="g948"
        transform="matrix(0.26458333,0,0,0.26458333,-16.231648,54.024676)" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#ffffff;stroke-width:0.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 46.659101,91.524724 -7.160591,7.953883 19.371281,-6.874441 -3.496281,9.921874 v 0"
        id="path125" />
   </g>
