@@ -14,10 +14,6 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    static readonly DEFAULT_MAX_OPACITY_AND_SIZE: number = 100;
-    static readonly INCREMENT: number = 5;
-    static readonly DECREMENT: number = 5;
-    static readonly MIN_SIZE: number = 10;
     gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
     isActivated: boolean = false;
     tester: number = 0;

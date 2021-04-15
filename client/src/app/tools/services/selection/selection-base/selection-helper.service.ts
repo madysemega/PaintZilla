@@ -6,15 +6,14 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
+import { OUTSIDE_DETECTION_OFFSET_PX } from '../selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class SelectionHelperService {
-    readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
     isSelectionBeingManipulated: BehaviorSubject<boolean>;
-
     mementos: HandlerMemento[] = [];
 
     constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {
@@ -47,10 +46,10 @@ export abstract class SelectionHelperService {
         const downLimit = isReversedY ? topLeft.y : bottomRight.y;
 
         xOutsideSelection =
-            mousePosition.x < leftLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+            mousePosition.x < leftLimit - OUTSIDE_DETECTION_OFFSET_PX|| mousePosition.x > rightLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
         yOutsideSelection =
-            mousePosition.y < upLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+            mousePosition.y < upLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
         return xOutsideSelection || yOutsideSelection;
     }
