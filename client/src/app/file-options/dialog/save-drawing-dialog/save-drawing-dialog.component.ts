@@ -7,7 +7,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ServerService } from '@app/server-communication/service/server.service';
-import { Drawing } from '@common/models/drawing';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({
     selector: 'app-save-drawing-dialog',
@@ -66,7 +65,7 @@ export class SaveDrawingDialogComponent implements OnInit {
             const image: string = this.drawingService.currentDrawing;
             this.currentlySaving = true;
             this.serverService.createDrawing(this.imageName, image, this.labels).subscribe(
-                (drawing: Drawing) => {
+                () => {
                     this.openSnackBar('Le dessin a bien été sauvegardé');
                 },
                 (error: HttpErrorResponse) => {

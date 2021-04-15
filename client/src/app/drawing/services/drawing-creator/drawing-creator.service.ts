@@ -8,10 +8,9 @@ import { HistoryService } from '@app/history/service/history.service';
     providedIn: 'root',
 })
 export class DrawingCreatorService {
+    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
     drawingRestored: EventEmitter<void> = new EventEmitter<void>();
-    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
-
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();
@@ -23,16 +22,11 @@ export class DrawingCreatorService {
         if (!this.drawingService.isCanvasEmpty() && this.noDialogsOpen()) {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
             this.dialogRef.afterClosed().subscribe((result) => {
-                if (result === 'discard') {
-                    this.drawingRestored.emit();
-                    this.drawingService.canvasIsEmpty = true;
-                    this.historyService.clear();
-                } else if (result === 'save') {
+                if (result === 'discard') this.clearCanvasAndActions();
+                if (result === 'save') {
                     this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
                     this.dialogRef.afterClosed().subscribe(() => {
-                        this.drawingRestored.emit();
-                        this.drawingService.canvasIsEmpty = true;
-                        this.historyService.clear();
+                        this.clearCanvasAndActions();
                     });
                 }
             });
@@ -41,5 +35,11 @@ export class DrawingCreatorService {
 
     noDialogsOpen(): boolean {
         return this.dialog.openDialogs.length === 0;
+    }
+
+    clearCanvasAndActions(): void {
+        this.drawingRestored.emit();
+        this.drawingService.canvasIsEmpty = true;
+        this.historyService.clear();
     }
 }
