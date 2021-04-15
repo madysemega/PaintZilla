@@ -9,6 +9,7 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { LassoSelectionCreatorService } from '../../tools/lasso-selection-creator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -51,7 +52,6 @@ export class ClipboardService {
     paste(): void {
         if (!this.isEmpty) {
             this.manipulatorToRestore.restoreFromMemento(this.manipulatorMemento);
-            // this.selectionManipulator.setPositionsAtTopLeft();
             this.positionAtOrigin();
             this.handlerToRestore.restoreFromMemento(this.handlerMemento);
             this.copyOwner.selectionHelper.setIsSelectionBeingManipulated(true);
@@ -59,6 +59,10 @@ export class ClipboardService {
             this.handlerToRestore.drawSelection(this.drawingService.previewCtx, this.manipulatorToRestore.topLeft);
             this.copyOwner.selectionManipulator.drawSelectionOutline();
             this.applyWhiteFill = false;
+
+            if (this.copyOwner.hasOwnProperty('wasBeingManipulated')) {
+                (this.copyOwner as LassoSelectionCreatorService).wasBeingManipulated = true;
+            }
         }
     }
 
