@@ -17,7 +17,7 @@ export class MagnetismComponent {
     static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
     tester: number = 0;
-    deleate: boolean = false;
+    delete: boolean = false;
     increment: boolean = false;
     decrement: boolean = false;
     draw: boolean = false;
@@ -95,7 +95,7 @@ export class MagnetismComponent {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
         this.drawingService.gridCtx.stroke();
-        this.deleate = true;
+        this.delete = true;
     }
 
     gridCellSizeChange(gridCellSize: number): void {

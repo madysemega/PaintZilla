@@ -114,11 +114,11 @@ describe('MagnetismComponent', () => {
     it('toogle the grid with no activate should deleate ', () => {
         component.isGridActivated = false;
         component.toggleGrid();
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('delete grid should remove grid ', () => {
         component.deleteGrid();
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('drawGrid should draw', () => {
         component.drawingService.canvasSize.x = 100;
@@ -131,28 +131,28 @@ describe('MagnetismComponent', () => {
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(true);
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('change opacity should change opacity', () => {
         component.isGridActivated = false;
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(false);
-        expect(component.deleate).toEqual(false);
+        expect(component.delete).toEqual(false);
     });
     it('change grid cell size should change size', () => {
         component.isGridActivated = true;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(true);
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('change grid cell size should change size', () => {
         component.isGridActivated = false;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(false);
-        expect(component.deleate).toEqual(false);
+        expect(component.delete).toEqual(false);
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
