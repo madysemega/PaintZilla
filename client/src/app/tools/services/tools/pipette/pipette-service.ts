@@ -13,6 +13,7 @@ import { VerticesShape } from '@app/shapes/vertices-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import * as Constants from './pipette-service.constants';
 
 @Injectable({
     providedIn: 'root',
@@ -27,13 +28,6 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     couleur: Uint8ClampedArray;
     cerclePreview: ImageData;
     outputCouleur: string;
-
-    readonly RECTANGLE_WIDTH: number = 3;
-    readonly RECTANGLE_SIZE: number = 20;
-    readonly ZOOM_WIDTH: number = 10;
-    readonly CIRCLE_WIDTH: number = 6;
-    readonly ZOOM_SIZE: number = 201;
-    readonly ZOOM_CENTER_POS: number = 8;
 
     constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
@@ -136,8 +130,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
     getCouleur(mousePosition: Vec2): void {
         this.couleur = this.drawingService.baseCtx.getImageData(
-            mousePosition.x - this.RECTANGLE_WIDTH,
-            mousePosition.y - this.RECTANGLE_WIDTH,
+            mousePosition.x - Constants.RECTANGLE_WIDTH,
+            mousePosition.y - Constants.RECTANGLE_WIDTH,
             1,
             1,
         ).data;
@@ -150,49 +144,49 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
     extractAPortionOfCanvas(mousePosition: Vec2): void {
         this.cerclePreview = this.drawingService.baseCtx.getImageData(
-            mousePosition.x - this.ZOOM_CENTER_POS,
-            mousePosition.y - this.ZOOM_CENTER_POS,
-            this.ZOOM_WIDTH + 1,
-            this.ZOOM_WIDTH + 1,
+            mousePosition.x - Constants.ZOOM_CENTER_POS,
+            mousePosition.y - Constants.ZOOM_CENTER_POS,
+            Constants.ZOOM_WIDTH + 1,
+            Constants.ZOOM_WIDTH + 1,
         );
     }
 
     fillTheCircleInWhite(): void {
         this.zoomctx.beginPath();
-        this.zoomctx.arc(this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, 0, 2 * Math.PI);
+        this.zoomctx.arc(Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, 0, 2 * Math.PI);
         this.zoomctx.clip();
         this.zoomctx.fillStyle = 'white';
-        this.zoomctx.fillRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.fillRect(0, 0, Constants.ZOOM_SIZE, Constants.ZOOM_SIZE);
         this.zoomctx.closePath();
     }
 
     fillTheEntireCanvasInBlue(): void {
-        this.zoomctx.clearRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.clearRect(0, 0, Constants.ZOOM_SIZE, Constants.ZOOM_SIZE);
         this.zoomctx.save();
         this.zoomctx.beginPath();
         this.zoomctx.fillStyle = 'rgba(40, 82, 145, 0.932)';
-        this.zoomctx.fillRect(0, 0, this.ZOOM_SIZE, this.ZOOM_SIZE);
+        this.zoomctx.fillRect(0, 0, Constants.ZOOM_SIZE, Constants.ZOOM_SIZE);
         this.zoomctx.closePath();
         this.zoomctx.restore();
     }
 
     pasteThePortionOfCanvas(): void {
         this.zoomctx.beginPath();
-        this.zoomctx.lineWidth = this.RECTANGLE_WIDTH;
-        this.zoomctx.arc(this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2, 0, 2 * Math.PI);
+        this.zoomctx.lineWidth = Constants.RECTANGLE_WIDTH;
+        this.zoomctx.arc(Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, 0, 2 * Math.PI);
         this.zoomctx.clip();
-        this.zoomctx.putImageData(this.cerclePreview, this.ZOOM_SIZE / 2, this.ZOOM_SIZE / 2);
+        this.zoomctx.putImageData(this.cerclePreview, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2);
         this.zoomctx.imageSmoothingEnabled = false;
         this.zoomctx.drawImage(
             this.zoomctx.canvas,
-            this.ZOOM_SIZE / 2,
-            this.ZOOM_SIZE / 2,
-            this.ZOOM_WIDTH,
-            this.ZOOM_WIDTH,
+            Constants.ZOOM_SIZE / 2,
+            Constants.ZOOM_SIZE / 2,
+            Constants.ZOOM_WIDTH,
+            Constants.ZOOM_WIDTH,
             0,
             0,
-            this.ZOOM_SIZE,
-            this.ZOOM_SIZE,
+            Constants.ZOOM_SIZE,
+            Constants.ZOOM_SIZE,
         );
     }
 
@@ -209,8 +203,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
         let i = 0;
         while (i < N_LINES) {
-            this.zoomctx.lineTo(this.ZOOM_SIZE, i * PIXEL_WIDTH + OFFSET);
-            this.zoomctx.lineTo(this.ZOOM_SIZE, (i + 1) * PIXEL_WIDTH + OFFSET);
+            this.zoomctx.lineTo(Constants.ZOOM_SIZE, i * PIXEL_WIDTH + OFFSET);
+            this.zoomctx.lineTo(Constants.ZOOM_SIZE, (i + 1) * PIXEL_WIDTH + OFFSET);
             this.zoomctx.lineTo(0, (i + 1) * PIXEL_WIDTH + OFFSET);
             i++;
         }
@@ -231,8 +225,8 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
 
         let j = 0;
         while (j < N_LINES) {
-            this.zoomctx.lineTo(j * PIXEL_HEIGHT + OFFSET, this.ZOOM_SIZE);
-            this.zoomctx.lineTo((j + 1) * PIXEL_HEIGHT + OFFSET, this.ZOOM_SIZE);
+            this.zoomctx.lineTo(j * PIXEL_HEIGHT + OFFSET, Constants.ZOOM_SIZE);
+            this.zoomctx.lineTo((j + 1) * PIXEL_HEIGHT + OFFSET, Constants.ZOOM_SIZE);
             this.zoomctx.lineTo((j + 1) * PIXEL_HEIGHT + OFFSET, 0);
             j++;
         }
@@ -246,12 +240,12 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.zoomctx.lineWidth = 2;
         this.zoomctx.strokeStyle = 'rgb(230, 255, 6)';
         this.zoomctx.strokeRect(
-            this.ZOOM_SIZE / 2 - this.RECTANGLE_SIZE / 2,
-            this.ZOOM_SIZE / 2 - this.RECTANGLE_SIZE / 2,
-            this.RECTANGLE_SIZE,
-            this.RECTANGLE_SIZE,
+            Constants.ZOOM_SIZE / 2 - Constants.RECTANGLE_SIZE / 2,
+            Constants.ZOOM_SIZE / 2 - Constants.RECTANGLE_SIZE / 2,
+            Constants.RECTANGLE_SIZE,
+            Constants.RECTANGLE_SIZE,
         );
-        this.zoomctx.lineWidth = this.CIRCLE_WIDTH;
+        this.zoomctx.lineWidth = Constants.CIRCLE_WIDTH;
         this.zoomctx.stroke();
         this.zoomctx.closePath();
         this.zoomctx.restore();

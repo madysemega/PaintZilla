@@ -3,9 +3,7 @@ import { Shape } from './shape';
 import { VerticesShape } from './vertices-shape';
 
 export class SprayShape extends VerticesShape {
-    static readonly DEFAULT_RADIUS: number = 1;
-
-    constructor(vertices: Vec2[], public radius: number = SprayShape.DEFAULT_RADIUS) {
+    constructor(vertices: Vec2[], public radius: number = 1) {
         super(vertices);
     }
 
