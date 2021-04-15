@@ -57,19 +57,6 @@ export abstract class SelectionHelperService {
         return xOutsideSelection || yOutsideSelection;
     }
 
-    /* isNumberOutsideLimits(areLimitsReversed: boolean, number:number, limits:Vec2[]){
-         let isOutside: boolean;
-         let lowerLimit
-  
-         if (areLimitsReversed) {
-             isOutside =
-                 number > limits[0].x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
-         } else {
-             isOutside =
-                 mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
-         }
-     }
- */
 
     addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;

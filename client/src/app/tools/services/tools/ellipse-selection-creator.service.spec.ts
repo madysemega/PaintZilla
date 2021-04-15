@@ -41,8 +41,6 @@ describe('EllipseSelectionCreatorService', () => {
     let resetPropertiesSpy: jasmine.Spy<any>;
     let drawSelectionOutlineSpy: jasmine.Spy<any>;
     let stopManipulatingSelectionSpy: jasmine.Spy<any>;
-    /*let copySpy: jasmine.Spy<any>;
-    let cutSpy: jasmine.Spy<any>;*/
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -129,15 +127,6 @@ describe('EllipseSelectionCreatorService', () => {
         resetPropertiesSpy = spyOn<any>(service, 'resetProperties').and.callThrough();
         drawSelectionOutlineSpy = spyOn<any>(service, 'drawSelectionOutline').and.callThrough();
         stopManipulatingSelectionSpy = spyOn<any>(service, 'stopManipulatingSelection').and.callThrough();
-        /*copySpy = spyOn<any>(service, 'copy').and.callThrough();
-        cutSpy = spyOn<any>(service, 'cut').and.callThrough();*/
-
-        /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
-        moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
-        moveIfPressLongEnoughSpy = spyOn<any>(service, 'moveIfPressLongEnough').and.callThrough();
-        singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
-        getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
-*/
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -278,35 +267,6 @@ describe('EllipseSelectionCreatorService', () => {
         service.onKeyUp(keyboardEvent);
         expect(ellipseSelectionManipulatorMock.onKeyUp).toHaveBeenCalled();
     });
-
-    /*it('releasing Ctrl + C should copy', () => {
-        keyboardEvent = {
-            ctrlKey: true,
-            key: 'c',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(copySpy).toHaveBeenCalled();
-    });
-
-    it('releasing Ctrl + X should cut', () => {
-        keyboardEvent = {
-            ctrlKey: true,
-            key: 'x',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(cutSpy).toHaveBeenCalled();
-    });
-
-    it('releasing Del should delete', () => {
-        keyboardEvent = {
-            key: 'Delete',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(ellipseSelectionManipulatorMock.delete).toHaveBeenCalled();
-    });*/
 
     it('releasing shift should set isShiftDown to true if isSelectionBeingManipulated returns false', () => {
         keyboardEvent = {
