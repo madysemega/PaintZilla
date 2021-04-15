@@ -265,7 +265,7 @@ export class ToolSelectorService {
 
         this.tools.set(lassoSelectionCreatorService.key, {
             displayName: 'Sélection par lasso polygonal',
-            icon: 'ellipse-selection',
+            icon: 'lasso-selection',
             keyboardShortcut: 'v',
             tool: lassoSelectionCreatorService,
         });
