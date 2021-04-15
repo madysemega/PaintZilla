@@ -62,8 +62,6 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
     }
 
     onMouseDown(event: MouseEvent): void {
- 
-
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);

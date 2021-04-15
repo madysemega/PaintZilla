@@ -7,7 +7,6 @@ import { SprayService } from '@app/tools/services/tools/spray-service';
     styleUrls: ['./spray-tool-configuration.component.scss'],
 })
 export class SprayToolConfigurationComponent {
-
     dropDiameter: number;
     jetDiameter: number;
     nbDropsPerSecond: number;
