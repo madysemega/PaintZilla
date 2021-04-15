@@ -7,7 +7,7 @@
         <div matRipple class="color-preview-display mat-elevation-z2" (click)="confirmColor()">
             <div
                 class="color-preview"
-                matTooltip="'Confirmer le choix'"
+                [matTooltip]="'Confirmer le choix'"
                 matTooltipPosition="right"
                 matRipple
                 [style.background-color]="color.toStringRGBA()">

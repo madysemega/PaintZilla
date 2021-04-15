@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { DiscardChangesDialogComponent } from '@app/file-options/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { HistoryService } from '@app/history/service/history.service';
@@ -11,12 +10,7 @@ import { HistoryService } from '@app/history/service/history.service';
 export class DrawingCreatorService {
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
     drawingRestored: EventEmitter<void> = new EventEmitter<void>();
-    constructor(
-        private drawingService: DrawingService,
-        public dialog: MatDialog,
-        private historyService: HistoryService,
-        private automaticSavingService: AutomaticSavingService,
-    ) {}
+    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
@@ -41,7 +35,6 @@ export class DrawingCreatorService {
                         this.historyService.clear();
                     });
                 }
-                this.automaticSavingService.saveDrawingLocally();
             });
         }
     }

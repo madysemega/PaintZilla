@@ -38,6 +38,7 @@ import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellips
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
@@ -75,6 +76,7 @@ describe('SidebarComponent', () => {
     let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
     let textServiceStub: TextService;
+    let paintBucketServiceStub: PaintBucketService;
     let stampServiceStub: StampService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -124,6 +126,7 @@ describe('SidebarComponent', () => {
         saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         textServiceStub = new TextService(drawingStub, colourServiceStub, historyServiceStub, keyboardServiceStub);
+        paintBucketServiceStub = new PaintBucketService(drawingStub, colourServiceStub, historyServiceStub);
         stampServiceStub = new StampService(drawingStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -179,6 +182,7 @@ describe('SidebarComponent', () => {
             rectangleSelectionCreatorService,
             stampServiceStub,
             textServiceStub,
+            paintBucketServiceStub,
         );
 
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);

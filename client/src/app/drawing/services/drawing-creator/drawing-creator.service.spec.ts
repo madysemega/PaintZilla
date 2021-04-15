@@ -171,15 +171,6 @@ describe('DrawingCreatorService', () => {
         expect(historyServiceStub.clear).toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should call saveDrawingLocally()', () => {
-        matDialogRefSpy.afterClosed.and.returnValue(of('save'));
-        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
-        spyOn(automaticSavingService, 'saveDrawingLocally').and.stub();
-        drawingServiceSpy.canvasIsEmpty = false;
-        service.createNewDrawing();
-        expect(automaticSavingService.saveDrawingLocally).toHaveBeenCalled();
-    });
-
     it('noDialogsOpen should return true if there are no dialogs', () => {
         const noDialogsOpen: boolean = service.noDialogsOpen();
         expect(noDialogsOpen).toEqual(true);
