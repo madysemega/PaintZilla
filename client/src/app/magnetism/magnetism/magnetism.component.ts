@@ -37,7 +37,6 @@ export class MagnetismComponent {
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            console.log('helloFromMagnet');
             this.isActivated = value;
             this.notifyManipulators();
         });
