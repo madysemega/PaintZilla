@@ -17,6 +17,7 @@ import { of, throwError } from 'rxjs';
 import { ImageNavigationComponent } from './image-navigation.component';
 
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 describe('ImageNavigationComponent', () => {
     let component: ImageNavigationComponent;
     let fixture: ComponentFixture<ImageNavigationComponent>;
@@ -29,7 +30,7 @@ describe('ImageNavigationComponent', () => {
 
     beforeEach(async(() => {
         matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ImageNavigationComponent>', ['afterClosed', 'close']);
-        matDialogRefSpy.afterClosed.and.returnValue(of());
+        matDialogRefSpy.afterClosed.and.returnValue(of({}));
 
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open', 'openDialogs']);
         matDialogSpy.open.and.callFake(() => {
@@ -155,14 +156,12 @@ describe('ImageNavigationComponent', () => {
         expect(snackBarOpenSpy).toHaveBeenCalled();
     });
 
-    it('should restore the keyboard context after dialog is closed', (done) => {
-        const keyboardRestoreContextSpy = spyOn(fixture.debugElement.injector.get(KeyboardService), 'restoreContext').and.stub();
+    it('should restore the keyboard context after dialog is closed', () => {
+        const restoreKeyboardContextSpy = spyOn(TestBed.inject(KeyboardService), 'restoreContext').and.stub();
 
-        matDialogRefSpy.close();
+        matDialogRefSpy.afterClosed.and.returnValue(of({}));
+        component['handleKeyboardContext']();
 
-        matDialogRefSpy.afterClosed().subscribe(() => {
-            expect(keyboardRestoreContextSpy).toHaveBeenCalled();
-        });
-        done();
+        expect(restoreKeyboardContextSpy).toHaveBeenCalled();
     });
 });
