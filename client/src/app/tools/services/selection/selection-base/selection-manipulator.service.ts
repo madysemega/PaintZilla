@@ -10,9 +10,8 @@ import { Tool } from '@app/tools/classes/tool';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { GridMovement } from './grid-movement';
-import * as Constants from '@app/app/constants/selection-constants';
-import { ResizingMode, Arrow, GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
+import * as Constants from '@app/tools/services/selection/selection-constants';
+import { ResizingMode, Arrow, GridMovementAnchor, GridMovement } from '@app/tools/services/selection/selection-utils';
 import { SelectionHandlerService } from './selection-handler.service';
 
 @Injectable({

@@ -1,3 +1,16 @@
+import { Vec2 } from "@app/app/classes/vec2";
+
+export class GridMovement {
+    movement: Vec2;
+    isMouseMovement: boolean;
+    gridCellSize: number;
+    anchor: GridMovementAnchor;
+    topLeft: Vec2;
+    bottomRight: Vec2;
+    isReversed: boolean[];
+}
+
+
 export enum ResizingMode {
     off = 0,
     towardsRight = 1,
