@@ -1,12 +1,12 @@
 <div class="center spacing">
-    <mat-slide-toggle id="toggle" matTooltip="Magnétisme (M)" [ngModel]="isActivated"
-        (ngModelChange)="isActivated = $event; notifyManipulators();">
+    <mat-slide-toggle id="toggle" matTooltip="Magnétisme (M)" [ngModel]="isMagnetismActivated"
+        (ngModelChange)="isMagnetismActivated = $event; notifyManipulators();">
     </mat-slide-toggle>
 </div>
 
 
 <div id="magnetisme">
-    <div *ngIf="isActivated == true">
+    <div *ngIf="isMagnetismActivated == true">
         <p id="text">
             Point d'ancrage:
         </p>

@@ -4,6 +4,7 @@ import { GridMovement, GridMovementAnchor } from '@app/tools/services/selection/
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
+import { OUTSIDE_DETECTION_OFFSET_PX } from '../selection-constants';
 import { SelectionHelperService } from './selection-helper.service';
 
 // tslint:disable:no-any
@@ -60,7 +61,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if isReversedX and mousePosition.x > topLeft.x + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: service.OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
+            { x: OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
             { x: 0, y: 0 },
             { x: 5, y: 6 },
         ];
@@ -69,7 +70,7 @@ describe('SelectionHelperService', () => {
     });
     it('click should be detected as outside selection if not isReversedX and mousePosition.x > bottomRight.x + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 10 + service.OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
+            { x: 10 + OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
             { x: 0, y: 0 },
             { x: 10, y: 6 },
         ];
@@ -79,7 +80,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if not isReversedX and isReversedY and mousePosition.x > bottomRight.x + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 10 + service.OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
+            { x: 10 + OUTSIDE_DETECTION_OFFSET_PX + 1, y: 0 },
             { x: 0, y: 0 },
             { x: 10, y: 6 },
         ];
@@ -89,7 +90,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if isReversedY and mousePosition.y > topLeft.y + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 0, y: service.OUTSIDE_DETECTION_OFFSET_PX + 1 },
+            { x: 0, y: OUTSIDE_DETECTION_OFFSET_PX + 1 },
             { x: 0, y: 0 },
             { x: 5, y: 6 },
         ];
@@ -99,7 +100,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if not isReversedY and mousePosition.y > bottomRight.y + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 0, y: 6 + service.OUTSIDE_DETECTION_OFFSET_PX + 1 },
+            { x: 0, y: 6 + OUTSIDE_DETECTION_OFFSET_PX + 1 },
             { x: 0, y: 0 },
             { x: 10, y: 6 },
         ];
@@ -109,7 +110,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if not isReversedX and not isReversedY and mousePosition.y > bottomRight.y + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 0, y: 6 + service.OUTSIDE_DETECTION_OFFSET_PX + 1 },
+            { x: 0, y: 6 + OUTSIDE_DETECTION_OFFSET_PX + 1 },
             { x: 0, y: 0 },
             { x: 10, y: 6 },
         ];
@@ -119,7 +120,7 @@ describe('SelectionHelperService', () => {
 
     it('click should be detected as outside selection if isReversedX and isReversedY and mousePosition.y > topLeft.y + the detection offset', () => {
         const positions: Vec2[] = [
-            { x: 0, y: service.OUTSIDE_DETECTION_OFFSET_PX + 1 },
+            { x: 0, y: OUTSIDE_DETECTION_OFFSET_PX + 1 },
             { x: 0, y: 0 },
             { x: 10, y: 6 },
         ];

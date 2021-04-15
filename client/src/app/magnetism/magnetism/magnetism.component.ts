@@ -15,7 +15,7 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 })
 export class MagnetismComponent {
     gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
-    isActivated: boolean = false;
+    isMagnetismActivated: boolean = false;
     tester: number = 0;
     delete: boolean = false;
     increment: boolean = false;
@@ -37,21 +37,21 @@ export class MagnetismComponent {
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            this.isActivated = value;
+            this.isMagnetismActivated = value;
             this.notifyManipulators();
         });
-        this.magnetismService.isIncrement.subscribe((value) => {
+        this.magnetismService.isIncrement.subscribe(() => {
             this.incrementGrid();
         });
-        this.magnetismService.isDecrement.subscribe((value) => {
+        this.magnetismService.isDecrement.subscribe(() => {
             this.decrementGrid();
         });
     }
     notifyManipulators(): void {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
     }
     toggleGrid(): void {
         if (this.isGridActivated === true) {
@@ -124,7 +124,7 @@ export class MagnetismComponent {
 
     getCurrentGridAnchor(): GridMovementAnchor {
         const invalid = -1;
-        if (!this.isActivated) {
+        if (!this.isMagnetismActivated) {
             return invalid;
         }
         return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService)

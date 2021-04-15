@@ -11,6 +11,7 @@ import { SelectionHelperService } from '@app/tools/services/selection/selection-
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
+import { MINIMUM_SELECTION_WIDTH } from '../selection/selection-constants';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -476,7 +477,7 @@ describe('EllipseSelectionCreatorService', () => {
     });
 
     it('startPointIsFarEnoughFrom should return true if distance mouse pos <-> start point > minimum ', () => {
-        const minimuDistance = service.MINIMUM_SELECTION_WIDTH;
+        const minimuDistance = MINIMUM_SELECTION_WIDTH;
         const mousePos: Vec2 = { x: 5, y: 7 };
         service.startPoint = { x: mousePos.x + minimuDistance, y: mousePos.y + minimuDistance };
         const output: boolean = service.startPointIsFarEnoughFrom(mousePos);
