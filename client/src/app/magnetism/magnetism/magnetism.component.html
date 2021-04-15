@@ -27,13 +27,12 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-
     
     <div>
         <mat-label>Grille</mat-label>
     </div>
     <div class="center">
-        <mat-slide-toggle id="toggleGrid" [ngModel] ="isGridActivated" (ngModelChange)="isGridActivated = $event; toggleGrid();"></mat-slide-toggle>
+        <mat-slide-toggle id="toggleGrid" matTooltip="Grille (G)" [ngModel] ="isGridActivated" (ngModelChange)="isGridActivated = $event; toggleGrid();"></mat-slide-toggle>
     </div>
     <div class="vertical">
         <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
@@ -48,7 +47,7 @@
         </mat-slider>
     </div>
     <div class="vertical">
-        <mat-label class="margin-bottom-small">Opacite de la grille</mat-label>
+        <mat-label class="margin-bottom-small">Opacité de la grille</mat-label>
         <mat-slider thumbLabel
                     matTooltip="Opacite de la grille"
                     matTooltipPosition="right"

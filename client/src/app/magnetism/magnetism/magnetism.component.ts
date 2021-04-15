@@ -11,12 +11,11 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    static readonly DEFAULT_MAX_OPACITY: number = 100;
+    static readonly DEFAULT_MAX_OPACITY_AND_SIZE: number = 100;
     static readonly INCREMENT: number = 5;
     static readonly DECREMENT: number = 5;
     static readonly MIN_SIZE: number = 10;
     isActivated: boolean = false;
-    tester: number = 0;
     deleate: boolean = false;
     increment: boolean = false;
     decrement: boolean = false;
@@ -37,7 +36,6 @@ export class MagnetismComponent {
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            console.log('helloFromMagnet');
             this.isActivated = value;
             this.notifyManipulators();
         });
@@ -62,7 +60,7 @@ export class MagnetismComponent {
         }
     }
     incrementGrid(): void {
-        if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
+        if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY_AND_SIZE) {
             this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
         }
         this.increment = true;
@@ -76,7 +74,7 @@ export class MagnetismComponent {
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
             this.drawingService.gridCtx.moveTo(i, 0);
-            if (this.opacite === MagnetismComponent.DEFAULT_MAX_OPACITY) {
+            if (this.opacite === MagnetismComponent.DEFAULT_MAX_OPACITY_AND_SIZE) {
                 this.drawingService.gridCtx.strokeStyle = '#000000FF';
             } else {
                 this.drawingService.gridCtx.strokeStyle = '#000000' + this.opacite;
