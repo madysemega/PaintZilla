@@ -19,18 +19,17 @@ export class DrawingCreatorService {
     }
 
     createNewDrawing(): void {
-        if (!this.drawingService.isCanvasEmpty() && this.noDialogsOpen()) {
-            this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
-            this.dialogRef.afterClosed().subscribe((result) => {
-                if (result === 'discard') this.clearCanvasAndActions();
-                if (result === 'save') {
-                    this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
-                    this.dialogRef.afterClosed().subscribe(() => {
-                        this.clearCanvasAndActions();
-                    });
-                }
-            });
-        }
+        if (this.drawingService.isCanvasEmpty() || !this.noDialogsOpen()) return;
+        this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
+        this.dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'discard') this.clearCanvasAndActions();
+            if (result === 'save') {
+                this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
+                this.dialogRef.afterClosed().subscribe(() => {
+                    this.clearCanvasAndActions();
+                });
+            }
+        });
     }
 
     noDialogsOpen(): boolean {
