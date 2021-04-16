@@ -20,7 +20,7 @@ export class DrawingCreatorService {
     }
 
     createNewDrawing(): void {
-        if (!this.drawingService.isCanvasEmpty() && this.noDialogsOpen()) {
+        if (!this.drawingService.isCanvasEmpty() && this.dialogsAreOpen()) {
             this.dialogRef = this.dialog.open(DiscardChangesDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
             this.dialogRef.afterClosed().subscribe((result) => {
                 if (result === 'discard') this.clearCanvasAndActions();
@@ -37,8 +37,8 @@ export class DrawingCreatorService {
         }
     }
 
-    noDialogsOpen(): boolean {
-        return this.dialog.openDialogs.length === 0;
+    dialogsAreOpen(): boolean {
+        return this.dialog.openDialogs.length !== 0;
     }
 
     clearCanvasAndActions(): void {

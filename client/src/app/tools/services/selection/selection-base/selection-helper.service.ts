@@ -3,20 +3,17 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { OUTSIDE_DETECTION_OFFSET_PX } from '@app/tools/services/selection/selection-constants';
+import { GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { BehaviorSubject } from 'rxjs';
-import { GridMovement } from './grid-movement';
-import { ResizingMode } from './resizing-mode';
-import { GridMovementAnchor } from './selection-constants';
 import { SelectionManipulatorService } from './selection-manipulator.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class SelectionHelperService {
-    readonly OUTSIDE_DETECTION_OFFSET_PX: number = 15;
     isSelectionBeingManipulated: BehaviorSubject<boolean>;
-
     mementos: HandlerMemento[] = [];
 
     constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {
@@ -48,28 +45,12 @@ export abstract class SelectionHelperService {
         const upLimit = isReversedY ? bottomRight.y : topLeft.y;
         const downLimit = isReversedY ? topLeft.y : bottomRight.y;
 
-        xOutsideSelection =
-            mousePosition.x < leftLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+        xOutsideSelection = mousePosition.x < leftLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > rightLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
-        yOutsideSelection =
-            mousePosition.y < upLimit - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + this.OUTSIDE_DETECTION_OFFSET_PX;
+        yOutsideSelection = mousePosition.y < upLimit - OUTSIDE_DETECTION_OFFSET_PX || mousePosition.y > downLimit + OUTSIDE_DETECTION_OFFSET_PX;
 
         return xOutsideSelection || yOutsideSelection;
     }
-
-    /* isNumberOutsideLimits(areLimitsReversed: boolean, number:number, limits:Vec2[]){
-         let isOutside: boolean;
-         let lowerLimit
-  
-         if (areLimitsReversed) {
-             isOutside =
-                 number > limits[0].x + this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x < bottomRight.x - this.OUTSIDE_DETECTION_OFFSET_PX;
-         } else {
-             isOutside =
-                 mousePosition.x < topLeft.x - this.OUTSIDE_DETECTION_OFFSET_PX || mousePosition.x > bottomRight.x + this.OUTSIDE_DETECTION_OFFSET_PX;
-         }
-     }
- */
 
     addInPlace(vect: Vec2, amount: Vec2): void {
         vect.x += amount.x;

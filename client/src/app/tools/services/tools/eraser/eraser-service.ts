@@ -15,13 +15,12 @@ import { EraserRenderer } from '@app/shapes/renderers/eraser-renderer';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import * as Constants from './eraser-service.constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EraserService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private readonly CURSOR_FILL_STYLE: string = '#FFF';
-    private readonly CURSOR_STROKE_STYLE: string = '#000';
     minimumWidth: number = 5;
 
     private shape: EraserShape;
@@ -107,8 +106,8 @@ export class EraserService extends ResizableTool implements ISelectableTool, IDe
 
         ctx.beginPath();
 
-        ctx.strokeStyle = this.CURSOR_STROKE_STYLE;
-        ctx.fillStyle = this.CURSOR_FILL_STYLE;
+        ctx.strokeStyle = Constants.CURSOR_STROKE_STYLE;
+        ctx.fillStyle = Constants.CURSOR_FILL_STYLE;
 
         const SIZE = this.lineWidth;
         ctx.rect(position.x - SIZE / 2, position.y - SIZE / 2, SIZE, SIZE);

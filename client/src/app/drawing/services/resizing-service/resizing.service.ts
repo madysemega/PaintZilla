@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { sleep } from '@app/app/classes/sleep';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { ResizingType } from '@app/drawing/enums/resizing-type';
@@ -7,7 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
-
+// tslint:disable:no-string-literal
 @Injectable({
     providedIn: 'root',
 })
@@ -17,9 +16,13 @@ export class ResizingService {
     rightDownResizerEnabled: boolean = false;
     canvasResize: Vec2;
     image: ImageData;
+    onCanvasSizeChange: EventEmitter<Vec2>;
+    onCanvasResizeChange: EventEmitter<Vec2>;
 
     constructor(public drawingService: DrawingService, private historyService: HistoryService, public magnetism: MagnetismService) {
         this.canvasResize = this.drawingService.canvasResize;
+        this.onCanvasResizeChange = new EventEmitter<Vec2>();
+        this.onCanvasSizeChange = new EventEmitter<Vec2>();
     }
 
     isResizing(): boolean {
@@ -37,6 +40,7 @@ export class ResizingService {
             this.canvasResize.y = event.offsetY;
         }
 
+        this.onCanvasResizeChange.emit({ x: this.canvasResize.x, y: this.canvasResize.y });
         this.drawingService.updateCanvasStyle();
         this.restorePreviewImageData();
     }
@@ -75,12 +79,9 @@ export class ResizingService {
 
     finalizeResizingEvent(): void {
         this.historyService.do(
-            new UserActionResizeDrawingSurface(this.canvasResize.x, this.canvasResize.y, async (width: number, height: number) => {
+            new UserActionResizeDrawingSurface(this.canvasResize.x, this.canvasResize.y, (width: number, height: number) => {
                 this.saveCurrentImage();
-
                 this.drawingService.resizeDrawingSurface(width, height);
-                await sleep();
-
                 this.drawingService.resetDrawingSurfaceColour();
                 this.restoreBaseImageData();
                 this.magnetism.toggleGrid();
@@ -92,6 +93,7 @@ export class ResizingService {
     updateCanvasSize(): void {
         this.drawingService.canvasSize.x = this.canvasResize.x;
         this.drawingService.canvasSize.y = this.canvasResize.y;
+        this.onCanvasSizeChange.emit({ x: this.drawingService.canvasSize.x, y: this.drawingService.canvasSize.y });
     }
 
     restoreBaseImageData(): void {
@@ -100,5 +102,6 @@ export class ResizingService {
     resetCanvasDimensions(): void {
         this.canvasResize.x = Constants.DEFAULT_WIDTH;
         this.canvasResize.y = Constants.DEFAULT_HEIGHT;
+        this.onCanvasResizeChange.emit({ x: this.canvasResize.x, y: this.canvasResize.y });
     }
 }
