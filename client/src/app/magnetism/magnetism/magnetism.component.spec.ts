@@ -8,6 +8,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
@@ -80,7 +81,7 @@ describe('MagnetismComponent', () => {
     });
 
     it('notifying the manipulators should change the isMagnetismActivated property in the selection Manipulator ', () => {
-        component.isActivated = true;
+        component.isMagnetismActivated = true;
         component.notifyManipulators();
         expect(rectangleSelectionCreator.selectionManipulator.isMagnetismActivated).toEqual(true);
     });
@@ -89,6 +90,16 @@ describe('MagnetismComponent', () => {
         component.isGridActivated = false;
         component.magnetismService.isGrid.next(isTester.value);
         expect(component.isGridActivated).toEqual(true);
+    });
+    it('notify grid should draw grid if activate ', () => {
+        component.isGridActivated = true;
+        component.notifyGrid();
+        expect(component.draw).toEqual(false);
+    });
+    it('notify grid should draw grid if not activate ', () => {
+        component.isGridActivated = false;
+        component.notifyGrid();
+        expect(component.draw).toEqual(true);
     });
     it('should notifyManipulators if next value is different than isGridActivated', () => {
         let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -114,11 +125,11 @@ describe('MagnetismComponent', () => {
     it('toogle the grid with no activate should deleate ', () => {
         component.isGridActivated = false;
         component.toggleGrid();
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('delete grid should remove grid ', () => {
         component.deleteGrid();
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('drawGrid should draw', () => {
         component.drawingService.canvasSize.x = 100;
@@ -131,33 +142,49 @@ describe('MagnetismComponent', () => {
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(true);
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('change opacity should change opacity', () => {
         component.isGridActivated = false;
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(false);
-        expect(component.deleate).toEqual(false);
+        expect(component.delete).toEqual(false);
     });
     it('change grid cell size should change size', () => {
         component.isGridActivated = true;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(true);
-        expect(component.deleate).toEqual(true);
+        expect(component.delete).toEqual(true);
     });
     it('change grid cell size should change size', () => {
         component.isGridActivated = false;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(false);
-        expect(component.deleate).toEqual(false);
+        expect(component.delete).toEqual(false);
     });
 
     it('setting grid anchor should change the grid movement anchor in the selection Manipulator', () => {
         const dummyAnchor = 5;
         component.setGridAnchor(dummyAnchor);
         expect(rectangleSelectionCreator.selectionManipulator.gridMovementAnchor).toEqual(dummyAnchor);
+    });
+
+    it('getCurrentGridAnchor should return -1 if Grid is not activated', () => {
+        const invalid = -1;
+        component.isMagnetismActivated = false;
+        let actualValue: number = component.getCurrentGridAnchor();
+        expect(actualValue).toEqual(invalid);
+    });
+
+    it('getCurrentGridAnchor should return correct anchorPoint if Grid is activated', () => {
+        const expectedValue = 5;
+        component.isMagnetismActivated = true;
+        ((component.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
+            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = 5;
+        let actualValue: number = component.getCurrentGridAnchor();
+        expect(actualValue).toEqual(expectedValue);
     });
 });

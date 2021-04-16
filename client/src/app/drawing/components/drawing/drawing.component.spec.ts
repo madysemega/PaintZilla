@@ -4,6 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -36,6 +37,8 @@ describe('DrawingComponent', () => {
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
     // tslint:disable:prefer-const
     let magnetismServiceStub: MagnetismService;
+    let canvasTestHelper: CanvasTestHelper;
+    let canvas: HTMLCanvasElement;
 
     beforeEach(async(() => {
         drawingRestoredStub = new EventEmitter<void>();
@@ -66,7 +69,8 @@ describe('DrawingComponent', () => {
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
-
+        canvasTestHelper = TestBed.inject(CanvasTestHelper);
+        canvas = canvasTestHelper.canvas;
         creatorStub = TestBed.inject(EllipseSelectionCreatorService);
     }));
 
@@ -309,5 +313,13 @@ describe('DrawingComponent', () => {
         });
 
         drawingCreatorService.drawingRestored.emit();
+    });
+
+    it('setCanvasDimensions(): should set canvas width and height', () => {
+        const expectedHeight = 10;
+        const expectedWidth = 10;
+        component.setCanvasDimensions(canvas, { x: expectedWidth, y: expectedHeight });
+        expect(canvas.width).toEqual(expectedWidth);
+        expect(canvas.height).toEqual(expectedHeight);
     });
 });

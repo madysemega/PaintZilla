@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { sleep } from '@app/app/classes/sleep';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
@@ -27,7 +26,6 @@ export class MainPageComponent {
 
     async resetCanvasDimensions(): Promise<void> {
         this.resizingService.resetCanvasDimensions();
-        await sleep();
         this.automaticSavingService.saveDrawingLocally();
     }
 

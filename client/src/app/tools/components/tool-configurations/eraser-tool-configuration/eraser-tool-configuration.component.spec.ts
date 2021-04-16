@@ -7,7 +7,7 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
-import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 
 describe('EraserToolConfigurationComponent', () => {

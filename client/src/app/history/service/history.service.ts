@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { sleep } from '@app/app/classes/sleep';
 import { IUserAction } from '@app/history/user-actions/user-action';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 
@@ -77,7 +76,6 @@ export class HistoryService {
             this.undoEventObservers.forEach((observerCallback) => observerCallback());
 
             for (const action of this.past) {
-                await sleep();
                 action.apply();
             }
 

@@ -13,7 +13,7 @@ import { SprayShape } from '@app/shapes/spray-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-
+import * as Constants from './spray-service.constants';
 @Injectable({
     providedIn: 'root',
 })
@@ -62,8 +62,6 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
     }
 
     onMouseDown(event: MouseEvent): void {
-        const NB_MS_IN_SECOND = 1000;
-
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
@@ -71,7 +69,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
             this.history.isLocked = true;
 
             this.onSpray();
-            this.sprayTimer = setInterval(() => this.onSpray(), (1.0 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
+            this.sprayTimer = setInterval(() => this.onSpray(), (1.0 / this.nbDropsPerSecond) * Constants.NB_MS_IN_SECOND);
         }
     }
 

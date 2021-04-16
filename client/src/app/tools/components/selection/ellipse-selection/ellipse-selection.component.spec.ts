@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
-import { ResizingMode } from '@app/tools/services/selection/selection-base/resizing-mode';
+import { ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { EllipseSelectionComponent } from './ellipse-selection.component';
 

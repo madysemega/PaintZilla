@@ -51,7 +51,6 @@ export class ClipboardService {
     paste(): void {
         if (!this.isEmpty) {
             this.manipulatorToRestore.restoreFromMemento(this.manipulatorMemento);
-            // this.selectionManipulator.setPositionsAtTopLeft();
             this.positionAtOrigin();
             this.handlerToRestore.restoreFromMemento(this.handlerMemento);
             this.copyOwner.selectionHelper.setIsSelectionBeingManipulated(true);
