@@ -8,6 +8,7 @@ import { EllipseSelectionHandlerService } from '@app/tools/services/selection/el
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
+import { MINIMUM_SELECTION_WIDTH } from '@app/tools/services/selection/selection-constants';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { BehaviorSubject } from 'rxjs';
@@ -41,8 +42,6 @@ describe('EllipseSelectionCreatorService', () => {
     let resetPropertiesSpy: jasmine.Spy<any>;
     let drawSelectionOutlineSpy: jasmine.Spy<any>;
     let stopManipulatingSelectionSpy: jasmine.Spy<any>;
-    /*let copySpy: jasmine.Spy<any>;
-    let cutSpy: jasmine.Spy<any>;*/
 
     beforeEach(() => {
         drawServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
@@ -129,15 +128,6 @@ describe('EllipseSelectionCreatorService', () => {
         resetPropertiesSpy = spyOn<any>(service, 'resetProperties').and.callThrough();
         drawSelectionOutlineSpy = spyOn<any>(service, 'drawSelectionOutline').and.callThrough();
         stopManipulatingSelectionSpy = spyOn<any>(service, 'stopManipulatingSelection').and.callThrough();
-        /*copySpy = spyOn<any>(service, 'copy').and.callThrough();
-        cutSpy = spyOn<any>(service, 'cut').and.callThrough();*/
-
-        /* resizeSelectionSpy = spyOn<any>(service, 'resizeSelection').and.callThrough();
-        moveSelectionSpy = spyOn<any>(service, 'moveSelection').and.callThrough();
-        moveIfPressLongEnoughSpy = spyOn<any>(service, 'moveIfPressLongEnough').and.callThrough();
-        singleMoveSpy = spyOn<any>(service, 'singleMove').and.callThrough();
-        getMousePosOnDiagonalSpy = spyOn<any>(service, 'getMousePosOnDiagonal').and.callThrough();
-*/
 
         // Configuration du spy du service
         // tslint:disable:no-string-literal
@@ -278,35 +268,6 @@ describe('EllipseSelectionCreatorService', () => {
         service.onKeyUp(keyboardEvent);
         expect(ellipseSelectionManipulatorMock.onKeyUp).toHaveBeenCalled();
     });
-
-    /*it('releasing Ctrl + C should copy', () => {
-        keyboardEvent = {
-            ctrlKey: true,
-            key: 'c',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(copySpy).toHaveBeenCalled();
-    });
-
-    it('releasing Ctrl + X should cut', () => {
-        keyboardEvent = {
-            ctrlKey: true,
-            key: 'x',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(cutSpy).toHaveBeenCalled();
-    });
-
-    it('releasing Del should delete', () => {
-        keyboardEvent = {
-            key: 'Delete',
-        } as KeyboardEvent;
-        isSelectionBeingManipulatedSpy.and.returnValue(true);
-        service.onKeyUp(keyboardEvent);
-        expect(ellipseSelectionManipulatorMock.delete).toHaveBeenCalled();
-    });*/
 
     it('releasing shift should set isShiftDown to true if isSelectionBeingManipulated returns false', () => {
         keyboardEvent = {
@@ -516,7 +477,7 @@ describe('EllipseSelectionCreatorService', () => {
     });
 
     it('startPointIsFarEnoughFrom should return true if distance mouse pos <-> start point > minimum ', () => {
-        const minimuDistance = service.MINIMUM_SELECTION_WIDTH;
+        const minimuDistance = MINIMUM_SELECTION_WIDTH;
         const mousePos: Vec2 = { x: 5, y: 7 };
         service.startPoint = { x: mousePos.x + minimuDistance, y: mousePos.y + minimuDistance };
         const output: boolean = service.startPointIsFarEnoughFrom(mousePos);

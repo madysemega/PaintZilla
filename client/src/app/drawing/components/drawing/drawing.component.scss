@@ -23,9 +23,9 @@ canvas {
     transform: translate(-25%, -25%);
     position: absolute;
     border: black 1px solid;
-    height: 8px;
-    width: 8px;
+    height: 12px;
+    width: 12px;
     background-color: teal;
-    z-index: 2;
+    z-index: 4;
     border-radius: 50%;
 }

@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { sleep } from '@app/app/classes/sleep';
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
@@ -24,7 +23,6 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
     isInCanvas: boolean;
-
     wasResizing: boolean;
 
     constructor(
@@ -37,21 +35,35 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingCreatorService.drawingRestored.subscribe(async () => {
             this.drawingService.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
             this.drawingService.resetDrawingSurfaceDimensions();
-            await sleep();
             this.drawingService.resetDrawingSurfaceColour();
             const image = new Image();
             image.src = this.drawingService.currentDrawing;
             this.drawingService.initialImage = image;
             this.drawingService.onDrawingLoaded.emit();
         });
-
         this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
             this.canvasSize.x = newDimensions.x;
             this.canvasSize.y = newDimensions.y;
 
             this.drawingService.canvasResize.x = newDimensions.x;
             this.drawingService.canvasResize.y = newDimensions.y;
+
+            this.resizingService.onCanvasResizeChange.emit({ x: newDimensions.x, y: newDimensions.y });
+            this.resizingService.onCanvasSizeChange.emit({ x: newDimensions.x, y: newDimensions.y });
         });
+
+        this.resizingService.onCanvasResizeChange.subscribe((dimensions: Vec2) => {
+            this.setCanvasDimensions(this.baseCanvas.nativeElement, dimensions);
+        });
+
+        this.resizingService.onCanvasSizeChange.subscribe((dimensions: Vec2) => {
+            this.setCanvasDimensions(this.previewCanvas.nativeElement, dimensions);
+        });
+    }
+
+    setCanvasDimensions(canvas: HTMLCanvasElement, dimensions: Vec2): void {
+        canvas.width = dimensions.x;
+        canvas.height = dimensions.y;
     }
 
     ngAfterViewInit(): void {
@@ -67,6 +79,8 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.canvasSize = this.canvasSize;
         this.drawingService.initialSize.x = this.canvasSize.x;
         this.drawingService.initialSize.y = this.canvasSize.y;
+        this.setCanvasDimensions(this.baseCanvas.nativeElement, this.canvasSize);
+        this.setCanvasDimensions(this.previewCanvas.nativeElement, this.canvasSize);
         this.drawingService.restoreCanvasStyle();
     }
 

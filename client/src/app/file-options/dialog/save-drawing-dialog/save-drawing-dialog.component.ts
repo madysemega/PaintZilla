@@ -6,6 +6,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import * as Constants from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({
@@ -14,7 +15,6 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
     styleUrls: ['./save-drawing-dialog.component.scss'],
 })
 export class SaveDrawingDialogComponent implements OnInit {
-    SNACK_BAR_DURATION: number = 6000;
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
@@ -77,7 +77,7 @@ export class SaveDrawingDialogComponent implements OnInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: this.SNACK_BAR_DURATION,
+            duration: Constants.SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });

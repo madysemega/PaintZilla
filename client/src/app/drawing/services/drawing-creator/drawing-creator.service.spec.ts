@@ -171,8 +171,8 @@ describe('DrawingCreatorService', () => {
         expect(historyServiceStub.clear).toHaveBeenCalled();
     });
 
-    it('noDialogsOpen should return true if there are no dialogs', () => {
-        const noDialogsOpen: boolean = service.noDialogsOpen();
-        expect(noDialogsOpen).toEqual(true);
+    it('areDialogsOpen should return false if there are no dialogs', () => {
+        const areDialogsOpen: boolean = service.dialogsAreOpen();
+        expect(areDialogsOpen).toEqual(false);
     });
 });
