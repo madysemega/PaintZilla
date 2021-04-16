@@ -91,12 +91,12 @@ describe('MagnetismComponent', () => {
         component.magnetismService.isGrid.next(isTester.value);
         expect(component.isGridActivated).toEqual(true);
     });
-    it('notify grid should draw grid if activate ', () => {
+    it('notify grid should not draw if grid was activated ', () => {
         component.isGridActivated = true;
         component.notifyGrid();
         expect(component.draw).toEqual(false);
     });
-    it('notify grid should draw grid if not activate ', () => {
+    it('notify grid should draw if grid was not activated', () => {
         component.isGridActivated = false;
         component.notifyGrid();
         expect(component.draw).toEqual(true);
@@ -117,12 +117,12 @@ describe('MagnetismComponent', () => {
         component.decrementGrid();
         expect(component.decrement).toEqual(true);
     });
-    it('toogle the grid should draw ', () => {
+    it('toogle the grid should draw if it is activated', () => {
         component.isGridActivated = true;
         component.toggleGrid();
         expect(component.draw).toEqual(true);
     });
-    it('toogle the grid with no activate should deleate ', () => {
+    it('toogle the grid with no activate should delete the grid ', () => {
         component.isGridActivated = false;
         component.toggleGrid();
         expect(component.delete).toEqual(true);
@@ -131,34 +131,34 @@ describe('MagnetismComponent', () => {
         component.deleteGrid();
         expect(component.delete).toEqual(true);
     });
-    it('drawGrid should draw', () => {
+    it('drawGrid should draw on the grid', () => {
         component.drawingService.canvasSize.x = 100;
         component.drawingService.canvasSize.y = 100;
         component.drawGrid();
         expect(component.draw).toEqual(true);
     });
-    it('change opacity should change opacity', () => {
+    it('change opacity should change opacity and redraw if activated', () => {
         component.isGridActivated = true;
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(true);
         expect(component.delete).toEqual(true);
     });
-    it('change opacity should change opacity', () => {
+    it('change opacity should change opacity and not draw if not activated', () => {
         component.isGridActivated = false;
         component.opaciteChange(10);
         expect(component.opacite).toEqual(10);
         expect(component.draw).toEqual(false);
         expect(component.delete).toEqual(false);
     });
-    it('change grid cell size should change size', () => {
+    it('change grid cell size should change size and redraw if activated', () => {
         component.isGridActivated = true;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
         expect(component.draw).toEqual(true);
         expect(component.delete).toEqual(true);
     });
-    it('change grid cell size should change size', () => {
+    it('change grid cell size should change size and not draw if not activated', () => {
         component.isGridActivated = false;
         component.gridCellSizeChange(10);
         expect(component.gridCellSize).toEqual(10);
