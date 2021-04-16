@@ -2,18 +2,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import { Drawing } from '@common/models/drawing';
-
 @Component({
     selector: 'app-image-navigation',
     templateUrl: './image-navigation.component.html',
     styleUrls: ['./image-navigation.component.scss'],
 })
 export class ImageNavigationComponent {
-    private readonly SNACK_BAR_DELAI: number = 6000;
-
     labels: string[];
     retainedLabels: string[];
     drawings: Drawing[];
@@ -60,7 +58,7 @@ export class ImageNavigationComponent {
 
     displayMessage(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: this.SNACK_BAR_DELAI,
+            duration: SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
