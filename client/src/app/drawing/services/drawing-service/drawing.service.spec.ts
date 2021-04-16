@@ -80,9 +80,10 @@ describe('DrawingService', () => {
     });
 
     it('isCanvasEmpty should be true if canvas is empty', () => {
-        service.clearCanvas(service.baseCtx);
+        service.restoreCanvasStyle();
         expect(service.isCanvasEmpty()).toBeTrue();
     });
+
     it('set cursor should set the cursor', () => {
         service.setCursorType(CursorType.CROSSHAIR);
         expect(service.previewCanvas.style.cursor).toEqual(CursorType.CROSSHAIR);
