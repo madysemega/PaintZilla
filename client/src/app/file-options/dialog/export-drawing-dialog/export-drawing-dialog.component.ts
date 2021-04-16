@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { ImgurRequest } from '@app/file-options/imgur-service/imgur-utils';
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
-
 @Component({
     selector: 'app-export-drawing-dialog',
     templateUrl: './export-drawing-dialog.component.html',
@@ -21,8 +21,8 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     ctx: CanvasRenderingContext2D;
     previewCtx: CanvasRenderingContext2D;
     imageName: string | undefined;
-    imageFormat: string | undefined = 'png';
-    filter: string = 'none';
+    imageFormat: string | undefined;
+    filter: string;
 
     constructor(
         public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>,
@@ -30,7 +30,11 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         public resizingService: ResizingService,
         public imgurService: ImgurService,
         private snackBar: MatSnackBar,
-    ) {}
+    ) {
+        this.imageName = '';
+        this.imageFormat = 'png';
+        this.filter = 'none';
+    }
 
     ngAfterViewInit(): void {
         this.canvas.nativeElement.width = this.drawingService.canvasSize.x;
@@ -99,7 +103,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         this.imgurService
             .uploadToImgur(this.canvas.nativeElement.toDataURL('image/' + this.imageFormat).split(';base64,')[1], this.imageFormat)
             .subscribe(
-                (response) => {
+                (response: ImgurRequest) => {
                     this.imgurService.openImgurLinkDialog(response.data.link);
                 },
                 (error: HttpErrorResponse) => {
