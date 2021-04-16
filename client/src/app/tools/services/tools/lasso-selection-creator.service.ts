@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
-import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
@@ -47,6 +46,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.onMouseUp(event);
         }
+
         this.mouseDown = false;
     }
 
@@ -150,24 +150,6 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
     isSelectionBeingManipulated(): boolean {
         return this.selectionHelper.isSelectionBeingManipulated.getValue();
-    }
-
-    stopManipulatingSelection(): void {
-        if (this.isSelectionBeingManipulated()) {
-            this.selectionManipulator.stopManipulation(true);
-            this.selectionHelper.setIsSelectionBeingManipulated(false);
-            return;
-        }
-        this.selectionManipulator.stopManipulation(false);
-    }
-
-    onToolSelect(): void {
-        this.drawingService.setCursorType(CursorType.CROSSHAIR);
-    }
-
-    onToolDeselect(): void {
-        this.resetProperties();
-        this.stopManipulatingSelection();
     }
 
     resetProperties(): void {
