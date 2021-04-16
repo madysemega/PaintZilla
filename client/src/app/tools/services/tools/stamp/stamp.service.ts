@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
-import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -11,39 +10,31 @@ import { StampRenderer } from '@app/shapes/renderers/stamp-renderer';
 import { StampShape } from '@app/shapes/stamp-shape';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import * as Constants from '@app/tools/services/tools/stamp/stamp-constants';
 
-const PI_TO_DEGREE = 180;
-const MAX_DEGREE = 360;
-const MAX_DEGREES_INCREMENT = 15;
-const MIN_DEGREES_INCREMENT = 1;
 @Injectable({
     providedIn: 'root',
 })
 export class StampService extends ShapeTool implements ISelectableTool {
-    private renderer: StampRenderer;
-    private shape: StampShape;
-    lastMousePosition: Vec2 = { x: 0, y: 0 };
     angle: number = 0;
     degree: number = 0;
-    imageSize: number = 10;
-    imageSizeProperty: ImageSizeProperty;
+    imagePaths: string[] = [
+        './assets/icons/spade-symbol.svg',
+        './assets/icons/heart.svg',
+        './assets/icons/clubs.svg',
+        './assets/icons/diamond.svg',
+        './assets/icons/cancel.svg',
+    ];
+    private shape: StampShape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
+    imageSize: number = Constants.MIN_IMAGE_SIZE;
+    imageSizeProperty: ImageSizeProperty = new ImageSizeProperty(this.imageSize);
     mouseDown: boolean;
-    imagePaths: string[];
-    toBorder: boolean[] = [];
+    toBorder: boolean[] = new Array(this.imagePaths.length).fill(false);
+    private renderer: StampRenderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'stamp';
-        this.imagePaths = [
-            './assets/icons/spade-symbol.svg',
-            './assets/icons/heart.svg',
-            './assets/icons/clubs.svg',
-            './assets/icons/diamond.svg',
-            './assets/icons/cancel.svg',
-        ];
-        this.shape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
-        this.imageSizeProperty = new ImageSizeProperty(this.imageSize);
-        this.renderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
-        this.toBorder = new Array(this.imagePaths.length).fill(false);
+        this.toBorder[0] = true;
     }
     onToolSelect(): void {
         this.drawingService.setCursorType(CursorType.NONE);
@@ -74,28 +65,23 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.imageSizeProperty.imageSize = size;
     }
     changeAngle(degrees: number): void {
-        this.angle = (degrees * Math.PI) / PI_TO_DEGREE;
+        this.angle = (degrees * Math.PI) / Constants.PI_TO_DEGREE;
         this.degree = degrees;
     }
     onWheel(event: WheelEvent): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        let degreesToAdd = 0;
-        const scrollValue = event.deltaY;
-        if (scrollValue > 0) {
-            degreesToAdd = event.altKey ? MIN_DEGREES_INCREMENT : MAX_DEGREES_INCREMENT;
-            this.degree -= degreesToAdd;
-            this.angle -= (degreesToAdd * Math.PI) / PI_TO_DEGREE;
-        } else {
-            degreesToAdd = event.altKey ? MIN_DEGREES_INCREMENT : MAX_DEGREES_INCREMENT;
-            this.degree += degreesToAdd;
-            this.angle += (degreesToAdd * Math.PI) / PI_TO_DEGREE;
-        }
-        this.degree %= MAX_DEGREE;
-        if (this.degree < 0) this.degree += MAX_DEGREE;
+        const DEGREES_TO_ADD = event.altKey ? Constants.MIN_DEGREES_INCREMENT : Constants.MAX_DEGREES_INCREMENT;
+        this.finalizeWheel(event.deltaY, DEGREES_TO_ADD);
+    }
+    finalizeWheel(scrollValue: number, degreesToAdd: number): void {
+        const ANGLE_TO_ADD = (degreesToAdd * Math.PI) / Constants.PI_TO_DEGREE;
+        this.degree = this.degree + (scrollValue > 0 ? -degreesToAdd : degreesToAdd);
+        this.angle = this.angle + (scrollValue > 0 ? -ANGLE_TO_ADD : ANGLE_TO_ADD);
+        this.degree %= Constants.MAX_DEGREE;
+        if (this.degree < 0) this.degree += Constants.MAX_DEGREE;
         this.shape.angle = this.angle;
         this.renderer.render(this.drawingService.previewCtx);
     }
-
     finalize(): void {
         if (this.mouseDown) {
             const RENDERS = new Array<ShapeRenderer<StampShape>>();
@@ -117,6 +103,5 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.shape.src = (event.target as HTMLImageElement).src;
         this.shape.image = new Image();
         this.shape.image.src = this.shape.src;
-        console.log(this.toBorder[0]);
     }
 }

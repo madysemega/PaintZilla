@@ -11,7 +11,8 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
-import { PolygonService } from './polygon.service';
+import * as Constants from '@app/tools/services/tools/polygon/polygon-constants';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 describe('PolygonService', () => {
@@ -267,13 +268,13 @@ describe('PolygonService', () => {
 
     it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {
         const STROKE_DISTANCE =
-            service.lineWidth / Math.sin((Math.PI + Math.PI * (service.numberSides - service['TRIANGLE_SIDES'])) / (2 * service.numberSides)) / 2;
+            service.lineWidth / Math.sin((Math.PI + Math.PI * (service.numberSides - Constants.TRIANGLE_SIDES)) / (2 * service.numberSides)) / 2;
         const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
         service.shapeType = ShapeType.Contoured;
         const NEGATIVE_SIZE = -2;
         service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
         const SIZE = Math.abs(NEGATIVE_SIZE - STROKE_DISTANCE);
-        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, service['CIRCLE_MAX_ANGLE']);
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, Constants.CIRCLE_MAX_ANGLE);
     });
     it('drawPerimeter calls ctx.ellipse with the appropriate size when polygon is filled', () => {
         const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
@@ -281,6 +282,6 @@ describe('PolygonService', () => {
         const NEGATIVE_SIZE = -2;
         service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
         const SIZE = Math.abs(NEGATIVE_SIZE + service.lineWidth / 2);
-        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, service['CIRCLE_MAX_ANGLE']);
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, Constants.CIRCLE_MAX_ANGLE);
     });
 });

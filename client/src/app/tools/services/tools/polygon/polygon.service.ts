@@ -18,57 +18,34 @@ import { PolygonStrokeRenderer } from '@app/shapes/renderers/polygon-stroke-rend
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import * as Constants from '@app/tools/services/tools/polygon/polygon-constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PolygonService extends ShapeTool implements ISelectableTool {
-    private readonly CIRCLE_MAX_ANGLE: number = 360;
-    private readonly TRIANGLE_SIDES: number = 3;
-
-    private strokeRenderer: PolygonStrokeRenderer;
-    private fillRenderer: PolygonFillRenderer;
-
     startPoint: Vec2 = { x: 0, y: 0 };
     lastMousePosition: Vec2 = { x: 0, y: 0 };
 
-    numberSides: number;
-    isToDrawPerim: boolean;
+    numberSides: number = Constants.TRIANGLE_SIDES;
+    isToDrawPerim: boolean = true;
 
-    private shape: PolygonShape;
+    private shape: PolygonShape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, Constants.TRIANGLE_SIDES, this.lineWidth);
 
-    strokeWidthProperty: StrokeWidthProperty;
-    colourProperty: StrokeStyleProperty;
-    strokeStyleProperty: StrokeStyleProperty;
-    fillStyleProperty: FillStyleProperty;
+    strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
+    colourProperty: StrokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
+    strokeStyleProperty: StrokeStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+    fillStyleProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+
+    private strokeRenderer: PolygonStrokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
+    private fillRenderer: PolygonFillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty]);
 
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';
-        this.numberSides = this.TRIANGLE_SIDES;
-        this.isToDrawPerim = true;
-        this.initialize();
-        this.initializeProperties();
-        this.initializeRenderers();
-    }
-
-    private initialize(): void {
-        this.shape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.TRIANGLE_SIDES, this.lineWidth);
-    }
-
-    private initializeProperties(): void {
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-        this.strokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
-        this.fillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
-
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.strokeStyleProperty.colour = colour));
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.fillStyleProperty.colour = colour));
-    }
-
-    private initializeRenderers(): void {
-        this.strokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
-        this.fillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty]);
     }
 
     onToolSelect(): void {
@@ -189,14 +166,14 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.lineWidth = 1;
 
         const STROKE_DISTANCE =
-            this.lineWidth / Math.sin((Math.PI + Math.PI * (this.numberSides - this.TRIANGLE_SIDES)) / (2 * this.numberSides)) / 2;
+            this.lineWidth / Math.sin((Math.PI + Math.PI * (this.numberSides - Constants.TRIANGLE_SIDES)) / (2 * this.numberSides)) / 2;
 
         if (shouldRenderFill && size > 0) size = Math.abs(size - this.lineWidth / 2);
         else if (shouldRenderFill) size = Math.abs(size + this.lineWidth / 2);
         else if (!shouldRenderFill && size > 0) size = Math.abs(size + STROKE_DISTANCE);
         else size = Math.abs(size - STROKE_DISTANCE);
 
-        ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
+        ctx.ellipse(center.x, center.y, size, size, 0, 0, Constants.CIRCLE_MAX_ANGLE);
         ctx.stroke();
         ctx.restore();
     }

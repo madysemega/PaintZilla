@@ -45,7 +45,7 @@ import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray/spray-service';
-import { StampService } from '@app/tools/services/tools/stamp.service';
+import { StampService } from '@app/tools/services/tools/stamp/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SidebarComponent } from './sidebar.component';
