@@ -7,6 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({
@@ -27,7 +28,10 @@ export class SaveDrawingDialogComponent implements OnInit {
         private serverService: ServerService,
         private drawingService: DrawingService,
         private snackBar: MatSnackBar,
-    ) {}
+        private keyboardService: KeyboardService,
+    ) {
+        this.handleKeyboardContext();
+    }
 
     ngOnInit(): void {
         this.formGroup = new FormGroup({
@@ -89,5 +93,11 @@ export class SaveDrawingDialogComponent implements OnInit {
         });
         this.currentlySaving = false;
         this.matDialogRef.close();
+    }
+
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'modal-save';
+        this.matDialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
     }
 }

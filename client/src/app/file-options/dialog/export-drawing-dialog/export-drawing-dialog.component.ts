@@ -8,6 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { ImgurRequest } from '@app/file-options/imgur-service/imgur-utils';
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 @Component({
     selector: 'app-export-drawing-dialog',
     templateUrl: './export-drawing-dialog.component.html',
@@ -30,10 +31,12 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         public resizingService: ResizingService,
         public imgurService: ImgurService,
         private snackBar: MatSnackBar,
+        private keyboardService: KeyboardService,
     ) {
         this.imageName = '';
         this.imageFormat = 'png';
         this.filter = 'none';
+        this.handleKeyboardContext();
     }
 
     ngAfterViewInit(): void {
@@ -120,5 +123,11 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
             verticalPosition: 'bottom',
         });
         this.matDialogRef.close();
+    }
+
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'modal-export';
+        this.matDialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
     }
 }
