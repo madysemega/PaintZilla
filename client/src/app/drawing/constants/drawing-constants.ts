@@ -9,5 +9,5 @@ export const INFERIOR_Z_INDEX = '0';
 export const SUPERIOR_Z_INDEX = '2';
 export const CTX_COLOR = 'rgba(255, 255, 255, 1)';
 export const PREVIEW_CTX_COLOR = 'rgba(255, 255, 255, 0)';
-export const BLANK = 0;
+export const BLANK = 255;
 export const HEX_WHITE = '#ffffff';
