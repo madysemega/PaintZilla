@@ -1,6 +1,6 @@
 import { ENTER } from '@angular/cdk/keycodes';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
     styleUrls: ['./save-drawing-dialog.component.scss'],
 })
 export class SaveDrawingDialogComponent implements OnInit {
+    @ViewChild('labelInput') input: ElementRef<HTMLInputElement>;
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
@@ -38,13 +39,18 @@ export class SaveDrawingDialogComponent implements OnInit {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const labelName = event.value;
-
         if (this.formGroup.controls.labelForm.valid && labelName !== '') {
             const LABEL_NOT_PRESENT = -1;
             if (this.labels.indexOf(labelName) === LABEL_NOT_PRESENT) this.labels.push(labelName);
 
             input.value = '';
         }
+    }
+
+    addLabelOnBlur(event: FocusEvent): void {
+        console.log(event);
+        const matChipEvent: MatChipInputEvent = { input: this.input.nativeElement, value: this.input.nativeElement.value };
+        this.addLabel(matChipEvent);
     }
 
     removeLabel(label: string): void {

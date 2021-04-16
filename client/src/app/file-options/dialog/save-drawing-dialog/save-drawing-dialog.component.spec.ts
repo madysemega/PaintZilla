@@ -191,4 +191,10 @@ describe('SaveDrawingDialogComponent', () => {
         component.saveImage();
         expect(openSnackBarSpy).toHaveBeenCalledWith('' + errorMessage + error.message);
     });
+
+    it('addLabelOnBlur() should call addLabel()', () => {
+        const addLabelSpy = spyOn(component, 'addLabel').and.callThrough();
+        component.addLabelOnBlur({} as FocusEvent);
+        expect(addLabelSpy).toHaveBeenCalled();
+    });
 });
