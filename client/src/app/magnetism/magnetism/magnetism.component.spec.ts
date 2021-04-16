@@ -91,6 +91,16 @@ describe('MagnetismComponent', () => {
         component.magnetismService.isGrid.next(isTester.value);
         expect(component.isGridActivated).toEqual(true);
     });
+    it('notify grid should draw grid if activate ', () => {
+        component.isGridActivated = true;
+        component.notifyGrid();
+        expect(component.draw).toEqual(false);
+    });
+    it('notify grid should draw grid if not activate ', () => {
+        component.isGridActivated = false;
+        component.notifyGrid();
+        expect(component.draw).toEqual(true);
+    });
     it('should notifyManipulators if next value is different than isGridActivated', () => {
         let isTester2: BehaviorSubject<boolean> = new BehaviorSubject(false);
         component.isGridActivated = false;
