@@ -19,9 +19,9 @@ import * as Constants from './pipette-service.constants';
     providedIn: 'root',
 })
 export class PipetteService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private colourProperty: StrokeStyleProperty;
-    private strokeWidthProperty: StrokeWidthProperty;
-    private shape: VerticesShape;
+    private colourProperty: StrokeStyleProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
+    private shape: VerticesShape = new VerticesShape([]);
     mouseRightDown: boolean = false;
 
     zoomctx: CanvasRenderingContext2D;
@@ -32,11 +32,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
         this.key = 'pipette';
-        this.colourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
-
-        this.shape = new VerticesShape([]);
     }
 
     setCtx(ctx: CanvasRenderingContext2D): void {
