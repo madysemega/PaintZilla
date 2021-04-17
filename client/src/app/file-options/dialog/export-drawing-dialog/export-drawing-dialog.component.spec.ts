@@ -18,6 +18,7 @@ import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { Observable, of, Subject, throwError } from 'rxjs';
 import { ExportDrawingDialogComponent } from './export-drawing-dialog.component';
 
@@ -37,6 +38,7 @@ describe('ExportDrawingDialogComponent', () => {
     let postSubject: Subject<any>;
     let snackBarSpy: jasmine.SpyObj<any>;
     let imgurServiceSpy: jasmine.SpyObj<any>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     let canvasTestHelper: CanvasTestHelper;
     let ctx: CanvasRenderingContext2D;
@@ -44,6 +46,7 @@ describe('ExportDrawingDialogComponent', () => {
     let canvasSizeStub: Vec2;
 
     beforeEach(async(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         keyboardServiceStub.registerAction.and.stub();
         keyboardServiceStub.saveContext.and.stub();
@@ -52,7 +55,8 @@ describe('ExportDrawingDialogComponent', () => {
         drawingServiceSpy = new DrawingService(historyServiceStub);
         resizingServiceSpy = new ResizingService(drawingServiceSpy, historyServiceStub, magnetismServiceStub);
         postSubject = new Subject<any>();
-        matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close']);
+        matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<ExportDrawingDialogComponent>', ['close', 'afterClosed']);
+        matDialogRefSpy.afterClosed.and.returnValue(of({}));
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
         httpClientSpy.post.and.returnValue(postSubject);
@@ -72,6 +76,7 @@ describe('ExportDrawingDialogComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 MatTooltipModule,
+                HotkeyModule.forRoot(),
             ],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
@@ -80,6 +85,7 @@ describe('ExportDrawingDialogComponent', () => {
                 { provide: HttpClient, useValue: httpClientSpy },
                 { provide: MatSnackBar, useValue: snackBarSpy },
                 { provide: ImgurService, useValue: imgurServiceSpy },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
         }).compileComponents();
 

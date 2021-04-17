@@ -3,17 +3,18 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { ImgurRequest } from '@app/file-options/imgur-service/imgur-utils';
 import { ImgurService } from '@app/file-options/imgur-service/imgur.service';
-
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 @Component({
     selector: 'app-export-drawing-dialog',
     templateUrl: './export-drawing-dialog.component.html',
     styleUrls: ['./export-drawing-dialog.component.scss'],
 })
 export class ExportDrawingDialogComponent implements AfterViewInit {
-    SNACK_BAR_DURATION: number = 6000;
     @ViewChild('downloadLink') downloadLink: ElementRef<HTMLLinkElement>;
     @ViewChild('imageCanvas') canvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas') previewCanvas: ElementRef<HTMLCanvasElement>;
@@ -21,8 +22,8 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
     ctx: CanvasRenderingContext2D;
     previewCtx: CanvasRenderingContext2D;
     imageName: string | undefined;
-    imageFormat: string | undefined = 'png';
-    filter: string = 'none';
+    imageFormat: string | undefined;
+    filter: string;
 
     constructor(
         public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>,
@@ -30,7 +31,13 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         public resizingService: ResizingService,
         public imgurService: ImgurService,
         private snackBar: MatSnackBar,
-    ) {}
+        private keyboardService: KeyboardService,
+    ) {
+        this.imageName = '';
+        this.imageFormat = 'png';
+        this.filter = 'none';
+        this.handleKeyboardContext();
+    }
 
     ngAfterViewInit(): void {
         this.canvas.nativeElement.width = this.drawingService.canvasSize.x;
@@ -99,7 +106,7 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         this.imgurService
             .uploadToImgur(this.canvas.nativeElement.toDataURL('image/' + this.imageFormat).split(';base64,')[1], this.imageFormat)
             .subscribe(
-                (response) => {
+                (response: ImgurRequest) => {
                     this.imgurService.openImgurLinkDialog(response.data.link);
                 },
                 (error: HttpErrorResponse) => {
@@ -111,10 +118,16 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: this.SNACK_BAR_DURATION,
+            duration: SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
         this.matDialogRef.close();
+    }
+
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'modal-export';
+        this.matDialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
     }
 }

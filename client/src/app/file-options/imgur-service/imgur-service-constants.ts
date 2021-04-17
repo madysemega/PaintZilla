@@ -8,9 +8,3 @@ export const HEADER_OPTIONS = {
         'Content-Type': 'application/json',
     }),
 };
-
-export interface ImgurRequest {
-    image: string;
-    type: string;
-    data: { link: string };
-}
