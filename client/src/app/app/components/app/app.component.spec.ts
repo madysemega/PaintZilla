@@ -25,12 +25,12 @@ import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-
 import { IndexService } from '@app/tools/services/index/index.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
-import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
-import { PipetteService } from '@app/tools/services/tools/pipette-service';
+import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
-import { SprayService } from '@app/tools/services/tools/spray-service';
+import { SprayService } from '@app/tools/services/tools/spray/spray-service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { AppComponent } from './app.component';
 

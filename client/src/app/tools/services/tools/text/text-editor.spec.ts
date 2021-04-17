@@ -8,6 +8,7 @@ import { TextEditor } from './text-editor';
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-string-literal
+// tslint:disable:max-file-line-count
 describe('TextEditor', () => {
     let editor: TextEditor;
 
@@ -104,10 +105,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorRight();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION + 1);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION + 1);
     });
 
     it('Moving cursor right should not move right if at the end of text', () => {
@@ -115,10 +116,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 10;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorRight();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION);
     });
 
     it('Moving cursor right should render', () => {
@@ -144,10 +145,10 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 3;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorLeft();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION - 1);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION - 1);
     });
 
     it('Moving cursor left should not move left if at the beginning of text', () => {
@@ -155,16 +156,39 @@ describe('TextEditor', () => {
 
         editor.write('1234567890');
         const INITIAL_CURSOR_POSITION = 0;
-        editor['cursorRenderer'].cursorPosition = INITIAL_CURSOR_POSITION;
+        editor['cursorRenderer'].cursor.position = INITIAL_CURSOR_POSITION;
 
         editor.moveCursorLeft();
-        expect(editor['cursorRenderer'].cursorPosition).toEqual(INITIAL_CURSOR_POSITION);
+        expect(editor['cursorRenderer'].cursor.position).toEqual(INITIAL_CURSOR_POSITION);
     });
 
     it('Moving cursor left should render', () => {
         const renderSpy = spyOn(editor, 'render').and.stub();
         editor.moveCursorLeft();
         expect(renderSpy).toHaveBeenCalled();
+    });
+
+    it('Moving cursor down should move cursor downward', () => {
+        const EXPECTED_LINE = 1;
+
+        spyOn(editor, 'render').and.stub();
+
+        editor.write('123\n321');
+        editor.moveCursorDown();
+
+        expect(editor['cursor'].line).toEqual(EXPECTED_LINE);
+    });
+
+    it('Moving cursor up should move cursor upward', () => {
+        const EXPECTED_LINE = 0;
+
+        spyOn(editor, 'render').and.stub();
+
+        editor.write('123\n321');
+        editor.moveCursorDown();
+        editor.moveCursorUp();
+
+        expect(editor['cursor'].line).toEqual(EXPECTED_LINE);
     });
 
     it('Should be able to write text in the middle of the text', () => {

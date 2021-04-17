@@ -1,0 +1,12 @@
+<div class='vertical'>
+  <mat-label class='margin-bottom-small'>Pourcentage de tolérance</mat-label>
+  <mat-slider thumbLabel
+              matTooltip="Tolérance pour la différence de couleur"
+              matTooltipPosition="right"
+              step="1"
+              min='0'
+              max='100'
+              [value]='tolerance'
+              (valueChange)='onToleranceChange($event)'>
+  </mat-slider>
+</div>

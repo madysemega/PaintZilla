@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import * as Constants from '@app/magnetism/magnetism.constant';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MetaWrappedTool } from '@app/tools/classes/meta-wrapped-tool';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
+import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
     selector: 'app-magnetism',
@@ -11,13 +14,10 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
     styleUrls: ['./magnetism.component.scss'],
 })
 export class MagnetismComponent {
-    static readonly DEFAULT_MAX_OPACITY: number = 100;
-    static readonly INCREMENT: number = 5;
-    static readonly DECREMENT: number = 5;
-    static readonly MIN_SIZE: number = 10;
-    isActivated: boolean = false;
+    gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
+    isMagnetismActivated: boolean = false;
     tester: number = 0;
-    deleate: boolean = false;
+    delete: boolean = false;
     increment: boolean = false;
     decrement: boolean = false;
     draw: boolean = false;
@@ -37,21 +37,21 @@ export class MagnetismComponent {
             }
         });
         this.magnetismService.isActivated.subscribe((value) => {
-            this.isActivated = value;
+            this.isMagnetismActivated = value;
             this.notifyManipulators();
         });
-        this.magnetismService.isIncrement.subscribe((value) => {
+        this.magnetismService.isIncrement.subscribe(() => {
             this.incrementGrid();
         });
-        this.magnetismService.isDecrement.subscribe((value) => {
+        this.magnetismService.isDecrement.subscribe(() => {
             this.decrementGrid();
         });
     }
     notifyManipulators(): void {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isActivated;
+            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
     }
     toggleGrid(): void {
         if (this.isGridActivated === true) {
@@ -61,21 +61,21 @@ export class MagnetismComponent {
         }
     }
     incrementGrid(): void {
-        if (this.gridCellSize < MagnetismComponent.DEFAULT_MAX_OPACITY) {
-            this.gridCellSizeChange(this.gridCellSize + MagnetismComponent.INCREMENT);
+        if (this.gridCellSize < Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
+            this.gridCellSizeChange(this.gridCellSize + Constants.INCREMENT);
         }
         this.increment = true;
     }
     decrementGrid(): void {
-        if (this.gridCellSize > MagnetismComponent.MIN_SIZE) {
-            this.gridCellSizeChange(this.gridCellSize - MagnetismComponent.DECREMENT);
+        if (this.gridCellSize > Constants.MIN_SIZE) {
+            this.gridCellSizeChange(this.gridCellSize - Constants.DECREMENT);
         }
         this.decrement = true;
     }
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
             this.drawingService.gridCtx.moveTo(i, 0);
-            if (this.opacite === MagnetismComponent.DEFAULT_MAX_OPACITY) {
+            if (this.opacite === Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
                 this.drawingService.gridCtx.strokeStyle = '#000000FF';
             } else {
                 this.drawingService.gridCtx.strokeStyle = '#000000' + this.opacite;
@@ -89,12 +89,14 @@ export class MagnetismComponent {
         this.drawingService.gridCtx.stroke();
         this.draw = true;
     }
-
+    notifyGrid(): void {
+        this.magnetismService.toggleGrid();
+    }
     deleteGrid(): void {
         this.drawingService.gridCtx.beginPath();
         this.drawingService.gridCtx.clearRect(0, 0, this.drawingService.canvasSize.x, this.drawingService.canvasSize.y);
         this.drawingService.gridCtx.stroke();
-        this.deleate = true;
+        this.delete = true;
     }
 
     gridCellSizeChange(gridCellSize: number): void {
@@ -119,6 +121,15 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+            .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+    }
+
+    getCurrentGridAnchor(): GridMovementAnchor {
+        const invalid = -1;
+        if (!this.isMagnetismActivated) {
+            return invalid;
+        }
+        return ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool).tool as RectangleSelectionCreatorService)
+            .selectionManipulator.gridMovementAnchor;
     }
 }

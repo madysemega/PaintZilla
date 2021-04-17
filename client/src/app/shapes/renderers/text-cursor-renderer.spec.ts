@@ -2,6 +2,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { FontProperty } from '@app/shapes/properties/font-property';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { TextShape } from '@app/shapes/text-shape';
+import { TextCursor } from '@app/tools/services/tools/text/text-cursor';
 import { TextCursorRenderer } from './text-cursor-renderer';
 import { TextRenderer } from './text-renderer';
 
@@ -19,6 +20,7 @@ describe('TextCursorRenderer', () => {
 
     let renderer: TextCursorRenderer;
     let shape: TextShape;
+    let cursor: TextCursor;
     let properties: ShapeProperty[];
 
     let canvasTestHelper: CanvasTestHelper;
@@ -29,7 +31,8 @@ describe('TextCursorRenderer', () => {
         properties = new Array<ShapeProperty>();
         properties.push(new FontProperty(FONT_SIZE, FONT_NAME, FONT_IS_BOLD, FONT_IS_ITALIC));
         shape = new TextShape(TEXT, POSITION, FONT_SIZE);
-        renderer = new TextCursorRenderer(shape, properties, INITIAL_CURSOR_POSITION);
+        cursor = new TextCursor(shape, INITIAL_CURSOR_POSITION);
+        renderer = new TextCursorRenderer(shape, properties, cursor);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -37,7 +40,7 @@ describe('TextCursorRenderer', () => {
     });
 
     it('cursor should be rendered with xOffset relative to the width of characters in the text', () => {
-        const X_OFFSET = ctxStub.measureText(shape.text.substr(0, renderer.cursorPosition)).width;
+        const X_OFFSET = ctxStub.measureText(shape.text.substr(0, renderer.cursor.position)).width;
         const EXPECTED_X_POSITION = shape.position.x + X_OFFSET;
 
         renderer.render(ctxStub);
@@ -116,7 +119,7 @@ describe('TextCursorRenderer', () => {
         const CURSOR_POSITION = 6;
 
         shape.text = '1234\n1234\n';
-        renderer.cursorPosition = CURSOR_POSITION;
+        renderer.cursor.position = CURSOR_POSITION;
         shape.textAlignment = 'start';
         expect(renderer['getRealPosition'](START_POSITION, ctxStub)).toEqual(START_POSITION);
     });

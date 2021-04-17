@@ -1,6 +1,6 @@
 <div id="canvas-container" onContextMenu="return false">
-    <canvas id="canvas" #baseCanvas [attr.width]="resizeWidth" [attr.height]="resizeHeight" ondragstart="return false"></canvas>
-    <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"> </canvas>
+    <canvas id="canvas" #baseCanvas ondragstart="return false"></canvas>
+    <canvas id="previewLayer" #previewCanvas ondragstart="return false"> </canvas>
     <div
         id="rightDown"
         draggable="false"
@@ -40,7 +40,7 @@
     <app-ellipse-selection></app-ellipse-selection>
     <app-rectangle-selection></app-rectangle-selection>
     <app-lasso-selection></app-lasso-selection>
-    <canvas id="gridLayer" style="z-index: 3;" #gridCanvas [attr.width]="width" [attr.height]="height" ondragstart="return false"> </canvas>
+    <canvas id="gridLayer" style="z-index: 3;" #gridCanvas ondragstart="return false"> </canvas>
 </div>
 
 

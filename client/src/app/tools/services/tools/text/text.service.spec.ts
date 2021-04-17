@@ -242,56 +242,130 @@ describe('TextService', () => {
     });
 
     it('If editing, right arrow key should move cursor to the right', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'ArrowRight' });
+        const keyboardService = TestBed.inject(KeyboardService);
         const moveCursorRightSpy = spyOn(service['editor'], 'moveCursorRight').and.stub();
 
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'right') {
+                action.invoke();
+            }
+        });
+
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
         expect(moveCursorRightSpy).toHaveBeenCalled();
     });
 
     it('If editing, left arrow key should move cursor to the left', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'ArrowLeft' });
+        const keyboardService = TestBed.inject(KeyboardService);
         const moveCursorLeftSpy = spyOn(service['editor'], 'moveCursorLeft').and.stub();
 
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'left') {
+                action.invoke();
+            }
+        });
+
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
         expect(moveCursorLeftSpy).toHaveBeenCalled();
     });
 
-    it('If editing, backspace key should remove character to the left of the cursor in the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Backspace' });
-        const backspaceSpy = spyOn(service['editor'], 'backspace').and.stub();
+    it('If editing, down arrow key should move cursor downward', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        const moveCursorDownSpy = spyOn(service['editor'], 'moveCursorDown').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'down') {
+                action.invoke();
+            }
+        });
 
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
+        expect(moveCursorDownSpy).toHaveBeenCalled();
+    });
+
+    it('If editing, up arrow key should move cursor upward', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        const moveCursorUpSpy = spyOn(service['editor'], 'moveCursorUp').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'up') {
+                action.invoke();
+            }
+        });
+
+        service['isEditing'] = true;
+        service['initializeKeyboardShortcuts']();
+
+        expect(moveCursorUpSpy).toHaveBeenCalled();
+    });
+
+    it('If editing, backspace key should remove character to the left of the cursor in the text', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
+        const backspaceSpy = spyOn(service['editor'], 'backspace').and.stub();
+
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'backspace') {
+                action.invoke();
+            }
+        });
+
+        service['isEditing'] = true;
+        service['initializeKeyboardShortcuts']();
+
         expect(backspaceSpy).toHaveBeenCalled();
     });
 
     it('If editing, delete key should remove character to the right of the cursor in the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Delete' });
+        const keyboardService = TestBed.inject(KeyboardService);
         const deleteSpy = spyOn(service['editor'], 'delete').and.stub();
 
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'delete') {
+                action.invoke();
+            }
+        });
+
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
         expect(deleteSpy).toHaveBeenCalled();
     });
 
-    it('If editing, delete key should remove character to the right of the cursor in the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Escape' });
+    it('If editing, escape key should cancel the text edition', () => {
+        const keyboardService = TestBed.inject(KeyboardService);
         const cancelSpy = spyOn<any>(service, 'cancel').and.stub();
 
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'escape') {
+                action.invoke();
+            }
+        });
+
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
         expect(cancelSpy).toHaveBeenCalled();
     });
 
     it('If editing, enter key should write \\n to the text', () => {
-        const keyboardEvent = new KeyboardEvent('onKeyUp', { key: 'Enter' });
+        const keyboardService = TestBed.inject(KeyboardService);
         const writeSpy = spyOn(service['editor'], 'write').and.stub();
 
+        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
+            if (action.trigger === 'enter') {
+                action.invoke();
+            }
+        });
+
         service['isEditing'] = true;
-        service.onKeyUp(keyboardEvent);
+        service['initializeKeyboardShortcuts']();
+
         expect(writeSpy).toHaveBeenCalledWith('\n');
     });
 

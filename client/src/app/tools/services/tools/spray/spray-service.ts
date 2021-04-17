@@ -13,16 +13,15 @@ import { SprayShape } from '@app/shapes/spray-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-
+import * as Constants from './spray-service.constants';
 @Injectable({
     providedIn: 'root',
 })
 export class SprayService extends ResizableTool implements ISelectableTool, IDeselectableTool {
-    private shape: SprayShape;
-    private renderer: SprayRenderer;
+    private shape: SprayShape = new SprayShape([]);
 
-    private colourProperty: FillStyleProperty;
-
+    private colourProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+    private renderer: SprayRenderer = new SprayRenderer(this.shape, [this.colourProperty]);
     jetDiameter: number;
     nbDropsPerSecond: number;
 
@@ -32,12 +31,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.key = 'spray';
-
-        this.colourProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
         this.colourService.primaryColourChanged.subscribe((newColour: Colour) => (this.colourProperty.colour = newColour));
-
-        this.shape = new SprayShape([]);
-        this.renderer = new SprayRenderer(this.shape, [this.colourProperty]);
     }
 
     onRadiusChanged(newRadius: number): void {
@@ -62,8 +56,6 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
     }
 
     onMouseDown(event: MouseEvent): void {
-        const NB_MS_IN_SECOND = 1000;
-
         this.mouseDown = event.button === MouseButton.Left;
         if (this.mouseDown) {
             this.lastMousePosition = this.getPositionFromMouse(event);
@@ -71,7 +63,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
             this.history.isLocked = true;
 
             this.onSpray();
-            this.sprayTimer = setInterval(() => this.onSpray(), (1.0 / this.nbDropsPerSecond) * NB_MS_IN_SECOND);
+            this.sprayTimer = setInterval(() => this.onSpray(), (1.0 / this.nbDropsPerSecond) * Constants.NB_MS_IN_SECOND);
         }
     }
 

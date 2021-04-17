@@ -12,25 +12,7 @@
             <app-history-controls></app-history-controls>
         </div>
     </div>
-
     <mat-divider></mat-divider>
-
-    <div>
-        <mat-label>Selection</mat-label>
-        <div class="center">
-            <app-clipboard></app-clipboard>
-        </div>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div>
-        <mat-label>Magnetisme</mat-label>
-        <app-magnetism></app-magnetism>
-    </div>
-
-    <mat-divider></mat-divider>
-
     <div>
         <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"> </app-ellipse-tool-configuration>
         <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'"> </app-pencil-tool-configuration>
@@ -42,5 +24,23 @@
         <app-polygon class="vertical" *ngIf="selectedToolName === 'polygon'"></app-polygon>
         <app-stamp class="vertical" *ngIf="selectedToolName === 'stamp'"></app-stamp>
         <app-text-tool-configuration class="vertical" *ngIf="selectedToolName === 'text'"></app-text-tool-configuration>
+        <app-paint-bucket-tool-configuration class="vertical" *ngIf="selectedToolName === 'paint-bucket'"></app-paint-bucket-tool-configuration>
     </div>
+
+    <mat-divider></mat-divider>
+
+    <div>
+        <mat-label>Sélection</mat-label>
+        <div class="center">
+            <app-clipboard></app-clipboard>
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div>
+        <mat-label>Magnétisme</mat-label>
+        <app-magnetism></app-magnetism>
+    </div>
+
 </div>

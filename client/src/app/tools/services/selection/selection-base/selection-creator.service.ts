@@ -10,17 +10,15 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import { MINIMUM_SELECTION_WIDTH } from '@app/tools/services/selection/selection-constants';
 import { SelectionHelperService } from './selection-helper.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export abstract class SelectionCreatorService extends Tool implements ISelectableTool, IDeselectableTool {
-    readonly MINIMUM_SELECTION_WIDTH: number = 5;
-
     startPoint: Vec2 = { x: 0, y: 0 };
     lastMousePosition: Vec2 = { x: 0, y: 0 };
-
     isShiftDown: boolean;
 
     constructor(
@@ -196,7 +194,7 @@ export abstract class SelectionCreatorService extends Tool implements ISelectabl
     }
 
     startPointIsFarEnoughFrom(mousePos: Vec2): boolean {
-        return Math.sqrt(Math.pow(this.startPoint.x - mousePos.x, 2) + Math.pow(this.startPoint.y - mousePos.y, 2)) > this.MINIMUM_SELECTION_WIDTH;
+        return Math.sqrt(Math.pow(this.startPoint.x - mousePos.x, 2) + Math.pow(this.startPoint.y - mousePos.y, 2)) > MINIMUM_SELECTION_WIDTH;
     }
 
     isSelectionBeingManipulated(): boolean {

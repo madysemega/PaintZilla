@@ -36,24 +36,25 @@ import { RectangleSelectionHandlerService } from '@app/tools/services/selection/
 import { RectangleSelectionHelperService } from '@app/tools/services/selection/rectangle/rectangle-selection-helper.service';
 import { RectangleSelectionManipulatorService } from '@app/tools/services/selection/rectangle/rectangle-selection-manipulator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
-// import { ColourToolService } from '@server/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
-import { EraserService } from '@app/tools/services/tools/eraser-service';
+import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
 import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
 import { LineService } from '@app/tools/services/tools/line.service';
+import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
-import { PipetteService } from '@app/tools/services/tools/pipette-service';
+import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 import { PolygonService } from '@app/tools/services/tools/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
-import { SprayService } from '@app/tools/services/tools/spray-service';
+import { SprayService } from '@app/tools/services/tools/spray/spray-service';
 import { StampService } from '@app/tools/services/tools/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SidebarComponent } from './sidebar.component';
 
-// tslint:disable:no-any
+// tslint:disable: no-any
+// tslint:disable: max-file-line-count
 // tslint:disable: max-classes-per-file
 // tslint:disable: prefer-const
 describe('SidebarComponent', () => {
@@ -79,6 +80,7 @@ describe('SidebarComponent', () => {
     let saveDrawingServiceSpy: jasmine.SpyObj<any>;
     let eraserStoolStub: EraserService;
     let textServiceStub: TextService;
+    let paintBucketServiceStub: PaintBucketService;
     let stampServiceStub: StampService;
 
     let ellipseSelectionHandlerService: EllipseSelectionHandlerService;
@@ -133,6 +135,7 @@ describe('SidebarComponent', () => {
         saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
         textServiceStub = new TextService(drawingStub, colourServiceStub, historyServiceStub, keyboardServiceStub);
+        paintBucketServiceStub = new PaintBucketService(drawingStub, colourServiceStub, historyServiceStub);
         stampServiceStub = new StampService(drawingStub, historyServiceStub);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
@@ -204,6 +207,7 @@ describe('SidebarComponent', () => {
             lassoSelectionCreatorService,
             stampServiceStub,
             textServiceStub,
+            paintBucketServiceStub,
         );
 
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
