@@ -17,21 +17,18 @@ import { NonContiguousPixelFill } from '@app/tools/services/paint-bucket/non-con
     providedIn: 'root',
 })
 export class PaintBucketService extends ResizableTool implements ISelectableTool, IDeselectableTool {
-    contiguousPixelFill: ContiguousPixelFill;
-    nonContiguousPixelFill: NonContiguousPixelFill;
+    contiguousPixelFill: ContiguousPixelFill = new ContiguousPixelFill();
+    nonContiguousPixelFill: NonContiguousPixelFill = new NonContiguousPixelFill();
     fillBucket: { [key: number]: FloodFill };
     colourProperty: FillStyleProperty;
     fillRenderer: PixelFillRenderer;
     pixelShape: PixelShape;
     tolerance: number;
-    isFilling: boolean;
+    isFilling: boolean = false;
     constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
         this.key = 'paint-bucket';
-        this.contiguousPixelFill = new ContiguousPixelFill();
-        this.nonContiguousPixelFill = new NonContiguousPixelFill();
         this.fillBucket = { 0: this.contiguousPixelFill, 2: this.nonContiguousPixelFill };
-        this.isFilling = false;
     }
 
     onMouseDown(event: MouseEvent): void {
