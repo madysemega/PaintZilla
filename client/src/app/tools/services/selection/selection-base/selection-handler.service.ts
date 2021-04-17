@@ -11,11 +11,11 @@ import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    selection: HTMLCanvasElement;
-    originalSelection: HTMLCanvasElement;
+    selection: HTMLCanvasElement= document.createElement('canvas');
+    originalSelection: HTMLCanvasElement = document.createElement('canvas');
 
-    selectionCtx: CanvasRenderingContext2D;
-    originalSelectionCtx: CanvasRenderingContext2D;
+    selectionCtx: CanvasRenderingContext2D = this.selection.getContext('2d') as CanvasRenderingContext2D;
+    originalSelectionCtx: CanvasRenderingContext2D = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
 
     topLeftRelativeToMiddle: Vec2 = { x: 0, y: 0 };
     offset: Vec2 = { x: 0, y: 0 };
@@ -32,12 +32,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
-        this.selection = document.createElement('canvas');
-        this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
-        this.originalSelection = document.createElement('canvas');
-        this.originalSelectionCtx = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
-    }
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {}
 
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;

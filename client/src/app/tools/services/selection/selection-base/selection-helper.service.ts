@@ -13,12 +13,10 @@ import { SelectionManipulatorService } from './selection-manipulator.service';
     providedIn: 'root',
 })
 export abstract class SelectionHelperService {
-    isSelectionBeingManipulated: BehaviorSubject<boolean>;
+    isSelectionBeingManipulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     mementos: HandlerMemento[] = [];
 
-    constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {
-        this.isSelectionBeingManipulated = new BehaviorSubject<boolean>(false);
-    }
+    constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {}
 
     getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
         return this.ellipseService.getSquareAdjustedPerimeter(startPoint, endPoint);
