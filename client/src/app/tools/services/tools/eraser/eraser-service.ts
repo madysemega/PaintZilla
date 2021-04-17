@@ -22,26 +22,17 @@ import * as Constants from './eraser-service.constants';
 })
 export class EraserService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
     minimumWidth: number = 5;
-
-    private shape: EraserShape;
-    private renderer: EraserRenderer;
-
-    private strokeWidthProperty: StrokeWidthProperty;
-
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.minimumWidth);
+    private shape: EraserShape = new EraserShape([], this.strokeWidthProperty.strokeWidth);
+    private renderer: EraserRenderer = new EraserRenderer(this.shape, [
+        this.strokeWidthProperty,
+        new StrokeStyleProperty(Colour.hexToRgb('#FFFFFF')),
+        new FillStyleProperty(Colour.hexToRgb('#FFFFFF')),
+    ]);
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'eraser';
-
         this.lineWidth = this.minimumWidth;
-
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-
-        this.shape = new EraserShape([], this.strokeWidthProperty.strokeWidth);
-        this.renderer = new EraserRenderer(this.shape, [
-            this.strokeWidthProperty,
-            new StrokeStyleProperty(Colour.hexToRgb('#FFFFFF')),
-            new FillStyleProperty(Colour.hexToRgb('#FFFFFF')),
-        ]);
     }
 
     onLineWidthChanged(): void {

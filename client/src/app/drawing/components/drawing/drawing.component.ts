@@ -58,6 +58,7 @@ export class DrawingComponent implements AfterViewInit {
 
         this.resizingService.onCanvasSizeChange.subscribe((dimensions: Vec2) => {
             this.setCanvasDimensions(this.previewCanvas.nativeElement, dimensions);
+            this.setCanvasDimensions(this.gridCanvas.nativeElement, dimensions);
         });
     }
 
@@ -81,6 +82,7 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.initialSize.y = this.canvasSize.y;
         this.setCanvasDimensions(this.baseCanvas.nativeElement, this.canvasSize);
         this.setCanvasDimensions(this.previewCanvas.nativeElement, this.canvasSize);
+        this.setCanvasDimensions(this.gridCanvas.nativeElement, this.canvasSize);
         this.drawingService.restoreCanvasStyle();
     }
 
