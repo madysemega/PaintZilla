@@ -45,6 +45,7 @@ import { FilterLabelComponent } from './carousel/components/filter-label/filter-
 import { ConfigurationPanelComponent } from './drawing/components/configuration-panel/configuration-panel.component';
 import { MagnetismComponent } from './magnetism/magnetism/magnetism.component';
 import { ClipboardComponent } from './tools/components/selection/clipboard/clipboard.component';
+import { LassoSelectionComponent } from './tools/components/selection/lasso-selection/lasso-selection.component';
 import { StampComponent } from './tools/components/tool-configurations/stamp/stamp.component';
 @NgModule({
     declarations: [
@@ -90,6 +91,7 @@ import { StampComponent } from './tools/components/tool-configurations/stamp/sta
         ImgurLinkDialogComponent,
         StampComponent,
         TextToolConfigurationComponent,
+        LassoSelectionComponent,
         PaintBucketToolConfigurationComponent,
     ],
     imports: [

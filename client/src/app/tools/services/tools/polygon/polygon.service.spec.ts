@@ -6,12 +6,14 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
+import * as CommonConstants from '@app/common-constants';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
-import { PolygonService } from './polygon.service';
+import * as Constants from '@app/tools/services/tools/polygon/polygon-constants';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 describe('PolygonService', () => {
@@ -98,13 +100,14 @@ describe('PolygonService', () => {
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawPerimeterSpy).toHaveBeenCalled();
     });
-    it('drawPerimeter is not called is isToDrawPerimeter is false', () => {
+    it('drawPerimeter is not called if isToDrawPerimeter is false', () => {
+        const SET_PERIMETER_SPY = spyOn<any>(service, 'setPerimeterAttributes').and.callThrough();
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
         service.isToDrawPerim = false;
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawPerimeterSpy).not.toHaveBeenCalled();
+        expect(SET_PERIMETER_SPY).not.toHaveBeenCalled();
     });
     it(' finalize should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
@@ -222,12 +225,12 @@ describe('PolygonService', () => {
         service['mouseDown'] = true;
         service.onMouseUp({} as MouseEvent);
 
-        const generatedUserAction = historyService['past'][0] as UserActionRenderShape;
+        const GENERATED_USER_ACTION = historyService['past'][0] as UserActionRenderShape;
 
-        const isGeneratedRendererOfTypeStroke =
-            generatedUserAction['renderers'].find((renderer) => typeof renderer === typeof service['strokeRenderer']) != undefined;
+        const IS_GENERATED_STROKE_RENDERER =
+            GENERATED_USER_ACTION['renderers'].find((renderer) => typeof renderer === typeof service['strokeRenderer']) != undefined;
 
-        expect(isGeneratedRendererOfTypeStroke).toBeTrue();
+        expect(IS_GENERATED_STROKE_RENDERER).toBeTrue();
     });
     it('when shape is drawn and type is filled, fillRenderer should be invoked', () => {
         service.shapeType = ShapeType.Filled;
@@ -267,13 +270,13 @@ describe('PolygonService', () => {
 
     it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {
         const STROKE_DISTANCE =
-            service.lineWidth / Math.sin((Math.PI + Math.PI * (service.numberSides - service['TRIANGLE_SIDES'])) / (2 * service.numberSides)) / 2;
+            service.lineWidth / Math.sin((Math.PI + Math.PI * (service.numberSides - Constants.TRIANGLE_SIDES)) / (2 * service.numberSides)) / 2;
         const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
         service.shapeType = ShapeType.Contoured;
         const NEGATIVE_SIZE = -2;
         service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
         const SIZE = Math.abs(NEGATIVE_SIZE - STROKE_DISTANCE);
-        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, service['CIRCLE_MAX_ANGLE']);
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, CommonConstants.MAX_DEGREES);
     });
     it('drawPerimeter calls ctx.ellipse with the appropriate size when polygon is filled', () => {
         const ELLIPSE_SPY = spyOn<any>(previewCtxStub, 'ellipse').and.callThrough();
@@ -281,6 +284,6 @@ describe('PolygonService', () => {
         const NEGATIVE_SIZE = -2;
         service.drawPerimeter(previewCtxStub, { x: 0, y: 0 }, NEGATIVE_SIZE);
         const SIZE = Math.abs(NEGATIVE_SIZE + service.lineWidth / 2);
-        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, service['CIRCLE_MAX_ANGLE']);
+        expect(ELLIPSE_SPY).toHaveBeenCalledWith(0, 0, SIZE, SIZE, 0, 0, CommonConstants.MAX_DEGREES);
     });
 });

@@ -5,6 +5,7 @@ import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
+import * as CommonConstants from '@app/common-constants';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -18,57 +19,35 @@ import { PolygonStrokeRenderer } from '@app/shapes/renderers/polygon-stroke-rend
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
+import * as Constants from '@app/tools/services/tools/polygon/polygon-constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PolygonService extends ShapeTool implements ISelectableTool {
-    private readonly CIRCLE_MAX_ANGLE: number = 360;
-    private readonly TRIANGLE_SIDES: number = 3;
-
-    private strokeRenderer: PolygonStrokeRenderer;
-    private fillRenderer: PolygonFillRenderer;
-
     startPoint: Vec2 = { x: 0, y: 0 };
     lastMousePosition: Vec2 = { x: 0, y: 0 };
 
-    numberSides: number;
-    isToDrawPerim: boolean;
+    numberSides: number = Constants.TRIANGLE_SIDES;
+    isToDrawPerim: boolean = true;
 
-    private shape: PolygonShape;
+    private shape: PolygonShape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, Constants.TRIANGLE_SIDES, this.lineWidth);
 
-    strokeWidthProperty: StrokeWidthProperty;
-    colourProperty: StrokeStyleProperty;
-    strokeStyleProperty: StrokeStyleProperty;
-    fillStyleProperty: FillStyleProperty;
-
+    strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
+    strokeStyleProperty: StrokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
+    fillStyleProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+    private strokeRenderer: PolygonStrokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
+    private fillRenderer: PolygonFillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty]);
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';
-        this.numberSides = this.TRIANGLE_SIDES;
-        this.isToDrawPerim = true;
-        this.initialize();
         this.initializeProperties();
-        this.initializeRenderers();
-    }
-
-    private initialize(): void {
-        this.shape = new PolygonShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.TRIANGLE_SIDES, this.lineWidth);
     }
 
     private initializeProperties(): void {
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-        this.strokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
-        this.fillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
-
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.strokeStyleProperty.colour = colour));
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.fillStyleProperty.colour = colour));
-    }
-
-    private initializeRenderers(): void {
-        this.strokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
-        this.fillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty]);
     }
 
     onToolSelect(): void {
@@ -152,52 +131,64 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     drawPolygon(ctx: CanvasRenderingContext2D, startPoint: Vec2, endPoint: Vec2): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-        const shouldRenderStroke = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
-        const shouldRenderFill = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
-
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
 
         const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
-        const HALF_STROKE_WIDTH = this.strokeWidthProperty.strokeWidth / 2;
+        this.setPolygonAttributes(startPoint, endPoint);
 
-        this.shape.topLeft.x = startPoint.x + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.topLeft.y = startPoint.y + (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.bottomRight.x = endPoint.x - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.bottomRight.y = endPoint.y - (shouldRenderStroke ? HALF_STROKE_WIDTH : 0);
-        this.shape.numberSides = this.numberSides;
+        this.renderPolygon(ctx);
 
         const SIZE = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
+        this.drawPerimeter(ctx, CENTER_POINT, Math.abs(SIZE));
+    }
 
-        if (shouldRenderFill) {
+    renderPolygon(ctx: CanvasRenderingContext2D): void {
+        const SHOULD_RENDER_STROKE = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
+        const SHOULD_RENDER_FILL = this.shapeType === ShapeType.Filled || this.shapeType === ShapeType.ContouredAndFilled;
+        if (SHOULD_RENDER_FILL) {
             this.fillRenderer.render(ctx);
         }
-        if (shouldRenderStroke) {
+        if (SHOULD_RENDER_STROKE) {
             this.strokeRenderer.render(ctx);
-        }
-        if (this.isToDrawPerim) {
-            this.drawPerimeter(ctx, CENTER_POINT, Math.abs(SIZE));
         }
     }
 
+    setPolygonAttributes(startPoint: Vec2, endPoint: Vec2): void {
+        const SHOULD_RENDER_STROKE = this.shapeType === ShapeType.Contoured || this.shapeType === ShapeType.ContouredAndFilled;
+        const HALF_STROKE_WIDTH = this.strokeWidthProperty.strokeWidth / 2;
+
+        this.shape.topLeft.x = startPoint.x + (SHOULD_RENDER_STROKE ? HALF_STROKE_WIDTH : 0);
+        this.shape.topLeft.y = startPoint.y + (SHOULD_RENDER_STROKE ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.x = endPoint.x - (SHOULD_RENDER_STROKE ? HALF_STROKE_WIDTH : 0);
+        this.shape.bottomRight.y = endPoint.y - (SHOULD_RENDER_STROKE ? HALF_STROKE_WIDTH : 0);
+        this.shape.numberSides = this.numberSides;
+    }
+
     drawPerimeter(ctx: CanvasRenderingContext2D, center: Vec2, size: number): void {
-        const shouldRenderFill = this.shapeType === ShapeType.Filled;
-        const DASH_NUMBER = 8;
+        if (!this.isToDrawPerim) return;
         ctx.save();
         ctx.beginPath();
+        size = this.setPerimeterAttributes(ctx, size);
+        ctx.ellipse(center.x, center.y, size, size, 0, 0, CommonConstants.MAX_DEGREES);
+        ctx.stroke();
+        ctx.restore();
+    }
+    setPerimeterAttributes(ctx: CanvasRenderingContext2D, size: number): number {
+        const DASH_NUMBER = 8;
         ctx.setLineDash([DASH_NUMBER]);
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1;
+        let strokeDistance =
+            this.lineWidth / Math.sin((Math.PI + Math.PI * (this.numberSides - Constants.TRIANGLE_SIDES)) / (2 * this.numberSides)) / 2;
 
-        const STROKE_DISTANCE =
-            this.lineWidth / Math.sin((Math.PI + Math.PI * (this.numberSides - this.TRIANGLE_SIDES)) / (2 * this.numberSides)) / 2;
+        const SHOULD_RENDER_FILL = this.shapeType === ShapeType.Filled;
+        const SUB_HALF_LINE_WIDTH = SHOULD_RENDER_FILL && size > 0 ? 1 : 0;
+        const ADD_HALF_LINE_WIDTH = SHOULD_RENDER_FILL && size <= 0 ? 1 : 0;
+        const ADD_STROKE_DISTANCE = !SHOULD_RENDER_FILL && size > 0 ? 1 : 0;
+        const SUB_STROKE_DISTANCE = !SHOULD_RENDER_FILL && size <= 0 ? 1 : 0;
+        const HALF_LINE_WIDTH = (ADD_HALF_LINE_WIDTH * this.lineWidth) / 2 - (SUB_HALF_LINE_WIDTH * this.lineWidth) / 2;
+        strokeDistance = ADD_STROKE_DISTANCE * strokeDistance - SUB_STROKE_DISTANCE * strokeDistance;
 
-        if (shouldRenderFill && size > 0) size = Math.abs(size - this.lineWidth / 2);
-        else if (shouldRenderFill) size = Math.abs(size + this.lineWidth / 2);
-        else if (!shouldRenderFill && size > 0) size = Math.abs(size + STROKE_DISTANCE);
-        else size = Math.abs(size - STROKE_DISTANCE);
-
-        ctx.ellipse(center.x, center.y, size, size, 0, 0, this.CIRCLE_MAX_ANGLE);
-        ctx.stroke();
-        ctx.restore();
+        return Math.abs(size + HALF_LINE_WIDTH + strokeDistance);
     }
 }

@@ -16,7 +16,6 @@ export class FilterLabelComponent {
 
     separatorKeysCodes: number[] = [ENTER, COMMA];
     labelCtrl: FormControl = new FormControl();
-
     removable: boolean = true;
     selectable: boolean = true;
     isAvailable: boolean = true;
@@ -25,8 +24,6 @@ export class FilterLabelComponent {
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
     filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
-
-    constructor() {}
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;

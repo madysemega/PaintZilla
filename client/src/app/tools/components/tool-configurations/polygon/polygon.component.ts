@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PolygonService } from '@app/tools/services/tools/polygon.service';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 
 @Component({
     selector: 'app-polygon',

@@ -10,9 +10,9 @@ import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
-// import { ColourToolService } from '@server/tools/services/tools/colour-tool.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardService } from './clipboard.service';
 
@@ -47,7 +47,7 @@ describe('ClipboardService', () => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }, { provide: LassoSelectionCreatorService }],
         });
         service = TestBed.inject(ClipboardService);
 
@@ -123,6 +123,23 @@ describe('ClipboardService', () => {
         service.paste();
 
         expect(service.applyWhiteFill).toEqual(false);
+    });
+
+    it('When making copy, if tool is lasso selection, should raise wasBeingManipulatedFlag', () => {
+        const INITIAL_VALUE = false;
+        const EXPECTED_VALUE = true;
+
+        const creatorService = TestBed.inject(LassoSelectionCreatorService);
+        creatorService.wasBeingManipulated = INITIAL_VALUE;
+        creatorService.selectionManipulator = ellipseSelectionManipulatorService;
+
+        service.manipulatorToRestore = ellipseSelectionManipulatorService;
+        service.handlerToRestore = ellipseSelectionHandlerService;
+        service.isEmpty = false;
+        service.copyOwner = creatorService;
+        service.paste();
+
+        expect(creatorService.wasBeingManipulated).toEqual(EXPECTED_VALUE);
     });
 
     it('the manipulator to restore should have its topLeft and bottomRight coordinates correctly set so the selection is at the origin even if isReversedX is true', () => {

@@ -10,15 +10,16 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
-import { PolygonService } from '@app/tools/services/tools/polygon.service';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray/spray-service';
-import { StampService } from '@app/tools/services/tools/stamp.service';
+import { StampService } from '@app/tools/services/tools/stamp/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -122,7 +123,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+c',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -137,7 +138,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+x',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -152,7 +153,7 @@ export class ToolSelectorService {
             trigger: 'del',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -191,6 +192,7 @@ export class ToolSelectorService {
         polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
+        lassoSelectionCreatorService: LassoSelectionCreatorService,
         stampService: StampService,
         textService: TextService,
         paintBucketService: PaintBucketService,
@@ -261,6 +263,13 @@ export class ToolSelectorService {
             icon: 'ellipse-selection',
             keyboardShortcut: 's',
             tool: ellipseSelectionCreatorService,
+        });
+
+        this.tools.set(lassoSelectionCreatorService.key, {
+            displayName: 'Sélection par lasso polygonal',
+            icon: 'lasso-selection',
+            keyboardShortcut: 'v',
+            tool: lassoSelectionCreatorService,
         });
 
         this.tools.set(textService.key, {
