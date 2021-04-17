@@ -7,6 +7,7 @@ import { SelectionManipulatorService } from '@app/tools/services/selection/selec
 import { GridMovementAnchor } from '@app/tools/services/selection/selection-utils';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 @Component({
     selector: 'app-magnetism',
@@ -51,7 +52,9 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
+            .tool as EllipseSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
+        ((this.toolSelector.getRegisteredTools().get('lasso-selection') as MetaWrappedTool)
+            .tool as LassoSelectionCreatorService).selectionManipulator.isMagnetismActivated = this.isMagnetismActivated;
     }
     toggleGrid(): void {
         if (this.isGridActivated === true) {
@@ -104,7 +107,9 @@ export class MagnetismComponent {
         ((this.toolSelector.getRegisteredTools().get('rectangle-selection') as MetaWrappedTool)
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridCellSize = gridCellSize;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
-            .tool as RectangleSelectionCreatorService).selectionManipulator.gridCellSize = gridCellSize;
+            .tool as EllipseSelectionCreatorService).selectionManipulator.gridCellSize = gridCellSize;
+        ((this.toolSelector.getRegisteredTools().get('lasso-selection') as MetaWrappedTool)
+            .tool as LassoSelectionCreatorService).selectionManipulator.gridCellSize = gridCellSize;
         if (this.isGridActivated === true) {
             this.deleteGrid();
             this.drawGrid();
@@ -122,6 +127,8 @@ export class MagnetismComponent {
             .tool as RectangleSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
         ((this.toolSelector.getRegisteredTools().get('ellipse-selection') as MetaWrappedTool)
             .tool as EllipseSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
+        ((this.toolSelector.getRegisteredTools().get('lasso-selection') as MetaWrappedTool)
+            .tool as LassoSelectionCreatorService).selectionManipulator.gridMovementAnchor = gridAnchor;
     }
 
     getCurrentGridAnchor(): GridMovementAnchor {
