@@ -18,11 +18,10 @@ import * as Constants from './spray-service.constants';
     providedIn: 'root',
 })
 export class SprayService extends ResizableTool implements ISelectableTool, IDeselectableTool {
-    private shape: SprayShape;
-    private renderer: SprayRenderer;
+    private shape: SprayShape = new SprayShape([]);
 
-    private colourProperty: FillStyleProperty;
-
+    private colourProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
+    private renderer: SprayRenderer = new SprayRenderer(this.shape, [this.colourProperty]);
     jetDiameter: number;
     nbDropsPerSecond: number;
 
@@ -32,12 +31,7 @@ export class SprayService extends ResizableTool implements ISelectableTool, IDes
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
         this.key = 'spray';
-
-        this.colourProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
         this.colourService.primaryColourChanged.subscribe((newColour: Colour) => (this.colourProperty.colour = newColour));
-
-        this.shape = new SprayShape([]);
-        this.renderer = new SprayRenderer(this.shape, [this.colourProperty]);
     }
 
     onRadiusChanged(newRadius: number): void {
