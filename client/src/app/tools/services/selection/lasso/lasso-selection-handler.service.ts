@@ -17,9 +17,21 @@ export class LassoSelectionHandlerService extends SelectionHandlerService {
         this.translatedVertices = new Array<Vec2>();
     }
 
+    private extractBounds(vertices: Vec2[]): Vec2[] {
+        const LOWER = 0;
+        const UPPER = 2;
+
+        return vertices.slice(LOWER, UPPER);
+    }
+
+    private extractBulk(vertices: Vec2[]): Vec2[] {
+        const START = 2;
+        return vertices.slice(START);
+    }
+
     initAllProperties(vertices: Vec2[]): void {
-        this.initialVertices = vertices.slice(2, -1);
-        super.initAllProperties(vertices.slice(0, 2));
+        this.initialVertices = this.extractBulk(vertices);
+        super.initAllProperties(this.extractBounds(vertices));
         this.translateVerticesToCenter();
     }
 
@@ -52,16 +64,11 @@ export class LassoSelectionHandlerService extends SelectionHandlerService {
 
         destination.imageSmoothingEnabled = false;
 
-        if (fillItWhite) {
-            destination.fillStyle = 'white';
-            destination.fill();
-        } else {
-            destination.drawImage(
-                source,
-                this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
-                this.topLeftRelativeToMiddle.y - this.originalTopLeftOnBaseCanvas.y,
-            );
-        }
+        destination.drawImage(
+            source,
+            this.topLeftRelativeToMiddle.x - this.originalTopLeftOnBaseCanvas.x,
+            this.topLeftRelativeToMiddle.y - this.originalTopLeftOnBaseCanvas.y,
+        );
 
         destination.closePath();
         destination.restore();
