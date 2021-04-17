@@ -25,7 +25,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
     providedIn: 'root',
 })
 export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private shape: ContouredBoxShape =new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
+    private shape: ContouredBoxShape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
     private strokeRenderer: EllipseStrokeRenderer;
     private fillRenderer: EllipseFillRenderer;
 
@@ -45,7 +45,6 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         this.initializeProperties();
         this.initializeRenderers();
     }
-
 
     private initializeProperties(): void {
         this.strokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());

@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root',
 })
 export class MagnetismService {
-    
     isGrid: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);

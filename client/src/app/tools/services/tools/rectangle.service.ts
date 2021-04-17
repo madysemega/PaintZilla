@@ -26,7 +26,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 })
 export class RectangleService extends ShapeTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
     startingPos: Vec2 = { x: 0, y: 0 };
-    width: number  = 0;
+    width: number = 0;
     height: number = 0;
     shiftDown: boolean = false;
     lastMouseCoords: Vec2 = { x: 0, y: 0 };

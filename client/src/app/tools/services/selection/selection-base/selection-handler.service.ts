@@ -11,7 +11,7 @@ import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    selection: HTMLCanvasElement= document.createElement('canvas');
+    selection: HTMLCanvasElement = document.createElement('canvas');
     originalSelection: HTMLCanvasElement = document.createElement('canvas');
 
     selectionCtx: CanvasRenderingContext2D = this.selection.getContext('2d') as CanvasRenderingContext2D;
@@ -161,12 +161,12 @@ export abstract class SelectionHandlerService {
             this.originalTopLeftOnBaseCanvas.x !== topLeftOnDestination.x || this.originalTopLeftOnBaseCanvas.y !== topLeftOnDestination.y);
     }
 
-    initializeMementoSize(memento: HandlerMemento){
+    initializeMementoSize(memento: HandlerMemento): void {
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
     }
 
-    initializeMementoPositions(memento: HandlerMemento){
+    initializeMementoPositions(memento: HandlerMemento): void {
         memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.originalTopLeftOnBaseCanvas = { x: this.originalTopLeftOnBaseCanvas.x, y: this.originalTopLeftOnBaseCanvas.y };
         memento.originalCenter = { x: this.originalCenter.x, y: this.originalCenter.y };
@@ -175,12 +175,12 @@ export abstract class SelectionHandlerService {
         });
     }
 
-    initializeMementoFlags(memento: HandlerMemento){
+    initializeMementoFlags(memento: HandlerMemento): void {
         memento.hasBeenManipulated = true;
         memento.needWhitePostDrawing = this.needWhitePostDrawing;
     }
 
-    initializeMementoResizingProperties(memento: HandlerMemento){
+    initializeMementoResizingProperties(memento: HandlerMemento): void {
         memento.offset = { x: this.offset.x, y: this.offset.y };
         memento.currentHorizontalScaling = this.currentHorizontalScaling;
         memento.currentVerticalScaling = this.currentVerticalScaling;
@@ -197,12 +197,12 @@ export abstract class SelectionHandlerService {
         return memento;
     }
 
-    initializeSize(memento: HandlerMemento){
+    initializeSize(memento: HandlerMemento): void {
         this.originalWidth = memento.originalWidth;
         this.originalHeight = memento.originalHeight;
     }
 
-    initializePositions(memento: HandlerMemento){
+    initializePositions(memento: HandlerMemento): void {
         this.originalTopLeftOnBaseCanvas = { x: memento.originalTopLeftOnBaseCanvas.x, y: memento.originalTopLeftOnBaseCanvas.y };
         this.originalCenter = { x: memento.originalCenter.x, y: memento.originalCenter.y };
         this.originalVertices = [];
@@ -211,12 +211,12 @@ export abstract class SelectionHandlerService {
         });
     }
 
-    initializeFlags(memento: HandlerMemento){
+    initializeFlags(memento: HandlerMemento): void {
         this.hasBeenManipulated = true;
         this.needWhitePostDrawing = memento.needWhitePostDrawing; //////
     }
 
-    initializeResizingProperties(memento: HandlerMemento){
+    initializeResizingProperties(memento: HandlerMemento): void {
         this.offset = { x: memento.offset.x, y: memento.offset.y };
         this.currentHorizontalScaling = memento.currentHorizontalScaling;
         this.currentVerticalScaling = memento.currentVerticalScaling;
