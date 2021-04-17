@@ -9,7 +9,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-sele
 export class ConfigurationPanelComponent implements OnInit {
     selectedToolName: string;
 
-    constructor(private toolSelectorService: ToolSelectorService) {}
+    constructor(public toolSelectorService: ToolSelectorService) {}
 
     ngOnInit(): void {
         this.toolSelectorService.name.subscribe((name) => (this.selectedToolName = name));
