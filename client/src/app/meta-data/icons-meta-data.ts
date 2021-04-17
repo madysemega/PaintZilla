@@ -101,6 +101,10 @@ export class IconsMetaData {
                 path: './assets/icons/text-format.svg',
             },
             {
+                name: 'lasso-selection',
+                path: './assets/icons/lasso-selection.svg',
+            },
+            {
                 name: 'paint-bucket',
                 path: './assets/icons/paint-bucket.svg',
             },

@@ -10,6 +10,7 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
 import { LineService } from '@app/tools/services/tools/line.service';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
@@ -191,6 +192,7 @@ export class ToolSelectorService {
         polygonService: PolygonService,
         ellipseSelectionCreatorService: EllipseSelectionCreatorService,
         rectangleSelectionCreatorService: RectangleSelectionCreatorService,
+        lassoSelectionCreatorService: LassoSelectionCreatorService,
         stampService: StampService,
         textService: TextService,
         paintBucketService: PaintBucketService,
@@ -261,6 +263,13 @@ export class ToolSelectorService {
             icon: 'ellipse-selection',
             keyboardShortcut: 's',
             tool: ellipseSelectionCreatorService,
+        });
+
+        this.tools.set(lassoSelectionCreatorService.key, {
+            displayName: 'Sélection par lasso polygonal',
+            icon: 'lasso-selection',
+            keyboardShortcut: 'v',
+            tool: lassoSelectionCreatorService,
         });
 
         this.tools.set(textService.key, {
