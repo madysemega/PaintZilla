@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
+import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso/lasso-selection-helper.service';
 import { LassoSelectionManipulatorService } from '@app/tools/services/selection/lasso/lasso-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
+import * as Constants from './lasso-selection-creator.constants';
 
 @Injectable({
     providedIn: 'root',
@@ -28,7 +30,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         this.key = 'lasso-selection';
 
         this.shape = new LineShape([]);
-        this.renderer = new LineShapeRenderer(this.shape, []);
+        this.renderer = new LineShapeRenderer(this.shape, [new LineDashProperty([Constants.DASH_SIZE])]);
 
         this.isShiftDown = false;
         this.wasBeingManipulated = false;
@@ -136,9 +138,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
     createSelection(): void {
         if (this.shape.vertices.length > 0) {
-            const verticesBundle = [this.findTopLeft(this.shape.vertices) as Vec2, this.findBottomRight(this.shape.vertices) as Vec2].concat(
-                (this.shape.clone() as LineShape).vertices,
-            );
+            const verticesBounds = [this.findTopLeft(this.shape.vertices) as Vec2, this.findBottomRight(this.shape.vertices) as Vec2];
+            const verticesBundle = verticesBounds.concat((this.shape.clone() as LineShape).vertices);
 
             this.selectionHelper.setIsSelectionBeingManipulated(true);
             this.selectionManipulator.initialize(verticesBundle);

@@ -12,7 +12,7 @@ import { EllipseSelectionHelperService } from '@app/tools/services/selection/ell
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
-import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { ClipboardService } from './clipboard.service';
 
