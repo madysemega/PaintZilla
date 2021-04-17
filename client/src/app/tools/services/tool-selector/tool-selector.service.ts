@@ -123,7 +123,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+c',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection','lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -138,7 +138,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+x',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection','lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -153,7 +153,7 @@ export class ToolSelectorService {
             trigger: 'del',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection','lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
