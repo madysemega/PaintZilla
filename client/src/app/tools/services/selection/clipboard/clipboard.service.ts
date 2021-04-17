@@ -9,7 +9,7 @@ import { SelectionCreatorService } from '@app/tools/services/selection/selection
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
-import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.service';
 
 @Injectable({
     providedIn: 'root',

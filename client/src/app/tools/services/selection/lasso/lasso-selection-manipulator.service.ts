@@ -3,6 +3,7 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { SelectionManipulatorService } from '@app/tools/services/selection/selection-base/selection-manipulator.service';
+import * as Constants from '@app/tools/services/tools/lasso-selection-creator/lasso-selection-creator.constants';
 import { LassoSelectionHandlerService } from './lasso-selection-handler.service';
 import { LassoSelectionHelperService } from './lasso-selection-helper.service';
 
@@ -45,6 +46,7 @@ export class LassoSelectionManipulatorService extends SelectionManipulatorServic
         const ctx = this.drawingService.previewCtx;
         ctx.save();
         ctx.fillStyle = 'white';
+        ctx.setLineDash([Constants.DASH_SIZE]);
         ctx.beginPath();
         translatedVertices.forEach((vertex) => {
             const scale = {
