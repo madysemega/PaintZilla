@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
+import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { SaveDrawingDialogComponent } from './save-drawing-dialog.component';
@@ -26,21 +27,25 @@ describe('SaveDrawingDialogComponent', () => {
     let matDialogRefSpy: jasmine.SpyObj<any>;
     let htmlInput: jasmine.SpyObj<any>;
     let snackBarSpy: jasmine.SpyObj<any>;
+    let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
 
     beforeEach(async(() => {
+        hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['currentDrawing']);
         serverServiceSpy = jasmine.createSpyObj('ServerService', ['createDrawing']);
-        matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<SaveDrawingDialogComponent>', ['close']);
+        matDialogRefSpy = jasmine.createSpyObj('MatDialogRef<SaveDrawingDialogComponent>', ['close', 'afterClosed']);
+        matDialogRefSpy.afterClosed.and.returnValue(of({}));
         htmlInput = jasmine.createSpyObj('HTMLInputElement', ['value']);
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
         TestBed.configureTestingModule({
             declarations: [SaveDrawingDialogComponent],
-            imports: [MatDialogModule, ReactiveFormsModule, CommonModule, MatTooltipModule],
+            imports: [MatDialogModule, ReactiveFormsModule, CommonModule, MatTooltipModule, HotkeyModule.forRoot()],
             providers: [
                 { provide: MatDialogRef, useValue: matDialogRefSpy },
                 { provide: MatSnackBar, useValue: snackBarSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },
                 { provide: ServerService, useValue: serverServiceSpy },
+                { provide: HotkeysService, useValue: hotkeysServiceStub },
             ],
             schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

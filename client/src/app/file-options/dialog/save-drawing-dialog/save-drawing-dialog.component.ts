@@ -7,11 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-<<<<<<< HEAD
 import { KeyboardService } from '@app/keyboard/keyboard.service';
-=======
-import * as Constants from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
->>>>>>> master
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({
@@ -20,10 +16,7 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
     styleUrls: ['./save-drawing-dialog.component.scss'],
 })
 export class SaveDrawingDialogComponent implements OnInit {
-<<<<<<< HEAD
     @ViewChild('labelInput') input: ElementRef<HTMLInputElement>;
-=======
->>>>>>> master
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
@@ -94,11 +87,7 @@ export class SaveDrawingDialogComponent implements OnInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-<<<<<<< HEAD
             duration: SNACK_BAR_DURATION,
-=======
-            duration: Constants.SNACK_BAR_DURATION,
->>>>>>> master
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
