@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ShapeTool } from '@app/app/classes/shape-tool';
+import * as CommonConstants from '@app/common-constants';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -70,15 +71,15 @@ export class StampService extends ShapeTool implements ISelectableTool {
     }
     onWheel(event: WheelEvent): void {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        const DEGREES_TO_ADD = event.altKey ? Constants.MIN_DEGREES_INCREMENT : Constants.MAX_DEGREES_INCREMENT;
-        this.finalizeWheel(event.deltaY, DEGREES_TO_ADD);
+        const DEGREES_INCREMENT = event.altKey ? Constants.MIN_DEGREES_INCREMENT : Constants.MAX_DEGREES_INCREMENT;
+        this.finalizeWheel(event.deltaY, DEGREES_INCREMENT);
     }
     finalizeWheel(scrollValue: number, degreesToAdd: number): void {
-        const ANGLE_TO_ADD = (degreesToAdd * Math.PI) / Constants.PI_TO_DEGREE;
+        const ANGLE_INCREMENT = (degreesToAdd * Math.PI) / Constants.PI_TO_DEGREE;
         this.degree = this.degree + (scrollValue > 0 ? -degreesToAdd : degreesToAdd);
-        this.angle = this.angle + (scrollValue > 0 ? -ANGLE_TO_ADD : ANGLE_TO_ADD);
-        this.degree %= Constants.MAX_DEGREE;
-        if (this.degree < 0) this.degree += Constants.MAX_DEGREE;
+        this.angle = this.angle + (scrollValue > 0 ? -ANGLE_INCREMENT : ANGLE_INCREMENT);
+        this.degree %= CommonConstants.MAX_DEGREES;
+        if (this.degree < 0) this.degree += CommonConstants.MAX_DEGREES;
         this.shape.angle = this.angle;
         this.renderer.render(this.drawingService.previewCtx);
     }

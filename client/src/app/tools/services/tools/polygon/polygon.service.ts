@@ -5,6 +5,7 @@ import { ShapeType } from '@app/app/classes/shape-type';
 import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
+import * as CommonConstants from '@app/common-constants';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -168,7 +169,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         ctx.save();
         ctx.beginPath();
         size = this.setPerimeterAttributes(ctx, size);
-        ctx.ellipse(center.x, center.y, size, size, 0, 0, Constants.CIRCLE_MAX_ANGLE);
+        ctx.ellipse(center.x, center.y, size, size, 0, 0, CommonConstants.MAX_DEGREES);
         ctx.stroke();
         ctx.restore();
     }

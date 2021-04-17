@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import * as CommonConstants from '@app/common-constants';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
@@ -71,12 +72,12 @@ describe('StampService', () => {
         expect(previewCtxDrawSpy).toHaveBeenCalled();
     });
     it(' onMouseDown should set mouseDown to false on right click', () => {
-        const mouseEventRClick = {
+        const MOUSE_EVENT_RCLICK = {
             offsetX: 25,
             offsetY: 25,
             button: 1,
         } as MouseEvent;
-        service.onMouseDown(mouseEventRClick);
+        service.onMouseDown(MOUSE_EVENT_RCLICK);
         expect(service.mouseDown).toEqual(false);
     });
     it(' onToolSelect should put cursorType to NONE', () => {
@@ -104,13 +105,13 @@ describe('StampService', () => {
         expect(service.degree).toBe(NEW_NUMBER);
     });
     it(' onMouseDown should set shape fields according to the mouse position and current configurations', () => {
-        const mouseEventRClick = {
+        const MOUSE_EVENT_RCLICK = {
             offsetX: 25,
             offsetY: 25,
             button: 0, // TODO: Avoir ceci dans un enum accessible
         } as MouseEvent;
         service['mouseDown'] = true;
-        service.onMouseDown(mouseEventRClick);
+        service.onMouseDown(MOUSE_EVENT_RCLICK);
         expect(service['shape'].topLeft).toEqual(service.mouseDownCoord);
         const BOTTOM_RIGHT: Vec2 = { x: service['shape'].topLeft.x + service.imageSize, y: service['shape'].topLeft.y + service.imageSize };
         expect(service['shape'].bottomRight).toEqual(BOTTOM_RIGHT);
@@ -125,7 +126,7 @@ describe('StampService', () => {
         expect(service.degree).toBe(Constants.MAX_DEGREES_INCREMENT);
         service.degree = service.angle = 0;
         service.onWheel(WHEEL_EVENT_NEGATIVE);
-        expect(service.degree).toBe((-Constants.MAX_DEGREES_INCREMENT % Constants.MAX_DEGREE) + Constants.MAX_DEGREE);
+        expect(service.degree).toBe((-Constants.MAX_DEGREES_INCREMENT % CommonConstants.MAX_DEGREES) + CommonConstants.MAX_DEGREES);
     });
     it('onWheel should increment and decrement angle by 1 when alt is pressed', () => {
         const WHEEL_EVENT_POSITIVE = new WheelEvent('onwheel', { deltaY: -125, altKey: true });
@@ -135,7 +136,7 @@ describe('StampService', () => {
         expect(service.degree).toBe(Constants.MIN_DEGREES_INCREMENT);
         service.degree = service.angle = 0;
         service.onWheel(WHEEL_EVENT_NEGATIVE);
-        expect(service.degree).toBe((-Constants.MIN_DEGREES_INCREMENT % Constants.MAX_DEGREE) + Constants.MAX_DEGREE);
+        expect(service.degree).toBe((-Constants.MIN_DEGREES_INCREMENT % CommonConstants.MAX_DEGREES) + CommonConstants.MAX_DEGREES);
     });
     it('selectStamp sets the shape src to the src of the image clicked', () => {
         const TARGET = new Image();
