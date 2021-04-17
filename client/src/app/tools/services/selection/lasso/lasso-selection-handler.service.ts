@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { SelectionHandlerService } from '../selection-base/selection-handler.service';
+import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { LassoSelectionHelperService } from './lasso-selection-helper.service';
 
 @Injectable({

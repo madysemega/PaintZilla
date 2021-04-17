@@ -12,8 +12,8 @@ import { EllipseSelectionHelperService } from '@app/tools/services/selection/ell
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
 import { EllipseSelectionCreatorService } from '@app/tools/services/tools/ellipse-selection-creator.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
+import { LassoSelectionCreatorService } from '@app/tools/services/tools/lasso-selection-creator.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
-import { LassoSelectionCreatorService } from '../../tools/lasso-selection-creator.service';
 import { ClipboardService } from './clipboard.service';
 
 // tslint:disable:no-any
@@ -47,10 +47,7 @@ describe('ClipboardService', () => {
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
         TestBed.configureTestingModule({
             imports: [HotkeyModule.forRoot()],
-            providers: [
-                { provide: HotkeysService, useValue: hotkeysServiceStub },
-                { provide: LassoSelectionCreatorService },
-            ],
+            providers: [{ provide: HotkeysService, useValue: hotkeysServiceStub }, { provide: LassoSelectionCreatorService }],
         });
         service = TestBed.inject(ClipboardService);
 
@@ -131,7 +128,7 @@ describe('ClipboardService', () => {
     it('When making copy, if tool is lasso selection, should raise wasBeingManipulatedFlag', () => {
         const INITIAL_VALUE = false;
         const EXPECTED_VALUE = true;
-        
+
         const creatorService = TestBed.inject(LassoSelectionCreatorService);
         creatorService.wasBeingManipulated = INITIAL_VALUE;
         creatorService.selectionManipulator = ellipseSelectionManipulatorService;
@@ -141,7 +138,7 @@ describe('ClipboardService', () => {
         service.isEmpty = false;
         service.copyOwner = creatorService;
         service.paste();
-        
+
         expect(creatorService.wasBeingManipulated).toEqual(EXPECTED_VALUE);
     });
 

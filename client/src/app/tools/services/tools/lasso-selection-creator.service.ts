@@ -7,7 +7,7 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso/lasso-selection-helper.service';
 import { LassoSelectionManipulatorService } from '@app/tools/services/selection/lasso/lasso-selection-manipulator.service';
-import { SelectionCreatorService } from '../selection/selection-base/selection-creator.service';
+import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 
 @Injectable({
     providedIn: 'root',
