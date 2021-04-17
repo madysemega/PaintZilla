@@ -10,10 +10,10 @@ export class MagnetismService {
     constructor(private keyboardService: KeyboardService, public historyService: HistoryService) {
         this.registerKeyboardShortcuts();
         historyService.afterUndo(() => {
-        this.toggleGrid();
-        this.toggleGrid()});
-
-}
+            this.toggleGrid();
+            this.toggleGrid();
+        });
+    }
     isGrid: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);

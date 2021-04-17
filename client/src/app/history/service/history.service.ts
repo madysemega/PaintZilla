@@ -98,7 +98,6 @@ export class HistoryService {
         this.undoEventObservers.push(callback);
     }
 
-
     canUndo(): boolean {
         return this.past.length > 0 && !this.isLocked;
     }
