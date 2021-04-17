@@ -100,13 +100,14 @@ describe('PolygonService', () => {
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
         expect(drawPerimeterSpy).toHaveBeenCalled();
     });
-    it('drawPerimeter is not called is isToDrawPerimeter is false', () => {
+    it('drawPerimeter is not called if isToDrawPerimeter is false', () => {
+        const SET_PERIMETER_SPY = spyOn<any>(service, 'setPerimeterAttributes').and.callThrough();
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = true;
         service.isToDrawPerim = false;
         service.onMouseMove(mouseEvent);
         expect(drawServiceSpy.clearCanvas).toHaveBeenCalled();
-        expect(drawPerimeterSpy).not.toHaveBeenCalled();
+        expect(SET_PERIMETER_SPY).not.toHaveBeenCalled();
     });
     it(' finalize should call stroke on base canvas if shape type is ContouredAndFilled', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
