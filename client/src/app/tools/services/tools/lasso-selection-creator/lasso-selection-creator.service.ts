@@ -10,6 +10,7 @@ import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso
 import { LassoSelectionManipulatorService } from '@app/tools/services/selection/lasso/lasso-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import * as Constants from './lasso-selection-creator.constants';
+import { LassoSelectionSegment } from './lasso-selection-segment';
 
 @Injectable({
     providedIn: 'root',
@@ -62,6 +63,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         if (event.button === MouseButton.Left) {
             const realMousePosition = this.getPositionFromMouse(event);
             const ajustedMousePosition = this.shape.getFinalMousePosition(realMousePosition, this.isShiftDown);
+
+            if (!this.canAddSegment()) return;
 
             if (this.shape.isCloseableWith(ajustedMousePosition)) {
                 this.wasBeingManipulated = true;
@@ -199,5 +202,19 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         }
 
         return bottomRight;
+    }
+
+    private canAddSegment(): boolean {
+        const lastSegment = new LassoSelectionSegment(this.shape.vertices[this.shape.vertices.length - 1], this.lastMousePosition);
+
+        for (let i = 0; i < this.shape.vertices.length - 1; ++i) {
+            const segmentToCompare = new LassoSelectionSegment(this.shape.vertices[i], this.shape.vertices[i + 1]);
+
+            if (lastSegment.intersects(segmentToCompare)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
