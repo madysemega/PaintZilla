@@ -25,4 +25,5 @@ export class HandlerMemento {
         this.originalSelection.width = width;
         this.originalSelection.height = height;
     }
+    
 }
