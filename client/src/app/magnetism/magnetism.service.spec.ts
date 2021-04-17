@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { BehaviorSubject } from 'rxjs';
 import { MagnetismService } from './magnetism.service';
@@ -8,13 +9,16 @@ import { MagnetismService } from './magnetism.service';
 describe('MagnetismService', () => {
     let service: MagnetismService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
+    let historyServiceStub: jasmine.SpyObj<HistoryService>;
 
     beforeEach(() => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction']);
+        historyServiceStub = jasmine.createSpyObj('HistoryService', ['afterUndo']);
         TestBed.configureTestingModule({
             providers: [{ provide: KeyboardService, useValue: keyboardServiceStub }],
         });
         service = TestBed.inject(MagnetismService);
+        historyServiceStub.afterUndo.and.stub();
     });
 
     it('should be created', () => {
