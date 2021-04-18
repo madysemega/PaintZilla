@@ -10,7 +10,7 @@ import { UserActionRenderShape } from '@app/history/user-actions/user-action-ren
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { VerticesRenderer } from '@app/shapes/renderers/vertices-renderer';
 import { VerticesShape } from '@app/shapes/vertices-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';

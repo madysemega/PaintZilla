@@ -97,7 +97,7 @@ describe('StampService', () => {
     it('changeSize should set imageSize to argument value', () => {
         const SIZE = 15;
         service.changeSize(SIZE);
-        expect(service.imageSizeProperty.imageSize).toBe(SIZE);
+        expect(service.imageSize).toBe(SIZE);
     });
     it('changeAngle should set degree to argument value', () => {
         const NEW_NUMBER = 4;
