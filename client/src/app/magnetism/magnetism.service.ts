@@ -11,7 +11,7 @@ export class MagnetismService {
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    
+
     constructor(private keyboardService: KeyboardService, public historyService: HistoryService) {
         historyService.afterUndo(() => {
             this.toggleGrid();
