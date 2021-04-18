@@ -10,10 +10,8 @@ export class PipetteToolConfigurationComponent {
     @ViewChild('zoomCanvas', { static: false }) zoomCanvas: ElementRef<HTMLCanvasElement>;
     zoomctx: CanvasRenderingContext2D;
     constructor(public pipetteService: PipetteService) {}
-    // tslint:disable:use-lifecycle-interface
     ngAfterViewInit(): void {
         this.zoomctx = this.zoomCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.pipetteService.setCtx(this.zoomctx);
-        // this.pipetteService.zoomctx = this.zoomctx;
     }
 }
