@@ -31,7 +31,7 @@ describe('ResizingService', () => {
         keyboardServiceStub.restoreContext.and.stub();
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingServiceStub = new DrawingService(historyServiceStub);
-        magnetismServiceStub = new MagnetismService(keyboardServiceStub);
+        magnetismServiceStub = new MagnetismService(keyboardServiceStub, historyServiceStub);
         TestBed.configureTestingModule({
             imports: [BrowserAnimationsModule],
             providers: [

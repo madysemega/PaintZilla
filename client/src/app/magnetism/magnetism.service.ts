@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,8 +11,12 @@ export class MagnetismService {
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isIncrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    constructor(private keyboardService: KeyboardService) {
+    
+    constructor(private keyboardService: KeyboardService, public historyService: HistoryService) {
+        historyService.afterUndo(() => {
+            this.toggleGrid();
+            this.toggleGrid();
+        });
         this.registerKeyboardShortcuts();
     }
 
