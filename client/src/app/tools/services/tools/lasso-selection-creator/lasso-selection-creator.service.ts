@@ -26,7 +26,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         selectionManipulator: LassoSelectionManipulatorService,
         public selectionHelper: LassoSelectionHelperService,
         private clipboard: ClipboardService,
-        private history: HistoryService
+        private history: HistoryService,
     ) {
         super(drawingService, selectionManipulator, selectionHelper, clipboard);
         this.key = 'lasso-selection';
