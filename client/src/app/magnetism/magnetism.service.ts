@@ -13,7 +13,7 @@ export class MagnetismService {
     isDecrement: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor(private keyboardService: KeyboardService, public historyService: HistoryService) {
-        historyService.afterUndo(() => {
+        historyService.onUndo(() => {
             this.toggleGrid();
             this.toggleGrid();
         });

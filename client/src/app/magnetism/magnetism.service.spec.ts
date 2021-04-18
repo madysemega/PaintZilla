@@ -39,10 +39,10 @@ describe('MagnetismService', () => {
         service.toggleMagnetism();
         expect(service.isActivated.value).toEqual(false);
     });
-    it('should call toggleGrid on afterUndo emit', async () => {
+    it('should call toggleGrid on onUndo emit', async () => {
         let callbackCalled = false;
         userActions.forEach((userAction) => historyServiceStub.register(userAction));
-        historyServiceStub.afterUndo(() => (callbackCalled = true));
+        historyServiceStub.onUndo(() => (callbackCalled = true));
         await historyServiceStub.undo();
         expect(callbackCalled).toBeTruthy();
     });

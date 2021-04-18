@@ -10,7 +10,6 @@ export class HistoryService {
         this.past = new Array<IUserAction>();
         this.future = new Array<IUserAction>();
         this.undoEventObservers = new Array<() => void>();
-        this.afterUndoObservers = new Array<() => void>();
         this.isLocked = false;
 
         this.onDrawingModification = new EventEmitter();
@@ -19,7 +18,6 @@ export class HistoryService {
     onDrawingModification: EventEmitter<boolean>;
 
     private undoEventObservers: (() => void)[];
-    private afterUndoObservers: (() => void)[];
     private past: IUserAction[];
     private future: IUserAction[];
 
@@ -78,7 +76,6 @@ export class HistoryService {
             for (const action of this.past) {
                 action.apply();
             }
-            this.afterUndoObservers.forEach((observerCallback) => observerCallback());
             this.onDrawingModification.emit();
         }
     }
@@ -93,9 +90,6 @@ export class HistoryService {
 
             this.onDrawingModification.emit();
         }
-    }
-    afterUndo(callback: () => void): void {
-        this.undoEventObservers.push(callback);
     }
 
     canUndo(): boolean {
