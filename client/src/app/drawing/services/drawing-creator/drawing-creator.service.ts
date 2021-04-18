@@ -10,6 +10,7 @@ import { HistoryService } from '@app/history/service/history.service';
 export class DrawingCreatorService {
     constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
+    saveDrawingDialogRef: MatDialogRef<SaveDrawingDialogComponent>;
     drawingRestored: EventEmitter<void> = new EventEmitter<void>();
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
@@ -24,8 +25,11 @@ export class DrawingCreatorService {
         this.dialogRef.afterClosed().subscribe((result) => {
             if (result === 'discard') this.clearCanvasAndActions();
             if (result === 'save') {
-                this.dialogRef = this.dialog.open(SaveDrawingDialogComponent, { disableClose: true, panelClass: 'custom-modalbox' });
-                this.dialogRef.afterClosed().subscribe(() => {
+                this.saveDrawingDialogRef = this.dialog.open(SaveDrawingDialogComponent, {
+                    disableClose: true,
+                    panelClass: 'custom-modalbox',
+                });
+                this.saveDrawingDialogRef.afterClosed().subscribe(() => {
                     this.clearCanvasAndActions();
                 });
             }

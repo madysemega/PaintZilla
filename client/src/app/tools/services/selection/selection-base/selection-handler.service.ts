@@ -11,11 +11,11 @@ import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 export abstract class SelectionHandlerService {
     protected readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    selection: HTMLCanvasElement;
-    originalSelection: HTMLCanvasElement;
+    selection: HTMLCanvasElement = document.createElement('canvas');
+    originalSelection: HTMLCanvasElement = document.createElement('canvas');
 
-    selectionCtx: CanvasRenderingContext2D;
-    originalSelectionCtx: CanvasRenderingContext2D;
+    selectionCtx: CanvasRenderingContext2D = this.selection.getContext('2d') as CanvasRenderingContext2D;
+    originalSelectionCtx: CanvasRenderingContext2D = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
 
     topLeftRelativeToMiddle: Vec2 = { x: 0, y: 0 };
     offset: Vec2 = { x: 0, y: 0 };
@@ -32,12 +32,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {
-        this.selection = document.createElement('canvas');
-        this.selectionCtx = this.selection.getContext('2d') as CanvasRenderingContext2D;
-        this.originalSelection = document.createElement('canvas');
-        this.originalSelectionCtx = this.originalSelection.getContext('2d') as CanvasRenderingContext2D;
-    }
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {}
 
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
@@ -166,50 +161,78 @@ export abstract class SelectionHandlerService {
             this.originalTopLeftOnBaseCanvas.x !== topLeftOnDestination.x || this.originalTopLeftOnBaseCanvas.y !== topLeftOnDestination.y);
     }
 
-    createMemento(): HandlerMemento {
-        const memento: HandlerMemento = new HandlerMemento(CANVAS_SIZE, CANVAS_SIZE);
-
-        memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
-        memento.offset = { x: this.offset.x, y: this.offset.y };
+    initializeMementoSize(memento: HandlerMemento): void {
         memento.originalWidth = this.originalWidth;
         memento.originalHeight = this.originalHeight;
-        memento.hasBeenManipulated = true;
-        memento.needWhitePostDrawing = this.needWhitePostDrawing; //////
+    }
+
+    initializeMementoPositions(memento: HandlerMemento): void {
+        memento.topLeftRelativeToMiddle = { x: this.topLeftRelativeToMiddle.x, y: this.topLeftRelativeToMiddle.y };
         memento.originalTopLeftOnBaseCanvas = { x: this.originalTopLeftOnBaseCanvas.x, y: this.originalTopLeftOnBaseCanvas.y };
         memento.originalCenter = { x: this.originalCenter.x, y: this.originalCenter.y };
         this.originalVertices.forEach((value) => {
             memento.originalVertices.push({ x: value.x, y: value.y });
         });
+    }
 
+    initializeMementoFlags(memento: HandlerMemento): void {
+        memento.hasBeenManipulated = true;
+        memento.needWhitePostDrawing = this.needWhitePostDrawing;
+    }
+
+    initializeMementoResizingProperties(memento: HandlerMemento): void {
+        memento.offset = { x: this.offset.x, y: this.offset.y };
         memento.currentHorizontalScaling = this.currentHorizontalScaling;
         memento.currentVerticalScaling = this.currentVerticalScaling;
+    }
+
+    createMemento(): HandlerMemento {
+        const memento: HandlerMemento = new HandlerMemento(CANVAS_SIZE, CANVAS_SIZE);
+        this.initializeMementoSize(memento);
+        this.initializeMementoPositions(memento);
+        this.initializeMementoFlags(memento);
+        this.initializeMementoResizingProperties(memento);
         this.drawACanvasOnAnother(this.selection, memento.selectionCtx);
         this.drawACanvasOnAnother(this.originalSelection, memento.originalSelectionCtx);
-
         return memento;
     }
 
-    restoreFromMemento(memento: HandlerMemento): void {
-        this.clearAndResetAllCanvas();
-        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
-        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
-
-        this.topLeftRelativeToMiddle = {
-            x: memento.topLeftRelativeToMiddle.x,
-            y: memento.topLeftRelativeToMiddle.y,
-        };
-        this.offset = { x: memento.offset.x, y: memento.offset.y };
+    initializeSize(memento: HandlerMemento): void {
         this.originalWidth = memento.originalWidth;
         this.originalHeight = memento.originalHeight;
-        this.hasBeenManipulated = true;
-        this.needWhitePostDrawing = memento.needWhitePostDrawing; //////
+    }
+
+    initializePositions(memento: HandlerMemento): void {
         this.originalTopLeftOnBaseCanvas = { x: memento.originalTopLeftOnBaseCanvas.x, y: memento.originalTopLeftOnBaseCanvas.y };
         this.originalCenter = { x: memento.originalCenter.x, y: memento.originalCenter.y };
         this.originalVertices = [];
         memento.originalVertices.forEach((value) => {
             this.originalVertices.push({ x: value.x, y: value.y });
         });
+    }
+
+    initializeFlags(memento: HandlerMemento): void {
+        this.hasBeenManipulated = true;
+        this.needWhitePostDrawing = memento.needWhitePostDrawing; //////
+    }
+
+    initializeResizingProperties(memento: HandlerMemento): void {
+        this.offset = { x: memento.offset.x, y: memento.offset.y };
         this.currentHorizontalScaling = memento.currentHorizontalScaling;
         this.currentVerticalScaling = memento.currentVerticalScaling;
+    }
+
+    restoreFromMemento(memento: HandlerMemento): void {
+        this.clearAndResetAllCanvas();
+        this.drawACanvasOnAnother(memento.selection, this.selectionCtx);
+        this.drawACanvasOnAnother(memento.originalSelection, this.originalSelectionCtx);
+        this.topLeftRelativeToMiddle = {
+            x: memento.topLeftRelativeToMiddle.x,
+            y: memento.topLeftRelativeToMiddle.y,
+        };
+        this.initializeSize(memento);
+        this.initializePositions(memento);
+        this.initializeFlags(memento);
+        this.initializeResizingProperties(memento);
     }
 }

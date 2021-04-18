@@ -15,11 +15,11 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
-import { PolygonService } from '@app/tools/services/tools/polygon.service';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray/spray-service';
-import { StampService } from '@app/tools/services/tools/stamp.service';
+import { StampService } from '@app/tools/services/tools/stamp/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -86,6 +86,13 @@ export class ToolSelectorService {
         return this.tools.get(toolName)?.icon;
     }
 
+    deselect(): void {
+        const selectedTool: Tool = this.selectedTool.tool;
+        if (((selectedTool as unknown) as IDeselectableTool).onToolDeselect !== undefined) {
+            ((selectedTool as unknown) as IDeselectableTool).onToolDeselect();
+        }
+    }
+
     fromKeyboardShortcut(key: string): string | undefined {
         for (const toolData of this.tools) {
             const toolName = toolData[0];
@@ -123,7 +130,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+c',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -138,7 +145,7 @@ export class ToolSelectorService {
             trigger: 'ctrl+x',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;
@@ -153,7 +160,7 @@ export class ToolSelectorService {
             trigger: 'del',
             invoke: () => {
                 const isCurrentToolSelection =
-                    ['rectangle-selection', 'ellipse-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
+                    ['rectangle-selection', 'ellipse-selection', 'lasso-selection'].find((key) => key === this.selectedTool.tool.key) != undefined;
 
                 if (isCurrentToolSelection) {
                     const selectionService = this.selectedTool.tool as SelectionCreatorService;

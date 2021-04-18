@@ -10,7 +10,7 @@ import { UserActionRenderShape } from '@app/history/user-actions/user-action-ren
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { VerticesRenderer } from '@app/shapes/renderers/vertices-renderer';
 import { VerticesShape } from '@app/shapes/vertices-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
@@ -22,7 +22,7 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 })
 export class PencilService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
     private colourProperty: StrokeStyleProperty;
-    private strokeWidthProperty: StrokeWidthProperty;
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
     private shape: VerticesShape;
     private renderer: VerticesRenderer;
 
@@ -31,10 +31,7 @@ export class PencilService extends ResizableTool implements ISelectableTool, IDe
         this.key = 'pencil';
 
         this.colourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
-
         this.shape = new VerticesShape([]);
 
         this.renderer = new VerticesRenderer(this.shape, [

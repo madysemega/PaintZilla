@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StampService } from '@app/tools/services/tools/stamp.service';
+import { StampService } from '@app/tools/services/tools/stamp/stamp.service';
 
 @Component({
     selector: 'app-stamp',

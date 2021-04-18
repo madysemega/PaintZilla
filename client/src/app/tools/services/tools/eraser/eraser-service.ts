@@ -10,7 +10,7 @@ import { UserActionRenderShape } from '@app/history/user-actions/user-action-ren
 import { EraserShape } from '@app/shapes/eraser-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { EraserRenderer } from '@app/shapes/renderers/eraser-renderer';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';

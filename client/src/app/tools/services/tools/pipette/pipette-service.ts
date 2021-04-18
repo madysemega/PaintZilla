@@ -8,7 +8,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { VerticesShape } from '@app/shapes/vertices-shape';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
@@ -25,9 +25,9 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     mouseRightDown: boolean = false;
 
     zoomctx: CanvasRenderingContext2D;
-    couleur: Uint8ClampedArray;
-    cerclePreview: ImageData;
-    outputCouleur: string;
+    colors: Uint8ClampedArray;
+    circlePreview: ImageData;
+    colorOutput: string;
 
     constructor(drawingService: DrawingService, private colourService: ColourService, public history: HistoryService) {
         super(drawingService);
@@ -69,14 +69,14 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
             this.mouseDownCoord = this.getPositionFromMouse(event);
 
             this.history.isLocked = true;
-            this.colourService.setPrimaryColour(Colour.hexToRgb(this.outputCouleur));
+            this.colourService.setPrimaryColour(Colour.hexToRgb(this.colorOutput));
         } else if (this.mouseRightDown) {
             this.clearVertices();
 
             this.mouseDownCoord = this.getPositionFromMouse(event);
 
             this.history.isLocked = true;
-            this.colourService.setSecondaryColour(Colour.hexToRgb(this.outputCouleur));
+            this.colourService.setSecondaryColour(Colour.hexToRgb(this.colorOutput));
         }
     }
 
@@ -125,21 +125,21 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
     }
 
     getCouleur(mousePosition: Vec2): void {
-        this.couleur = this.drawingService.baseCtx.getImageData(
+        this.colors = this.drawingService.baseCtx.getImageData(
             mousePosition.x - Constants.RECTANGLE_WIDTH,
             mousePosition.y - Constants.RECTANGLE_WIDTH,
             1,
             1,
         ).data;
-        const R = Colour.toHex(this.couleur[0]);
-        const G = Colour.toHex(this.couleur[1]);
-        const B = Colour.toHex(this.couleur[2]);
+        const R = Colour.toHex(this.colors[0]);
+        const G = Colour.toHex(this.colors[1]);
+        const B = Colour.toHex(this.colors[2]);
 
-        this.outputCouleur = '#' + R + G + B;
+        this.colorOutput = '#' + R + G + B;
     }
 
     extractAPortionOfCanvas(mousePosition: Vec2): void {
-        this.cerclePreview = this.drawingService.baseCtx.getImageData(
+        this.circlePreview = this.drawingService.baseCtx.getImageData(
             mousePosition.x - Constants.ZOOM_CENTER_POS,
             mousePosition.y - Constants.ZOOM_CENTER_POS,
             Constants.ZOOM_WIDTH + 1,
@@ -171,7 +171,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.zoomctx.lineWidth = Constants.RECTANGLE_WIDTH;
         this.zoomctx.arc(Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2, 0, 2 * Math.PI);
         this.zoomctx.clip();
-        this.zoomctx.putImageData(this.cerclePreview, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2);
+        this.zoomctx.putImageData(this.circlePreview, Constants.ZOOM_SIZE / 2, Constants.ZOOM_SIZE / 2);
         this.zoomctx.imageSmoothingEnabled = false;
         this.zoomctx.drawImage(
             this.zoomctx.canvas,

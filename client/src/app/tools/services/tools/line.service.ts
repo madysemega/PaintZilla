@@ -13,7 +13,7 @@ import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';
@@ -24,35 +24,27 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
     providedIn: 'root',
 })
 export class LineService extends ResizableTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private lineShape: LineShape;
+    private lineShape: LineShape = new LineShape([]);
     private lineShapeRenderer: LineShapeRenderer;
     private lineJointsRenderer: LineJointsRenderer;
     private lastMousePosition: Vec2;
 
-    private isShiftDown: boolean;
+    private isShiftDown: boolean = false;
 
-    lineType: LineType;
+    lineType: LineType = LineType.WITHOUT_JOINTS;
 
-    private strokeWidthProperty: StrokeWidthProperty;
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
     private strokeColourProperty: StrokeStyleProperty;
     private jointsColourProperty: FillStyleProperty;
 
     constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
         this.key = 'line';
-
-        this.initialize();
-
-        this.isShiftDown = false;
-
-        this.lineType = LineType.WITHOUT_JOINTS;
         this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+        this.initialize();
     }
 
     private initialize(): void {
-        this.lineShape = new LineShape([]);
-
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.strokeColourProperty = new StrokeStyleProperty(this.colourService.getPrimaryColour());
         this.jointsColourProperty = new FillStyleProperty(this.colourService.getSecondaryColour());
 
@@ -66,11 +58,6 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
 
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.strokeColourProperty.colour = colour));
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.jointsColourProperty.colour = colour));
-
-        this.isShiftDown = false;
-
-        this.lineType = LineType.WITHOUT_JOINTS;
-        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
     }
 
     onToolSelect(): void {

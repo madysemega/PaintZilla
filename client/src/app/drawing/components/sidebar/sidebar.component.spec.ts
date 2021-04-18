@@ -44,11 +44,11 @@ import { LineService } from '@app/tools/services/tools/line.service';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
 import { PencilService } from '@app/tools/services/tools/pencil-service';
 import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
-import { PolygonService } from '@app/tools/services/tools/polygon.service';
+import { PolygonService } from '@app/tools/services/tools/polygon/polygon.service';
 import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rectangle-selection-creator.service';
 import { RectangleService } from '@app/tools/services/tools/rectangle.service';
 import { SprayService } from '@app/tools/services/tools/spray/spray-service';
-import { StampService } from '@app/tools/services/tools/stamp.service';
+import { StampService } from '@app/tools/services/tools/stamp/stamp.service';
 import { TextService } from '@app/tools/services/tools/text/text.service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { SidebarComponent } from './sidebar.component';
@@ -186,6 +186,7 @@ describe('SidebarComponent', () => {
             lassoSelectionManipulatorService,
             lassoSelectionHelperService,
             clipboardService,
+            historyServiceStub,
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
@@ -349,5 +350,11 @@ describe('SidebarComponent', () => {
     it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
         component.saveDrawing();
         expect(saveDrawingServiceSpy.openSaveDrawingDialog).toHaveBeenCalled();
+    });
+
+    it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
+        const deselectSpy = spyOn(component.toolSelectorService, 'deselect').and.callThrough();
+        component.deselect();
+        expect(deselectSpy).toHaveBeenCalled();
     });
 });

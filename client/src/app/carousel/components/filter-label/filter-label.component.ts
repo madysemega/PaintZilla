@@ -3,7 +3,6 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable } from 'rxjs';
 // source: https://material.angular.io/components/chips/examples
 @Component({
     selector: 'app-filter-label',
@@ -12,49 +11,33 @@ import { Observable } from 'rxjs';
 })
 export class FilterLabelComponent {
     @Input()
-    availableLabels: string[];
-    retainedLabels: string[];
+    availableLabels: string[] = [];
+    retainedLabels: string[] = [];
 
-    separatorKeysCodes: number[];
-    labelCtrl: FormControl;
-    filteredLabels: Observable<string[]>;
-
-    removable: boolean;
-    selectable: boolean;
-    isAvailable: boolean;
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    labelCtrl: FormControl = new FormControl();
+    removable: boolean = true;
+    selectable: boolean = true;
+    isAvailable: boolean = true;
 
     @Output()
     filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
     filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
 
-    constructor() {
-        this.availableLabels = [];
-        this.retainedLabels = [];
-
-        this.separatorKeysCodes = [ENTER, COMMA];
-        this.labelCtrl = new FormControl();
-
-        this.removable = true;
-        this.selectable = true;
-        this.isAvailable = true;
-    }
-
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
     addFilter(event: MatChipInputEvent): void {
+        this.isAvailable = false;
         const LABEL = event.value.trim();
-        if (LABEL) {
-            if (this.availableLabels.indexOf(LABEL) < 0) {
-                this.isAvailable = false;
-            } else if (this.retainedLabels.indexOf(LABEL) < 0) {
-                this.retainedLabels.push(LABEL);
-                this.filterAddEvent.emit(LABEL);
-                this.isAvailable = true;
-            }
-        }
         if (event.input) event.input.value = '';
+        if (!LABEL) return;
+        if (this.retainedLabels.indexOf(LABEL) < 0 && !(this.availableLabels.indexOf(LABEL) < 0)) {
+            this.retainedLabels.push(LABEL);
+            this.filterAddEvent.emit(LABEL);
+            this.isAvailable = true;
+        }
         this.labelCtrl.setValue(null);
     }
     removeFilter(label: string): void {

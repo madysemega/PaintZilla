@@ -1,12 +1,13 @@
 import { ENTER } from '@angular/cdk/keycodes';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import * as Constants from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
+import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
 @Component({
@@ -15,6 +16,7 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
     styleUrls: ['./save-drawing-dialog.component.scss'],
 })
 export class SaveDrawingDialogComponent implements OnInit {
+    @ViewChild('labelInput') input: ElementRef<HTMLInputElement>;
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
@@ -26,7 +28,10 @@ export class SaveDrawingDialogComponent implements OnInit {
         private serverService: ServerService,
         private drawingService: DrawingService,
         private snackBar: MatSnackBar,
-    ) {}
+        private keyboardService: KeyboardService,
+    ) {
+        this.handleKeyboardContext();
+    }
 
     ngOnInit(): void {
         this.formGroup = new FormGroup({
@@ -38,13 +43,17 @@ export class SaveDrawingDialogComponent implements OnInit {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const labelName = event.value;
-
         if (this.formGroup.controls.labelForm.valid && labelName !== '') {
             const LABEL_NOT_PRESENT = -1;
             if (this.labels.indexOf(labelName) === LABEL_NOT_PRESENT) this.labels.push(labelName);
 
             input.value = '';
         }
+    }
+
+    addLabelOnBlur(event: FocusEvent): void {
+        const matChipEvent: MatChipInputEvent = { input: this.input.nativeElement, value: this.input.nativeElement.value };
+        this.addLabel(matChipEvent);
     }
 
     removeLabel(label: string): void {
@@ -77,11 +86,17 @@ export class SaveDrawingDialogComponent implements OnInit {
 
     openSnackBar(message: string): void {
         this.snackBar.open(message, 'Ok', {
-            duration: Constants.SNACK_BAR_DURATION,
+            duration: SNACK_BAR_DURATION,
             horizontalPosition: 'left',
             verticalPosition: 'bottom',
         });
         this.currentlySaving = false;
         this.matDialogRef.close();
+    }
+
+    private handleKeyboardContext(): void {
+        this.keyboardService.saveContext();
+        this.keyboardService.context = 'modal-save';
+        this.matDialogRef.afterClosed().subscribe(() => this.keyboardService.restoreContext());
     }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { HistoryService } from '@app/history/service/history.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
@@ -27,6 +28,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         selectionManipulator: LassoSelectionManipulatorService,
         public selectionHelper: LassoSelectionHelperService,
         private clipboard: ClipboardService,
+        private history: HistoryService,
     ) {
         super(drawingService, selectionManipulator, selectionHelper, clipboard);
         this.key = 'lasso-selection';
@@ -40,7 +42,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
     onMouseDown(event: MouseEvent): void {
         this.mouseDown = event.button === MouseButton.Left;
-
+        this.history.isLocked = true;
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.onMouseDown(event);
         }
@@ -122,6 +124,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
                 this.drawSelectionOutline();
                 break;
             case 'Escape':
+                this.history.isLocked = false;
                 this.shape.clear();
                 this.drawingService.clearCanvas(this.drawingService.previewCtx);
                 break;

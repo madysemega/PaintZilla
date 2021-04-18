@@ -135,44 +135,51 @@ describe('DrawingCreatorService', () => {
         expect(matDialogSpy.open).not.toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should call emit if changes are discarded and canvas is not empty', () => {
+    it('createNewDrawing() should call clearCanvasAndActions() if changes are discarded and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of('discard'));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
-        spyOn(service.drawingRestored, 'emit');
+        const clearCanvasAndActions = spyOn(service, 'clearCanvasAndActions').and.callThrough();
         service.createNewDrawing();
-        expect(service.drawingRestored.emit).toHaveBeenCalled();
-        expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
+        expect(clearCanvasAndActions).toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should clear undo-redo history if changes are discarded and canvas is not empty', () => {
+    it('createNewDrawing() should not call clearCanvasAndActions() if changes are discarded and canvas is empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of('discard'));
-        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(true);
         drawingServiceSpy.canvasIsEmpty = false;
+        const clearCanvasAndActions = spyOn(service, 'clearCanvasAndActions').and.callThrough();
         service.createNewDrawing();
-        expect(historyServiceStub.clear).toHaveBeenCalled();
+        expect(clearCanvasAndActions).not.toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should call emit if changes are saved and canvas is not empty', () => {
+    it('createNewDrawing() should call clearCanvasAndActions() if changes are saved and canvas is not empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of('save'));
         spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
         drawingServiceSpy.canvasIsEmpty = false;
-        spyOn(service.drawingRestored, 'emit');
+        const clearCanvasAndActions = spyOn(service, 'clearCanvasAndActions').and.callThrough();
         service.createNewDrawing();
-        expect(service.drawingRestored.emit).toHaveBeenCalled();
-        expect(drawingServiceSpy.canvasIsEmpty).toEqual(true);
+        expect(clearCanvasAndActions).toHaveBeenCalled();
     });
 
-    it('createNewDrawing() should clear undo-redo history if changes are saved and canvas is not empty', () => {
+    it('createNewDrawing() should not call clearCanvasAndActions() if changes are saved and canvas is empty', () => {
         matDialogRefSpy.afterClosed.and.returnValue(of('save'));
-        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(true);
         drawingServiceSpy.canvasIsEmpty = false;
+        const clearCanvasAndActions = spyOn(service, 'clearCanvasAndActions').and.callThrough();
         service.createNewDrawing();
-        expect(historyServiceStub.clear).toHaveBeenCalled();
+        expect(clearCanvasAndActions).not.toHaveBeenCalled();
     });
 
     it('areDialogsOpen should return false if there are no dialogs', () => {
         const areDialogsOpen: boolean = service.dialogsAreOpen();
         expect(areDialogsOpen).toEqual(false);
+    });
+
+    it('clearCanvasAndActions() should clear undo-redo history', () => {
+        spyOn(drawingServiceSpy, 'isCanvasEmpty').and.returnValue(false);
+        drawingServiceSpy.canvasIsEmpty = false;
+        service.clearCanvasAndActions();
+        expect(historyServiceStub.clear).toHaveBeenCalled();
     });
 });

@@ -22,11 +22,13 @@
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
+                    #labelInput
                     matInput
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="addLabel($event)"
                     formControlName="labelForm"
+                    (blur)="addLabelOnBlur($event)"
                 />
                 <mat-error *ngIf="formGroup.controls.labelForm.invalid">Invalide</mat-error>
             </mat-chip-list>

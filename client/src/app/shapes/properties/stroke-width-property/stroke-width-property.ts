@@ -1,8 +1,7 @@
-import { ShapeProperty } from './shape-property';
+import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import * as Constants from '@app/shapes/properties/stroke-width-property/stroke-width-constants';
 
 export class StrokeWidthProperty extends ShapeProperty {
-    static readonly DEFAULT_STROKE_WIDTH: number = 1;
-
     apply(ctx: CanvasRenderingContext2D): void {
         ctx.lineWidth = this.strokeWidth;
     }
@@ -11,7 +10,7 @@ export class StrokeWidthProperty extends ShapeProperty {
         return new StrokeWidthProperty(this.strokeWidth);
     }
 
-    constructor(public strokeWidth: number = StrokeWidthProperty.DEFAULT_STROKE_WIDTH) {
+    constructor(public strokeWidth: number = Constants.DEFAULT_STROKE_WIDTH) {
         super();
     }
 }
