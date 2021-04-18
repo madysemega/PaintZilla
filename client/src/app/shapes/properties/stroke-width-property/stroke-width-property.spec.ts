@@ -1,4 +1,5 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
+import * as Constants from '@app/shapes/properties/stroke-width-property/stroke-width-constants';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 
 describe('StrokeWidthProperty', () => {
@@ -23,6 +24,6 @@ describe('StrokeWidthProperty', () => {
 
     it('if instantiated without any width given, width should be default', () => {
         strokeWidthProperty = new StrokeWidthProperty();
-        expect(strokeWidthProperty.strokeWidth).toEqual(StrokeWidthProperty.DEFAULT_STROKE_WIDTH);
+        expect(strokeWidthProperty.strokeWidth).toEqual(Constants.DEFAULT_STROKE_WIDTH);
     });
 });
