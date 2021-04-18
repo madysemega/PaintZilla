@@ -11,28 +11,31 @@ export class EraserRenderer extends ShapeRenderer<EraserShape> {
     draw(ctx: CanvasRenderingContext2D): void {
         this.shape.vertices.forEach((point, index) => {
             if (index === 0) {
-                ctx.beginPath();
-                ctx.rect(point.x, point.y, 0, 0);
-                ctx.stroke();
+                this.drawIndex0(ctx, point);
             } else {
-                const previousPoint = this.shape.vertices[index - 1];
-
-                const isMovementRightward = point.x > previousPoint.x;
-                const isMovementDownward = point.y > previousPoint.y;
-
-                if (isMovementRightward && isMovementDownward) {
-                    this.drawRightwardPolygon(ctx, previousPoint, point, this.shape.strokeWidth);
-                } else if (!isMovementRightward && isMovementDownward) {
-                    this.drawLeftwardPolygon(ctx, previousPoint, point, this.shape.strokeWidth);
-                } else if (!isMovementRightward && !isMovementDownward) {
-                    this.drawRightwardPolygon(ctx, point, previousPoint, this.shape.strokeWidth);
-                } else {
-                    this.drawLeftwardPolygon(ctx, point, previousPoint, this.shape.strokeWidth);
-                }
+                this.deciderDraw(ctx, point, index);
             }
         });
     }
-
+    drawIndex0(ctx: CanvasRenderingContext2D, point: Vec2): void {
+        ctx.beginPath();
+        ctx.rect(point.x, point.y, 0, 0);
+        ctx.stroke();
+    }
+    deciderDraw(ctx: CanvasRenderingContext2D, point: Vec2, index: number): void {
+        const previousPoint = this.shape.vertices[index - 1];
+        const isMovementRightward = point.x > previousPoint.x;
+        const isMovementDownward = point.y > previousPoint.y;
+        if (isMovementRightward && isMovementDownward) {
+            this.drawRightwardPolygon(ctx, previousPoint, point, this.shape.strokeWidth);
+        } else if (!isMovementRightward && isMovementDownward) {
+            this.drawLeftwardPolygon(ctx, previousPoint, point, this.shape.strokeWidth);
+        } else if (!isMovementRightward && !isMovementDownward) {
+            this.drawRightwardPolygon(ctx, point, previousPoint, this.shape.strokeWidth);
+        } else {
+            this.drawLeftwardPolygon(ctx, point, previousPoint, this.shape.strokeWidth);
+        }
+    }
     drawRightwardPolygon(ctx: CanvasRenderingContext2D, topLeft: Vec2, bottomRight: Vec2, width: number): void {
         const HALF_LINE_WIDTH = width / 2;
 
