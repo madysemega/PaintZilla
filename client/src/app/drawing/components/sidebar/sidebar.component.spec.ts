@@ -351,4 +351,10 @@ describe('SidebarComponent', () => {
         component.saveDrawing();
         expect(saveDrawingServiceSpy.openSaveDrawingDialog).toHaveBeenCalled();
     });
+
+    it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
+        const deselectSpy = spyOn(component.toolSelectorService, 'deselect').and.callThrough();
+        component.deselect();
+        expect(deselectSpy).toHaveBeenCalled();
+    });
 });
