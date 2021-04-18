@@ -13,7 +13,7 @@ import { Drawing } from '@common/models/drawing';
 })
 export class ImageNavigationComponent {
     labels: string[];
-    retainedLabels: string[];
+    private retainedLabels: string[];
     drawings: Drawing[];
 
     isLoadingDrawings: boolean;

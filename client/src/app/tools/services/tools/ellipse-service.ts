@@ -25,11 +25,11 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
     providedIn: 'root',
 })
 export class EllipseService extends ShapeTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    private shape: ContouredBoxShape;
+    private shape: ContouredBoxShape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
     private strokeRenderer: EllipseStrokeRenderer;
     private fillRenderer: EllipseFillRenderer;
 
-    private strokeWidthProperty: StrokeWidthProperty;
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
     private strokeStyleProperty: StrokeStyleProperty;
     private fillStyleProperty: FillStyleProperty;
 
@@ -42,18 +42,11 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
-
-        this.initializeShape();
         this.initializeProperties();
         this.initializeRenderers();
     }
 
-    private initializeShape(): void {
-        this.shape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
-    }
-
     private initializeProperties(): void {
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
         this.strokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
         this.fillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
 

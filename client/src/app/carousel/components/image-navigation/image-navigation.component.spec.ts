@@ -72,17 +72,17 @@ describe('ImageNavigationComponent', () => {
 
     it('removeFilter should call filterDrawings on all labels if retainedLabels is emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
-        component.retainedLabels.push('test');
-        component.removeFilter(component.retainedLabels.indexOf('test'));
-        expect(component.retainedLabels.length).toBe(0);
+        component['retainedLabels'].push('test');
+        component.removeFilter(component['retainedLabels'].indexOf('test'));
+        expect(component['retainedLabels'].length).toBe(0);
         expect(FILTER_SPY).toHaveBeenCalled();
     });
 
     it('removeFilter should call filterDrawings if retainedElements is not emptied', () => {
         const FILTER_SPY: jasmine.Spy<any> = spyOn<any>(component, 'filterDrawings').and.callThrough();
-        component.retainedLabels.push('test1');
-        component.retainedLabels.push('test2');
-        component.removeFilter(component.retainedLabels.indexOf('test1'));
+        component['retainedLabels'].push('test1');
+        component['retainedLabels'].push('test2');
+        component.removeFilter(component['retainedLabels'].indexOf('test1'));
         expect(FILTER_SPY).toHaveBeenCalled();
     });
 

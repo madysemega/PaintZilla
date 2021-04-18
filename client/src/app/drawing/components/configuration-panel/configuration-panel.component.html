@@ -27,7 +27,7 @@
         <app-paint-bucket-tool-configuration class="vertical" *ngIf="selectedToolName === 'paint-bucket'"></app-paint-bucket-tool-configuration>
     </div>
 
-    <mat-divider></mat-divider>
+    <mat-divider *ngIf='toolSelectorService.getActiveSelectionTool()==undefined'></mat-divider>
 
     <div>
         <mat-label>Sélection</mat-label>
@@ -39,7 +39,6 @@
     <mat-divider></mat-divider>
 
     <div>
-        <mat-label>Magnétisme</mat-label>
         <app-magnetism></app-magnetism>
     </div>
 
