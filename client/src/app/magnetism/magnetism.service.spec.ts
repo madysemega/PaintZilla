@@ -10,7 +10,7 @@ import { MagnetismService } from './magnetism.service';
 describe('MagnetismService', () => {
     let service: MagnetismService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
-    let historyServiceStub: HistoryService
+    let historyServiceStub: HistoryService;
     let userActions: jasmine.SpyObj<IUserAction>[];
     const NB_USER_ACTIONS_TO_GENERATE = 5;
 
