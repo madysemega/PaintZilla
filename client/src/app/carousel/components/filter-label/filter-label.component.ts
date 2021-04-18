@@ -30,15 +30,13 @@ export class FilterLabelComponent {
 
     addFilter(event: MatChipInputEvent): void {
         const LABEL = event.value.trim();
-        if (LABEL) {
-            if (this.availableLabels.indexOf(LABEL) < 0) {
-                this.isAvailable = false;
-            } else if (this.retainedLabels.indexOf(LABEL) < 0) {
-                this.retainedLabels.push(LABEL);
-                this.filterAddEvent.emit(LABEL);
-                this.isAvailable = true;
-            }
+        if (!LABEL) return;
+        this.isAvailable = this.availableLabels.indexOf(LABEL) < 0;
+        if (this.isAvailable && this.retainedLabels.indexOf(LABEL) < 0) {
+            this.retainedLabels.push(LABEL);
+            this.filterAddEvent.emit(LABEL);
         }
+
         if (event.input) event.input.value = '';
         this.labelCtrl.setValue(null);
     }

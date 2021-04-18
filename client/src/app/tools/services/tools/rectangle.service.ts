@@ -13,7 +13,7 @@ import { BoxShape } from '@app/shapes/box-shape';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { RectangleFillRenderer } from '@app/shapes/renderers/rectangle-fill-renderer';
 import { RectangleStrokeRenderer } from '@app/shapes/renderers/rectangle-stroke-renderer';
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';

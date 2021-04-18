@@ -13,7 +13,7 @@ import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineType } from '@app/shapes/types/line-type';

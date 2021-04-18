@@ -1,5 +1,5 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
-import { StrokeWidthProperty } from './stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 
 describe('StrokeWidthProperty', () => {
     let strokeWidthProperty: StrokeWidthProperty;

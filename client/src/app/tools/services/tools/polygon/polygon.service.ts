@@ -13,7 +13,7 @@ import { UserActionRenderShape } from '@app/history/user-actions/user-action-ren
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
-import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property';
+import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { PolygonFillRenderer } from '@app/shapes/renderers/polygon-fill-renderer';
 import { PolygonStrokeRenderer } from '@app/shapes/renderers/polygon-stroke-renderer';
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';
