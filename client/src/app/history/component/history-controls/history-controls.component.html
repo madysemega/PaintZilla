@@ -1,5 +1,3 @@
-<mat-icon class="history-control" [class.disabled]="!history.canUndo()"
-         (click)="history.undo()" matTooltip="Annuler (Ctrl+Z)">undo</mat-icon>
+<mat-icon class="history-control" [class.disabled]="!history.canUndo()" (click)="history.undo()" matTooltip="Annuler (Ctrl+Z)">undo</mat-icon>
 
-<mat-icon class="history-control" [class.disabled]="!history.canRedo()"
-         (click)="history.redo()" matTooltip="Refaire (Ctrl+Shift+Z)">redo</mat-icon>
+<mat-icon class="history-control" [class.disabled]="!history.canRedo()" (click)="history.redo()" matTooltip="Refaire (Ctrl+Shift+Z)">redo</mat-icon>
