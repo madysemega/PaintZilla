@@ -78,11 +78,7 @@ export class MagnetismComponent {
     drawGrid(): void {
         for (let i = 0; i < this.drawingService.canvasSize.x; i = i + this.gridCellSize) {
             this.drawingService.gridCtx.moveTo(i, 0);
-            if (this.opacite === Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
-                this.drawingService.gridCtx.strokeStyle = '#000000FF';
-            } else {
-                this.drawingService.gridCtx.strokeStyle = '#000000' + this.opacite;
-            }
+            this.setOpacity();
             this.drawingService.gridCtx.lineTo(i, this.drawingService.canvasSize.y);
         }
         for (let i = 0; i < this.drawingService.canvasSize.y; i = i + this.gridCellSize) {
@@ -91,6 +87,13 @@ export class MagnetismComponent {
         }
         this.drawingService.gridCtx.stroke();
         this.draw = true;
+    }
+    setOpacity(): void {
+        if (this.opacite === Constants.DEFAULT_MAX_OPACITY_AND_SIZE) {
+            this.drawingService.gridCtx.strokeStyle = Constants.BLACKHEX;
+        } else {
+            this.drawingService.gridCtx.strokeStyle = Constants.OPACITYHEX + this.opacite;
+        }
     }
     notifyGrid(): void {
         this.magnetismService.toggleGrid();
