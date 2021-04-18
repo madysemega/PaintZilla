@@ -186,6 +186,7 @@ describe('SidebarComponent', () => {
             lassoSelectionManipulatorService,
             lassoSelectionHelperService,
             clipboardService,
+            historyServiceStub
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
