@@ -51,9 +51,9 @@
     <div>
         <mat-label>Grille</mat-label>
     </div>
-    <div class="center">
+    <div class="center spacing">
         <mat-slide-toggle id="toggleGrid" [ngModel]="isGridActivated"
-            (ngModelChange)="isGridActivated = $event; notifyGrid(); toggleGrid();"></mat-slide-toggle>
+            (ngModelChange)="isGridActivated = $event; notifyGrid(); toggleGrid();" matTooltip="Grille (G)"></mat-slide-toggle>
     </div>
     <div id="grid-configuration" *ngIf='isGridActivated'>
         <div class="vertical">
