@@ -1,1 +1,1 @@
-export const DEFAULT_CONTEXT: string = 'default';
+export const DEFAULT_CONTEXT = 'default';

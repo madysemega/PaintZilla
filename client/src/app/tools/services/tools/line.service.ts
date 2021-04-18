@@ -9,6 +9,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { LineShape } from '@app/shapes/line-shape/line-shape';
+import { DEFAULT_JOINTS_DIAMETER } from '@app/shapes/line-shape/line-shape.constants';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
@@ -20,7 +21,6 @@ import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
-import{ DEFAULT_JOINTS_DIAMETER } from '@app/shapes/line-shape/line-shape.constants';
 @Injectable({
     providedIn: 'root',
 })

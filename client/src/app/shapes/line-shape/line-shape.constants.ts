@@ -1,1 +1,1 @@
-export const DEFAULT_JOINTS_DIAMETER: number = 5;
+export const DEFAULT_JOINTS_DIAMETER = 5;

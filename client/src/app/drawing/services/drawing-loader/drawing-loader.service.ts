@@ -11,7 +11,6 @@ import { ServerService } from '@app/server-communication/service/server.service'
     providedIn: 'root',
 })
 export class DrawingLoaderService {
-    
     constructor(private drawingService: DrawingService, private server: ServerService, private dialog: MatDialog, private snackBar: MatSnackBar) {}
 
     loadFromServer(imageId: string): void {

@@ -4,11 +4,9 @@ import { Message } from '@common/communication/message';
 import { BASE_URL } from './index.constants';
 import { IndexService } from './index.service';
 
-
 describe('IndexService', () => {
     let httpMock: HttpTestingController;
     let service: IndexService;
-
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -19,7 +17,6 @@ describe('IndexService', () => {
         // BASE_URL is private so we need to access it with its name as a key
         // Try to avoid this syntax which violates encapsulation
         // tslint:disable: no-string-literal
-
     });
 
     afterEach(() => {

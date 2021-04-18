@@ -1,9 +1,8 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { Shape } from '../shape';
+import { Shape } from '@app/shapes/shape';
 import { DEFAULT_JOINTS_DIAMETER } from './line-shape.constants';
 
 export class LineShape extends Shape {
-    
     constructor(public vertices: Vec2[], public jointsDiameter: number = DEFAULT_JOINTS_DIAMETER) {
         super();
     }

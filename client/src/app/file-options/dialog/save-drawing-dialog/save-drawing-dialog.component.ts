@@ -6,10 +6,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SNACK_BAR_DURATION } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { SEPARATOR_KEY_CODES } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
-import { SEPARATOR_KEY_CODES } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
 
 @Component({
     selector: 'app-save-drawing-dialog',

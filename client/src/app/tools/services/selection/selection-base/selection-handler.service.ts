@@ -9,7 +9,6 @@ import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
     providedIn: 'root',
 })
 export abstract class SelectionHandlerService {
-
     selection: HTMLCanvasElement = document.createElement('canvas');
     originalSelection: HTMLCanvasElement = document.createElement('canvas');
 

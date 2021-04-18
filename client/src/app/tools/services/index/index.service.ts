@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Message } from '@common/communication/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BASE_URL} from './index.constants'
+import { BASE_URL } from './index.constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class IndexService {
-    
     constructor(private http: HttpClient) {}
 
     basicGet(): Observable<Message> {

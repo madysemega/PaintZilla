@@ -4,11 +4,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
+import { CONTAINER_HEIGHT, CONTAINER_WIDTH } from '@app/carousel/components/image-details/image-details.constants';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { DiscardChangesModalData } from '@app/carousel/interfaces/discard-changes-modal-data';
 import { HistoryService } from '@app/history/service/history.service';
 import { Drawing } from '@common/models/drawing';
-import { CONTAINER_WIDTH, CONTAINER_HEIGHT } from '@app/carousel/components/image-details/image-details.constants'
 
 @Component({
     selector: 'app-image-details',
@@ -30,7 +30,7 @@ export class ImageDetailsComponent {
     imageContainerWidth: number = CONTAINER_WIDTH;
     imageContainerHeight: number = CONTAINER_HEIGHT;
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) { }
+    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {}
 
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.drawing);

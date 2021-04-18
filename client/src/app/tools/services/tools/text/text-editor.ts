@@ -24,8 +24,8 @@ export class TextEditor {
     private textAlignmentProperty: TextAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
 
     private showCursor: boolean;
-    private cursor: TextCursor  = new TextCursor(this.shape, this.DEFAULT_CURSOR_POSITION);
-    private cursorRenderer: TextCursorRenderer  = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
+    private cursor: TextCursor = new TextCursor(this.shape, this.DEFAULT_CURSOR_POSITION);
+    private cursorRenderer: TextCursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
 
     constructor(private ctx: TextEditorContext) {
         this.initialize();

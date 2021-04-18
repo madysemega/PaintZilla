@@ -10,8 +10,6 @@ export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-      
-
         const center: Vec2 = {
             x: (this.shape.topLeft.x + this.shape.bottomRight.x) / 2,
             y: (this.shape.topLeft.y + this.shape.bottomRight.y) / 2,
