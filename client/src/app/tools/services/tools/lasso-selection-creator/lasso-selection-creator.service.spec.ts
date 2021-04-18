@@ -12,6 +12,7 @@ import { LassoSelectionCreatorService } from './lasso-selection-creator.service'
 
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
+// tslint:disable:no-any
 describe('LassoSelectionCreatorService', () => {
     let service: LassoSelectionCreatorService;
 

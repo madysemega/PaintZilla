@@ -117,6 +117,5 @@ export class StampService extends ShapeTool implements ISelectableTool {
         this.shape.src = (event.target as HTMLImageElement).src;
         this.shape.image = new Image();
         this.shape.image.src = this.shape.src;
-        console.log(this.toBorder[0]);
     }
 }
