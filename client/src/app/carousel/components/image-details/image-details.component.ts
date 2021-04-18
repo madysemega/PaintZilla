@@ -8,6 +8,7 @@ import { ImageNavigationComponent } from '@app/carousel/components/image-navigat
 import { DiscardChangesModalData } from '@app/carousel/interfaces/discard-changes-modal-data';
 import { HistoryService } from '@app/history/service/history.service';
 import { Drawing } from '@common/models/drawing';
+import { CONTAINER_WIDTH, CONTAINER_HEIGHT } from '@app/carousel/components/image-details/image-details.constants'
 
 @Component({
     selector: 'app-image-details',
@@ -24,18 +25,12 @@ export class ImageDetailsComponent {
 
     @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
 
-    @Output() delete: EventEmitter<string>;
+    @Output() delete: EventEmitter<string> = new EventEmitter();
 
-    imageContainerWidth: number;
-    imageContainerHeight: number;
-    readonly CONTAINER_WIDTH: number = 150;
-    readonly CONTAINER_HEIGHT: number = 150;
+    imageContainerWidth: number = CONTAINER_WIDTH;
+    imageContainerHeight: number = CONTAINER_HEIGHT;
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
-        this.delete = new EventEmitter();
-        this.imageContainerWidth = this.CONTAINER_WIDTH;
-        this.imageContainerHeight = this.CONTAINER_HEIGHT;
-    }
+    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) { }
 
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.drawing);

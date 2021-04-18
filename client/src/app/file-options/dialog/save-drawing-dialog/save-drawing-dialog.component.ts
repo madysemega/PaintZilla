@@ -1,4 +1,3 @@
-import { ENTER } from '@angular/cdk/keycodes';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +9,8 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { ServerService } from '@app/server-communication/service/server.service';
 import * as RegularExpressions from '@common/validation/regular.expressions';
+import { SEPARATOR_KEY_CODES } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.constant';
+
 @Component({
     selector: 'app-save-drawing-dialog',
     templateUrl: './save-drawing-dialog.component.html',
@@ -17,11 +18,11 @@ import * as RegularExpressions from '@common/validation/regular.expressions';
 })
 export class SaveDrawingDialogComponent implements OnInit {
     @ViewChild('labelInput') input: ElementRef<HTMLInputElement>;
+    SEPARATORS: number[] = SEPARATOR_KEY_CODES;
     currentlySaving: boolean = false;
     imageName: string;
     formGroup: FormGroup;
     labels: string[] = [];
-    readonly separatorKeysCodes: number[] = [ENTER];
 
     constructor(
         public matDialogRef: MatDialogRef<SaveDrawingDialogComponent>,

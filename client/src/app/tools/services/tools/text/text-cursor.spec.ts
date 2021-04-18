@@ -1,4 +1,4 @@
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { TextCursor } from './text-cursor';
 
 // tslint:disable: no-string-literal

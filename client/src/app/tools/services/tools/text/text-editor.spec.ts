@@ -2,7 +2,7 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { TextEditor } from './text-editor';
 
 // tslint:disable:no-any

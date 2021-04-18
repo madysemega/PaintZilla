@@ -1,4 +1,4 @@
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 
 export class TextCursor {
     constructor(private shape: TextShape, public position: number) {}

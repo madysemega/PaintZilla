@@ -1,4 +1,5 @@
 import { Vec2 } from '@app/app/classes/vec2';
+import { MAX_DEGREES } from '@app/common-constants';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
@@ -9,7 +10,7 @@ export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-        const FULL_CIRCLE_DEG = 360;
+      
 
         const center: Vec2 = {
             x: (this.shape.topLeft.x + this.shape.bottomRight.x) / 2,
@@ -22,7 +23,7 @@ export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
         };
 
         ctx.beginPath();
-        ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, FULL_CIRCLE_DEG);
+        ctx.ellipse(center.x, center.y, radii.x, radii.y, 0, 0, MAX_DEGREES);
         ctx.fill();
     }
 

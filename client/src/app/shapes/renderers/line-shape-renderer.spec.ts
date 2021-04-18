@@ -1,6 +1,6 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { LineShape } from '@app/shapes/line-shape';
+import { LineShape } from '@app/shapes/line-shape/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { LineShapeRenderer } from './line-shape-renderer';
 

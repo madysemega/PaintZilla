@@ -1,17 +1,15 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { Shape } from './shape';
+import { Shape } from '../shape';
+import { DEFAULT_TEXT } from '@app/tools/services/tools/text/text.constants'
+import * as Constants from './text-shape.constants'
 
 export class TextShape extends Shape {
-    static readonly DEFAULT_TEXT: string = '';
-    static readonly DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
-    static readonly DEFAULT_FONT_SIZE: number = 12;
-    static readonly DEFAULT_FONT_NAME: string = 'Arial';
-
+    
     constructor(
-        public text: string = TextShape.DEFAULT_TEXT,
-        public position: Vec2 = TextShape.DEFAULT_POSITION,
-        public fontSize: number = TextShape.DEFAULT_FONT_SIZE,
-        public fontName: string = TextShape.DEFAULT_FONT_NAME,
+        public text: string = DEFAULT_TEXT,
+        public position: Vec2 = Constants.DEFAULT_POSITION,
+        public fontSize: number = Constants.DEFAULT_FONT_SIZE,
+        public fontName: string = Constants.DEFAULT_FONT_NAME,
         public textAlignment: CanvasTextAlign = 'left',
     ) {
         super();

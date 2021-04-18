@@ -1,23 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { KeyboardAction } from './keyboard-action';
+import { DEFAULT_CONTEXT } from './keyboard.constants'
 
 @Injectable({
     providedIn: 'root',
 })
 export class KeyboardService {
-    static readonly DEFAULT_CONTEXT: string = 'default';
 
-    context: string;
-    private savedContextStack: string[];
+    context: string = DEFAULT_CONTEXT;
+    private savedContextStack: string[] = new Array<string>();
+    private registeredShortcutNames: string[] = new Array<string>();
 
-    private registeredShortcutNames: string[];
-
-    constructor(private hotkeysService: HotkeysService) {
-        this.context = KeyboardService.DEFAULT_CONTEXT;
-        this.savedContextStack = new Array<string>();
-        this.registeredShortcutNames = new Array<string>();
-    }
+    constructor(private hotkeysService: HotkeysService) { }
 
     registerAction(action: KeyboardAction): void {
         const actionHasAlreadyBeenRegistered = this.registeredShortcutNames.find((name) => name === action.uniqueName) !== undefined;
@@ -44,6 +39,6 @@ export class KeyboardService {
 
     restoreContext(): void {
         const lastContext = this.savedContextStack.pop();
-        this.context = lastContext === undefined ? KeyboardService.DEFAULT_CONTEXT : lastContext;
+        this.context = lastContext === undefined ? DEFAULT_CONTEXT : lastContext;
     }
 }
