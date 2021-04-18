@@ -52,7 +52,6 @@ export class SaveDrawingDialogComponent implements OnInit {
     }
 
     addLabelOnBlur(event: FocusEvent): void {
-        console.log(event);
         const matChipEvent: MatChipInputEvent = { input: this.input.nativeElement, value: this.input.nativeElement.value };
         this.addLabel(matChipEvent);
     }
