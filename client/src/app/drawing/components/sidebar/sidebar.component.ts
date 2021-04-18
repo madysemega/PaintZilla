@@ -15,12 +15,13 @@ export class SidebarComponent implements OnInit {
     toolNames: string[];
 
     constructor(
-        private toolSelectorService: ToolSelectorService,
+        public toolSelectorService: ToolSelectorService,
         private drawingCreatorService: DrawingCreatorService,
         private exportDrawingService: ExportDrawingService,
         private saveDrawingService: SaveDrawingService,
         public drawingService: DrawingService,
     ) {
+        
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 
@@ -61,5 +62,9 @@ export class SidebarComponent implements OnInit {
 
     saveDrawing(): void {
         this.saveDrawingService.openSaveDrawingDialog();
+    }
+
+    deselect(): void {
+        this.toolSelectorService.deselect();
     }
 }
