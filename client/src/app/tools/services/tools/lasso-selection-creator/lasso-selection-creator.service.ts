@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { LineShape } from '@app/shapes/line-shape';
 import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
@@ -93,6 +94,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         this.shape.vertices.push(ajustedMousePosition);
         this.drawSelectionOutline();
         this.shape.vertices.pop();
+
+        this.drawingService.setCursorType(this.canAddSegment() ? CursorType.CROSSHAIR : CursorType.NOT_ALLOWED);
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -205,7 +208,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
     }
 
     private canAddSegment(): boolean {
-        const lastSegment = new LassoSelectionSegment(this.shape.vertices[this.shape.vertices.length - 1], this.lastMousePosition);
+        const ajustedMousePosition = this.shape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown);
+        const lastSegment = new LassoSelectionSegment(this.shape.vertices[this.shape.vertices.length - 1], ajustedMousePosition);
 
         for (let i = 0; i < this.shape.vertices.length - 1; ++i) {
             const segmentToCompare = new LassoSelectionSegment(this.shape.vertices[i], this.shape.vertices[i + 1]);

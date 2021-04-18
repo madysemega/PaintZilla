@@ -1,4 +1,5 @@
 import { LassoSelectionSegment } from './lasso-selection-segment';
+import { LassoSelectionSegmentBounds } from './lasso-selection-segment-bounds';
 
 describe('LassoSelectionSegment', () => {
     const DEFAULT_FIRST_VERTEX = { x: 6, y: 3 };
@@ -166,5 +167,66 @@ describe('LassoSelectionSegment', () => {
 
         expect(segment.topLeft).toEqual(EXPECTED_TOP_LEFT);
         expect(segment.bottomRight).toEqual(EXPECTED_BOTTOM_RIGHT);
+    });
+
+    it('For vertices: { (3, 0), (0, 6) }, top-left should be (0, 0) and bottom-right should be (3, 6)', () => {
+        const FIRST_VERTEX = { x: 3, y: 0 };
+        const SECOND_VERTEX = { x: 0, y: 6 };
+        const EXPECTED_TOP_LEFT = { x: 0, y: 0 };
+        const EXPECTED_BOTTOM_RIGHT = { x: 3, y: 6 };
+
+        segment.firstVertex = FIRST_VERTEX;
+        segment.secondVertex = SECOND_VERTEX;
+
+        expect(segment.topLeft).toEqual(EXPECTED_TOP_LEFT);
+        expect(segment.bottomRight).toEqual(EXPECTED_BOTTOM_RIGHT);
+    });
+
+    it('For vertices: { (0, 6), (3, 0) }, top-left should be (0, 0) and bottom-right should be (3, 6)', () => {
+        const FIRST_VERTEX = { x: 0, y: 6 };
+        const SECOND_VERTEX = { x: 3, y: 0 };
+        const EXPECTED_TOP_LEFT = { x: 0, y: 0 };
+        const EXPECTED_BOTTOM_RIGHT = { x: 3, y: 6 };
+
+        segment.firstVertex = FIRST_VERTEX;
+        segment.secondVertex = SECOND_VERTEX;
+
+        expect(segment.topLeft).toEqual(EXPECTED_TOP_LEFT);
+        expect(segment.bottomRight).toEqual(EXPECTED_BOTTOM_RIGHT);
+    });
+
+    it('Segments { (0, 0), (6, 0) } and { (0, 1), (6, 1) } should not intersect', () => {
+        const firstVertex = new LassoSelectionSegmentBounds({ x: 0, y: 0 }, { x: 6, y: 0 });
+        const secondVertex = new LassoSelectionSegmentBounds({ x: 0, y: 1 }, { x: 6, y: 1 });
+
+        expect(firstVertex.intersects(secondVertex)).toBeFalse();
+    });
+
+    it('Segments { (0, 0), (6, 0) } and { (3, 1), (3, -1) } should intersect', () => {
+        const firstVertex = new LassoSelectionSegmentBounds({ x: 0, y: 0 }, { x: 6, y: 0 });
+        const secondVertex = new LassoSelectionSegmentBounds({ x: 3, y: 1 }, { x: 3, y: -1 });
+
+        expect(firstVertex.intersects(secondVertex)).toBeTrue();
+    });
+
+    it('Segments { (0, 0), (6, 0) } and { (0, 1), (6, -1) } should intersect', () => {
+        const firstVertex = new LassoSelectionSegmentBounds({ x: 0, y: 0 }, { x: 6, y: 0 });
+        const secondVertex = new LassoSelectionSegmentBounds({ x: 3, y: 1 }, { x: 3, y: -1 });
+
+        expect(firstVertex.intersects(secondVertex)).toBeTrue();
+    });
+
+    it('Segments { (0, 0), (6, 0) } and { (6, 1), (0, -1) } should intersect', () => {
+        const firstVertex = new LassoSelectionSegmentBounds({ x: 0, y: 0 }, { x: 6, y: 0 });
+        const secondVertex = new LassoSelectionSegmentBounds({ x: 3, y: 1 }, { x: 3, y: -1 });
+
+        expect(firstVertex.intersects(secondVertex)).toBeTrue();
+    });
+
+    it('Segments { (0, 0), (6, 0) } and { (12, 1), (12, -1) } should not intersect', () => {
+        const firstVertex = new LassoSelectionSegmentBounds({ x: 0, y: 0 }, { x: 6, y: 0 });
+        const secondVertex = new LassoSelectionSegmentBounds({ x: 3, y: 1 }, { x: 3, y: -1 });
+
+        expect(firstVertex.intersects(secondVertex)).toBeFalse();
     });
 });
