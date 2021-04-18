@@ -1,11 +1,11 @@
-<div class="center spacing">
-    <mat-slide-toggle id="toggle" matTooltip="Magnétisme (M)" [ngModel]="isMagnetismActivated"
-        (ngModelChange)="isMagnetismActivated = $event; notifyManipulators();">
-    </mat-slide-toggle>
-</div>
+<div id="magnetisme" *ngIf='this.toolSelector.getActiveSelectionTool()!=undefined'>
+    <mat-label>Magnétisme</mat-label>
+    <div class="center spacing">
+        <mat-slide-toggle id="toggle" matTooltip="Magnétisme (M)" [ngModel]="isMagnetismActivated"
+            (ngModelChange)="isMagnetismActivated = $event; notifyManipulators();">
+        </mat-slide-toggle>
+    </div>
 
-
-<div id="magnetisme">
     <div *ngIf="isMagnetismActivated == true">
         <p id="text">
             Point d'ancrage:
@@ -45,26 +45,28 @@
     </div>
 </div>
 
-<mat-divider></mat-divider>
+<mat-divider *ngIf='this.toolSelector.getActiveSelectionTool()!=undefined'></mat-divider>
 
 <div id="grille">
     <div>
         <mat-label>Grille</mat-label>
     </div>
-    <div class="center">
+    <div class="center spacing">
         <mat-slide-toggle id="toggleGrid" [ngModel]="isGridActivated"
-            (ngModelChange)="isGridActivated = $event; notifyGrid(); toggleGrid();"></mat-slide-toggle>
+            (ngModelChange)="isGridActivated = $event; notifyGrid(); toggleGrid();" matTooltip="Grille (G)"></mat-slide-toggle>
     </div>
-    <div class="vertical">
-        <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
-        <mat-slider thumbLabel matTooltip="Largeur de la grille" matTooltipPosition="right" step="5" min="10" max="100"
-            [value]="gridCellSize" (valueChange)="gridCellSizeChange($event)">
-        </mat-slider>
-    </div>
-    <div class="vertical">
-        <mat-label class="margin-bottom-small">Opacite de la grille</mat-label>
-        <mat-slider thumbLabel matTooltip="Opacite de la grille" matTooltipPosition="right" step="5" min="10" max="100"
-            [value]="opacite" (valueChange)="opaciteChange($event)">
-        </mat-slider>
+    <div id="grid-configuration" *ngIf='isGridActivated'>
+        <div class="vertical">
+            <mat-label class="margin-bottom-small">Largeur de la grille</mat-label>
+            <mat-slider thumbLabel matTooltip="Largeur de la grille" matTooltipPosition="right" step="5" min="10"
+                max="100" [value]="gridCellSize" (valueChange)="gridCellSizeChange($event)">
+            </mat-slider>
+        </div>
+        <div class="vertical">
+            <mat-label class="margin-bottom-small">Opacite de la grille</mat-label>
+            <mat-slider thumbLabel matTooltip="Opacite de la grille" matTooltipPosition="right" step="5" min="10"
+                max="100" [value]="opacite" (valueChange)="opaciteChange($event)">
+            </mat-slider>
+        </div>
     </div>
 </div>

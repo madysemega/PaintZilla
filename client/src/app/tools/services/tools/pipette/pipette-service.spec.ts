@@ -89,23 +89,23 @@ describe('PipetteService', () => {
     it(' mouseDown should set mouseDownCoord to correct position', () => {
         const expectedResult: Vec2 = { x: mouseEvent.clientX - canvasPosition.x, y: mouseEvent.clientY - canvasPosition.y };
         service.mouseInCanvas = true;
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.onMouseDown(mouseEvent);
         expect(service.mouseDownCoord).toEqual(expectedResult);
     });
 
     it(' mouseDown should set mouseDown property to true on left click', () => {
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.onMouseDown(mouseEvent);
         expect(service.mouseDown).toEqual(true);
     });
     it(' mouseDown should set mouseDownRight property to true on right click', () => {
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.onMouseDown(mouseEventRight);
         expect(service.mouseRightDown).toEqual(true);
     });
     it(' mouseDown should not set mouseDownRight property to true on other click', () => {
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.onMouseDown(mouseEventOther);
         expect(service.mouseRightDown).toEqual(false);
     });
@@ -135,21 +135,21 @@ describe('PipetteService', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
         drawServiceSpy.canvasSize = { x: 100, y: 100 };
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.zoomctx = baseCtxStub;
         drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
-        expect(service.cerclePreview).toBeDefined();
+        expect(service.circlePreview).toBeDefined();
     });
     it(' onMouseMove should not define cerclePreview if canvas is small', () => {
         service.mouseDownCoord = { x: 0, y: 0 };
         service.mouseDown = false;
         drawServiceSpy.canvasSize = { x: 0, y: 0 };
-        service.outputCouleur = '';
+        service.colorOutput = '';
         service.zoomctx = baseCtxStub;
         drawServiceSpy.baseCtx = baseCtxStub;
         service.onMouseMove(mouseEvent);
-        expect(service.cerclePreview).not.toBeDefined();
+        expect(service.circlePreview).not.toBeDefined();
     });
 
     it('when stroke width changes, it should be reflected in the stroke width property', () => {

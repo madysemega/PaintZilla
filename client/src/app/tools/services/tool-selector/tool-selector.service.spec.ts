@@ -16,6 +16,7 @@ import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 // tslint:disable:max-line-length
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
+
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
@@ -143,6 +144,43 @@ describe('ToolSelectorService', () => {
         service.selectTool('pencil');
 
         expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call onToolDeselect on current tool when deselect is called if currentTool implements IDeselectableTool', () => {
+        service.selectTool('line');
+        const onToolDeselectSpy = spyOn(service.getRegisteredTools().get('line')?.tool as LineService, 'onToolDeselect');
+
+        service.deselect();
+
+        expect(onToolDeselectSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call onToolDeselect on current tool when deselect is called if currentTool implements IDeselectableTool', () => {
+        const nonDeselectableTool = jasmine.createSpyObj('Tool', [
+            'onKeyDown',
+            'onKeyUp',
+            'onMouseDown',
+            'onMouseUp',
+            'onMouseClick',
+            'onMouseDoubleClick',
+            'onMouseMove',
+            'onMouseLeave',
+            'onMouseEnter',
+            'getPositionFromMouse',
+        ]);
+
+        service['tools'].set('test', {
+            displayName: 'Test',
+            icon: 'test',
+            keyboardShortcut: 't',
+            tool: nonDeselectableTool as Tool,
+        });
+
+        service.selectTool('test');
+        service.deselect();
+
+        const returnValue = service.selectTool('pencil');
+        expect(returnValue).toBeTrue();
     });
 
     it('When deselecting a non-deselectable tool, action should still be valid, but do nothing', () => {

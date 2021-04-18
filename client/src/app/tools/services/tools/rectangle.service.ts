@@ -25,42 +25,32 @@ import { ISelectableTool } from '@app/tools/classes/selectable-tool';
     providedIn: 'root',
 })
 export class RectangleService extends ShapeTool implements ISelectableTool, IDeselectableTool, ILineWidthChangeListener {
-    startingPos: Vec2;
-    width: number;
-    height: number;
-    shiftDown: boolean;
-    lastMouseCoords: Vec2;
+    startingPos: Vec2 = { x: 0, y: 0 };
+    width: number = 0;
+    height: number = 0;
+    shiftDown: boolean = false;
+    lastMouseCoords: Vec2 = { x: 0, y: 0 };
 
-    private shape: ContouredBoxShape;
+    private shape: ContouredBoxShape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
     private strokeRenderer: RectangleStrokeRenderer;
     private fillRenderer: RectangleFillRenderer;
 
     private strokeStyleProperty: StrokeStyleProperty;
     private fillStyleProperty: FillStyleProperty;
-    private strokeWidthProperty: StrokeWidthProperty;
+    private strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
 
     constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
         super(drawingService);
-        this.startingPos = { x: 0, y: 0 };
-        this.width = 0;
-        this.height = 0;
-        this.shiftDown = false;
-        this.lastMouseCoords = { x: 0, y: 0 };
         this.shapeType = ShapeType.Contoured;
         this.key = 'rectangle';
-
         this.initialize();
     }
 
     private initialize(): void {
         this.fillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
         this.strokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
-        this.strokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
-
         this.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.fillStyleProperty.colour = colour));
         this.colourService.secondaryColourChanged.subscribe((colour: Colour) => (this.strokeStyleProperty.colour = colour));
-
-        this.shape = new ContouredBoxShape({ x: 0, y: 0 }, { x: 0, y: 0 }, this.lineWidth);
         this.strokeRenderer = new RectangleStrokeRenderer(this.shape, [this.strokeStyleProperty, this.strokeWidthProperty]);
         this.fillRenderer = new RectangleFillRenderer(this.shape, [this.fillStyleProperty]);
     }

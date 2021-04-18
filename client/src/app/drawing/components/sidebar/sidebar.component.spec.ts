@@ -186,6 +186,7 @@ describe('SidebarComponent', () => {
             lassoSelectionManipulatorService,
             lassoSelectionHelperService,
             clipboardService,
+            historyServiceStub,
         );
 
         lineServiceStub = new LineService(drawingStub, colourServiceStub, historyServiceStub);
@@ -349,5 +350,11 @@ describe('SidebarComponent', () => {
     it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
         component.saveDrawing();
         expect(saveDrawingServiceSpy.openSaveDrawingDialog).toHaveBeenCalled();
+    });
+
+    it('saveDrawing should call saveDrawingService.openSaveDrawingDialog', () => {
+        const deselectSpy = spyOn(component.toolSelectorService, 'deselect').and.callThrough();
+        component.deselect();
+        expect(deselectSpy).toHaveBeenCalled();
     });
 });

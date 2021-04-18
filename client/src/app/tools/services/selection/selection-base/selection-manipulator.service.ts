@@ -32,7 +32,7 @@ export abstract class SelectionManipulatorService extends Tool {
     isReversedX: boolean = false;
     isReversedY: boolean = false;
     arrowKeyDown: boolean[] = [false, false, false, false];
-    subscriptions: Subscription[] = [];
+    subscriptions: Subscription[] = new Array<Subscription>(Constants.NUMBER_OF_ARROW_TYPES);
     isContinousMovementByKeyboardOn: boolean[] = [false, false, false, false];
 
     abstract drawSelectionOutline(): void;
@@ -45,7 +45,6 @@ export abstract class SelectionManipulatorService extends Tool {
     ) {
         super(drawingService);
         this.key = 'selection-manipulator';
-        this.subscriptions = new Array<Subscription>(Constants.NUMBER_OF_ARROW_TYPES);
     }
 
     onMouseDown(event: MouseEvent): void {
