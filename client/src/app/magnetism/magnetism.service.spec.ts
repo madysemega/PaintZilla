@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HistoryService } from '@app/history/service/history.service';
+import { IUserAction } from '@app/history/user-actions/user-action';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { BehaviorSubject } from 'rxjs';
 import { MagnetismService } from './magnetism.service';
@@ -9,7 +10,9 @@ import { MagnetismService } from './magnetism.service';
 describe('MagnetismService', () => {
     let service: MagnetismService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
-    let historyServiceStub: jasmine.SpyObj<HistoryService>;
+    let historyServiceStub: HistoryService
+    let userActions: jasmine.SpyObj<IUserAction>[];
+    const NB_USER_ACTIONS_TO_GENERATE = 5;
 
     beforeEach(() => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction']);
@@ -18,7 +21,12 @@ describe('MagnetismService', () => {
             providers: [{ provide: KeyboardService, useValue: keyboardServiceStub }],
         });
         service = TestBed.inject(MagnetismService);
-        historyServiceStub.afterUndo.and.stub();
+        historyServiceStub = TestBed.inject(HistoryService);
+        userActions = new Array<jasmine.SpyObj<IUserAction>>();
+        for (let i = 0; i < NB_USER_ACTIONS_TO_GENERATE; ++i) {
+            const userAction = jasmine.createSpyObj('IUserAction', ['apply']);
+            userActions.push(userAction);
+        }
     });
 
     it('should be created', () => {
@@ -30,6 +38,13 @@ describe('MagnetismService', () => {
         service.toggleMagnetism();
         service.toggleMagnetism();
         expect(service.isActivated.value).toEqual(false);
+    });
+    it('should call toggleGrid on afterUndo emit', async () => {
+        let callbackCalled = false;
+        userActions.forEach((userAction) => historyServiceStub.register(userAction));
+        historyServiceStub.afterUndo(() => (callbackCalled = true));
+        await historyServiceStub.undo();
+        expect(callbackCalled).toBeTruthy();
     });
 
     it("Pressing the 'm' key should toggle magnetism", () => {

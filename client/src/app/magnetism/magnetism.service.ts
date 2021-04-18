@@ -8,11 +8,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MagnetismService {
     constructor(private keyboardService: KeyboardService, public historyService: HistoryService) {
-        this.registerKeyboardShortcuts();
         historyService.afterUndo(() => {
             this.toggleGrid();
             this.toggleGrid();
         });
+        this.registerKeyboardShortcuts();
     }
     isGrid: BehaviorSubject<boolean> = new BehaviorSubject(false);
     isActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
