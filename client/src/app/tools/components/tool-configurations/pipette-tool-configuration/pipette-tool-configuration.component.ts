@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { PipetteService } from '@app/tools/services/tools/pipette/pipette-service';
 
 @Component({
@@ -6,7 +6,7 @@ import { PipetteService } from '@app/tools/services/tools/pipette/pipette-servic
     templateUrl: './pipette-tool-configuration.component.html',
     styleUrls: ['./pipette-tool-configuration.component.scss'],
 })
-export class PipetteToolConfigurationComponent {
+export class PipetteToolConfigurationComponent implements AfterViewInit {
     @ViewChild('zoomCanvas', { static: false }) zoomCanvas: ElementRef<HTMLCanvasElement>;
     zoomctx: CanvasRenderingContext2D;
     constructor(public pipetteService: PipetteService) {}
