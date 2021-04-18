@@ -27,8 +27,11 @@ export class LassoSelectionSegment {
     }
 
     intersects(other: LassoSelectionSegment): boolean {
-        const areParallel = (isNaN(this.slope) && isNaN(other.slope)) || this.slope - other.slope === 0;
-        if (areParallel) return this.evaluateColinearIntersection(this, other);
+        const areParallel = this.slope === other.slope;
+        if (areParallel) {
+            console.log(this.evaluateColinearIntersection(this, other));
+            return this.evaluateColinearIntersection(this, other);
+        }
 
         const isOtherVertical = Math.abs(other.firstVertex.x - other.secondVertex.x) <= Constants.EPSILON;
         if (isOtherVertical) return this.evaluateVerticalIntersection(other, this);

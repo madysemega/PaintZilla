@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ClipboardService } from '@app/tools/services//selection/clipboard/clipboard.service';
@@ -21,7 +22,7 @@ describe('LassoSelectionCreatorService', () => {
     let clipboardStub: jasmine.SpyObj<ClipboardService>;
 
     beforeEach(() => {
-        drawingStub = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
+        drawingStub = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setCursorType']);
 
         manipulatorStub = jasmine.createSpyObj('LassoSelectionManipulatorService', [
             'onMouseDown',
@@ -171,6 +172,14 @@ describe('LassoSelectionCreatorService', () => {
         expect(service.onMouseClick(event)).toBe(void 0);
     });
 
+    it('On mouse click, if cannot add segment, should do nothing', () => {
+        const event = { button: MouseButton.Left } as MouseEvent;
+        spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 0, y: 0 });
+        spyOn<any>(service, 'canAddSegment').and.returnValue(false);
+        spyOn(service, 'isSelectionBeingManipulated').and.returnValue(false);
+        expect(service.onMouseClick(event)).toBe(void 0);
+    });
+
     it('When mouse moves, if manipulating, event should be propagated to manipulator', () => {
         spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 0, y: 0 });
         spyOn(service, 'isSelectionBeingManipulated').and.returnValue(true);
@@ -200,6 +209,26 @@ describe('LassoSelectionCreatorService', () => {
         service.onMouseMove({} as MouseEvent);
 
         expect(drawOutlineSpy).toHaveBeenCalled();
+    });
+
+    it('When mouse moved, if can add segment, cursor should be CROSSHAIR', () => {
+        spyOn(service, 'drawSelectionOutline').and.stub();
+        spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 0, y: 0 });
+        spyOn(service, 'isSelectionBeingManipulated').and.returnValue(false);
+        spyOn<any>(service, 'canAddSegment').and.returnValue(true);
+
+        service.onMouseMove({} as MouseEvent);
+        expect(drawingStub.setCursorType).toHaveBeenCalledWith(CursorType.CROSSHAIR);
+    });
+
+    it('When mouse moved, if cannot add segment, cursor should be NOT_ALLOWED', () => {
+        spyOn(service, 'drawSelectionOutline').and.stub();
+        spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 0, y: 0 });
+        spyOn(service, 'isSelectionBeingManipulated').and.returnValue(false);
+        spyOn<any>(service, 'canAddSegment').and.returnValue(false);
+
+        service.onMouseMove({} as MouseEvent);
+        expect(drawingStub.setCursorType).toHaveBeenCalledWith(CursorType.NOT_ALLOWED);
     });
 
     it('On key down, if manipulating, event should be propagated to manipulator', () => {
@@ -425,5 +454,17 @@ describe('LassoSelectionCreatorService', () => {
         ];
 
         expect(service['findBottomRight'](VERTICES)).toEqual(EXPECTED_BOTTOM_RIGHT);
+    });
+
+    it('Can add segment if segment to add intersects with no other segment', () => {
+        service['shape'].vertices.push({ x: 3, y: 0 }, { x: 3, y: 9 }, { x: 9, y: 9 });
+        service.lastMousePosition = { x: 12, y: 9 };
+        expect(service['canAddSegment']()).toBeTrue();
+    });
+
+    it('Cannot add segment if segment to add intersects with another segment', () => {
+        service['shape'].vertices.push({ x: 3, y: 0 }, { x: 3, y: 9 }, { x: 9, y: 9 });
+        service.lastMousePosition = { x: 0, y: 3 };
+        expect(service['canAddSegment']()).toBeFalse();
     });
 });
