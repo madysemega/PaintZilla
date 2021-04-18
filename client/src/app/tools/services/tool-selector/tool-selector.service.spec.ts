@@ -17,7 +17,6 @@ import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 // tslint:disable:max-file-line-count
 // tslint:disable:no-string-literal
 
-
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
 
@@ -157,7 +156,6 @@ describe('ToolSelectorService', () => {
     });
 
     it('should not call onToolDeselect on current tool when deselect is called if currentTool implements IDeselectableTool', () => {
-        
         const nonDeselectableTool = jasmine.createSpyObj('Tool', [
             'onKeyDown',
             'onKeyUp',
@@ -170,7 +168,7 @@ describe('ToolSelectorService', () => {
             'onMouseEnter',
             'getPositionFromMouse',
         ]);
-        
+
         service['tools'].set('test', {
             displayName: 'Test',
             icon: 'test',

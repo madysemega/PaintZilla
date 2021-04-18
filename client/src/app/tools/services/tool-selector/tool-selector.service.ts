@@ -86,10 +86,10 @@ export class ToolSelectorService {
         return this.tools.get(toolName)?.icon;
     }
 
-    deselect(): void{
-        const selectedTool = this.selectedTool.tool as any;
-        if(selectedTool.onToolDeselect !== undefined){
-            selectedTool.onToolDeselect();
+    deselect(): void {
+        const selectedTool: Tool = this.selectedTool.tool;
+        if (((selectedTool as unknown) as IDeselectableTool).onToolDeselect !== undefined) {
+            ((selectedTool as unknown) as IDeselectableTool).onToolDeselect();
         }
     }
 

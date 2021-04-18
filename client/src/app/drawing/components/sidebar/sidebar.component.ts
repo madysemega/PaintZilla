@@ -21,7 +21,6 @@ export class SidebarComponent implements OnInit {
         private saveDrawingService: SaveDrawingService,
         public drawingService: DrawingService,
     ) {
-        
         this.toolNames = Array.from(this.toolSelectorService.getRegisteredTools().keys());
     }
 
