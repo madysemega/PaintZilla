@@ -1,6 +1,7 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { BoxShape } from '@app/shapes/box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { EllipseStrokeRenderer } from './ellipse-stroke-renderer';
 
@@ -18,11 +19,13 @@ describe('EllipseStrokeRenderer', () => {
     let ctxEllipseSpy: jasmine.Spy<any>;
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxStrokeSpy: jasmine.Spy<any>;
+    let mathsHelper: MathsHelper;
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         shape = new BoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT);
-        renderer = new EllipseStrokeRenderer(shape, properties);
+        mathsHelper = new MathsHelper();
+        renderer = new EllipseStrokeRenderer(shape, properties, mathsHelper);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;

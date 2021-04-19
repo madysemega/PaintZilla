@@ -5,6 +5,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { LassoSelectionHandlerService } from './lasso-selection-handler.service';
@@ -23,6 +24,7 @@ describe('LassoSelectionManipulatorService', () => {
     let handler: LassoSelectionHandlerService;
     let helper: LassoSelectionHelperService;
     let manipulator: LassoSelectionManipulatorService;
+    let mathsHelper: MathsHelper;
 
     beforeEach(() => {
         const canvasTestHelper = new CanvasTestHelper();
@@ -35,10 +37,9 @@ describe('LassoSelectionManipulatorService', () => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         colourService = new ColourService({} as ColourPickerService);
         historyService = new HistoryService(keyboardServiceStub);
-        ellipseService = new EllipseService(drawingServiceStub, colourService, historyService);
 
-        helper = new LassoSelectionHelperService(drawingServiceStub, colourService, ellipseService);
-        handler = new LassoSelectionHandlerService(drawingServiceStub, helper);
+        helper = new LassoSelectionHelperService(drawingServiceStub, colourService, ellipseService, mathsHelper);
+        handler = new LassoSelectionHandlerService(drawingServiceStub, helper, mathsHelper);
         manipulator = new LassoSelectionManipulatorService(drawingServiceStub, helper, handler, historyService);
 
         TestBed.configureTestingModule({
@@ -54,7 +55,10 @@ describe('LassoSelectionManipulatorService', () => {
                 { provide: LassoSelectionManipulatorService, useValue: manipulator },
             ],
         });
+        mathsHelper = TestBed.inject(MathsHelper);
         service = TestBed.inject(LassoSelectionManipulatorService);
+
+        ellipseService = new EllipseService(drawingServiceStub, colourService, historyService, mathsHelper);
     });
 
     it('should be created', () => {

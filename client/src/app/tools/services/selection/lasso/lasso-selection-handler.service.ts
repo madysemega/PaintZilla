@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { LassoSelectionHelperService } from './lasso-selection-helper.service';
 
@@ -11,8 +12,8 @@ export class LassoSelectionHandlerService extends SelectionHandlerService {
     initialVertices: Vec2[];
     translatedVertices: Vec2[];
 
-    constructor(drawingService: DrawingService, protected selectionHelper: LassoSelectionHelperService) {
-        super(drawingService, selectionHelper);
+    constructor(drawingService: DrawingService, protected selectionHelper: LassoSelectionHelperService, mathsHelper: MathsHelper) {
+        super(drawingService, selectionHelper, mathsHelper);
         this.initialVertices = new Array<Vec2>();
         this.translatedVertices = new Array<Vec2>();
     }
