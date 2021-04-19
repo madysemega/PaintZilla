@@ -1,7 +1,7 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { LineShape } from '@app/shapes/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { LineShape } from '@app/shapes/types/line-shape/line-shape';
 import { LineJointsRenderer } from './line-joints-renderer';
 
 // tslint:disable:no-any

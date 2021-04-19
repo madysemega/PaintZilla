@@ -1,5 +1,5 @@
-import { LineShape } from '@app/shapes/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { LineShape } from '@app/shapes/types/line-shape/line-shape';
 import { ShapeRenderer } from './shape-renderer';
 
 export class LineJointsRenderer extends ShapeRenderer<LineShape> {

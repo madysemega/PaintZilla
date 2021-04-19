@@ -1,5 +1,6 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { Shape } from './shape';
+import { Shape } from '@app/shapes/shape';
+import * as Constants from '@app/shapes/types/line-shape/line-shape-constants';
 
 export class LineShape extends Shape {
     static readonly DEFAULT_JOINTS_DIAMETER: number = 5;
@@ -9,9 +10,6 @@ export class LineShape extends Shape {
     }
 
     getFinalMousePosition(realMousePosition: Vec2, isShiftDown: boolean): Vec2 {
-        const HALF_ANGLE_OFFSET_FACTOR_INV = 8;
-        const QUARTER_CIRCLE_FACTOR_INV = 4;
-
         const isLineBeingDrawn = this.vertices.length > 0;
         if (!isShiftDown || !isLineBeingDrawn) return realMousePosition;
 
@@ -22,16 +20,15 @@ export class LineShape extends Shape {
             y: realMousePosition.y - lastVertex.y,
         };
 
-        const realTheta: number = Math.atan2(delta.y, delta.x);
+        const adjustedTheta: number = this.getMouseAttributes(delta);
 
-        const offset: number = Math.PI / HALF_ANGLE_OFFSET_FACTOR_INV;
-        const circleQuarter: number = Math.PI / QUARTER_CIRCLE_FACTOR_INV;
-        const ajustedTheta: number = Math.floor((realTheta + offset) / circleQuarter) * circleQuarter;
-
+        return this.getVectorAttributes(delta, adjustedTheta, lastVertex);
+    }
+    getVectorAttributes(delta: Vec2, adjustedTheta: number, lastVertex: Vec2): Vec2 {
         let vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
 
-        const isSegmentHorizontal = ajustedTheta % Math.PI === 0;
-        const isSegmentVertical = (ajustedTheta + Math.PI / 2) % Math.PI === 0;
+        const isSegmentHorizontal = adjustedTheta % Math.PI === 0;
+        const isSegmentVertical = (adjustedTheta + Math.PI / 2) % Math.PI === 0;
 
         if (isSegmentHorizontal) {
             vecLength = Math.abs(delta.x);
@@ -39,14 +36,19 @@ export class LineShape extends Shape {
             vecLength = Math.abs(delta.y);
         }
 
-        const ajustedVector: Vec2 = {
-            x: lastVertex.x + Math.cos(ajustedTheta) * vecLength,
-            y: lastVertex.y + Math.sin(ajustedTheta) * vecLength,
+        return {
+            x: lastVertex.x + Math.cos(adjustedTheta) * vecLength,
+            y: lastVertex.y + Math.sin(adjustedTheta) * vecLength,
         };
-
-        return ajustedVector;
     }
+    getMouseAttributes(delta: Vec2): number {
+        const realTheta: number = Math.atan2(delta.y, delta.x);
 
+        const offset: number = Math.PI / Constants.HALF_ANGLE_OFFSET_FACTOR_INV;
+        const circleQuarter: number = Math.PI / Constants.QUARTER_CIRCLE_FACTOR_INV;
+        const ajustedTheta: number = Math.floor((realTheta + offset) / circleQuarter) * circleQuarter;
+        return ajustedTheta;
+    }
     isCloseableWith(lastVertex: Vec2): boolean {
         const VALID_SHAPE_MIN_NB_VERTICES = 3;
         const CLOSING_SEGMENT_LENGTH_VALIDITY_THRESHOLD = 20; // (in pixels)
