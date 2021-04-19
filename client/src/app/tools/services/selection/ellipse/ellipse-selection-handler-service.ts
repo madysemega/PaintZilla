@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { MAX_DEGREES } from '@app/common-constants';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { EllipseSelectionHelperService } from './ellipse-selection-helper.service';
@@ -21,7 +22,7 @@ export class EllipseSelectionHandlerService extends SelectionHandlerService {
 
         destination.save();
         destination.beginPath();
-        destination.ellipse(this.selection.width / 2, this.selection.height / 2, originalRadii.x, originalRadii.y, 0, 0, this.CIRCLE_MAX_ANGLE);
+        destination.ellipse(this.selection.width / 2, this.selection.height / 2, originalRadii.x, originalRadii.y, 0, 0, MAX_DEGREES);
         destination.clip();
 
         destination.imageSmoothingEnabled = false;

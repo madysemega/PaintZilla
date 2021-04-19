@@ -5,7 +5,6 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
-import { ImageSizeProperty } from '@app/shapes/properties/image-size-property';
 import { ShapeRenderer } from '@app/shapes/renderers/shape-renderer';
 import { StampRenderer } from '@app/shapes/renderers/stamp-renderer';
 import { StampShape } from '@app/shapes/stamp-shape';
@@ -28,10 +27,9 @@ export class StampService extends ShapeTool implements ISelectableTool {
     ];
     private shape: StampShape = new StampShape({ x: 0, y: 0 }, { x: 0, y: 0 }, new Image(), this.angle, this.imagePaths[0]);
     imageSize: number = Constants.MIN_IMAGE_SIZE;
-    imageSizeProperty: ImageSizeProperty = new ImageSizeProperty(this.imageSize);
     mouseDown: boolean;
     toBorder: boolean[] = new Array(this.imagePaths.length).fill(false);
-    private renderer: StampRenderer = new StampRenderer(this.shape, [this.imageSizeProperty]);
+    private renderer: StampRenderer = new StampRenderer(this.shape, []);
     constructor(drawingService: DrawingService, private history: HistoryService) {
         super(drawingService);
         this.key = 'stamp';
@@ -63,7 +61,6 @@ export class StampService extends ShapeTool implements ISelectableTool {
     }
     changeSize(size: number): void {
         this.imageSize = size;
-        this.imageSizeProperty.imageSize = size;
     }
     changeAngle(degrees: number): void {
         this.angle = (degrees * Math.PI) / Constants.PI_TO_DEGREE;

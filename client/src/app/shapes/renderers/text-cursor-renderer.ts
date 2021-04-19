@@ -1,6 +1,6 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { TextCursor } from '@app/tools/services/tools/text/text-cursor';
 import { ShapeRenderer } from './shape-renderer';
 

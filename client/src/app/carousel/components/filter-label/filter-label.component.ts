@@ -29,17 +29,15 @@ export class FilterLabelComponent {
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
     addFilter(event: MatChipInputEvent): void {
+        this.isAvailable = false;
         const LABEL = event.value.trim();
-        if (LABEL) {
-            if (this.availableLabels.indexOf(LABEL) < 0) {
-                this.isAvailable = false;
-            } else if (this.retainedLabels.indexOf(LABEL) < 0) {
-                this.retainedLabels.push(LABEL);
-                this.filterAddEvent.emit(LABEL);
-                this.isAvailable = true;
-            }
-        }
         if (event.input) event.input.value = '';
+        if (!LABEL) return;
+        if (this.retainedLabels.indexOf(LABEL) < 0 && !(this.availableLabels.indexOf(LABEL) < 0)) {
+            this.retainedLabels.push(LABEL);
+            this.filterAddEvent.emit(LABEL);
+            this.isAvailable = true;
+        }
         this.labelCtrl.setValue(null);
     }
     removeFilter(label: string): void {

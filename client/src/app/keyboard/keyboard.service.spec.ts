@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Hotkey, HotkeyModule, HotkeysService } from 'angular2-hotkeys';
 import { KeyboardAction } from './keyboard-action';
+import { DEFAULT_CONTEXT } from './keyboard.constants';
 import { KeyboardService } from './keyboard.service';
 
 // tslint:disable: no-any
@@ -105,7 +106,6 @@ describe('KeyboardService', () => {
 
     it('restoreContext() should set context to default value if no save operation has been performed', () => {
         const INITIAL_CONTEXT = 'test';
-        const DEFAULT_CONTEXT = KeyboardService.DEFAULT_CONTEXT;
 
         service.context = INITIAL_CONTEXT;
         service.restoreContext();

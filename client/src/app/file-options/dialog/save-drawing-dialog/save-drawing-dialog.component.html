@@ -25,7 +25,7 @@
                     #labelInput
                     matInput
                     [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputSeparatorKeyCodes]="SEPARATORS"
                     (matChipInputTokenEnd)="addLabel($event)"
                     formControlName="labelForm"
                     (blur)="addLabelOnBlur($event)"

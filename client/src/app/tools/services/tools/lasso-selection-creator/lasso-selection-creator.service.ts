@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
+<<<<<<< HEAD
+=======
+import { LineShape } from '@app/shapes/line-shape/line-shape';
+>>>>>>> master
 import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { LineShape } from '@app/shapes/types/line-shape/line-shape';
@@ -11,6 +16,7 @@ import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso
 import { LassoSelectionManipulatorService } from '@app/tools/services/selection/lasso/lasso-selection-manipulator.service';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import * as Constants from './lasso-selection-creator.constants';
+import { LassoSelectionSegment } from './lasso-selection-segment';
 
 @Injectable({
     providedIn: 'root',
@@ -65,6 +71,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
             const realMousePosition = this.getPositionFromMouse(event);
             const ajustedMousePosition = this.shape.getFinalMousePosition(realMousePosition, this.isShiftDown);
 
+            if (!this.canAddSegment()) return;
+
             if (this.shape.isCloseableWith(ajustedMousePosition)) {
                 this.wasBeingManipulated = true;
                 this.drawingService.clearCanvas(this.drawingService.previewCtx);
@@ -92,6 +100,8 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         this.shape.vertices.push(ajustedMousePosition);
         this.drawSelectionOutline();
         this.shape.vertices.pop();
+
+        this.drawingService.setCursorType(this.canAddSegment() ? CursorType.CROSSHAIR : CursorType.NOT_ALLOWED);
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -202,5 +212,20 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         }
 
         return bottomRight;
+    }
+
+    private canAddSegment(): boolean {
+        const ajustedMousePosition = this.shape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown);
+        const lastSegment = new LassoSelectionSegment(this.shape.vertices[this.shape.vertices.length - 1], ajustedMousePosition);
+
+        for (let i = 0; i < this.shape.vertices.length - 1; ++i) {
+            const segmentToCompare = new LassoSelectionSegment(this.shape.vertices[i], this.shape.vertices[i + 1]);
+
+            if (lastSegment.intersects(segmentToCompare)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
