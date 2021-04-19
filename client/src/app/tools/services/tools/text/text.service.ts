@@ -78,13 +78,6 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
         });
 
         this.keyboardService.registerAction({
-            trigger: 'delete',
-            invoke: () => this.editor.delete(),
-            uniqueName: 'Remove character to the right of the cursor in text',
-            contexts: ['editing-text'],
-        });
-
-        this.keyboardService.registerAction({
             trigger: 'escape',
             invoke: () => this.cancel(),
             uniqueName: 'Cancel the editing tool',
@@ -192,7 +185,9 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
             event.preventDefault();
             event.stopPropagation();
 
-            const isCharAllowed = this.isCharAllowed(event.code);
+            if (event.code === 'Delete') this.editor.delete();
+
+            const isCharAllowed = this.isCharAllowed(event.code) && event.key.length === 1;
             if (isCharAllowed) {
                 this.editor.write(event.key);
             }
