@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { SelectionHelperService } from '@app/tools/services/selection/selection-base/selection-helper.service';
 import { CANVAS_SIZE } from '@app/tools/services/selection/selection-constants';
 
@@ -30,7 +31,7 @@ export abstract class SelectionHandlerService {
     currentHorizontalScaling: number = 1;
     currentVerticalScaling: number = 1;
 
-    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService) {}
+    constructor(protected drawingService: DrawingService, protected selectionService: SelectionHelperService, protected mathsHelper: MathsHelper) {}
 
     abstract extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void;
     abstract whiteFillAtOriginalLocation(): void;
@@ -52,7 +53,7 @@ export abstract class SelectionHandlerService {
         this.offset = { x: 0, y: 0 };
 
         this.originalTopLeftOnBaseCanvas = { x: vertices[0].x, y: vertices[0].y };
-        this.originalCenter = { x: (vertices[0].x + vertices[1].x) / 2, y: (vertices[0].y + vertices[1].y) / 2 };
+        this.originalCenter = this.mathsHelper.computeCenter(vertices[0], vertices[1]);
 
         this.hasBeenManipulated = false;
         this.needWhitePostDrawing = true;

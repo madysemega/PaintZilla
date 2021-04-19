@@ -1,5 +1,6 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { PolygonFillRenderer } from './polygon-fill-renderer';
@@ -20,11 +21,13 @@ describe('PolygonFillRenderer', () => {
     let ctxLineSpy: jasmine.Spy<any>;
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxFillSpy: jasmine.Spy<any>;
+    let mathsHelper: MathsHelper;
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         shape = new PolygonShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT, INITIAL_NUMBER_SIDES, CONTOUR_WIDTH);
-        renderer = new PolygonFillRenderer(shape, properties);
+        mathsHelper = new MathsHelper();
+        renderer = new PolygonFillRenderer(shape, properties, mathsHelper);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;

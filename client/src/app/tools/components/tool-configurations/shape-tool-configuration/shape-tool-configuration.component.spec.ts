@@ -11,6 +11,7 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MaterialModule } from '@app/material.module';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ResizableToolConfigurationComponent } from '@app/tools/components/tool-configurations/resizable-tool-configuration/resizable-tool-configuration.component';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { HotkeyModule, HotkeysService } from 'angular2-hotkeys';
@@ -36,6 +37,7 @@ describe('ShapeToolConfigurationComponent', () => {
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let ellipseToolStub: EllipseService;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+    let mathsHelper: MathsHelper;
 
     beforeEach(async(() => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
@@ -45,7 +47,8 @@ describe('ShapeToolConfigurationComponent', () => {
         historyServiceStub = new HistoryService(keyboardServiceStub);
         drawingStub = new DrawingService(historyServiceStub);
         colourServiceStub = new ColourService({} as ColourPickerService);
-        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
+        mathsHelper = new MathsHelper();
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub, mathsHelper);
 
         hotkeysServiceStub = jasmine.createSpyObj('HotkeysService', ['add']);
 

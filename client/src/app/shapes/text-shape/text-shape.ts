@@ -1,11 +1,10 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { Shape } from '@app/shapes/shape';
-import { DEFAULT_TEXT } from '@app/tools/services/tools/text/text.constants';
-import * as Constants from './text-shape.constants';
+import * as Constants from '@app/tools/services/tools/text/text-tool.constants';
 
 export class TextShape extends Shape {
     constructor(
-        public text: string = DEFAULT_TEXT,
+        public text: string = Constants.DEFAULT_TEXT,
         public position: Vec2 = Constants.DEFAULT_POSITION,
         public fontSize: number = Constants.DEFAULT_FONT_SIZE,
         public fontName: string = Constants.DEFAULT_FONT_NAME,

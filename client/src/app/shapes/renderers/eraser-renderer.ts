@@ -11,18 +11,18 @@ export class EraserRenderer extends ShapeRenderer<EraserShape> {
     draw(ctx: CanvasRenderingContext2D): void {
         this.shape.vertices.forEach((point, index) => {
             if (index === 0) {
-                this.drawIndex0(ctx, point);
+                this.drawRectangle(ctx, point);
             } else {
-                this.deciderDraw(ctx, point, index);
+                this.drawAlgorithm(ctx, point, index);
             }
         });
     }
-    drawIndex0(ctx: CanvasRenderingContext2D, point: Vec2): void {
+    drawRectangle(ctx: CanvasRenderingContext2D, point: Vec2): void {
         ctx.beginPath();
         ctx.rect(point.x, point.y, 0, 0);
         ctx.stroke();
     }
-    deciderDraw(ctx: CanvasRenderingContext2D, point: Vec2, index: number): void {
+    drawAlgorithm(ctx: CanvasRenderingContext2D, point: Vec2, index: number): void {
         const previousPoint = this.shape.vertices[index - 1];
         const isMovementRightward = point.x > previousPoint.x;
         const isMovementDownward = point.y > previousPoint.y;
