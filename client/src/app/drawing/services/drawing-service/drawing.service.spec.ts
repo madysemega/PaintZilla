@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-// import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
 import { HistoryService } from '@app/history/service/history.service';
@@ -36,6 +35,7 @@ describe('DrawingService', () => {
         service = TestBed.inject(DrawingService);
         canvasTestHelper = TestBed.inject(CanvasTestHelper);
         service.canvas = canvasTestHelper.canvas;
+        service.gridCanvas = canvasTestHelper.canvas;
         service.previewCanvas = canvasTestHelper.drawCanvas;
         service.baseCtx = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         service.previewCtx = canvasTestHelper.drawCanvas.getContext('2d') as CanvasRenderingContext2D;
@@ -86,7 +86,7 @@ describe('DrawingService', () => {
 
     it('set cursor should set the cursor', () => {
         service.setCursorType(CursorType.CROSSHAIR);
-        expect(service.previewCanvas.style.cursor).toEqual(CursorType.CROSSHAIR);
+        expect(service.gridCanvas.style.cursor).toEqual(CursorType.CROSSHAIR);
     });
 
     it('isCanvasEmpty should be false if canvas is not empty', () => {
