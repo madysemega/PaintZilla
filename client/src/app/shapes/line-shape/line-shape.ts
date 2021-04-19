@@ -1,16 +1,13 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { Shape } from '@app/shapes/shape';
-import { DEFAULT_JOINTS_DIAMETER } from './line-shape.constants';
+import * as Constants from './line-shape.constants';
 
 export class LineShape extends Shape {
-    constructor(public vertices: Vec2[], public jointsDiameter: number = DEFAULT_JOINTS_DIAMETER) {
+    constructor(public vertices: Vec2[], public jointsDiameter: number = Constants.DEFAULT_JOINTS_DIAMETER) {
         super();
     }
 
     getFinalMousePosition(realMousePosition: Vec2, isShiftDown: boolean): Vec2 {
-        const HALF_ANGLE_OFFSET_FACTOR_INV = 8;
-        const QUARTER_CIRCLE_FACTOR_INV = 4;
-
         const isLineBeingDrawn = this.vertices.length > 0;
         if (!isShiftDown || !isLineBeingDrawn) return realMousePosition;
 
@@ -23,9 +20,13 @@ export class LineShape extends Shape {
 
         const realTheta: number = Math.atan2(delta.y, delta.x);
 
-        const offset: number = Math.PI / HALF_ANGLE_OFFSET_FACTOR_INV;
-        const circleQuarter: number = Math.PI / QUARTER_CIRCLE_FACTOR_INV;
-        const ajustedTheta: number = Math.floor((realTheta + offset) / circleQuarter) * circleQuarter;
+        return this.ajustVectorToLockIn45deg(delta, realTheta, lastVertex);
+    }
+
+    private ajustVectorToLockIn45deg(delta: Vec2, theta: number, end: Vec2): Vec2 {
+        const offset: number = Math.PI / Constants.HALF_ANGLE_OFFSET_FACTOR_INV;
+        const circleQuarter: number = Math.PI / Constants.QUARTER_CIRCLE_FACTOR_INV;
+        const ajustedTheta: number = Math.floor((theta + offset) / circleQuarter) * circleQuarter;
 
         let vecLength: number = Math.sqrt(delta.x ** 2 + delta.y ** 2);
 
@@ -38,12 +39,10 @@ export class LineShape extends Shape {
             vecLength = Math.abs(delta.y);
         }
 
-        const ajustedVector: Vec2 = {
-            x: lastVertex.x + Math.cos(ajustedTheta) * vecLength,
-            y: lastVertex.y + Math.sin(ajustedTheta) * vecLength,
+        return {
+            x: end.x + Math.cos(ajustedTheta) * vecLength,
+            y: end.y + Math.sin(ajustedTheta) * vecLength,
         };
-
-        return ajustedVector;
     }
 
     isCloseableWith(lastVertex: Vec2): boolean {

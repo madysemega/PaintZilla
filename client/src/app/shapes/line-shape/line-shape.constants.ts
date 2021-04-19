@@ -1,1 +1,4 @@
 export const DEFAULT_JOINTS_DIAMETER = 5;
+
+export const HALF_ANGLE_OFFSET_FACTOR_INV = 8;
+export const QUARTER_CIRCLE_FACTOR_INV = 4;
