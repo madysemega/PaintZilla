@@ -6,7 +6,6 @@ export class LocalDatabaseMock {
     updateServerDrawings(): void {}
     addDrawing(id: string, drawing: string): void {}
     getDrawing(id: string): void {}
-    getDrawingIndex(id: string): void {}
     updateDrawing(id: string, drawing: string): void {}
     deleteDrawing(id: string): void {}
     filterDrawings(metadatas: Metadata[]): void {}

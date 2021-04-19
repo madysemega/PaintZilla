@@ -118,7 +118,6 @@ export class DrawingService {
     }
 
     // TO DO: DELETE
-
     async deleteDrawing(id: string): Promise<void> {
         Validator.checkId(id);
         const item = await MetadataModel.findByIdAndDelete(id);

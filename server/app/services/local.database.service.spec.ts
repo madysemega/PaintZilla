@@ -1,10 +1,10 @@
-import * as mocha from 'mocha';
-import * as chai from 'chai';
-import * as spies from 'chai-spies';
 import { MetadataModel } from '@app/constants/metadata.schema';
-import * as filesystem from 'fs';
-import { LocalDatabaseService } from './local.database.service';
+import * as chai from 'chai';
 import * as chaiAspromised from 'chai-as-promised';
+import * as spies from 'chai-spies';
+import * as filesystem from 'fs';
+import * as mocha from 'mocha';
+import { LocalDatabaseService } from './local.database.service';
 chai.use(spies);
 mocha.describe('Local database service', () => {
     let databaseService: LocalDatabaseService;

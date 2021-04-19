@@ -9,10 +9,8 @@ export class DatabaseService {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     };
-    distantDatabase: mongoose.Mongoose;
-    constructor(@inject(TYPES.LocalDatabaseService) public localDatabaseService: LocalDatabaseService) {
-        this.distantDatabase = mongoose;
-    }
+    distantDatabase: mongoose.Mongoose = mongoose;
+    constructor(@inject(TYPES.LocalDatabaseService) public localDatabaseService: LocalDatabaseService) {}
     /* istanbul ignore next */
     async start(url: string = Constants.DATABASE_URL): Promise<void> {
         await this.distantDatabase
