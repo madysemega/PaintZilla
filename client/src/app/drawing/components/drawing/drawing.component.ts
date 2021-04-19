@@ -4,6 +4,7 @@ import * as Constants from '@app/drawing/constants/drawing-constants';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { Tool } from '@app/tools/classes/tool';
 import { SelectionCreatorService } from '@app/tools/services/selection/selection-base/selection-creator.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
@@ -30,6 +31,7 @@ export class DrawingComponent implements AfterViewInit {
         public toolSelector: ToolSelectorService,
         public resizingService: ResizingService,
         private drawingCreatorService: DrawingCreatorService,
+        private magnetism: MagnetismService
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(async () => {
@@ -40,6 +42,8 @@ export class DrawingComponent implements AfterViewInit {
             image.src = this.drawingService.currentDrawing;
             this.drawingService.initialImage = image;
             this.drawingService.onDrawingLoaded.emit();
+            this.magnetism.toggleGrid();
+            this.magnetism.toggleGrid();
         });
         this.drawingService.onDrawingSurfaceResize.subscribe((newDimensions: Vec2) => {
             this.canvasSize.x = newDimensions.x;
