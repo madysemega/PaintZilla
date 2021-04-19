@@ -1,12 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
+import { ResizingType } from '@app/drawing/classes/resizing-type';
 import * as Constants from '@app/drawing/constants/drawing-constants';
-import { ResizingType } from '@app/drawing/enums/resizing-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionResizeDrawingSurface } from '@app/history/user-actions/user-action-resize-drawing-surface';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
-// tslint:disable:no-string-literal
 @Injectable({
     providedIn: 'root',
 })
@@ -14,16 +13,12 @@ export class ResizingService {
     rightResizerEnabled: boolean = false;
     downResizerEnabled: boolean = false;
     rightDownResizerEnabled: boolean = false;
-    canvasResize: Vec2;
+    canvasResize: Vec2 = this.drawingService.canvasResize;
     image: ImageData;
-    onCanvasSizeChange: EventEmitter<Vec2>;
-    onCanvasResizeChange: EventEmitter<Vec2>;
+    onCanvasSizeChange: EventEmitter<Vec2> = new EventEmitter<Vec2>();
+    onCanvasResizeChange: EventEmitter<Vec2> = new EventEmitter<Vec2>();
 
-    constructor(public drawingService: DrawingService, private historyService: HistoryService, public magnetism: MagnetismService) {
-        this.canvasResize = this.drawingService.canvasResize;
-        this.onCanvasResizeChange = new EventEmitter<Vec2>();
-        this.onCanvasSizeChange = new EventEmitter<Vec2>();
-    }
+    constructor(public drawingService: DrawingService, private historyService: HistoryService, public magnetism: MagnetismService) {}
 
     isResizing(): boolean {
         return this.downResizerEnabled || this.rightDownResizerEnabled || this.rightResizerEnabled;
