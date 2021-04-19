@@ -61,5 +61,6 @@ export class LassoSelectionManipulatorService extends SelectionManipulatorServic
         });
         ctx.stroke();
         ctx.restore();
+        this.selectionHelper.drawPerimeter(this.drawingService.previewCtx, this.topLeft, this.bottomRight);
     }
 }
