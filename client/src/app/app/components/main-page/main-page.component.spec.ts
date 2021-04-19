@@ -16,18 +16,13 @@ import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
 import { MaterialModule } from '@app/material.module';
-import { IndexService } from '@app/tools/services/index/index.service';
 import { HotkeyModule } from 'angular2-hotkeys';
-import { of } from 'rxjs';
 import { MainPageComponent } from './main-page.component';
-
-import SpyObj = jasmine.SpyObj;
 
 // tslint:disable: prefer-const
 describe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;
-    let indexServiceSpy: SpyObj<IndexService>;
     let historyServiceStub: HistoryService;
     let magnetismServiceStub: MagnetismService;
     let resizingServiceStub: ResizingService;
@@ -38,10 +33,6 @@ describe('MainPageComponent', () => {
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
 
     beforeEach(async(() => {
-        indexServiceSpy = jasmine.createSpyObj('IndexService', ['basicGet', 'basicPost']);
-        indexServiceSpy.basicGet.and.returnValue(of({ title: '', body: '' }));
-        indexServiceSpy.basicPost.and.returnValue(of());
-
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         keyboardServiceStub.registerAction.and.stub();
         keyboardServiceStub.saveContext.and.stub();
@@ -64,7 +55,6 @@ describe('MainPageComponent', () => {
             ],
             declarations: [MainPageComponent],
             providers: [
-                { provide: IndexService, useValue: indexServiceSpy },
                 { provide: ResizingService, useValue: resizingServiceStub },
                 { provide: MatDialog, useValue: dialogServiceStub },
                 { provide: DrawingService, useValue: drawingServiceStub },

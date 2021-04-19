@@ -8,11 +8,8 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
-<<<<<<< HEAD
-=======
 import { LineShape } from '@app/shapes/line-shape/line-shape';
 import { DEFAULT_JOINTS_DIAMETER } from '@app/shapes/line-shape/line-shape.constants';
->>>>>>> master
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
@@ -20,7 +17,6 @@ import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-propert
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
 import { LineJointsRenderer } from '@app/shapes/renderers/line-joints-renderer';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
-import { LineShape } from '@app/shapes/types/line-shape/line-shape';
 import { LineType } from '@app/shapes/types/line-type';
 import { IDeselectableTool } from '@app/tools/classes/deselectable-tool';
 import { MouseButton } from '@app/tools/classes/mouse-button';

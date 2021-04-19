@@ -3,13 +3,9 @@ import { Vec2 } from '@app/app/classes/vec2';
 import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
-<<<<<<< HEAD
-=======
 import { LineShape } from '@app/shapes/line-shape/line-shape';
->>>>>>> master
 import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
-import { LineShape } from '@app/shapes/types/line-shape/line-shape';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ClipboardService } from '@app/tools/services/selection/clipboard/clipboard.service';
 import { LassoSelectionHelperService } from '@app/tools/services/selection/lasso/lasso-selection-helper.service';

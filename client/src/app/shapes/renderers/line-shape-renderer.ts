@@ -1,5 +1,5 @@
+import { LineShape } from '@app/shapes/line-shape/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { LineShape } from '@app/shapes/types/line-shape/line-shape';
 import { ShapeRenderer } from './shape-renderer';
 
 export class LineShapeRenderer extends ShapeRenderer<LineShape> {
@@ -9,7 +9,7 @@ export class LineShapeRenderer extends ShapeRenderer<LineShape> {
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
-        this.shape.vertices.forEach((vertex) => {
+        this.shape.vertices.forEach((vertex: { x: number; y: number }) => {
             ctx.lineTo(vertex.x, vertex.y);
         });
         ctx.stroke();
