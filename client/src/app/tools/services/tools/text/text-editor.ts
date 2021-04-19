@@ -78,6 +78,7 @@ export class TextEditor {
     setAlignment(value: CanvasTextAlign): void {
         this.textAlignmentProperty.value = value;
         this.shape.textAlignment = value;
+        this.render();
     }
 
     getAlignment(): CanvasTextAlign {
@@ -86,6 +87,7 @@ export class TextEditor {
 
     setFontIsItalic(value: boolean): void {
         this.fontProperty.isItalic = value;
+        this.render();
     }
 
     getFontIsItalic(): boolean {
@@ -94,6 +96,7 @@ export class TextEditor {
 
     setFontIsBold(value: boolean): void {
         this.fontProperty.isBold = value;
+        this.render();
     }
 
     getFontIsBold(): boolean {
@@ -103,6 +106,7 @@ export class TextEditor {
     setFontName(name: string): void {
         this.fontProperty.fontName = name;
         this.shape.fontName = name;
+        this.render();
     }
 
     getFontName(): string {
@@ -112,6 +116,7 @@ export class TextEditor {
     setFontSize(size: number): void {
         this.fontProperty.fontSize = size;
         this.shape.fontSize = size;
+        this.render();
     }
 
     getFontSize(): number {
