@@ -2,12 +2,11 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { ColoursComponent } from '@app/drawing/components/colours/colours.component';
+import * as Constants from '@app/drawing/constants/drawing-constants';
 import { MouseButton } from '@app/tools/classes/mouse-button';
 // tslint:disable: no-string-literal
-export const DEFAULT_COLOUR = new Colour();
 describe('ColoursComponent', () => {
     let component: ColoursComponent;
     let fixture: ComponentFixture<ColoursComponent>;
@@ -32,9 +31,9 @@ describe('ColoursComponent', () => {
                 primaryColourSelected: primaryColourSelectedStub,
             },
         );
-        colourServiceSpy.getPrimaryColour.and.returnValue(DEFAULT_COLOUR);
-        colourServiceSpy.getSecondaryColour.and.returnValue(DEFAULT_COLOUR);
-        colourServiceSpy.getPreviousColours.and.returnValue([DEFAULT_COLOUR]);
+        colourServiceSpy.getPrimaryColour.and.returnValue(Constants.DEFAULT_COLOUR);
+        colourServiceSpy.getSecondaryColour.and.returnValue(Constants.DEFAULT_COLOUR);
+        colourServiceSpy.getPreviousColours.and.returnValue([Constants.DEFAULT_COLOUR]);
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, CommonModule],
             declarations: [ColoursComponent],
@@ -70,7 +69,7 @@ describe('ColoursComponent', () => {
     it('onPreviousColourClick(): should not call setPrimaryColour or setSecondaryColour if event.button is different from right and left', () => {
         const event = { button: MouseButton.Forward } as MouseEvent;
         component.showColourPicker = true;
-        component.onPreviousColourClick(event, DEFAULT_COLOUR);
+        component.onPreviousColourClick(event, Constants.DEFAULT_COLOUR);
         expect(colourServiceSpy.setPrimaryColour).not.toHaveBeenCalled();
         expect(colourServiceSpy.setSecondaryColour).not.toHaveBeenCalled();
         expect(component.showColourPicker).toBeFalse();
@@ -79,7 +78,7 @@ describe('ColoursComponent', () => {
     it('onPreviousColourClick(): should call setPrimaryColour if event.button is left', () => {
         const event = { button: MouseButton.Left } as MouseEvent;
         component.showColourPicker = true;
-        component.onPreviousColourClick(event, DEFAULT_COLOUR);
+        component.onPreviousColourClick(event, Constants.DEFAULT_COLOUR);
         expect(colourServiceSpy.setPrimaryColour).toHaveBeenCalled();
         expect(colourServiceSpy.setSecondaryColour).not.toHaveBeenCalled();
         expect(component.showColourPicker).toBeFalse();
@@ -88,7 +87,7 @@ describe('ColoursComponent', () => {
     it('onPreviousColourClick(): should call setSecondaryColour if event.button is right', () => {
         const event = { button: MouseButton.Right } as MouseEvent;
         component.showColourPicker = true;
-        component.onPreviousColourClick(event, DEFAULT_COLOUR);
+        component.onPreviousColourClick(event, Constants.DEFAULT_COLOUR);
         expect(colourServiceSpy.setPrimaryColour).not.toHaveBeenCalled();
         expect(colourServiceSpy.setSecondaryColour).toHaveBeenCalled();
         expect(component.showColourPicker).toBeFalse();
@@ -137,19 +136,19 @@ describe('ColoursComponent', () => {
 
     it('primaryColour: should call colourService.getPrimaryColour', () => {
         const value = component.primaryColour;
-        expect(value).toEqual(DEFAULT_COLOUR);
+        expect(value).toEqual(Constants.DEFAULT_COLOUR);
         expect(colourServiceSpy.getPrimaryColour).toHaveBeenCalled();
     });
 
     it('secondaryColour: should call colourService.getSecondaryColour', () => {
         const value = component.secondaryColour;
-        expect(value).toEqual(DEFAULT_COLOUR);
+        expect(value).toEqual(Constants.DEFAULT_COLOUR);
         expect(colourServiceSpy.getSecondaryColour).toHaveBeenCalled();
     });
 
     it('previousColours: should call colourService.getPreviousColours', () => {
         const values = component.previousColours;
-        expect(values).toEqual([DEFAULT_COLOUR]);
+        expect(values).toEqual([Constants.DEFAULT_COLOUR]);
         expect(colourServiceSpy.getPreviousColours).toHaveBeenCalled();
     });
 });

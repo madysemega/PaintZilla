@@ -1,10 +1,10 @@
 import { async, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
 import { Subject } from 'rxjs';
-export const DEFAULT_COLOUR = new Colour();
 // tslint:disable:no-any
 describe('RgbaFormService', () => {
     let service: RgbaFormService;
@@ -54,7 +54,7 @@ describe('RgbaFormService', () => {
             valid: true,
         });
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['setCurrentColour']);
-        spyOn(Colour, 'hexToRgb').and.returnValue(DEFAULT_COLOUR);
+        spyOn(Colour, 'hexToRgb').and.returnValue(Constants.DEFAULT_COLOUR);
         TestBed.configureTestingModule({
             imports: [ReactiveFormsModule],
             providers: [{ provide: RgbaFormService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy }],
@@ -69,7 +69,7 @@ describe('RgbaFormService', () => {
 
     it('updateRgbForm(): should call rgbaFormGroup.controls forms setValue and markAsTouched if isTyping is false', () => {
         service.isTyping = false;
-        service.updateRgbForm(DEFAULT_COLOUR);
+        service.updateRgbForm(Constants.DEFAULT_COLOUR);
         expect(service.rgbaFormGroup.controls.redForm.setValue).toHaveBeenCalled();
         expect(service.rgbaFormGroup.controls.redForm.markAsTouched).toHaveBeenCalled();
         expect(service.rgbaFormGroup.controls.greenForm.setValue).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe('RgbaFormService', () => {
 
     it('updateRgbForm(): should not call rgbaFormGroup.controls forms setValue and markAsTouched if isTyping is true', () => {
         service.isTyping = true;
-        service.updateRgbForm(DEFAULT_COLOUR);
+        service.updateRgbForm(Constants.DEFAULT_COLOUR);
         expect(service.rgbaFormGroup.controls.redForm.setValue).not.toHaveBeenCalled();
         expect(service.rgbaFormGroup.controls.redForm.markAsTouched).not.toHaveBeenCalled();
         expect(service.rgbaFormGroup.controls.greenForm.setValue).not.toHaveBeenCalled();

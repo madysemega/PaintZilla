@@ -23,7 +23,26 @@ export class DrawingComponent implements AfterViewInit {
     private previewCtx: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
     isInCanvas: boolean;
-    wasResizing: boolean;
+    wasResizing: boolean = false;
+
+    ngAfterViewInit(): void {
+        this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.gridCtx = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawingService.baseCtx = this.baseCtx;
+        this.drawingService.previewCtx = this.previewCtx;
+        this.drawingService.gridCtx = this.gridCtx;
+        this.drawingService.canvas = this.baseCanvas.nativeElement;
+        this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
+        this.drawingService.gridCanvas = this.gridCanvas.nativeElement;
+        this.drawingService.canvasSize = this.canvasSize;
+        this.drawingService.initialSize.x = this.canvasSize.x;
+        this.drawingService.initialSize.y = this.canvasSize.y;
+        this.setCanvasDimensions(this.baseCanvas.nativeElement, this.canvasSize);
+        this.setCanvasDimensions(this.previewCanvas.nativeElement, this.canvasSize);
+        this.setCanvasDimensions(this.gridCanvas.nativeElement, this.canvasSize);
+        this.drawingService.restoreCanvasStyle();
+    }
 
     constructor(
         private drawingService: DrawingService,
@@ -31,7 +50,6 @@ export class DrawingComponent implements AfterViewInit {
         public resizingService: ResizingService,
         private drawingCreatorService: DrawingCreatorService,
     ) {
-        this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(async () => {
             this.drawingService.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
             this.drawingService.resetDrawingSurfaceDimensions();
@@ -67,25 +85,6 @@ export class DrawingComponent implements AfterViewInit {
         canvas.height = dimensions.y;
     }
 
-    ngAfterViewInit(): void {
-        this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.previewCtx = this.previewCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.gridCtx = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawingService.baseCtx = this.baseCtx;
-        this.drawingService.previewCtx = this.previewCtx;
-        this.drawingService.gridCtx = this.gridCtx;
-        this.drawingService.canvas = this.baseCanvas.nativeElement;
-        this.drawingService.previewCanvas = this.previewCanvas.nativeElement;
-        this.drawingService.gridCanvas = this.gridCanvas.nativeElement;
-        this.drawingService.canvasSize = this.canvasSize;
-        this.drawingService.initialSize.x = this.canvasSize.x;
-        this.drawingService.initialSize.y = this.canvasSize.y;
-        this.setCanvasDimensions(this.baseCanvas.nativeElement, this.canvasSize);
-        this.setCanvasDimensions(this.previewCanvas.nativeElement, this.canvasSize);
-        this.setCanvasDimensions(this.gridCanvas.nativeElement, this.canvasSize);
-        this.drawingService.restoreCanvasStyle();
-    }
-
     @HostListener('document:wheel', ['$event'])
     onWheel(event: WheelEvent): void {
         if (this.isInCanvas) {
@@ -110,7 +109,7 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     @HostListener('document: mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
+    onMouseUp(): void {
         if (this.resizingService.isResizing()) {
             this.wasResizing = true;
             this.resizingService.disableResizer();
@@ -151,22 +150,6 @@ export class DrawingComponent implements AfterViewInit {
         }
     }
 
-    get resizeWidth(): number {
-        return this.resizingService.canvasResize.x;
-    }
-
-    get resizeHeight(): number {
-        return this.resizingService.canvasResize.y;
-    }
-
-    get width(): number {
-        return this.canvasSize.x;
-    }
-
-    get height(): number {
-        return this.canvasSize.y;
-    }
-
     activateResizer(button: string): void {
         const creator: SelectionCreatorService | undefined = this.toolSelector.getActiveSelectionTool();
         if (creator != undefined) {
@@ -181,5 +164,21 @@ export class DrawingComponent implements AfterViewInit {
 
     getCurrentTool(): Tool {
         return this.toolSelector.getSelectedTool();
+    }
+
+    get resizeWidth(): number {
+        return this.resizingService.canvasResize.x;
+    }
+
+    get resizeHeight(): number {
+        return this.resizingService.canvasResize.y;
+    }
+
+    get width(): number {
+        return this.canvasSize.x;
+    }
+
+    get height(): number {
+        return this.canvasSize.y;
     }
 }

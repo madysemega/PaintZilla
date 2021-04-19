@@ -5,7 +5,6 @@ import * as PaletteConstants from '@app/colour-picker/constants/colour-palette.c
 import * as ColourSliderConstants from '@app/colour-picker/constants/colour-slider.component.constants';
 import * as OpacitySliderConstants from '@app/colour-picker/constants/opacity-slider.component.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
-
 @Injectable({
     providedIn: 'root',
 })

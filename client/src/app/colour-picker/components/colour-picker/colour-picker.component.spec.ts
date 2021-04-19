@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerComponent } from '@app/colour-picker/components/colour-picker/colour-picker.component';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-export const DEFAULT_COLOUR = new Colour();
 // tslint:disable: no-string-literal
 describe('ColourPicker', () => {
     let component: ColourPickerComponent;
@@ -16,7 +15,7 @@ describe('ColourPicker', () => {
 
     beforeEach(() => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['getCurrentColor']);
-        colourPickerServiceSpy.getCurrentColor.and.returnValue(DEFAULT_COLOUR);
+        colourPickerServiceSpy.getCurrentColor.and.returnValue(Constants.DEFAULT_COLOUR);
         colourServiceSpy = jasmine.createSpyObj('ColourService', [], {
             colourPickerService: colourPickerServiceSpy,
         });
@@ -62,6 +61,6 @@ describe('ColourPicker', () => {
     });
 
     it('get color(): should return DEFAULT_COLOUR', () => {
-        expect(component.color).toEqual(DEFAULT_COLOUR);
+        expect(component.color).toEqual(Constants.DEFAULT_COLOUR);
     });
 });

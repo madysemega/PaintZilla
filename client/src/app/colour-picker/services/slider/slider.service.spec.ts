@@ -1,9 +1,9 @@
 import { async, TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { SliderService } from '@app/colour-picker/services/slider/slider.service';
-export const DEFAULT_COLOUR = new Colour();
 // tslint:disable: no-string-literal
 describe('SliderService', () => {
     let service: SliderService;
@@ -11,7 +11,7 @@ describe('SliderService', () => {
     let canvasTestHelper: CanvasTestHelper;
     beforeEach(async(() => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['getCurrentColor', 'getHue', 'getAlpha']);
-        colourPickerServiceSpy.getCurrentColor.and.returnValue(DEFAULT_COLOUR);
+        colourPickerServiceSpy.getCurrentColor.and.returnValue(Constants.DEFAULT_COLOUR);
         TestBed.configureTestingModule({
             providers: [{ provide: SliderService }],
         });
@@ -24,7 +24,7 @@ describe('SliderService', () => {
         service.colorCtx = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         service.opacityCtx = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
         service['colourPickerService'] = colourPickerServiceSpy;
-        spyOn(Colour, 'hsvToRgb').and.returnValue(DEFAULT_COLOUR);
+        spyOn(Colour, 'hsvToRgb').and.returnValue(Constants.DEFAULT_COLOUR);
     }));
 
     it('should create', () => {

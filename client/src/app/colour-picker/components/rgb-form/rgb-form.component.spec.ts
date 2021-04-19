@@ -3,13 +3,11 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
 import { Subject } from 'rxjs';
-
-export const DEFAULT_COLOUR = new Colour();
 // tslint:disable:no-any
 // tslint:disable: no-string-literal
 describe('RgbFormComponent', () => {
@@ -74,7 +72,7 @@ describe('RgbFormComponent', () => {
             valueObservable: valueChanged,
             alphaObservable: alphaChanged,
         });
-        colourPickerServiceSpy.getCurrentColor.and.returnValue(DEFAULT_COLOUR);
+        colourPickerServiceSpy.getCurrentColor.and.returnValue(Constants.DEFAULT_COLOUR);
         rgbaFormServiceSpy = jasmine.createSpyObj('RgbaFormService', ['updateRgbForm', 'updateColourComponents'], {
             isTyping: false,
             colourPickerService: colourPickerServiceSpy,

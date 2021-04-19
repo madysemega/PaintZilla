@@ -19,7 +19,7 @@ import { NonContiguousPixelFill } from '@app/tools/services/paint-bucket/non-con
 export class PaintBucketService extends ResizableTool implements ISelectableTool, IDeselectableTool {
     contiguousPixelFill: ContiguousPixelFill = new ContiguousPixelFill();
     nonContiguousPixelFill: NonContiguousPixelFill = new NonContiguousPixelFill();
-    fillBucket: { [key: number]: FloodFill };
+    fillBucket: { [key: number]: FloodFill } = { 0: this.contiguousPixelFill, 2: this.nonContiguousPixelFill };
     colourProperty: FillStyleProperty;
     fillRenderer: PixelFillRenderer;
     pixelShape: PixelShape;
@@ -28,7 +28,6 @@ export class PaintBucketService extends ResizableTool implements ISelectableTool
     constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
         this.key = 'paint-bucket';
-        this.fillBucket = { 0: this.contiguousPixelFill, 2: this.nonContiguousPixelFill };
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -38,7 +37,12 @@ export class PaintBucketService extends ResizableTool implements ISelectableTool
             const imageData = this.drawingService.baseCtx.getImageData(0, 0, this.drawingService.canvas.width, this.drawingService.canvas.height);
             this.colourProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
             this.historyService.isLocked = true;
-            const pixels = this.fillBucket[event.button].fill(imageData, { x: coords.x, y: coords.y }, this.colourProperty.colour, this.tolerance);
+            const pixels = this.fillBucket[event.button].fill({
+                imageData,
+                onClickCoords: { x: coords.x, y: coords.y },
+                fillColour: this.colourProperty.colour,
+                tolerance: this.tolerance,
+            });
             this.renderFill(pixels);
         }
     }

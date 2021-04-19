@@ -1,30 +1,30 @@
 import { Vec2 } from '@app/app/classes/vec2';
-import { Colour } from '@app/colour-picker/classes/colours.class';
-import * as Constants from '@app/tools/constants/flood-fill.constants';
 import { FloodFill } from '@app/tools/services/paint-bucket/flood-fill/flood-fill';
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 
-type Line = [number, number, number, number];
 export class ContiguousPixelFill extends FloodFill {
-    private queue: Line[] = [];
+    private queue: Constants.Line[] = [];
     private start: number;
     private end: number;
-    fill(imageData: ImageData, onClickCoords: Vec2, fillColour: Colour, tolerance: number): number[] {
-        onClickCoords = { x: Math.round(onClickCoords.x), y: Math.round(onClickCoords.y) };
-        this.initializeAttributes(imageData, onClickCoords, fillColour, tolerance);
-        let line: Line | undefined = [onClickCoords.x, onClickCoords.x, onClickCoords.y, Constants.INVALID_INDEX];
+    fill(parameters: Constants.fillParameters): number[] {
+        parameters.onClickCoords = { x: Math.round(parameters.onClickCoords.x), y: Math.round(parameters.onClickCoords.y) };
+        this.initializeAttributes(parameters);
+        let x = parameters.onClickCoords.x;
+        let y = parameters.onClickCoords.y;
+        let line: Constants.Line | undefined = [x, x, y, Constants.INVALID_INDEX];
         while (line) {
             const [x1, x2, y1, dy] = line;
-            onClickCoords.x = x1;
-            onClickCoords.y = y1;
-            while (onClickCoords.x !== Constants.INVALID_INDEX && onClickCoords.x <= x2) {
-                [this.start, this.end] = this.fillAt(onClickCoords.x, onClickCoords.y);
+            x = x1;
+            y = y1;
+            while (x !== Constants.INVALID_INDEX && x <= x2) {
+                [this.start, this.end] = this.fillAt(x, y);
                 if (this.start !== Constants.INVALID_INDEX) {
-                    this.fillQueue(x1, x2, onClickCoords.y, dy);
+                    this.fillQueue({ start: x1, end: x2, nextRow: y, parentRow: dy });
                 }
-                if (this.end === Constants.INVALID_INDEX && onClickCoords.x <= x2) {
-                    onClickCoords.x++;
+                if (this.end === Constants.INVALID_INDEX && x <= x2) {
+                    x++;
                 } else {
-                    onClickCoords.x = this.end + 1;
+                    x = this.end + 1;
                 }
             }
             line = this.queue.shift();
@@ -32,20 +32,20 @@ export class ContiguousPixelFill extends FloodFill {
         return this.result;
     }
 
-    fillQueue(x1: number, x2: number, y: number, dy: number): void {
-        if (this.start >= x1 && this.end <= x2 && dy !== Constants.INVALID_INDEX) {
-            if (dy < y && y + 1 < this.height) {
-                this.queue.push([this.start, this.end, y + 1, y]);
+    fillQueue(toVisit: Constants.visitCoordinates): void {
+        if (this.start >= toVisit.start && this.end <= toVisit.end && toVisit.parentRow !== Constants.INVALID_INDEX) {
+            if (toVisit.parentRow < toVisit.nextRow && toVisit.parentRow + 1 < this.height) {
+                this.queue.push([this.start, this.end, toVisit.nextRow + 1, toVisit.nextRow]);
             }
-            if (dy > y && y > 0) {
-                this.queue.push([this.start, this.end, y - 1, y]);
+            if (toVisit.parentRow > toVisit.nextRow && toVisit.nextRow > 0) {
+                this.queue.push([this.start, this.end, toVisit.nextRow - 1, toVisit.nextRow]);
             }
         } else {
-            if (y > 0) {
-                this.queue.push([this.start, this.end, y - 1, y]);
+            if (toVisit.nextRow > 0) {
+                this.queue.push([this.start, this.end, toVisit.nextRow - 1, toVisit.nextRow]);
             }
-            if (y + 1 < this.height) {
-                this.queue.push([this.start, this.end, y + 1, y]);
+            if (toVisit.nextRow + 1 < this.height) {
+                this.queue.push([this.start, this.end, toVisit.nextRow + 1, toVisit.nextRow]);
             }
         }
     }
