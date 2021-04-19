@@ -2,7 +2,7 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { PixelShape } from '@app/shapes/pixel-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import * as Constants from '@app/tools/constants/flood-fill.constants';
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 import { ShapeRenderer } from './shape-renderer';
 export class PixelFillRenderer extends ShapeRenderer<PixelShape> {
     fillColour: Colour;

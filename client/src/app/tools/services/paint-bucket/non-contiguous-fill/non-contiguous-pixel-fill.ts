@@ -1,10 +1,8 @@
-import { Vec2 } from '@app/app/classes/vec2';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { FloodFill } from '@app/tools/services/paint-bucket/flood-fill/flood-fill';
-
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 export class NonContiguousPixelFill extends FloodFill {
-    fill(imageData: ImageData, onClickCoords: Vec2, fillColour: Colour, tolerance: number): number[] {
-        this.initializeAttributes(imageData, onClickCoords, fillColour, tolerance);
+    fill(parameters: Constants.fillParameters): number[] {
+        this.initializeAttributes(parameters);
         let startX = 0;
         let startY = 0;
         while (startY < this.height) {

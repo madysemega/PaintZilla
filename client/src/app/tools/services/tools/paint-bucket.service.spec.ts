@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -9,8 +8,8 @@ import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { PixelShape } from '@app/shapes/pixel-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 import { PaintBucketService } from '@app/tools/services/tools/paint-bucket.service';
-export const BLACK = new Colour();
 describe('PaintBucketService', () => {
     let service: PaintBucketService;
     let drawingServiceStub: DrawingService;
@@ -53,7 +52,7 @@ describe('PaintBucketService', () => {
     it('onMouseDown(): should call renderFill if !isFilling', () => {
         const renderStub = spyOn(service, 'renderFill').and.stub();
         spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 0, y: 0 } as Vec2);
-        spyOn(colourServiceStub, 'getPrimaryColour').and.returnValue(BLACK);
+        spyOn(colourServiceStub, 'getPrimaryColour').and.returnValue(Constants.BLACK);
         spyOn(service.contiguousPixelFill, 'fill').and.returnValue([]);
         service.onMouseDown({ button: 0 } as MouseEvent);
         expect(renderStub).toHaveBeenCalled();
@@ -63,7 +62,7 @@ describe('PaintBucketService', () => {
     it('renderFill(): should call historyService.do', () => {
         const historyStub = spyOn(historyServiceStub, 'do').and.stub();
         service.pixelShape = new PixelShape([]);
-        service.colourProperty = new FillStyleProperty(BLACK);
+        service.colourProperty = new FillStyleProperty(Constants.BLACK);
         service.renderFill([]);
         expect(historyStub).toHaveBeenCalled();
     });

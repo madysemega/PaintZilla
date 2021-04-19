@@ -1,12 +1,8 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
-import { Colour } from '@app/colour-picker/classes/colours.class';
 import { PixelShape } from '@app/shapes/pixel-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { PixelFillRenderer } from '@app/shapes/renderers/pixel-fill-renderer';
-
-export const WIDTH = 10;
-export const HEIGHT = 10;
-export const DEFAULT_COLOUR = new Colour();
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 describe('PixelFillRenderer', () => {
     let renderer: PixelFillRenderer;
     let shape: PixelShape;
@@ -15,8 +11,8 @@ describe('PixelFillRenderer', () => {
     let ctxStub: CanvasRenderingContext2D;
     beforeEach(() => {
         shape = new PixelShape([0]);
-        properties = [new FillStyleProperty(DEFAULT_COLOUR)];
-        renderer = new PixelFillRenderer(shape, properties, WIDTH, HEIGHT);
+        properties = [new FillStyleProperty(Constants.BLACK)];
+        renderer = new PixelFillRenderer(shape, properties, Constants.WIDTH, Constants.HEIGHT);
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;
     });
