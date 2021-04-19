@@ -173,11 +173,12 @@ describe('SprayService', () => {
     it('When primary colour changed, it should be reflected in the colour property of the spray tool', (done) => {
         const NEW_PRIMARY_COLOUR = Colour.hexToRgb('424242');
 
-        colourServiceSpy.setPrimaryColour(NEW_PRIMARY_COLOUR);
         colourServiceSpy.primaryColourChanged.subscribe(() => {
             expect(service['colourProperty'].colour).toEqual(NEW_PRIMARY_COLOUR);
+            done();
         });
-        done();
+
+        colourServiceSpy.setPrimaryColour(NEW_PRIMARY_COLOUR);
     });
 
     it('onToolDeselect should call finalizePaint', () => {

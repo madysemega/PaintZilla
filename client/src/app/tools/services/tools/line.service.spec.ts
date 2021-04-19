@@ -390,23 +390,25 @@ describe('LineService', () => {
         });
     });
 
-    it('when primary colour changes, so should fill style', () => {
+    it('when primary colour changes, so should fill style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
-
-        colourService.setPrimaryColour(COLOUR);
 
         colourService.primaryColourChanged.subscribe(() => {
             expect(service['strokeColourProperty'].colour).toEqual(COLOUR);
+            done();
         });
+
+        colourService.setPrimaryColour(COLOUR);
     });
 
-    it('when secondary colour changes, so should stroke style', () => {
+    it('when secondary colour changes, so should stroke style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
-
-        colourService.setSecondaryColour(COLOUR);
 
         colourService.secondaryColourChanged.subscribe(() => {
             expect(service['jointsColourProperty'].colour).toEqual(COLOUR);
+            done();
         });
+
+        colourService.setSecondaryColour(COLOUR);
     });
 });
