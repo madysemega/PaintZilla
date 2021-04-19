@@ -84,7 +84,6 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
     onMouseMove(event: MouseEvent): void {
         const realMousePosition = this.getPositionFromMouse(event);
-        const ajustedMousePosition = this.shape.getFinalMousePosition(realMousePosition, this.isShiftDown);
 
         if (this.isSelectionBeingManipulated()) {
             this.selectionManipulator.onMouseMove(event);
@@ -93,9 +92,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
         this.lastMousePosition = realMousePosition;
 
-        this.shape.vertices.push(ajustedMousePosition);
-        this.drawSelectionOutline();
-        this.shape.vertices.pop();
+        this.renderSelection();
 
         this.drawingService.setCursorType(this.canAddSegment() ? CursorType.CROSSHAIR : CursorType.NOT_ALLOWED);
     }
@@ -108,7 +105,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
 
         if (event.key === 'Shift') {
             this.isShiftDown = true;
-            this.drawSelectionOutline();
+            this.renderSelection();
         }
     }
 
@@ -121,7 +118,7 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         switch (event.key) {
             case 'Shift':
                 this.isShiftDown = false;
-                this.drawSelectionOutline();
+                this.renderSelection();
                 break;
             case 'Escape':
                 this.history.isLocked = false;
@@ -168,6 +165,13 @@ export class LassoSelectionCreatorService extends SelectionCreatorService {
         this.mouseDown = false;
         this.isShiftDown = false;
         this.wasBeingManipulated = false;
+    }
+
+    private renderSelection(): void {
+        const ajustedMousePosition = this.shape.getFinalMousePosition(this.lastMousePosition, this.isShiftDown);
+        this.shape.vertices.push(ajustedMousePosition);
+        this.drawSelectionOutline();
+        this.shape.vertices.pop();
     }
 
     private findTopLeft(vertices: Vec2[]): Vec2 | undefined {
