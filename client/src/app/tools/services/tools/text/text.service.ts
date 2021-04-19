@@ -11,13 +11,12 @@ import { MouseButton } from '@app/tools/classes/mouse-button';
 import { ISelectableTool } from '@app/tools/classes/selectable-tool';
 import { Tool } from '@app/tools/classes/tool';
 import { TextEditor } from './text-editor';
+import * as Constants from './text-tool.constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TextService extends Tool implements ISelectableTool, IDeselectableTool {
-    private ALLOWED_CHAR_CLASSES: string[] = ['Key', 'Digit', 'Comma', 'Period', 'Quote', 'Backquote', 'Slash', 'Backslash', 'Bracket', 'Space'];
-
     private editor: TextEditor;
     private isEditing: boolean;
 
@@ -150,7 +149,7 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
 
     private isCharAllowed(char: string): boolean {
         let isInAllowedClass = false;
-        this.ALLOWED_CHAR_CLASSES.forEach((allowedClass) => {
+        Constants.ALLOWED_CHAR_CLASSES.forEach((allowedClass) => {
             if (char.startsWith(allowedClass)) {
                 isInAllowedClass = true;
             }

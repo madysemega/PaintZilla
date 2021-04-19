@@ -8,11 +8,9 @@ import { TextRenderer } from '@app/shapes/renderers/text-renderer';
 import { TextShape } from '@app/shapes/text-shape';
 import { TextCursor } from './text-cursor';
 import { TextEditorContext } from './text-editor-context';
+import * as Constants from './text-tool.constants';
 
 export class TextEditor {
-    private readonly DEFAULT_CURSOR_POSITION: number = 0;
-    private readonly CURSOR_BLINK_DELAI_MS: number = 500;
-
     private cursorTimerHandle: number;
 
     constructor(private ctx: TextEditorContext) {
@@ -35,7 +33,7 @@ export class TextEditor {
         this.initializeProperties();
         this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty, this.textAlignmentProperty]);
 
-        this.cursor = new TextCursor(this.shape, this.DEFAULT_CURSOR_POSITION);
+        this.cursor = new TextCursor(this.shape, Constants.DEFAULT_CURSOR_POSITION);
         this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
     }
 
@@ -127,7 +125,7 @@ export class TextEditor {
         this.cursorTimerHandle = window.setInterval(() => {
             this.showCursor = !this.showCursor;
             this.render();
-        }, this.CURSOR_BLINK_DELAI_MS);
+        }, Constants.CURSOR_BLINK_DELAI_MS);
     }
 
     disableCursor(): void {
