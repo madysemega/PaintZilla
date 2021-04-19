@@ -6,24 +6,17 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
     providedIn: 'root',
 })
 export class ColourService {
-    private previousColours: Colour[];
-    private primaryColour: Colour;
-    private secondaryColour: Colour;
+    private previousColours: Colour[] = Constants.INITIAL_COLORS;
+    private primaryColour: Colour = Constants.DEFAULT_PRIMARY;
+    private secondaryColour: Colour = Constants.DEFAULT_SECONDARY;
     primaryColourSelected: boolean;
     showColourPicker: boolean;
     onColourPicker: boolean;
-    showColourPickerChange: EventEmitter<boolean>;
-    primaryColourChanged: EventEmitter<Colour>;
-    secondaryColourChanged: EventEmitter<Colour>;
+    showColourPickerChange: EventEmitter<boolean> = new EventEmitter<boolean>(this.showColourPicker);
+    primaryColourChanged: EventEmitter<Colour> = new EventEmitter<Colour>(true);
+    secondaryColourChanged: EventEmitter<Colour> = new EventEmitter<Colour>(true);
 
-    constructor(private colourPickerService: ColourPickerService) {
-        this.primaryColour = Constants.DEFAULT_PRIMARY;
-        this.secondaryColour = Constants.DEFAULT_SECONDARY;
-        this.previousColours = Constants.INITIAL_COLORS;
-        this.showColourPickerChange = new EventEmitter<boolean>(this.showColourPicker);
-        this.primaryColourChanged = new EventEmitter<Colour>(true);
-        this.secondaryColourChanged = new EventEmitter<Colour>(true);
-    }
+    constructor(private colourPickerService: ColourPickerService) {}
 
     updatePrimaryColour(): void {
         this.primaryColour = this.colourPickerService.getCurrentColor().clone();

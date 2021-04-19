@@ -13,14 +13,13 @@ export class RgbaFormService {
 
     updateRgbForm(colour: Colour): void {
         if (!this.isTyping) {
-            // tslint:disable-next-line: radix
-            this.rgbaFormGroup.controls.redForm.setValue(Colour.toHex(parseInt(colour.getRed().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.redForm.setValue(Colour.toHex(parseInt(colour.getRed().toString(), Constants.RADIX)), { emitEvent: false });
             this.rgbaFormGroup.controls.redForm.markAsTouched();
-            // tslint:disable-next-line: radix
-            this.rgbaFormGroup.controls.greenForm.setValue(Colour.toHex(parseInt(colour.getGreen().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.greenForm.setValue(Colour.toHex(parseInt(colour.getGreen().toString(), Constants.RADIX)), {
+                emitEvent: false,
+            });
             this.rgbaFormGroup.controls.greenForm.markAsTouched();
-            // tslint:disable-next-line: radix
-            this.rgbaFormGroup.controls.blueForm.setValue(Colour.toHex(parseInt(colour.getBlue().toString())), { emitEvent: false });
+            this.rgbaFormGroup.controls.blueForm.setValue(Colour.toHex(parseInt(colour.getBlue().toString(), Constants.RADIX)), { emitEvent: false });
             this.rgbaFormGroup.controls.blueForm.markAsTouched();
             this.rgbaFormGroup.controls.alphaForm.setValue((colour.getAlpha() * Constants.PERCENTAGE).toString(), { emitEvent: false });
             this.rgbaFormGroup.controls.alphaForm.markAsTouched();

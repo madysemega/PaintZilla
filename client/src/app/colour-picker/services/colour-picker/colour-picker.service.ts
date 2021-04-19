@@ -7,27 +7,17 @@ import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
     providedIn: 'root',
 })
 export class ColourPickerService {
-    private currentColour: Colour = Colour.hsvToRgb(0, 0, 0);
-    private alphaSubject: BehaviorSubject<number>;
-    private hueSubject: BehaviorSubject<number>;
-    private saturationSubject: BehaviorSubject<number>;
-    private valueSubject: BehaviorSubject<number>;
-    alphaObservable: Observable<number>;
-    hueObservable: Observable<number>;
-    saturationObservable: Observable<number>;
-    valueObservable: Observable<number>;
-    currentColourObservable: Observable<Colour>;
+    private currentColour: Colour = new Colour();
+    private alphaSubject: BehaviorSubject<number> = new BehaviorSubject<number>(this.currentColour.getAlpha());
+    private hueSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    private saturationSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    private valueSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    alphaObservable: Observable<number> = this.alphaSubject.asObservable();
+    hueObservable: Observable<number> = this.hueSubject.asObservable();
+    saturationObservable: Observable<number> = this.saturationSubject.asObservable();
+    valueObservable: Observable<number> = this.valueSubject.asObservable();
     colourChangedSubscription: Subscription;
     constructor() {
-        const currentHsvColour = this.currentColour.rgbToHsv();
-        this.alphaSubject = new BehaviorSubject<number>(this.currentColour.getAlpha());
-        this.hueSubject = new BehaviorSubject<number>(currentHsvColour[Constants.HUE_INDEX]);
-        this.saturationSubject = new BehaviorSubject<number>(currentHsvColour[Constants.SATURATION_INDEX]);
-        this.valueSubject = new BehaviorSubject<number>(currentHsvColour[Constants.VALUE_INDEX]);
-        this.alphaObservable = this.alphaSubject.asObservable();
-        this.hueObservable = this.hueSubject.asObservable();
-        this.saturationObservable = this.saturationSubject.asObservable();
-        this.valueObservable = this.valueSubject.asObservable();
         this.colourChangedSubscription = combineLatest([
             this.alphaObservable,
             this.hueObservable,

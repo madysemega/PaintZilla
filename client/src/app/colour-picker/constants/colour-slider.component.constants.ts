@@ -5,6 +5,5 @@ export const CURSOR_RADIUS = 10;
 export const CURSOR_LINEWIDTH = 2;
 export const MAX_HUE = 360;
 export const MAX_SATURATION = 1.0;
-export const HALF_LIGHTNESS = 0.5;
 export const MAX_VALUE = 1.0;
 export const GRADIENTS = ['rgb(255, 0, 0)', 'rgb(255, 255, 0)', 'rgb(0, 255, 0)', 'rgb(0, 255, 255)', 'rgb(0, 0, 255)', 'rgb(255, 0, 255)'];

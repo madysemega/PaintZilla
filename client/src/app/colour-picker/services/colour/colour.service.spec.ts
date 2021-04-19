@@ -1,15 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { Colour } from '@app/colour-picker/classes/colours.class';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-export const DEFAULT_COLOUR = new Colour(1, 1, 1, 1);
 // tslint:disable: no-string-literal
 describe('ColourService', () => {
     let service: ColourService;
     let colourPickerServiceSpy: jasmine.SpyObj<ColourPickerService>;
     beforeEach(() => {
         colourPickerServiceSpy = jasmine.createSpyObj('ColourPickerService', ['getCurrentColor', 'setCurrentColour']);
-        colourPickerServiceSpy.getCurrentColor.and.returnValue(DEFAULT_COLOUR);
+        colourPickerServiceSpy.getCurrentColor.and.returnValue(Constants.WHITE);
         TestBed.configureTestingModule({
             providers: [{ provide: ColourService }, { provide: ColourPickerService, useValue: colourPickerServiceSpy }],
         });
@@ -37,31 +36,31 @@ describe('ColourService', () => {
     });
 
     it('getPrimaryColour(): should return primaryColour', () => {
-        service['primaryColour'] = DEFAULT_COLOUR;
-        expect(service.getPrimaryColour()).toEqual(DEFAULT_COLOUR);
+        service['primaryColour'] = Constants.WHITE;
+        expect(service.getPrimaryColour()).toEqual(Constants.WHITE);
     });
 
     it('getSecondaryColour(): should return secondaryColour', () => {
-        service['secondaryColour'] = DEFAULT_COLOUR;
-        expect(service.getSecondaryColour()).toEqual(DEFAULT_COLOUR);
+        service['secondaryColour'] = Constants.WHITE;
+        expect(service.getSecondaryColour()).toEqual(Constants.WHITE);
     });
 
     it('setPrimaryColour(): should set primaryColour to specified colour and emit primaryColourChanged', () => {
         const primaryChangedSpy = spyOn(service['primaryColourChanged'], 'emit').and.callThrough();
-        service.setPrimaryColour(DEFAULT_COLOUR);
-        expect(service['primaryColour']).toEqual(DEFAULT_COLOUR);
+        service.setPrimaryColour(Constants.WHITE);
+        expect(service['primaryColour']).toEqual(Constants.WHITE);
         expect(primaryChangedSpy).toHaveBeenCalled();
     });
 
     it('setSecondaryColour(): should set secondaryColour to specified colour and emit secondaryColourChanged', () => {
         const secondaryChangedSpy = spyOn(service['secondaryColourChanged'], 'emit').and.callThrough();
-        service.setSecondaryColour(DEFAULT_COLOUR);
-        expect(service['secondaryColour']).toEqual(DEFAULT_COLOUR);
+        service.setSecondaryColour(Constants.WHITE);
+        expect(service['secondaryColour']).toEqual(Constants.WHITE);
         expect(secondaryChangedSpy).toHaveBeenCalled();
     });
 
     it('getPreviousColours(): should return an array of previous colours', () => {
-        const expected = [DEFAULT_COLOUR, DEFAULT_COLOUR];
+        const expected = [Constants.WHITE, Constants.WHITE];
         service['previousColours'] = expected;
         expect(service.getPreviousColours()).toEqual(expected);
     });
@@ -125,15 +124,15 @@ describe('ColourService', () => {
     });
 
     it('updatePreviousColours(): should ecrase previousColours[index] if index is found', () => {
-        const previousColors = [DEFAULT_COLOUR];
+        const previousColors = [Constants.WHITE];
         service['previousColours'] = previousColors;
-        service.updatePreviousColours(DEFAULT_COLOUR);
-        expect(service['previousColours'][0]).toEqual(DEFAULT_COLOUR);
+        service.updatePreviousColours(Constants.WHITE);
+        expect(service['previousColours'][0]).toEqual(Constants.WHITE);
     });
 
     it('updatePreviousColours(): should replace first colour of array with provided colour if no match was found', () => {
-        service.updatePreviousColours(DEFAULT_COLOUR);
-        expect(service['previousColours'][0]).toEqual(DEFAULT_COLOUR);
+        service.updatePreviousColours(Constants.WHITE);
+        expect(service['previousColours'][0]).toEqual(Constants.WHITE);
     });
 
     it('swapColours(): primaryColourChanged and secondaryColourChanged should emit', () => {

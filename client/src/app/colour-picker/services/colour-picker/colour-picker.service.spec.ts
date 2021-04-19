@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { Colour } from '@app/colour-picker/classes/colours.class';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
-export const DEFAULT_COLOUR = new Colour();
-export const TEST_COLOUR = new Colour(1, 1, 1, 1);
 // tslint:disable: no-string-literal
 describe('ColourPickerService', () => {
     let service: ColourPickerService;
     beforeEach(() => {
-        spyOn(Colour, 'hsvToRgb').and.returnValue(DEFAULT_COLOUR);
+        spyOn(Colour, 'hsvToRgb').and.returnValue(Constants.DEFAULT_COLOUR);
         TestBed.configureTestingModule({
             providers: [{ provide: ColourPickerService }],
         });
@@ -67,19 +66,19 @@ describe('ColourPickerService', () => {
     });
 
     it('getCurrentColor(): should return currentColour', () => {
-        service['currentColour'] = DEFAULT_COLOUR;
-        expect(service.getCurrentColor()).toEqual(DEFAULT_COLOUR);
+        service['currentColour'] = Constants.DEFAULT_COLOUR;
+        expect(service.getCurrentColor()).toEqual(Constants.DEFAULT_COLOUR);
     });
 
     it('setCurrentColour(): should set currentColour to specified value if they are not equal', () => {
-        service['currentColour'] = TEST_COLOUR;
-        service.setCurrentColour(DEFAULT_COLOUR);
-        expect(service.getCurrentColor()).toEqual(DEFAULT_COLOUR);
+        service['currentColour'] = Constants.WHITE;
+        service.setCurrentColour(Constants.DEFAULT_COLOUR);
+        expect(service.getCurrentColor()).toEqual(Constants.DEFAULT_COLOUR);
     });
 
     it('setCurrentColour(): should not set currentColour to specified value if they are equal', () => {
-        service['currentColour'] = DEFAULT_COLOUR;
-        service.setCurrentColour(DEFAULT_COLOUR);
-        expect(service.getCurrentColor()).toEqual(DEFAULT_COLOUR);
+        service['currentColour'] = Constants.DEFAULT_COLOUR;
+        service.setCurrentColour(Constants.DEFAULT_COLOUR);
+        expect(service.getCurrentColor()).toEqual(Constants.DEFAULT_COLOUR);
     });
 });
