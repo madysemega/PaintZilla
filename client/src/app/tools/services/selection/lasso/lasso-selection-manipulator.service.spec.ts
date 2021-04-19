@@ -38,8 +38,8 @@ describe('LassoSelectionManipulatorService', () => {
         colourService = new ColourService({} as ColourPickerService);
         historyService = new HistoryService(keyboardServiceStub);
 
-        helper = new LassoSelectionHelperService(drawingServiceStub, colourService, ellipseService);
-        handler = new LassoSelectionHandlerService(drawingServiceStub, helper);
+        helper = new LassoSelectionHelperService(drawingServiceStub, colourService, ellipseService, mathsHelper);
+        handler = new LassoSelectionHandlerService(drawingServiceStub, helper, mathsHelper);
         manipulator = new LassoSelectionManipulatorService(drawingServiceStub, helper, handler, historyService);
 
         TestBed.configureTestingModule({

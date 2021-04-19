@@ -133,7 +133,7 @@ describe('SidebarComponent', () => {
         mathsHelper = new MathsHelper();
         ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub, mathsHelper);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
-        polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub);
+        polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub, mathsHelper);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
         exportDrawingServiceSpy = jasmine.createSpyObj('ExportDrawingService', ['openExportDrawingDialog']);
         saveDrawingServiceSpy = jasmine.createSpyObj('SaveDrawingService', ['openSaveDrawingDialog']);
@@ -142,8 +142,8 @@ describe('SidebarComponent', () => {
         paintBucketServiceStub = new PaintBucketService(drawingStub, colourServiceStub, historyServiceStub);
         stampServiceStub = new StampService(drawingStub, historyServiceStub);
 
-        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
-        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub, mathsHelper);
+        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService, mathsHelper);
         ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(
             drawingStub,
             ellipseSelectionHelperService,
@@ -157,7 +157,7 @@ describe('SidebarComponent', () => {
             clipboardService,
         );
 
-        rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
+        rectangleSelectionHelperService = new RectangleSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub, mathsHelper);
         rectangleSelectionManipulatorService = new RectangleSelectionManipulatorService(
             drawingStub,
             rectangleSelectionHelperService,
@@ -177,8 +177,8 @@ describe('SidebarComponent', () => {
             clipboardService,
         );
 
-        lassoSelectionHelperService = new LassoSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
-        lassoSelectionHandlerService = new LassoSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        lassoSelectionHelperService = new LassoSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub, mathsHelper);
+        lassoSelectionHandlerService = new LassoSelectionHandlerService(drawingStub, ellipseSelectionHelperService, mathsHelper);
         lassoSelectionManipulatorService = new LassoSelectionManipulatorService(
             drawingStub,
             lassoSelectionHelperService,

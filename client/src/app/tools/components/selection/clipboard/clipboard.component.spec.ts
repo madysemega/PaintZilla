@@ -71,8 +71,8 @@ describe('ClipboardComponent', () => {
 
         pencilService = new PencilService(drawingStub, colourServiceStub, historyServiceStub);
 
-        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
-        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);
+        ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub, mathsHelper);
+        ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService, mathsHelper);
         clipboardService = new ClipboardService(drawingStub, ellipseSelectionHelperService, historyServiceStub);
         ellipseSelectionManipulatorService = new EllipseSelectionManipulatorService(
             drawingStub,
