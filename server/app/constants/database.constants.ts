@@ -4,4 +4,5 @@ export const LOCAL_DATABASE_DIRECTORY = './app/drawings';
 export const UTF_8 = 'utf-8';
 export const NOT_FOUND = -1;
 export const DEFAULT_NAME = 'Sans titre';
-export const DRAWING_NOT_FOUND = { drawing: '', id: '', labels: [], name: DEFAULT_NAME };
+export const READY_STATE_DISCONNECTED = 0;
+export const READY_STATE_CONNECTED = 1;
