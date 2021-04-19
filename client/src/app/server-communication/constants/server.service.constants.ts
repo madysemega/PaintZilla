@@ -12,5 +12,3 @@ export const TEXT_HTTP_OPTIONS = {
     }),
 };
 export const API_URL = 'http://localhost:3000/api/drawings';
-
-export const DEFAULT_NAME = 'Sans titre';

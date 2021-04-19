@@ -6,12 +6,6 @@ import { Validator } from '@common/validation/validator/validator';
 import { Subject, Subscriber } from 'rxjs';
 import { ServerService } from './server.service';
 // tslint:disable:max-file-line-count
-export const MOCK_DRAWING: Drawing = {
-    id: Constants.DEFAULT_ID,
-    drawing: Constants.DEFAULT_DRAWING,
-    name: Constants.DEFAULT_NAME,
-    labels: Constants.DEFAULT_LABELS,
-};
 describe('RequestsService', () => {
     // tslint:disable:no-any
     let service: ServerService;
@@ -53,21 +47,23 @@ describe('RequestsService', () => {
     });
 
     it('createDrawing(): should call all external methods', () => {
-        service.createDrawing(MOCK_DRAWING.name, MOCK_DRAWING.drawing, MOCK_DRAWING.labels);
-        expect(Validator.checkDrawing).toHaveBeenCalledWith(MOCK_DRAWING.drawing);
+        service.createDrawing(Constants.MOCK_DRAWING.name, Constants.MOCK_DRAWING.drawing, Constants.MOCK_DRAWING.labels);
+        expect(Validator.checkDrawing).toHaveBeenCalledWith(Constants.MOCK_DRAWING.drawing);
         expect(httpClientSpy.post).toHaveBeenCalled();
     });
 
     it('createDrawing(): should return an observable on success channel if post request returns success', () => {
-        service.createDrawing(MOCK_DRAWING.name, MOCK_DRAWING.drawing, MOCK_DRAWING.labels).subscribe((drawing: Drawing) => {
-            subscriberSpy.successChannel(drawing);
-        });
-        postSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        service
+            .createDrawing(Constants.MOCK_DRAWING.name, Constants.MOCK_DRAWING.drawing, Constants.MOCK_DRAWING.labels)
+            .subscribe((drawing: Drawing) => {
+                subscriberSpy.successChannel(drawing);
+            });
+        postSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('createDrawing(): should return an observable on error channel if post request returns error', () => {
-        service.createDrawing(MOCK_DRAWING.name, MOCK_DRAWING.drawing, MOCK_DRAWING.labels).subscribe(
+        service.createDrawing(Constants.MOCK_DRAWING.name, Constants.MOCK_DRAWING.drawing, Constants.MOCK_DRAWING.labels).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -90,8 +86,8 @@ describe('RequestsService', () => {
         service.getAllDrawings().subscribe((drawings: Drawing[]) => {
             subscriberSpy.successChannel(drawings);
         });
-        getMultipleDrawingSubject.next([MOCK_DRAWING]);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([MOCK_DRAWING]);
+        getMultipleDrawingSubject.next([Constants.MOCK_DRAWING]);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([Constants.MOCK_DRAWING]);
     });
 
     it('getAllDrawings(): should return an observable on error channel if get request returns error', () => {
@@ -119,8 +115,8 @@ describe('RequestsService', () => {
         service.getAllLabels().subscribe((labels: string[]) => {
             subscriberSpy.successChannel(labels);
         });
-        getMultipleDrawingSubject.next([MOCK_DRAWING]);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([MOCK_DRAWING]);
+        getMultipleDrawingSubject.next([Constants.MOCK_DRAWING]);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([Constants.MOCK_DRAWING]);
     });
 
     it('getAllLabels(): should return an observable on error channel if get request returns error', () => {
@@ -139,21 +135,21 @@ describe('RequestsService', () => {
     });
 
     it('getDrawingById(): should call all external methods', () => {
-        service.getDrawingById(MOCK_DRAWING.id);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
+        service.getDrawingById(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
         expect(httpClientSpy.get).toHaveBeenCalled();
     });
 
     it('getDrawingById(): should return an observable on success channel if get request returns success', () => {
-        service.getDrawingById(MOCK_DRAWING.id).subscribe((drawing: Drawing) => {
+        service.getDrawingById(Constants.MOCK_DRAWING.id).subscribe((drawing: Drawing) => {
             subscriberSpy.successChannel(drawing);
         });
-        getSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        getSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('getDrawingsById(): should return an observable on error channel if get request returns error', () => {
-        service.getDrawingById(MOCK_DRAWING.id).subscribe(
+        service.getDrawingById(Constants.MOCK_DRAWING.id).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -167,23 +163,23 @@ describe('RequestsService', () => {
     });
 
     it('getDrawingByName(): should call all external methods', () => {
-        service.getDrawingsByName(MOCK_DRAWING.name);
-        expect(Validator.checkName).toHaveBeenCalledWith(MOCK_DRAWING.name);
+        service.getDrawingsByName(Constants.MOCK_DRAWING.name);
+        expect(Validator.checkName).toHaveBeenCalledWith(Constants.MOCK_DRAWING.name);
         expect(httpClientSpy.get).toHaveBeenCalled();
     });
 
     it('getDrawingByName(): should return an observable on success channel if get request returns success', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByName(MOCK_DRAWING.name).subscribe((drawings: Drawing[]) => {
+        service.getDrawingsByName(Constants.MOCK_DRAWING.name).subscribe((drawings: Drawing[]) => {
             subscriberSpy.successChannel(drawings);
         });
-        getMultipleDrawingSubject.next([MOCK_DRAWING]);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([MOCK_DRAWING]);
+        getMultipleDrawingSubject.next([Constants.MOCK_DRAWING]);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([Constants.MOCK_DRAWING]);
     });
 
     it('getDrawingsByName(): should return an observable on error channel if get request returns error', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByName(MOCK_DRAWING.name).subscribe(
+        service.getDrawingsByName(Constants.MOCK_DRAWING.name).subscribe(
             (drawings: Drawing[]) => {
                 subscriberSpy.successChannel(drawings);
             },
@@ -197,23 +193,23 @@ describe('RequestsService', () => {
     });
 
     it('getDrawingsByLabelsAllMatch(): should call all external methods', () => {
-        service.getDrawingsByLabelsAllMatch(MOCK_DRAWING.labels);
-        expect(Validator.checkLabels).toHaveBeenCalledWith(MOCK_DRAWING.labels);
+        service.getDrawingsByLabelsAllMatch(Constants.MOCK_DRAWING.labels);
+        expect(Validator.checkLabels).toHaveBeenCalledWith(Constants.MOCK_DRAWING.labels);
         expect(httpClientSpy.get).toHaveBeenCalled();
     });
 
     it('getDrawingsByLabelsAllMatch(): should return an observable on success channel if get request returns success', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByLabelsAllMatch(MOCK_DRAWING.labels).subscribe((drawings: Drawing[]) => {
+        service.getDrawingsByLabelsAllMatch(Constants.MOCK_DRAWING.labels).subscribe((drawings: Drawing[]) => {
             subscriberSpy.successChannel(drawings);
         });
-        getMultipleDrawingSubject.next([MOCK_DRAWING]);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([MOCK_DRAWING]);
+        getMultipleDrawingSubject.next([Constants.MOCK_DRAWING]);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([Constants.MOCK_DRAWING]);
     });
 
     it('getDrawingsByLabelsAllMatch(): should return an observable on error channel if get request returns error', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByLabelsAllMatch(MOCK_DRAWING.labels).subscribe(
+        service.getDrawingsByLabelsAllMatch(Constants.MOCK_DRAWING.labels).subscribe(
             (drawings: Drawing[]) => {
                 subscriberSpy.successChannel(drawings);
             },
@@ -227,23 +223,23 @@ describe('RequestsService', () => {
     });
 
     it('getDrawingsByLabelsOneMatch(): should call all external methods', () => {
-        service.getDrawingsByLabelsOneMatch(MOCK_DRAWING.labels);
-        expect(Validator.checkLabels).toHaveBeenCalledWith(MOCK_DRAWING.labels);
+        service.getDrawingsByLabelsOneMatch(Constants.MOCK_DRAWING.labels);
+        expect(Validator.checkLabels).toHaveBeenCalledWith(Constants.MOCK_DRAWING.labels);
         expect(httpClientSpy.get).toHaveBeenCalled();
     });
 
     it('getDrawingsByLabelsOneMatch(): should return an observable on success channel if get request returns success', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByLabelsOneMatch(MOCK_DRAWING.labels).subscribe((drawings: Drawing[]) => {
+        service.getDrawingsByLabelsOneMatch(Constants.MOCK_DRAWING.labels).subscribe((drawings: Drawing[]) => {
             subscriberSpy.successChannel(drawings);
         });
-        getMultipleDrawingSubject.next([MOCK_DRAWING]);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([MOCK_DRAWING]);
+        getMultipleDrawingSubject.next([Constants.MOCK_DRAWING]);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith([Constants.MOCK_DRAWING]);
     });
 
     it('getDrawingsByLabelsOneMatch(): should return an observable on error channel if get request returns error', () => {
         httpClientSpy.get.and.returnValue(getMultipleDrawingSubject);
-        service.getDrawingsByLabelsOneMatch(MOCK_DRAWING.labels).subscribe(
+        service.getDrawingsByLabelsOneMatch(Constants.MOCK_DRAWING.labels).subscribe(
             (drawings: Drawing[]) => {
                 subscriberSpy.successChannel(drawings);
             },
@@ -257,22 +253,22 @@ describe('RequestsService', () => {
     });
 
     it('updateDrawing(): should call all external methods', () => {
-        service.updateDrawing(MOCK_DRAWING.id, MOCK_DRAWING);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
-        expect(Validator.checkAll).toHaveBeenCalledWith(MOCK_DRAWING);
+        service.updateDrawing(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkAll).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
         expect(httpClientSpy.put).toHaveBeenCalled();
     });
 
     it('updateDrawing(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawing(MOCK_DRAWING.id, MOCK_DRAWING).subscribe((drawing: Drawing) => {
+        service.updateDrawing(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING).subscribe((drawing: Drawing) => {
             subscriberSpy.successChannel(drawing);
         });
-        putSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        putSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('updateDrawing(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawing(MOCK_DRAWING.id, MOCK_DRAWING).subscribe(
+        service.updateDrawing(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -286,22 +282,22 @@ describe('RequestsService', () => {
     });
 
     it('updateDrawingName(): should call all external methods', () => {
-        service.updateDrawingName(MOCK_DRAWING.id, MOCK_DRAWING.name);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
-        expect(Validator.checkName).toHaveBeenCalledWith(MOCK_DRAWING.name);
+        service.updateDrawingName(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.name);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkName).toHaveBeenCalledWith(Constants.MOCK_DRAWING.name);
         expect(httpClientSpy.put).toHaveBeenCalled();
     });
 
     it('updateDrawingName(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingName(MOCK_DRAWING.id, MOCK_DRAWING.name).subscribe((drawing: Drawing) => {
+        service.updateDrawingName(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.name).subscribe((drawing: Drawing) => {
             subscriberSpy.successChannel(drawing);
         });
-        putSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        putSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('updateDrawingName(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingName(MOCK_DRAWING.id, MOCK_DRAWING.name).subscribe(
+        service.updateDrawingName(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.name).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -315,22 +311,22 @@ describe('RequestsService', () => {
     });
 
     it('updateDrawingLabels(): should call all external methods', () => {
-        service.updateDrawingLabels(MOCK_DRAWING.id, MOCK_DRAWING.labels);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
-        expect(Validator.checkLabels).toHaveBeenCalledWith(MOCK_DRAWING.labels);
+        service.updateDrawingLabels(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.labels);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkLabels).toHaveBeenCalledWith(Constants.MOCK_DRAWING.labels);
         expect(httpClientSpy.put).toHaveBeenCalled();
     });
 
     it('updateDrawingLabels(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingLabels(MOCK_DRAWING.id, MOCK_DRAWING.labels).subscribe((drawing: Drawing) => {
+        service.updateDrawingLabels(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.labels).subscribe((drawing: Drawing) => {
             subscriberSpy.successChannel(drawing);
         });
-        putSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        putSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('updateDrawingLabels(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingLabels(MOCK_DRAWING.id, MOCK_DRAWING.labels).subscribe(
+        service.updateDrawingLabels(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.labels).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -344,22 +340,22 @@ describe('RequestsService', () => {
     });
 
     it('updateDrawingContent(): should call all external methods', () => {
-        service.updateDrawingContent(MOCK_DRAWING.id, MOCK_DRAWING.drawing);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
-        expect(Validator.checkDrawing).toHaveBeenCalledWith(MOCK_DRAWING.drawing);
+        service.updateDrawingContent(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.drawing);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkDrawing).toHaveBeenCalledWith(Constants.MOCK_DRAWING.drawing);
         expect(httpClientSpy.put).toHaveBeenCalled();
     });
 
     it('updateDrawingContent(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingContent(MOCK_DRAWING.id, MOCK_DRAWING.drawing).subscribe((drawing: Drawing) => {
+        service.updateDrawingContent(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.drawing).subscribe((drawing: Drawing) => {
             subscriberSpy.successChannel(drawing);
         });
-        putSubject.next(MOCK_DRAWING);
-        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(MOCK_DRAWING);
+        putSubject.next(Constants.MOCK_DRAWING);
+        expect(subscriberSpy.successChannel).toHaveBeenCalledWith(Constants.MOCK_DRAWING);
     });
 
     it('updateDrawingContent(): should return an observable on success channel if get request returns success', () => {
-        service.updateDrawingContent(MOCK_DRAWING.id, MOCK_DRAWING.drawing).subscribe(
+        service.updateDrawingContent(Constants.MOCK_DRAWING.id, Constants.MOCK_DRAWING.drawing).subscribe(
             (drawing: Drawing) => {
                 subscriberSpy.successChannel(drawing);
             },
@@ -373,13 +369,13 @@ describe('RequestsService', () => {
     });
 
     it('deleteDrawing(): should call all external methods', () => {
-        service.deleteDrawing(MOCK_DRAWING.id);
-        expect(Validator.checkId).toHaveBeenCalledWith(MOCK_DRAWING.id);
+        service.deleteDrawing(Constants.MOCK_DRAWING.id);
+        expect(Validator.checkId).toHaveBeenCalledWith(Constants.MOCK_DRAWING.id);
         expect(httpClientSpy.delete).toHaveBeenCalled();
     });
 
     it('deleteDrawing(): should return an observable on success channel if get request returns success', () => {
-        service.deleteDrawing(MOCK_DRAWING.id).subscribe(() => {
+        service.deleteDrawing(Constants.MOCK_DRAWING.id).subscribe(() => {
             subscriberSpy.successChannel();
         });
         deleteSubject.next();
@@ -387,7 +383,7 @@ describe('RequestsService', () => {
     });
 
     it('deleteDrawing(): should return an observable on success channel if get request returns success', () => {
-        service.deleteDrawing(MOCK_DRAWING.id).subscribe(
+        service.deleteDrawing(Constants.MOCK_DRAWING.id).subscribe(
             () => {
                 subscriberSpy.successChannel();
             },
