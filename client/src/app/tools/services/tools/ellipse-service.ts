@@ -11,6 +11,7 @@ import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
 import { BoxShape } from '@app/shapes/box-shape';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
 import { StrokeWidthProperty } from '@app/shapes/properties/stroke-width-property/stroke-width-property';
@@ -38,7 +39,7 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
+    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService, private mathsHelper: MathsHelper) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';
@@ -55,8 +56,8 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
     }
 
     private initializeRenderers(): void {
-        this.strokeRenderer = new EllipseStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
-        this.fillRenderer = new EllipseFillRenderer(this.shape, [this.fillStyleProperty]);
+        this.strokeRenderer = new EllipseStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty], this.mathsHelper);
+        this.fillRenderer = new EllipseFillRenderer(this.shape, [this.fillStyleProperty], this.mathsHelper);
     }
 
     onToolSelect(): void {

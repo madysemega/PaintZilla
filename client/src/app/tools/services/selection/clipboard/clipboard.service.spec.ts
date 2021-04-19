@@ -7,6 +7,7 @@ import { ColourService } from '@app/colour-picker/services/colour/colour.service
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { EllipseSelectionHandlerService } from '@app/tools/services/selection/ellipse/ellipse-selection-handler-service';
 import { EllipseSelectionHelperService } from '@app/tools/services/selection/ellipse/ellipse-selection-helper.service';
 import { EllipseSelectionManipulatorService } from '@app/tools/services/selection/ellipse/ellipse-selection-manipulator.service';
@@ -33,6 +34,7 @@ describe('ClipboardService', () => {
     let ellipseToolStub: EllipseService;
     let keyboardServiceStub: jasmine.SpyObj<KeyboardService>;
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
+    let mathsHelper: MathsHelper;
 
     let registerWhiteFillSpy: jasmine.Spy<any>;
     let drawSelectionSpy: jasmine.Spy<any>;
@@ -54,7 +56,8 @@ describe('ClipboardService', () => {
         drawingStub = new DrawingService(historyServiceStub);
         drawingStub.canvasSize = { x: 500, y: 600 };
 
-        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
+        mathsHelper = new MathsHelper();
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub, mathsHelper);
 
         ellipseSelectionHelperService = new EllipseSelectionHelperService(drawingStub, colourServiceStub, ellipseToolStub);
         ellipseSelectionHandlerService = new EllipseSelectionHandlerService(drawingStub, ellipseSelectionHelperService);

@@ -16,6 +16,7 @@ import { SaveDrawingService } from '@app/drawing/services/save-drawing/save-draw
 import { HistoryControlsComponent } from '@app/history/component/history-controls/history-controls.component';
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { EraserToolConfigurationComponent } from '@app/tools/components/tool-configurations/eraser-tool-configuration/eraser-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
@@ -98,6 +99,8 @@ describe('SidebarComponent', () => {
     let lassoSelectionHelperService: LassoSelectionHelperService;
     let lassoSelectionCreatorService: LassoSelectionCreatorService;
 
+    let mathsHelper: MathsHelper;
+
     class RectangleServiceStub extends RectangleService {
         constructor(drawingService: DrawingService, colourService: ColourService, historyService: HistoryService) {
             super(drawingService, colourService, historyService);
@@ -127,7 +130,8 @@ describe('SidebarComponent', () => {
         sprayStoolStub = new SprayService(drawingStub, colourServiceStub, historyServiceStub);
         pipetteStoolStub = new PipetteService(drawingStub, colourServiceStub, historyServiceStub);
         eraserStoolStub = new EraserService(drawingStub, historyServiceStub);
-        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub);
+        mathsHelper = new MathsHelper();
+        ellipseToolStub = new EllipseService(drawingStub, colourServiceStub, historyServiceStub, mathsHelper);
         rectangleService = new RectangleServiceStub(drawingStub, colourServiceStub, historyServiceStub);
         polygonService = new PolygonService(drawingStub, colourServiceStub, historyServiceStub);
         drawingCreatorServiceSpy = jasmine.createSpyObj('DrawingCreatorService', ['createNewDrawing']);
