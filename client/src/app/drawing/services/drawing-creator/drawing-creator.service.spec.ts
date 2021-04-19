@@ -10,6 +10,7 @@ import { AutomaticSavingService } from '@app/file-options/automatic-saving/autom
 import { HistoryService } from '@app/history/service/history.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
 import { MagnetismService } from '@app/magnetism/magnetism.service';
+import { HotkeyModule } from 'angular2-hotkeys';
 import { of } from 'rxjs';
 
 // tslint:disable:no-any
@@ -52,7 +53,7 @@ describe('DrawingCreatorService', () => {
         });
 
         TestBed.configureTestingModule({
-            imports: [MatDialogModule],
+            imports: [MatDialogModule, HotkeyModule.forRoot()],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: DrawingService, useValue: drawingServiceSpy },

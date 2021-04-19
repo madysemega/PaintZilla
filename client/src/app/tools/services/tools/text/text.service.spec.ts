@@ -47,6 +47,15 @@ describe('TextService', () => {
         expect(finalizeSpy).toHaveBeenCalled();
     });
 
+    it('When text alignment changes, the event should be propagated to editor', () => {
+        const editorSetAlignmentSpy = spyOn(service['editor'], 'setAlignment').and.stub();
+
+        const NEW_ALIGNMENT = 'right';
+        service.updateAlignment(NEW_ALIGNMENT);
+
+        expect(editorSetAlignmentSpy).toHaveBeenCalled();
+    });
+
     it('When font size changes, the event should be propagated to editor', () => {
         const editorSetFontSizeSpy = spyOn(service['editor'], 'setFontSize').and.stub();
 
@@ -322,17 +331,11 @@ describe('TextService', () => {
     });
 
     it('If editing, delete key should remove character to the right of the cursor in the text', () => {
-        const keyboardService = TestBed.inject(KeyboardService);
         const deleteSpy = spyOn(service['editor'], 'delete').and.stub();
-
-        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
-            if (action.trigger === 'delete') {
-                action.invoke();
-            }
-        });
+        const event = new KeyboardEvent('keyup', { code: 'Delete' });
 
         service['isEditing'] = true;
-        service['initializeKeyboardShortcuts']();
+        service.onKeyUp(event);
 
         expect(deleteSpy).toHaveBeenCalled();
     });
