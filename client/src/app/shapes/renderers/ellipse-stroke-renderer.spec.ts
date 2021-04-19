@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { BoxShape } from '@app/shapes/box-shape';
@@ -20,13 +19,13 @@ describe('EllipseStrokeRenderer', () => {
     let ctxEllipseSpy: jasmine.Spy<any>;
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxStrokeSpy: jasmine.Spy<any>;
-    let mathsHelper: MathsHelper = TestBed.inject(MathsHelper);
+    let mathsHelper: MathsHelper;
 
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         shape = new BoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT);
-
+        mathsHelper = new MathsHelper();
         renderer = new EllipseStrokeRenderer(shape, properties, mathsHelper);
 
         canvasTestHelper = new CanvasTestHelper();

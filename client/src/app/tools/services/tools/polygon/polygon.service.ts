@@ -10,6 +10,7 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { StrokeStyleProperty } from '@app/shapes/properties/stroke-style-property';
@@ -36,12 +37,14 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     strokeWidthProperty: StrokeWidthProperty = new StrokeWidthProperty(this.lineWidth);
     strokeStyleProperty: StrokeStyleProperty = new StrokeStyleProperty(this.colourService.getSecondaryColour());
     fillStyleProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
-    private strokeRenderer: PolygonStrokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty]);
-    private fillRenderer: PolygonFillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty]);
-    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService) {
+    private strokeRenderer: PolygonStrokeRenderer;
+    private fillRenderer: PolygonFillRenderer;
+    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService, private mathsHelper: MathsHelper) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';
+        this.strokeRenderer = new PolygonStrokeRenderer(this.shape, [this.strokeWidthProperty, this.strokeStyleProperty], this.mathsHelper);
+        this.fillRenderer = new PolygonFillRenderer(this.shape, [this.fillStyleProperty], this.mathsHelper);
         this.initializeProperties();
     }
 
@@ -132,8 +135,7 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
         endPoint = this.getSquareEndPoint(startPoint, endPoint);
-
-        const CENTER_POINT: Vec2 = { x: (startPoint.x + endPoint.x) / 2, y: (startPoint.y + endPoint.y) / 2 };
+        const CENTER_POINT: Vec2 = this.mathsHelper.computeCenter(startPoint, endPoint);
         this.setPolygonAttributes(startPoint, endPoint);
 
         this.renderPolygon(ctx);

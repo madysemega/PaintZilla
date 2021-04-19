@@ -2,6 +2,7 @@ import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { MathsHelper } from '../helper/maths-helper.service';
 import { PolygonStrokeRenderer } from './polygon-stroke-renderer';
 
 // tslint:disable:no-any
@@ -20,11 +21,13 @@ describe('PolygonStrokeRenderer', () => {
     let ctxLineSpy: jasmine.Spy<any>;
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxStrokeSpy: jasmine.Spy<any>;
+    let mathsHelper: MathsHelper;
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         shape = new PolygonShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT, INITIAL_NUMBER_SIDES, CONTOUR_WIDTH);
-        renderer = new PolygonStrokeRenderer(shape, properties);
+        mathsHelper = new MathsHelper();
+        renderer = new PolygonStrokeRenderer(shape, properties, mathsHelper);
 
         canvasTestHelper = new CanvasTestHelper();
         ctxStub = canvasTestHelper.canvas.getContext('2d') as CanvasRenderingContext2D;

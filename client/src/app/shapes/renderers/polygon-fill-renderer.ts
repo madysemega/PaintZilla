@@ -1,18 +1,16 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
+import { MathsHelper } from '../helper/maths-helper.service';
 import { ShapeRenderer } from './shape-renderer';
 
 export class PolygonFillRenderer extends ShapeRenderer<PolygonShape> {
-    constructor(shape: PolygonShape, properties: ShapeProperty[]) {
+    constructor(shape: PolygonShape, properties: ShapeProperty[], private mathsHelper: MathsHelper) {
         super(shape, properties);
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-        const CENTER_POINT: Vec2 = {
-            x: (this.shape.bottomRight.x + this.shape.topLeft.x) / 2,
-            y: (this.shape.bottomRight.y + this.shape.topLeft.y) / 2,
-        };
+        const CENTER_POINT: Vec2 = this.mathsHelper.computeCenter(this.shape.bottomRight, this.shape.topLeft);
 
         const SIZE_BEFORE_CONTOUR = this.squarePoint(CENTER_POINT, this.shape.bottomRight);
         let size;
@@ -37,7 +35,7 @@ export class PolygonFillRenderer extends ShapeRenderer<PolygonShape> {
     }
 
     clone(): ShapeRenderer<PolygonShape> {
-        return new PolygonFillRenderer(this.getShapeCopy(), this.getPropertiesCopy());
+        return new PolygonFillRenderer(this.getShapeCopy(), this.getPropertiesCopy(), this.mathsHelper);
     }
 
     squarePoint(startPoint: Vec2, endPoint: Vec2): number {

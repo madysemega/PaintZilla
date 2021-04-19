@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
@@ -21,11 +20,12 @@ describe('EllipseFillRenderer', () => {
     let ctxEllipseSpy: jasmine.Spy<any>;
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxFillSpy: jasmine.Spy<any>;
-    let mathsHelper: MathsHelper = TestBed.inject(MathsHelper);
+    let mathsHelper: MathsHelper;
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();
         shape = new ContouredBoxShape(INITIAL_TOP_LEFT, INITIAL_BOTTOM_RIGHT, CONTOUR_WIDTH);
+        mathsHelper = new MathsHelper();
         renderer = new EllipseFillRenderer(shape, properties, mathsHelper);
 
         canvasTestHelper = new CanvasTestHelper();

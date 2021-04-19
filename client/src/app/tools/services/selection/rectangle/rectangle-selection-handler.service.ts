@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { SelectionHandlerService } from '@app/tools/services/selection/selection-base/selection-handler.service';
 import { RectangleSelectionHelperService } from './rectangle-selection-helper.service';
 
@@ -7,8 +8,8 @@ import { RectangleSelectionHelperService } from './rectangle-selection-helper.se
     providedIn: 'root',
 })
 export class RectangleSelectionHandlerService extends SelectionHandlerService {
-    constructor(drawingService: DrawingService, protected selectionHelper: RectangleSelectionHelperService) {
-        super(drawingService, selectionHelper);
+    constructor(drawingService: DrawingService, protected selectionHelper: RectangleSelectionHelperService, mathsHelper: MathsHelper) {
+        super(drawingService, selectionHelper, mathsHelper);
     }
 
     extractSelectionFromSource(sourceCanvas: HTMLCanvasElement): void {
