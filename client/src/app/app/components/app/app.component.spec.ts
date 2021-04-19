@@ -22,7 +22,6 @@ import { MaterialModule } from '@app/material.module';
 import { EllipseToolConfigurationComponent } from '@app/tools/components/tool-configurations/ellipse-tool-configuration/ellipse-tool-configuration.component';
 import { LineToolConfigurationComponent } from '@app/tools/components/tool-configurations/line-tool-configuration/line-tool-configuration.component';
 import { RectangleToolConfigurationComponent } from '@app/tools/components/tool-configurations/rectangle-tool-configuration/rectangle-tool-configuration.component';
-import { IndexService } from '@app/tools/services/index/index.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 import { EraserService } from '@app/tools/services/tools/eraser/eraser-service';
@@ -79,7 +78,6 @@ describe('AppComponent', () => {
                 RectangleToolConfigurationComponent,
             ],
             providers: [
-                { provide: IndexService },
                 { provide: ResizingService },
                 { provide: PencilService },
                 { provide: PipetteService },
