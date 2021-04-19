@@ -1,1 +1,3 @@
-export const SNACK_BAR_DURATION = 6000;
+import { ENTER } from '@angular/cdk/keycodes';
+
+export const SEPARATOR_KEY_CODES: number[] = [ENTER];

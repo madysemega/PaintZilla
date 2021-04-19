@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
-import { LineShape } from '@app/shapes/line-shape';
+import { LineShape } from '@app/shapes/line-shape/line-shape';
 import { LineDashProperty } from '@app/shapes/properties/line-dash-property';
 import { LineShapeRenderer } from '@app/shapes/renderers/line-shape-renderer';
 import { MouseButton } from '@app/tools/classes/mouse-button';

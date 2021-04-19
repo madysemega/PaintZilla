@@ -1,0 +1,1 @@
+export const DEFAULT_JOINTS_DIAMETER = 5;

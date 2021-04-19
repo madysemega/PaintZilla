@@ -1,12 +1,12 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Message } from '@common/communication/message';
+import { BASE_URL } from './index.constants';
 import { IndexService } from './index.service';
 
 describe('IndexService', () => {
     let httpMock: HttpTestingController;
     let service: IndexService;
-    let baseUrl: string;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -17,7 +17,6 @@ describe('IndexService', () => {
         // BASE_URL is private so we need to access it with its name as a key
         // Try to avoid this syntax which violates encapsulation
         // tslint:disable: no-string-literal
-        baseUrl = service['BASE_URL'];
     });
 
     afterEach(() => {
@@ -33,7 +32,7 @@ describe('IndexService', () => {
             expect(response.body).toEqual(expectedMessage.body, 'body check');
         }, fail);
 
-        const req = httpMock.expectOne(baseUrl);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('GET');
         // actually send the request
         req.flush(expectedMessage);
@@ -45,7 +44,7 @@ describe('IndexService', () => {
         // tslint:disable-next-line: no-empty
         service.basicPost(sentMessage).subscribe(() => {}, fail);
 
-        const req = httpMock.expectOne(baseUrl + '/send');
+        const req = httpMock.expectOne(BASE_URL + '/send');
         expect(req.request.method).toBe('POST');
         // actually send the request
         req.flush(sentMessage);
@@ -56,7 +55,7 @@ describe('IndexService', () => {
             expect(response).toBeUndefined();
         }, fail);
 
-        const req = httpMock.expectOne(baseUrl);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('GET');
         req.error(new ErrorEvent('Random error occured'));
     });
