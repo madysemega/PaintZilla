@@ -1,7 +1,7 @@
-<div class="container vertical" (click)="this.deselect()">
+<div class="container vertical">
     <div class="navbar-section vertical">
         <mat-divider></mat-divider>
-        <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right" routerLink="/home">
+        <button mat-icon-button aria-label="Accueil" matTooltip="Accueil" matTooltipPosition="right" routerLink="/home" (click)="this.deselect()">
             <mat-icon>home</mat-icon>
         </button>
         <button
