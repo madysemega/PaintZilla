@@ -4,10 +4,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RgbFormComponent } from '@app/colour-picker/components/rgb-form/rgb-form.component';
+import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { RgbaFormService } from '@app/colour-picker/services/rgb-form/rgb-form.service';
 import { Subject } from 'rxjs';
-import * as Constants from '@app/colour-picker/constants/colour-testing.constants';
 // tslint:disable:no-any
 // tslint:disable: no-string-literal
 describe('RgbFormComponent', () => {

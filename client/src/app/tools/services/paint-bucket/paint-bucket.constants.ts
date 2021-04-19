@@ -19,8 +19,8 @@ export const TOLERANCE = 10;
 export const BLACK = new Colour();
 export const WHITE = new Colour(MAX_RGBA, MAX_RGBA, MAX_RGBA, MAX_ALPHA);
 export const INVALID_INDEX = -1;
-export type fillParameters = { imageData: ImageData, onClickCoords: Vec2, fillColour: Colour, tolerance: number };
-export type visitCoordinates = { start: number, end: number, nextRow: number, parentRow: number };
+export type fillParameters = { imageData: ImageData; onClickCoords: Vec2; fillColour: Colour; tolerance: number };
+export type visitCoordinates = { start: number; end: number; nextRow: number; parentRow: number };
 export class FloodFillMock extends FloodFill {
     fill(parameters: fillParameters): number[] {
         return [];
