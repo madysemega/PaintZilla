@@ -10,33 +10,20 @@ import { MatChipInputEvent } from '@angular/material/chips';
     styleUrls: ['./filter-label.component.scss'],
 })
 export class FilterLabelComponent {
-    constructor() {
-        this.availableLabels = [];
-        this.retainedLabels = [];
-        this.separatorKeysCodes = [ENTER, COMMA];
-        this.labelCtrl = new FormControl();
-        this.removable = true;
-        this.selectable = true;
-        this.isAvailable = true;
-
-        this.filterAddEvent = new EventEmitter<string>();
-        this.filterRemoveEvent = new EventEmitter<number>();
-    }
-
     @Input()
-    availableLabels: string[];
-    retainedLabels: string[];
+    availableLabels: string[] = [];
+    retainedLabels: string[] = [];
 
-    separatorKeysCodes: number[];
-    labelCtrl: FormControl;
-    removable: boolean;
-    selectable: boolean;
-    isAvailable: boolean;
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    labelCtrl: FormControl = new FormControl();
+    removable: boolean = true;
+    selectable: boolean = true;
+    isAvailable: boolean = true;
 
     @Output()
-    filterAddEvent: EventEmitter<string>;
+    filterAddEvent: EventEmitter<string> = new EventEmitter<string>();
     @Output()
-    filterRemoveEvent: EventEmitter<number>;
+    filterRemoveEvent: EventEmitter<number> = new EventEmitter<number>();
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete: MatAutocomplete;
