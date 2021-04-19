@@ -12,12 +12,12 @@ import { EllipseService } from '@app/tools/services/tools/ellipse-service';
 export class EllipseSelectionHelperService extends SelectionHelperService {
     private readonly CIRCLE_MAX_ANGLE: number = 360;
 
-    constructor(public drawingService: DrawingService, colourService: ColourService, ellipseService: EllipseService, mathsHelper:MathsHelper) {
+    constructor(public drawingService: DrawingService, colourService: ColourService, ellipseService: EllipseService, mathsHelper: MathsHelper) {
         super(drawingService, colourService, ellipseService, mathsHelper);
     }
 
     getEllipseParam(startPoint: Vec2, endPoint: Vec2, center: Vec2, radii: Vec2): void {
-        center = this.mathsHelper.computeCenter(startPoint, endPoint);
+        this.mathsHelper.computeCenterInPlace(center, startPoint, endPoint);
         radii.x = Math.abs(endPoint.x - startPoint.x) / 2;
         radii.y = Math.abs(endPoint.y - startPoint.y) / 2;
     }

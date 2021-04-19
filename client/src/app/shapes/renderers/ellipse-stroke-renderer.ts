@@ -1,7 +1,7 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { BoxShape } from '@app/shapes/box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { MathsHelper } from '../helper/maths-helper.service';
 import { ShapeRenderer } from './shape-renderer';
 
 export class EllipseStrokeRenderer extends ShapeRenderer<BoxShape> {

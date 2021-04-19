@@ -12,7 +12,7 @@ export class LassoSelectionHandlerService extends SelectionHandlerService {
     initialVertices: Vec2[];
     translatedVertices: Vec2[];
 
-    constructor(drawingService: DrawingService, protected selectionHelper: LassoSelectionHelperService,  mathsHelper: MathsHelper) {
+    constructor(drawingService: DrawingService, protected selectionHelper: LassoSelectionHelperService, mathsHelper: MathsHelper) {
         super(drawingService, selectionHelper, mathsHelper);
         this.initialVertices = new Array<Vec2>();
         this.translatedVertices = new Array<Vec2>();

@@ -39,7 +39,12 @@ export class EllipseService extends ShapeTool implements ISelectableTool, IDesel
 
     isShiftDown: boolean = false;
 
-    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService, private mathsHelper: MathsHelper) {
+    constructor(
+        drawingService: DrawingService,
+        private colourService: ColourService,
+        private history: HistoryService,
+        private mathsHelper: MathsHelper,
+    ) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'ellipse';

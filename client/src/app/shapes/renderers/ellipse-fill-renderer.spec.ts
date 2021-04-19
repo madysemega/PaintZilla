@@ -1,8 +1,8 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { MathsHelper } from '../helper/maths-helper.service';
 import { EllipseFillRenderer } from './ellipse-fill-renderer';
 
 // tslint:disable:no-any

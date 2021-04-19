@@ -1,9 +1,9 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import { MAX_DEGREES } from '@app/common-constants';
 import { ContouredBoxShape } from '@app/shapes/contoured-box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
-import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 
 export class EllipseFillRenderer extends ShapeRenderer<ContouredBoxShape> {
     constructor(shape: ContouredBoxShape, properties: ShapeProperty[], private mathsHelper: MathsHelper) {

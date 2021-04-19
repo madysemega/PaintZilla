@@ -1,8 +1,8 @@
 import { CanvasTestHelper } from '@app/app/classes/canvas-test-helper';
 import { Vec2 } from '@app/app/classes/vec2';
 import { BoxShape } from '@app/shapes/box-shape';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { MathsHelper } from '../helper/maths-helper.service';
 import { EllipseStrokeRenderer } from './ellipse-stroke-renderer';
 
 // tslint:disable:no-any
@@ -20,7 +20,6 @@ describe('EllipseStrokeRenderer', () => {
     let ctxBeginPathSpy: jasmine.Spy<any>;
     let ctxStrokeSpy: jasmine.Spy<any>;
     let mathsHelper: MathsHelper;
-
 
     beforeEach(() => {
         properties = new Array<ShapeProperty>();

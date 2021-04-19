@@ -37,7 +37,6 @@ describe('LassoSelectionManipulatorService', () => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         colourService = new ColourService({} as ColourPickerService);
         historyService = new HistoryService(keyboardServiceStub);
-        
 
         helper = new LassoSelectionHelperService(drawingServiceStub, colourService, ellipseService);
         handler = new LassoSelectionHandlerService(drawingServiceStub, helper);

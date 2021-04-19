@@ -10,7 +10,7 @@ import { EllipseSelectionHelperService } from './ellipse-selection-helper.servic
     providedIn: 'root',
 })
 export class EllipseSelectionHandlerService extends SelectionHandlerService {
-    constructor(drawingService: DrawingService, protected selectionHelper: EllipseSelectionHelperService, mathsHelper : MathsHelper) {
+    constructor(drawingService: DrawingService, protected selectionHelper: EllipseSelectionHelperService, mathsHelper: MathsHelper) {
         super(drawingService, selectionHelper, mathsHelper);
     }
 

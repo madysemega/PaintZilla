@@ -17,7 +17,12 @@ export abstract class SelectionHelperService {
     isSelectionBeingManipulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     mementos: HandlerMemento[] = [];
 
-    constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService, protected mathsHelper: MathsHelper) {}
+    constructor(
+        protected drawingService: DrawingService,
+        protected colourService: ColourService,
+        private ellipseService: EllipseService,
+        protected mathsHelper: MathsHelper,
+    ) {}
 
     getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
         return this.ellipseService.getSquareAdjustedPerimeter(startPoint, endPoint);

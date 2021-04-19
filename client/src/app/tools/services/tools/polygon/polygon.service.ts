@@ -39,7 +39,12 @@ export class PolygonService extends ShapeTool implements ISelectableTool {
     fillStyleProperty: FillStyleProperty = new FillStyleProperty(this.colourService.getPrimaryColour());
     private strokeRenderer: PolygonStrokeRenderer;
     private fillRenderer: PolygonFillRenderer;
-    constructor(drawingService: DrawingService, private colourService: ColourService, private history: HistoryService, private mathsHelper: MathsHelper) {
+    constructor(
+        drawingService: DrawingService,
+        private colourService: ColourService,
+        private history: HistoryService,
+        private mathsHelper: MathsHelper,
+    ) {
         super(drawingService);
         this.shapeType = ShapeType.Contoured;
         this.key = 'polygon';

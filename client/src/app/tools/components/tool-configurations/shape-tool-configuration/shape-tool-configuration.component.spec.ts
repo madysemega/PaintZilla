@@ -39,7 +39,6 @@ describe('ShapeToolConfigurationComponent', () => {
     let hotkeysServiceStub: jasmine.SpyObj<HotkeysService>;
     let mathsHelper: MathsHelper;
 
-
     beforeEach(async(() => {
         keyboardServiceStub = jasmine.createSpyObj('KeyboardService', ['registerAction', 'saveContext', 'restoreContext']);
         keyboardServiceStub.registerAction.and.stub();

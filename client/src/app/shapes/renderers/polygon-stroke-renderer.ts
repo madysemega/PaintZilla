@@ -1,7 +1,7 @@
 import { Vec2 } from '@app/app/classes/vec2';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { PolygonShape } from '@app/shapes/polygon-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { MathsHelper } from '../helper/maths-helper.service';
 import { ShapeRenderer } from './shape-renderer';
 
 export class PolygonStrokeRenderer extends ShapeRenderer<PolygonShape> {
