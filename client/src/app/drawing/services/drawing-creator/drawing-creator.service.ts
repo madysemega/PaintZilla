@@ -8,10 +8,12 @@ import { HistoryService } from '@app/history/service/history.service';
     providedIn: 'root',
 })
 export class DrawingCreatorService {
-    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
     saveDrawingDialogRef: MatDialogRef<SaveDrawingDialogComponent>;
     drawingRestored: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
+
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();

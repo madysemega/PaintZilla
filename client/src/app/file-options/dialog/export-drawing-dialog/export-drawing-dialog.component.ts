@@ -21,9 +21,9 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
 
     ctx: CanvasRenderingContext2D;
     previewCtx: CanvasRenderingContext2D;
-    imageName: string | undefined;
-    imageFormat: string | undefined;
-    filter: string;
+    imageName: string | undefined = '';
+    imageFormat: string | undefined = 'png';
+    filter: string = 'none';
 
     constructor(
         public matDialogRef: MatDialogRef<ExportDrawingDialogComponent>,
@@ -33,9 +33,6 @@ export class ExportDrawingDialogComponent implements AfterViewInit {
         private snackBar: MatSnackBar,
         private keyboardService: KeyboardService,
     ) {
-        this.imageName = '';
-        this.imageFormat = 'png';
-        this.filter = 'none';
         this.handleKeyboardContext();
     }
 

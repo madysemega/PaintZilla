@@ -7,7 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./imgur-link-dialog.component.scss'],
 })
 export class ImgurLinkDialogComponent {
-    link: string;
+    link: string = '';
     constructor(public matDialogRef: MatDialogRef<ImgurLinkDialogComponent>) {}
 
     // Taken from https://stackoverflow.com/questions/49102724/angular-5-copy-to-clipboard

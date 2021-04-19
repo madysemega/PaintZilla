@@ -6,10 +6,9 @@ import { HistoryService } from '@app/history/service/history.service';
     providedIn: 'root',
 })
 export class AutomaticSavingService {
-    private currentDrawing: string | null;
+    private currentDrawing: string | null = '';
 
     constructor(private drawingService: DrawingService, private historyService: HistoryService) {
-        this.currentDrawing = '';
         this.drawingService.onDrawingLoaded.subscribe(() => {
             this.saveDrawingLocally();
         });
