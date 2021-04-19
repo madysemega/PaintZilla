@@ -1,4 +1,4 @@
-import { LineShape } from '@app/shapes/line-shape';
+import { LineShape } from '@app/shapes/line-shape/line-shape';
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
 import { ShapeRenderer } from './shape-renderer';
 

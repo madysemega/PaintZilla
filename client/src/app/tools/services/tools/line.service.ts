@@ -8,7 +8,8 @@ import { CursorType } from '@app/drawing/classes/cursor-type';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { HistoryService } from '@app/history/service/history.service';
 import { UserActionRenderShape } from '@app/history/user-actions/user-action-render-shape';
-import { LineShape } from '@app/shapes/line-shape';
+import { LineShape } from '@app/shapes/line-shape/line-shape';
+import { DEFAULT_JOINTS_DIAMETER } from '@app/shapes/line-shape/line-shape.constants';
 import { FillStyleProperty } from '@app/shapes/properties/fill-style-property';
 import { LineCapProperty } from '@app/shapes/properties/line-cap-property';
 import { LineJoinProperty } from '@app/shapes/properties/line-join-property';
@@ -40,7 +41,7 @@ export class LineService extends ResizableTool implements ISelectableTool, IDese
     constructor(drawingService: DrawingService, private colourService: ColourService, private historyService: HistoryService) {
         super(drawingService);
         this.key = 'line';
-        this.jointsDiameter = LineShape.DEFAULT_JOINTS_DIAMETER;
+        this.jointsDiameter = DEFAULT_JOINTS_DIAMETER;
         this.initialize();
     }
 

@@ -2,8 +2,8 @@ import { Colour } from '@app/colour-picker/classes/colours.class';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
-import { TextShape } from '@app/shapes/text-shape';
 import { TextEditor } from './text-editor';
+import { DEFAULT_TEXT } from './text-tool.constants';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -33,7 +33,7 @@ describe('TextEditor', () => {
 
     it('Reset should reset text', () => {
         editor.reset();
-        expect(editor['shape'].text).toEqual(TextShape.DEFAULT_TEXT);
+        expect(editor['shape'].text).toEqual(DEFAULT_TEXT);
     });
 
     it('Reset should reset position', () => {

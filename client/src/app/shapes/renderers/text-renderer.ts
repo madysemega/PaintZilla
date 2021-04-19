@@ -1,5 +1,5 @@
 import { ShapeProperty } from '@app/shapes/properties/shape-property';
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { ShapeRenderer } from './shape-renderer';
 
 export class TextRenderer extends ShapeRenderer<TextShape> {

@@ -5,7 +5,7 @@ import { FontProperty } from '@app/shapes/properties/font-property';
 import { TextAlignmentProperty } from '@app/shapes/properties/text-alignment-property';
 import { TextCursorRenderer } from '@app/shapes/renderers/text-cursor-renderer';
 import { TextRenderer } from '@app/shapes/renderers/text-renderer';
-import { TextShape } from '@app/shapes/text-shape';
+import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { TextCursor } from './text-cursor';
 import { TextEditorContext } from './text-editor-context';
 import * as Constants from './text-tool.constants';
@@ -13,39 +13,33 @@ import * as Constants from './text-tool.constants';
 export class TextEditor {
     private cursorTimerHandle: number;
 
+    private shape: TextShape = new TextShape();
+    private renderer: TextRenderer;
+
+    private colourProperty: FillStyleProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
+    private fontProperty: FontProperty = new FontProperty(
+        this.shape.fontSize,
+        this.shape.fontName,
+        Constants.DEFAULT_IS_BOLD,
+        Constants.DEFAULT_IS_ITALIC,
+    );
+    private textAlignmentProperty: TextAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
+
+    private showCursor: boolean;
+    private cursor: TextCursor = new TextCursor(this.shape, Constants.DEFAULT_CURSOR_POSITION);
+    private cursorRenderer: TextCursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
+
     constructor(private ctx: TextEditorContext) {
         this.initialize();
     }
 
-    private shape: TextShape;
-    private renderer: TextRenderer;
-
-    private colourProperty: FillStyleProperty;
-    private fontProperty: FontProperty;
-    private textAlignmentProperty: TextAlignmentProperty;
-
-    private showCursor: boolean;
-    private cursor: TextCursor;
-    private cursorRenderer: TextCursorRenderer;
-
     private initialize(): void {
-        this.shape = new TextShape();
         this.initializeProperties();
         this.renderer = new TextRenderer(this.shape, [this.colourProperty, this.fontProperty, this.textAlignmentProperty]);
-
-        this.cursor = new TextCursor(this.shape, Constants.DEFAULT_CURSOR_POSITION);
-        this.cursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
     }
 
     private initializeProperties(): void {
-        const DEFAULT_IS_BOLD = false;
-        const DEFAULT_IS_ITALIC = false;
-
-        this.colourProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
         this.ctx.colourService.primaryColourChanged.subscribe((colour: Colour) => (this.colourProperty.colour = colour));
-
-        this.fontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName, DEFAULT_IS_BOLD, DEFAULT_IS_ITALIC);
-        this.textAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
     }
 
     private makeAppliedCtx(): CanvasRenderingContext2D {
@@ -68,7 +62,7 @@ export class TextEditor {
     reset(position: Vec2 = { x: 0, y: 0 }): void {
         this.disableCursor();
 
-        this.shape.text = TextShape.DEFAULT_TEXT;
+        this.shape.text = Constants.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
     }

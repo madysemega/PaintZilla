@@ -4,6 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Vec2 } from '@app/app/classes/vec2';
 import { DiscardChangesModalComponent } from '@app/carousel/components/discard-changes-modal/discard-changes-modal.component';
+import { CONTAINER_HEIGHT, CONTAINER_WIDTH } from '@app/carousel/components/image-details/image-details.constants';
 import { ImageNavigationComponent } from '@app/carousel/components/image-navigation/image-navigation.component';
 import { DiscardChangesModalData } from '@app/carousel/interfaces/discard-changes-modal-data';
 import { HistoryService } from '@app/history/service/history.service';
@@ -24,18 +25,12 @@ export class ImageDetailsComponent {
 
     @Input() dialogRef: MatDialogRef<ImageNavigationComponent>;
 
-    @Output() delete: EventEmitter<string>;
+    @Output() delete: EventEmitter<string> = new EventEmitter();
 
-    imageContainerWidth: number;
-    imageContainerHeight: number;
-    readonly CONTAINER_WIDTH: number = 150;
-    readonly CONTAINER_HEIGHT: number = 150;
+    imageContainerWidth: number = CONTAINER_WIDTH;
+    imageContainerHeight: number = CONTAINER_HEIGHT;
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {
-        this.delete = new EventEmitter();
-        this.imageContainerWidth = this.CONTAINER_WIDTH;
-        this.imageContainerHeight = this.CONTAINER_HEIGHT;
-    }
+    constructor(private domSanitizer: DomSanitizer, private router: Router, private history: HistoryService, private dialog: MatDialog) {}
 
     get imageSrc(): SafeResourceUrl {
         return this.domSanitizer.bypassSecurityTrustResourceUrl(this.data.drawing);

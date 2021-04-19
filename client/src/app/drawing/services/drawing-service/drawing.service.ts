@@ -25,8 +25,8 @@ export class DrawingService {
     initialImage: CanvasImageSource | undefined;
 
     setCursorType(type: CursorType): void {
-        if (this.previewCanvas) {
-            this.previewCanvas.style.setProperty('cursor', type as string);
+        if (this.gridCanvas) {
+            this.gridCanvas.style.setProperty('cursor', type as string);
         }
     }
 
