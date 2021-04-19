@@ -8,23 +8,25 @@ import { TextRenderer } from '@app/shapes/renderers/text-renderer';
 import { TextShape } from '@app/shapes/text-shape/text-shape';
 import { TextCursor } from './text-cursor';
 import { TextEditorContext } from './text-editor-context';
-import { DEFAULT_IS_BOLD, DEFAULT_IS_ITALIC, DEFAULT_TEXT } from './text.constants';
+import * as Constants from './text-tool.constants';
 
 export class TextEditor {
-    private readonly DEFAULT_CURSOR_POSITION: number = 0;
-    private readonly CURSOR_BLINK_DELAI_MS: number = 500;
-
     private cursorTimerHandle: number;
 
     private shape: TextShape = new TextShape();
     private renderer: TextRenderer;
 
     private colourProperty: FillStyleProperty = new FillStyleProperty(this.ctx.colourService.getPrimaryColour());
-    private fontProperty: FontProperty = new FontProperty(this.shape.fontSize, this.shape.fontName, DEFAULT_IS_BOLD, DEFAULT_IS_ITALIC);
+    private fontProperty: FontProperty = new FontProperty(
+        this.shape.fontSize,
+        this.shape.fontName,
+        Constants.DEFAULT_IS_BOLD,
+        Constants.DEFAULT_IS_ITALIC,
+    );
     private textAlignmentProperty: TextAlignmentProperty = new TextAlignmentProperty(this.shape.textAlignment);
 
     private showCursor: boolean;
-    private cursor: TextCursor = new TextCursor(this.shape, this.DEFAULT_CURSOR_POSITION);
+    private cursor: TextCursor = new TextCursor(this.shape, Constants.DEFAULT_CURSOR_POSITION);
     private cursorRenderer: TextCursorRenderer = new TextCursorRenderer(this.shape, [this.fontProperty], this.cursor);
 
     constructor(private ctx: TextEditorContext) {
@@ -60,7 +62,7 @@ export class TextEditor {
     reset(position: Vec2 = { x: 0, y: 0 }): void {
         this.disableCursor();
 
-        this.shape.text = DEFAULT_TEXT;
+        this.shape.text = Constants.DEFAULT_TEXT;
         this.shape.position.x = position.x;
         this.shape.position.y = position.y;
     }
@@ -68,6 +70,7 @@ export class TextEditor {
     setAlignment(value: CanvasTextAlign): void {
         this.textAlignmentProperty.value = value;
         this.shape.textAlignment = value;
+        this.render();
     }
 
     getAlignment(): CanvasTextAlign {
@@ -76,6 +79,7 @@ export class TextEditor {
 
     setFontIsItalic(value: boolean): void {
         this.fontProperty.isItalic = value;
+        this.render();
     }
 
     getFontIsItalic(): boolean {
@@ -84,6 +88,7 @@ export class TextEditor {
 
     setFontIsBold(value: boolean): void {
         this.fontProperty.isBold = value;
+        this.render();
     }
 
     getFontIsBold(): boolean {
@@ -93,6 +98,7 @@ export class TextEditor {
     setFontName(name: string): void {
         this.fontProperty.fontName = name;
         this.shape.fontName = name;
+        this.render();
     }
 
     getFontName(): string {
@@ -102,6 +108,7 @@ export class TextEditor {
     setFontSize(size: number): void {
         this.fontProperty.fontSize = size;
         this.shape.fontSize = size;
+        this.render();
     }
 
     getFontSize(): number {
@@ -112,7 +119,7 @@ export class TextEditor {
         this.cursorTimerHandle = window.setInterval(() => {
             this.showCursor = !this.showCursor;
             this.render();
-        }, this.CURSOR_BLINK_DELAI_MS);
+        }, Constants.CURSOR_BLINK_DELAI_MS);
     }
 
     disableCursor(): void {
