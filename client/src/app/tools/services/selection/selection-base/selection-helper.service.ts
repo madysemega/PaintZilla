@@ -3,6 +3,7 @@ import { HandlerMemento } from '@app/app/classes/handler-memento';
 import { Vec2 } from '@app/app/classes/vec2';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
+import { MathsHelper } from '@app/shapes/helper/maths-helper.service';
 import { OUTSIDE_DETECTION_OFFSET_PX } from '@app/tools/services/selection/selection-constants';
 import { GridMovement, GridMovementAnchor, ResizingMode } from '@app/tools/services/selection/selection-utils';
 import { EllipseService } from '@app/tools/services/tools/ellipse-service';
@@ -16,7 +17,12 @@ export abstract class SelectionHelperService {
     isSelectionBeingManipulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     mementos: HandlerMemento[] = [];
 
-    constructor(protected drawingService: DrawingService, protected colourService: ColourService, private ellipseService: EllipseService) {}
+    constructor(
+        protected drawingService: DrawingService,
+        protected colourService: ColourService,
+        private ellipseService: EllipseService,
+        protected mathsHelper: MathsHelper,
+    ) {}
 
     getSquareAdjustedPerimeter(startPoint: Vec2, endPoint: Vec2): Vec2 {
         return this.ellipseService.getSquareAdjustedPerimeter(startPoint, endPoint);

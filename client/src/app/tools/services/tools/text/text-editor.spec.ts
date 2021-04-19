@@ -3,7 +3,7 @@ import { ColourPickerService } from '@app/colour-picker/services/colour-picker/c
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
 import { TextEditor } from './text-editor';
-import { DEFAULT_TEXT } from './text.constants';
+import { DEFAULT_TEXT } from './text-tool.constants';
 
 // tslint:disable:no-any
 // tslint:disable:no-magic-numbers
@@ -43,13 +43,17 @@ describe('TextEditor', () => {
 
     it('setFontSize() should set the font size in both the property and the shape', () => {
         const NEW_SIZE = 32;
+
+        spyOn(editor, 'render').and.stub();
         editor.setFontSize(NEW_SIZE);
+
         expect(editor['fontProperty'].fontSize).toEqual(NEW_SIZE);
         expect(editor['shape'].fontSize).toEqual(NEW_SIZE);
     });
 
     it('setFontName() should set the font name in both the property and the shape', () => {
         const NEW_NAME = 'Times New Roman';
+        spyOn(editor, 'render').and.stub();
         editor.setFontName(NEW_NAME);
         expect(editor['fontProperty'].fontName).toEqual(NEW_NAME);
         expect(editor['shape'].fontName).toEqual(NEW_NAME);
@@ -57,14 +61,23 @@ describe('TextEditor', () => {
 
     it('setFontIsBold() should set font isBold in the property', () => {
         const NEW_IS_BOLD = true;
+        spyOn(editor, 'render').and.stub();
         editor.setFontIsBold(NEW_IS_BOLD);
         expect(editor['fontProperty'].isBold).toEqual(NEW_IS_BOLD);
     });
 
     it('setFontIsItalic() should set font isItalic in the property', () => {
         const NEW_IS_ITALIC = true;
+        spyOn(editor, 'render').and.stub();
         editor.setFontIsItalic(NEW_IS_ITALIC);
         expect(editor['fontProperty'].isItalic).toEqual(NEW_IS_ITALIC);
+    });
+
+    it('setAlignment() should set font alignment in the property', () => {
+        const NEW_ALIGNMENT = 'right';
+        spyOn(editor, 'render').and.stub();
+        editor.setAlignment(NEW_ALIGNMENT);
+        expect(editor['textAlignmentProperty'].value).toEqual(NEW_ALIGNMENT);
     });
 
     it('Enabling the cursor should start an interval', () => {

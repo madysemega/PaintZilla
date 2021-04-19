@@ -95,7 +95,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.shape.vertices.push(mousePosition);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
 
-        this.getCouleur(mousePosition);
+        this.getColor(mousePosition);
 
         this.zoomctx.save();
 
@@ -124,7 +124,7 @@ export class PipetteService extends ResizableTool implements ISelectableTool, ID
         this.shape.clear();
     }
 
-    getCouleur(mousePosition: Vec2): void {
+    getColor(mousePosition: Vec2): void {
         this.colors = this.drawingService.baseCtx.getImageData(
             mousePosition.x - Constants.RECTANGLE_WIDTH,
             mousePosition.y - Constants.RECTANGLE_WIDTH,

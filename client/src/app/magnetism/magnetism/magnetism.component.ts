@@ -17,7 +17,6 @@ import { RectangleSelectionCreatorService } from '@app/tools/services/tools/rect
 export class MagnetismComponent {
     gridMovementAnchor: typeof GridMovementAnchor = GridMovementAnchor;
     isMagnetismActivated: boolean = false;
-    tester: number = 0;
     delete: boolean = false;
     increment: boolean = false;
     decrement: boolean = false;

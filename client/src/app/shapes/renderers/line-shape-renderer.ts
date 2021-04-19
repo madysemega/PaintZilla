@@ -9,7 +9,7 @@ export class LineShapeRenderer extends ShapeRenderer<LineShape> {
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
-        this.shape.vertices.forEach((vertex) => {
+        this.shape.vertices.forEach((vertex: { x: number; y: number }) => {
             ctx.lineTo(vertex.x, vertex.y);
         });
         ctx.stroke();
