@@ -51,9 +51,10 @@ export class EditorComponent implements AfterViewInit {
 
         setTimeout(() => {
             this.toolSelector.selectTool(this.toolSelector.getSelectedTool().key);
+            this.historyService.clear();
         });
+
         this.route.params.subscribe((parameters) => this.initializeImage(parameters.imageId));
-        this.historyService.clear();
     }
 
     private initializeImage(imageId: string | undefined): void {

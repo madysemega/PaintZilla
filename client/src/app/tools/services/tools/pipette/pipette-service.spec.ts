@@ -167,11 +167,11 @@ describe('PipetteService', () => {
     it('when primary colour changes, it should be reflected in the colour property', (done) => {
         const GIVEN_COLOUR = Colour.hexToRgb('ABC');
 
-        colourServiceStub.setPrimaryColour(GIVEN_COLOUR);
-
         colourServiceStub.primaryColourChanged.subscribe(() => {
             expect(service['colourProperty'].colour).toEqual(GIVEN_COLOUR);
+            done();
         });
-        done();
+
+        colourServiceStub.setPrimaryColour(GIVEN_COLOUR);
     });
 });

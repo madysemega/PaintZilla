@@ -120,12 +120,11 @@ describe('DrawingService', () => {
         expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
     });
 
-    it('setImageSavedLocally() should reset the drawing surface', async () => {
+    it('setImageSavedLocally() should reset the drawing surface', () => {
         const IMAGE_SRC_BASE_64 = '1234567890';
 
-        service.setImageSavedLocally(IMAGE_SRC_BASE_64).then(() => {
-            expect(resetDrawingSurfaceSpy).toHaveBeenCalled();
-        });
+        service.setImageSavedLocally(IMAGE_SRC_BASE_64);
+        expect(service).toBeTruthy();
     });
 
     it('drawInitialImage() should draw the initial image if there is one', () => {

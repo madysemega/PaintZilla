@@ -4,17 +4,11 @@ import { DrawingService } from '@app/drawing/services/drawing-service/drawing.se
 import { DiscardChangesDialogComponent } from '@app/file-options/dialog/discard-changes-dialog/discard-changes-dialog.component';
 import { SaveDrawingDialogComponent } from '@app/file-options/dialog/save-drawing-dialog/save-drawing-dialog.component';
 import { HistoryService } from '@app/history/service/history.service';
-import { ToolSelectorService } from '@app/tools/services/tool-selector/tool-selector.service';
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingCreatorService {
-    constructor(
-        private drawingService: DrawingService,
-        public dialog: MatDialog,
-        private historyService: HistoryService,
-        private toolSelector: ToolSelectorService,
-    ) {}
+    constructor(private drawingService: DrawingService, public dialog: MatDialog, private historyService: HistoryService) {}
 
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
     saveDrawingDialogRef: MatDialogRef<SaveDrawingDialogComponent>;
@@ -52,6 +46,5 @@ export class DrawingCreatorService {
         this.drawingRestored.emit();
         this.drawingService.canvasIsEmpty = true;
         this.historyService.clear();
-        this.toolSelector.selectTool('pencil');
     }
 }

@@ -356,11 +356,14 @@ describe('TextEditor', () => {
         expect(editor.isEmpty()).toBeFalse();
     });
 
-    it('When primary colour changes, so should text colour', () => {
+    it('When primary colour changes, so should text colour', (done) => {
         const NEW_COLOUR = Colour.hexToRgb('222333444');
-        colourService.primaryColourChanged.emit(NEW_COLOUR);
+
         colourService.primaryColourChanged.subscribe(() => {
             expect(editor['colourProperty'].colour).toEqual(NEW_COLOUR);
+            done();
         });
+
+        colourService.primaryColourChanged.emit(NEW_COLOUR);
     });
 });

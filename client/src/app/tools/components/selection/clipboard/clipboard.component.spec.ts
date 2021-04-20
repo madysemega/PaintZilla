@@ -187,10 +187,12 @@ describe('ClipboardComponent', () => {
         expect(deleteSpy).not.toHaveBeenCalled();
     });
 
-    it('should selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+    it('should set selectedToolName to rectangle-selection when calling selectTheEntireCanvas', () => {
+        const EXPECTED_NAME = 'rectangle-selection';
         const dummyRectangleCreator: RectangleCreatorMock = new RectangleCreatorMock();
         spyOn<any>(component.toolSelector, 'getSelectedTool').and.returnValue(dummyRectangleCreator as RectangleSelectionCreatorService);
         component.selectTheEntireCanvas();
+        expect(component.toolSelector.selectedTool.tool.key).toEqual(EXPECTED_NAME);
     });
 
     it('isSelectionToolCurrentlySelected should call getSelectedTool', () => {

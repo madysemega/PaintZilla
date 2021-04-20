@@ -1,18 +1,4 @@
 <div class="container">
-    <div class="colour-section">
-        <mat-label>Couleur</mat-label>
-        <app-colours class="vertical"></app-colours>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div class="vertical">
-        <mat-label>Historique</mat-label>
-        <div class="center">
-            <app-history-controls></app-history-controls>
-        </div>
-    </div>
-    <mat-divider></mat-divider>
     <div>
         <app-ellipse-tool-configuration class="vertical" *ngIf="selectedToolName === 'ellipse'"> </app-ellipse-tool-configuration>
         <app-pencil-tool-configuration class="vertical" *ngIf="selectedToolName === 'pencil'"> </app-pencil-tool-configuration>
@@ -27,7 +13,23 @@
         <app-paint-bucket-tool-configuration class="vertical" *ngIf="selectedToolName === 'paint-bucket'"></app-paint-bucket-tool-configuration>
     </div>
 
-    <mat-divider *ngIf='toolSelectorService.getActiveSelectionTool()==undefined'></mat-divider>
+    <mat-divider></mat-divider>
+
+    <div class="colour-section">
+        <mat-label>Couleur</mat-label>
+        <app-colours class="vertical"></app-colours>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="vertical">
+        <mat-label>Historique</mat-label>
+        <div class="center">
+            <app-history-controls></app-history-controls>
+        </div>
+    </div>
+
+    <mat-divider *ngIf="toolSelectorService.getActiveSelectionTool() == undefined"></mat-divider>
 
     <div>
         <mat-label>Sélection</mat-label>
@@ -41,5 +43,4 @@
     <div>
         <app-magnetism></app-magnetism>
     </div>
-
 </div>

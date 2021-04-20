@@ -247,25 +247,26 @@ describe('PolygonService', () => {
 
         expect(fillRenderSpy).toHaveBeenCalled();
     });
-    it('when primary colour changes, so should fill style', () => {
+    it('when primary colour changes, so should fill style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
-
-        colourService.setPrimaryColour(COLOUR);
 
         colourService.primaryColourChanged.subscribe(() => {
             expect(service['fillStyleProperty'].colour).toEqual(COLOUR);
+            done();
         });
+
+        colourService.setPrimaryColour(COLOUR);
     });
 
     it('when secondary colour changes, so should stroke style', (done) => {
         const COLOUR = Colour.hexToRgb('424242');
 
-        colourService.setSecondaryColour(COLOUR);
-
         colourService.secondaryColourChanged.subscribe(() => {
             expect(service['strokeStyleProperty'].colour).toEqual(COLOUR);
+            done();
         });
-        done();
+
+        colourService.setSecondaryColour(COLOUR);
     });
 
     it('drawPerimeter calls ctx.ellipse with the appropriate size when size is negative', () => {

@@ -1,9 +1,17 @@
 import { Vec2 } from '@app/app/classes/vec2';
 import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
+import { FloodFill } from './flood-fill';
+
+export class FloodFillMock extends FloodFill {
+    fill(parameters: Constants.fillParameters): number[] {
+        return [];
+    }
+}
+
 // tslint:disable:no-string-literal
 // tslint:disable:no-magic-numbers
 describe('FloodFill', () => {
-    let floodFill: Constants.FloodFillMock;
+    let floodFill: FloodFillMock;
     let dataStub: Uint8ClampedArray;
     let imageDataStub: ImageData;
     let onClickStub: Vec2;
@@ -13,7 +21,7 @@ describe('FloodFill', () => {
             dataStub[i] = Constants.MAX_RGBA;
         }
         imageDataStub = new ImageData(dataStub, Constants.WIDTH, Constants.HEIGHT);
-        floodFill = new Constants.FloodFillMock();
+        floodFill = new FloodFillMock();
         onClickStub = { x: 0, y: 0 };
     });
 

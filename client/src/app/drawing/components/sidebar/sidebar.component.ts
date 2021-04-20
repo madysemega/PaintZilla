@@ -53,14 +53,17 @@ export class SidebarComponent implements OnInit {
 
     createNewDrawing(): void {
         this.drawingCreatorService.createNewDrawing();
+        this.deselect();
     }
 
     exportDrawing(): void {
         this.exportDrawingService.openExportDrawingDialog();
+        this.deselect();
     }
 
     saveDrawing(): void {
         this.saveDrawingService.openSaveDrawingDialog();
+        this.deselect();
     }
 
     deselect(): void {

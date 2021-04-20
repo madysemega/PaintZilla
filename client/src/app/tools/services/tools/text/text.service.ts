@@ -92,6 +92,7 @@ export class TextService extends Tool implements ISelectableTool, IDeselectableT
 
     onToolDeselect(): void {
         this.finalize();
+        this.reset();
         this.drawingService.setCursorType(CursorType.CROSSHAIR);
     }
 

@@ -277,4 +277,11 @@ describe('LassoSelectionSegment', () => {
 
         expect(firstSegment.intersects(secondSegment)).toBeFalse();
     });
+
+    it('Segments { (5, 10), (5, -10) } and { (0, 0), (10, 0) } should intersect', () => {
+        const firstSegment = new LassoSelectionSegment({ x: 5, y: 10 }, { x: 5, y: -10 });
+        const secondSegment = new LassoSelectionSegment({ x: 0, y: 0 }, { x: 10, y: 0 });
+
+        expect(firstSegment.intersects(secondSegment)).toBeTrue();
+    });
 });

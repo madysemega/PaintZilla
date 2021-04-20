@@ -11,8 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ColourPickerService } from '@app/colour-picker/services/colour-picker/colour-picker.service';
 import { ColourService } from '@app/colour-picker/services/colour/colour.service';
-// import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-// import { SidebarComponent } from '@app/drawing/components/sidebar/sidebar.component';
 import { DrawingCreatorService } from '@app/drawing/services/drawing-creator/drawing-creator.service';
 import { DrawingLoaderService } from '@app/drawing/services/drawing-loader/drawing-loader.service';
 import { DrawingService } from '@app/drawing/services/drawing-service/drawing.service';
@@ -200,14 +198,6 @@ describe('EditorComponent', () => {
         component.onMouseMove(event);
         expect(mouseEventSpy).toHaveBeenCalled();
         expect(mouseEventSpy).toHaveBeenCalledWith(event);
-    });
-
-    it('Ctrl+G should open the carousel', () => {
-        const keyboardService = fixture.debugElement.injector.get(KeyboardService);
-
-        spyOn(keyboardService, 'registerAction').and.callFake((action) => {
-            action.invoke();
-        });
     });
 
     it("When colour picker visibility state changes, so should the editor component's internal flag", () => {
