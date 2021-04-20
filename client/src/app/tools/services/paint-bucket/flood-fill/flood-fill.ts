@@ -1,6 +1,5 @@
-import { Vec2 } from '@app/app/classes/vec2';
 import { Colour } from '@app/colour-picker/classes/colours.class';
-import * as Constants from '@app/tools/constants/flood-fill.constants';
+import * as Constants from '@app/tools/services/paint-bucket/paint-bucket.constants';
 export abstract class FloodFill {
     // tslint:disable-next-line:variable-name
     protected _result: number[] = [];
@@ -11,15 +10,15 @@ export abstract class FloodFill {
     protected replacementColour: Colour;
     protected tolerance: number;
     protected visited: boolean[][];
-    abstract fill(imageData: ImageData, onClickCoords: Vec2, fillColour: Colour, tolerance: number): number[];
+    abstract fill(parameters: Constants.fillParameters): number[];
 
-    initializeAttributes(imageData: ImageData, onClickCoords: Vec2, fillColour: Colour, tolerance: number): void {
-        this.pixels = imageData.data;
-        this.width = imageData.width;
-        this.height = imageData.height;
-        this.replacementColour = fillColour;
-        this.replacedColour = this.getColourAtPixel(this.normalize(onClickCoords.x, onClickCoords.y));
-        this.tolerance = tolerance / Constants.TO_PERCENTAGE;
+    initializeAttributes(parameters: Constants.fillParameters): void {
+        this.pixels = parameters.imageData.data;
+        this.width = parameters.imageData.width;
+        this.height = parameters.imageData.height;
+        this.replacementColour = parameters.fillColour;
+        this.replacedColour = this.getColourAtPixel(this.normalize(parameters.onClickCoords.x, parameters.onClickCoords.y));
+        this.tolerance = parameters.tolerance / Constants.TO_PERCENTAGE;
         this.initializeVisitsArray();
     }
 

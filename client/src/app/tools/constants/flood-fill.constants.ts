@@ -1,9 +1,0 @@
-export const PIXEL_LENGTH = 4;
-export const MAX_RGBA = 255;
-export const RED_INDEX = 0;
-export const GREEN_INDEX = 1;
-export const BLUE_INDEX = 2;
-export const ALPHA_INDEX = 3;
-export const INVALID_INDEX = -1;
-export const TO_PERCENTAGE = 100;
-export const MAX_DISTANCE = 196608;

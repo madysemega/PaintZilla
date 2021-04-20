@@ -147,24 +147,22 @@ describe('DrawingComponent', () => {
 
     it("onMouseUp(): should call resizingService's disableResizer method and wasResizing should be true when receiving a mouse up event \
     and canvas is resizing ", () => {
-        const event = {} as MouseEvent;
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(true);
         spyOn(resizingServiceStub, 'restoreBaseImageData').and.returnValue();
         spyOn(resizingServiceStub, 'updateCanvasSize').and.returnValue();
         const disableResizerStub = spyOn(resizingServiceStub, 'disableResizer').and.stub();
-        component.onMouseUp(event);
+        component.onMouseUp();
         expect(disableResizerStub).toHaveBeenCalled();
         expect(component.wasResizing).toEqual(true);
     });
 
     it("onMouseUp(): should not call resizingService's disableResizer method and wasResizing should be false when receiving a mouse up event \
     and canvas is not resizing", () => {
-        const event = {} as MouseEvent;
         spyOn(resizingServiceStub, 'isResizing').and.returnValue(false);
         spyOn(resizingServiceStub, 'restoreBaseImageData').and.returnValue();
         spyOn(resizingServiceStub, 'updateCanvasSize').and.returnValue();
         const disableResizerStub = spyOn(resizingServiceStub, 'disableResizer').and.stub();
-        component.onMouseUp(event);
+        component.onMouseUp();
         expect(disableResizerStub).not.toHaveBeenCalled();
         expect(component.wasResizing).toEqual(false);
     });

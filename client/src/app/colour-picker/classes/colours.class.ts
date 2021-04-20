@@ -1,10 +1,10 @@
 import * as Constants from '@app/colour-picker/constants/colours.class.constants';
 import * as Converter from 'color-convert';
 export class Colour {
-    private red: number = Constants.MIN_RGB;
-    private green: number = Constants.MIN_RGB;
-    private blue: number = Constants.MIN_RGB;
-    private alpha: number = Constants.MAX_ALPHA;
+    private red: number;
+    private green: number;
+    private blue: number;
+    private alpha: number;
     constructor(
         red: number = Constants.MIN_RGB,
         green: number = Constants.MIN_RGB,
