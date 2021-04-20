@@ -31,7 +31,7 @@ export class DrawingComponent implements AfterViewInit {
         public toolSelector: ToolSelectorService,
         public resizingService: ResizingService,
         private drawingCreatorService: DrawingCreatorService,
-        private magnetism: MagnetismService
+        private magnetism: MagnetismService,
     ) {
         this.wasResizing = false;
         this.drawingCreatorService.drawingRestored.subscribe(async () => {

@@ -18,7 +18,7 @@ export class MainPageComponent {
         public dialog: MatDialog,
         keyboardService: KeyboardService,
         private automaticSavingService: AutomaticSavingService,
-        private magnetism: MagnetismService
+        private magnetism: MagnetismService,
     ) {
         keyboardService.context = 'main-page';
     }
