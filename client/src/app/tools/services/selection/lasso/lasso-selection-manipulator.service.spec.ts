@@ -27,6 +27,8 @@ describe('LassoSelectionManipulatorService', () => {
     let mathsHelper: MathsHelper;
 
     beforeEach(() => {
+        mathsHelper = new MathsHelper();
+
         const canvasTestHelper = new CanvasTestHelper();
         drawingServiceStub = jasmine.createSpyObj('DrawingService', ['clearCanvas']);
         drawingServiceStub.canvas = canvasTestHelper.canvas;
@@ -55,7 +57,6 @@ describe('LassoSelectionManipulatorService', () => {
                 { provide: LassoSelectionManipulatorService, useValue: manipulator },
             ],
         });
-        mathsHelper = TestBed.inject(MathsHelper);
         service = TestBed.inject(LassoSelectionManipulatorService);
 
         ellipseService = new EllipseService(drawingServiceStub, colourService, historyService, mathsHelper);
@@ -111,6 +112,8 @@ describe('LassoSelectionManipulatorService', () => {
     it('Selection outline should be drawn with translated vertices', () => {
         const SCALING = { x: 3, y: 1.5 };
         const lineToSpy = spyOn(drawingServiceStub.previewCtx, 'lineTo').and.callThrough();
+
+        spyOn(helper, 'drawPerimeter').and.stub();
 
         service.selectionHandler.currentHorizontalScaling = SCALING.x;
         service.selectionHandler.currentVerticalScaling = SCALING.y;
