@@ -5,6 +5,7 @@ import { ImageNavigationComponent } from '@app/carousel/components/image-navigat
 import { ResizingService } from '@app/drawing/services/resizing-service/resizing.service';
 import { AutomaticSavingService } from '@app/file-options/automatic-saving/automatic-saving.service';
 import { KeyboardService } from '@app/keyboard/keyboard.service';
+import { MagnetismService } from '@app/magnetism/magnetism.service';
 
 @Component({
     selector: 'app-main-page',
@@ -17,6 +18,7 @@ export class MainPageComponent {
         public dialog: MatDialog,
         keyboardService: KeyboardService,
         private automaticSavingService: AutomaticSavingService,
+        private magnetism: MagnetismService,
     ) {
         keyboardService.context = 'main-page';
     }
@@ -29,6 +31,8 @@ export class MainPageComponent {
         this.resizingService.resetCanvasDimensions();
         await sleep();
         this.automaticSavingService.saveDrawingLocally();
+        this.magnetism.toggleGrid();
+        this.magnetism.toggleGrid();
     }
 
     drawingIsSavedLocally(): boolean {

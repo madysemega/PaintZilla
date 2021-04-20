@@ -18,11 +18,11 @@ export class DrawingService {
     canvasSize: Vec2;
     canvasResize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
-    onDrawingSurfaceResize: EventEmitter<Vec2>;
-    onDrawingLoaded: EventEmitter<boolean>;
+    onDrawingSurfaceResize: EventEmitter<Vec2> = new EventEmitter();
+    onDrawingLoaded: EventEmitter<boolean> = new EventEmitter();
 
-    initialSize: Vec2;
-    initialImage: CanvasImageSource | undefined;
+    initialSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    initialImage: CanvasImageSource | undefined = undefined;
 
     setCursorType(type: CursorType): void {
         if (this.gridCanvas) {
@@ -122,11 +122,5 @@ export class DrawingService {
 
     constructor(historyService: HistoryService) {
         historyService.onUndo(() => this.resetDrawingSurface());
-
-        this.onDrawingLoaded = new EventEmitter();
-
-        this.onDrawingSurfaceResize = new EventEmitter();
-        this.initialSize = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
-        this.initialImage = undefined;
     }
 }

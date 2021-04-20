@@ -15,9 +15,11 @@ export class DrawingCreatorService {
         private historyService: HistoryService,
         private toolSelector: ToolSelectorService,
     ) {}
+
     dialogRef: MatDialogRef<DiscardChangesDialogComponent>;
     saveDrawingDialogRef: MatDialogRef<SaveDrawingDialogComponent>;
     drawingRestored: EventEmitter<void> = new EventEmitter<void>();
+
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();

@@ -20,7 +20,7 @@ export class SaveDrawingDialogComponent implements OnInit {
     @ViewChild('labelInput') input: ElementRef<HTMLInputElement>;
     SEPARATORS: number[] = SEPARATOR_KEY_CODES;
     currentlySaving: boolean = false;
-    imageName: string;
+    imageName: string = '';
     formGroup: FormGroup;
     labels: string[] = [];
 
