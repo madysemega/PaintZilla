@@ -1,4 +1,4 @@
-# LOG2990
+# Paintzilla
 
 Projet de base à utiliser pour démarrer le développement de votre application.
 
